@@ -9,13 +9,14 @@ export default class ReactStore {
 
   initializeAxiosConfig() {
     axios.defaults.baseURL = this.getBaseURL()
-    axios.defaults.headers.common['Authorization'] = ''
+    axios.defaults.headers.common['Authorization'] = this.getAuthorizationToken()
     axios.defaults.headers.common['Accept'] = 'application/vnd.api+json'
     axios.defaults.headers.common['X-Client-Platform'] = 'Web'
   }
 
   setHost(host) {
     this.host = host
+    this.initializeAxiosConfig()
   }
 
   setNamespace(namespace) {
@@ -30,7 +31,13 @@ export default class ReactStore {
     return `${this.host}/${this.namespace}`
   }
 
+  getAuthorizationToken() {
+    return `Token ${window.localStorage.getItem('token')}`
+  }
+
   query(resource, params = {}) {
-    console.log(resource, params);
+    axios.get(resource, {
+      params: params
+    })
   }
 }
