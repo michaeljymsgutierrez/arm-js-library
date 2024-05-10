@@ -36,8 +36,8 @@ export default class ReactStore {
   }
 
   query(resource, params = {}) {
-    axios.get(resource, {
+    return axios.get(resource, {
       params: params
     })
   }
-}
+ }

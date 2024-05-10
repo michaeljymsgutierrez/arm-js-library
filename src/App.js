@@ -7,10 +7,14 @@ RS.setHost('https://staging.metromart.com')
 function App() {
 
   useEffect(() => {
-    RS.query('cities', {
-      filter: { 'area.id': 131, 'id': 1},
-      sort: 'priority'
-    })
+    async function fetchData() {
+      const results =  await RS.query('cities', {
+        filter: { 'area.id': 131, 'id': 1},
+        sort: 'priority'
+      })
+      console.log(results.data)
+    }
+    fetchData()
   }, [])
 
   return <div className="App">React Store</div>
