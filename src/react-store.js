@@ -1,10 +1,18 @@
 import axios from 'axios'
+import { makeObservable, observable, computed, action, flow } from 'mobx'
 
 export default class ReactStore {
   constructor() {
     this.namespace = 'api/v1'
     this.host = window.location.origin
     this.initializeAxiosConfig()
+    this.value = []
+
+    makeObservable(this, {
+      value: observable,
+      updateValue: action,
+      updatedValue: computed,
+    })
   }
 
   initializeAxiosConfig() {
@@ -36,9 +44,18 @@ export default class ReactStore {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
-  query(resource, params = {}) {
-    return axios.get(resource, {
+  async query(resource, params = {}) {
+    const queryResults = await axios.get(resource, {
       params: params,
     })
+    this.value = queryResults?.data?.data || []
+  }
+
+  get updatedValue() {
+    return this.value
+  }
+
+  updateValue() {
+    this.value = []
   }
 }
