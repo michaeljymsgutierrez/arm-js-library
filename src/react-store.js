@@ -9,7 +9,8 @@ export default class ReactStore {
 
   initializeAxiosConfig() {
     axios.defaults.baseURL = this.getBaseURL()
-    axios.defaults.headers.common['Authorization'] = this.getAuthorizationToken()
+    axios.defaults.headers.common['Authorization'] =
+      this.getAuthorizationToken()
     axios.defaults.headers.common['Content-Type'] = 'application/vnd.api+json'
     axios.defaults.headers.common['X-Client-Platform'] = 'Web'
   }
@@ -37,7 +38,7 @@ export default class ReactStore {
 
   query(resource, params = {}) {
     return axios.get(resource, {
-      params: params
+      params: params,
     })
   }
- }
+}
