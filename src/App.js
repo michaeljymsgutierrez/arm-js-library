@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ReactStore from './react-store'
 
-const RS = new ReactStore()
+const RS = new ReactStore(['cities', 'areas'])
+
 RS.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  const { value } = RS;
+  const { cities } = RS;
 
   useEffect(() => {
     RS.query('cities', {
@@ -18,9 +19,9 @@ const App = observer(() => {
   return (
     <div className="App">
       <div>React Store</div>
-      <button onClick={() => RS.updateValue()}>Test</button>
+      <label>Cities</label>
       <ul>
-        {value.map((v, i) => (
+        {cities.map((v, i) => (
           <li key={i}>{v.attributes.name}</li>
         ))}
       </ul>
