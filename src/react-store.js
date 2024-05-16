@@ -1,6 +1,15 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import { makeObservable, makeAutoObservable, observable, computed, action, flow } from 'mobx'
+import {
+  makeObservable,
+  extendObservable,
+  makeAutoObservable,
+  observable,
+  override,
+  computed,
+  action,
+  flow,
+} from 'mobx'
 
 export default class ReactStore {
   constructor(resourceKeys) {
@@ -20,7 +29,7 @@ export default class ReactStore {
   }
 
   initializeResourceKeys(resourceKeys) {
-    resourceKeys.forEach(resourceKey => {
+    resourceKeys.forEach((resourceKey) => {
       this[resourceKey] = []
     })
   }
@@ -52,16 +61,29 @@ export default class ReactStore {
 
   pushPayload(resourceName, resourceData) {
     let currentResourceCollection = this[resourceName]
-    let updatedResourceCollection = lodash.sortBy(lodash.unionWith(currentResourceCollection, resourceData, lodash.isEqual), ['id'])
+    let updatedResourceCollection = lodash.sortBy(
+      lodash.unionWith(currentResourceCollection, resourceData, lodash.isEqual),
+      ['id']
+    )
     this[resourceName] = updatedResourceCollection
   }
 
-  async query(resource, params = {}) {
+  alias(aliasName) {
+    const _this = this
+    return {
+      query: function (resource, params) {
+        _this.query(...arguments, aliasName)
+      },
+    }
+  }
+
+  async query(resource, params = {}, alias = null) {
     const request = await axios.get(resource, {
       params: params,
     })
     const results = request?.data?.data || []
 
     this.pushPayload(resource, results)
+    if (alias) this[alias] = results
   }
 }

@@ -8,7 +8,7 @@ export const RS = new ReactStore(['cities', 'areas'])
 RS.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  const { cities } = RS;
+  const { cities, citiesResults } = RS
 
   // useEffect(() => {
   //   RS.query('cities', {
@@ -29,6 +29,12 @@ const App = observer(() => {
       <ul>
         {cities.map((city, index) => (
           <li key={index}>{city.attributes.name}</li>
+        ))}
+      </ul>
+      ----
+      <ul>
+        {citiesResults?.map((city, index) => (
+          <li key={index}>{city.attributes.name} - Test</li>
         ))}
       </ul>
       <TestComponent />
