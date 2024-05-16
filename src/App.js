@@ -11,7 +11,12 @@ const App = observer(() => {
 
   useEffect(() => {
     RS.query('cities', {
-      filter: { 'area.id': 131, id: 1 },
+      filter: { 'area.id': 131 },
+      sort: 'priority',
+    })
+
+    RS.query('cities', {
+      filter: { 'area.id': 131, id: 2 },
       sort: 'priority',
     })
   }, [])

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as lodash from 'lodash'
 import { makeObservable, makeAutoObservable, observable, computed, action, flow } from 'mobx'
 
 export default class ReactStore {
@@ -49,11 +50,18 @@ export default class ReactStore {
     this[resourceName] = resourceData
   }
 
+  pushPayload(resourceName, resourceData) {
+    let currentResourceCollection = this[resourceName]
+    let updatedResourceCollection = lodash.sortBy(lodash.unionWith(currentResourceCollection, resourceData, lodash.isEqual), ['id'])
+    this[resourceName] = updatedResourceCollection
+  }
+
   async query(resource, params = {}) {
     const request = await axios.get(resource, {
       params: params,
     })
     const results = request?.data?.data || []
-    this[resource] = results
+
+    this.pushPayload(resource, results)
   }
 }
