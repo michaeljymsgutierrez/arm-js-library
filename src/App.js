@@ -1,35 +1,37 @@
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ReactStore from './react-store'
+import TestComponent from './components/test-component'
 
-const RS = new ReactStore(['cities', 'areas'])
+export const RS = new ReactStore(['cities', 'areas'])
 
 RS.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
   const { cities } = RS;
 
-  useEffect(() => {
-    RS.query('cities', {
-      filter: { 'area.id': 131 },
-      sort: 'priority',
-    })
-
-    RS.query('cities', {
-      filter: { 'area.id': 131, id: 2 },
-      sort: 'priority',
-    })
-  }, [])
+  // useEffect(() => {
+  //   RS.query('cities', {
+  //     filter: { 'area.id': 131 },
+  //     sort: 'priority',
+  //   })
+  //
+  //   RS.query('cities', {
+  //     filter: { 'area.id': 131, id: 2 },
+  //     sort: 'priority',
+  //   })
+  // }, [])
 
   return (
     <div className="App">
       <div>React Store</div>
-      <label>Cities</label>
+      <label>Cities from parent component</label>
       <ul>
-        {cities.map((v, i) => (
-          <li key={i}>{v.attributes.name}</li>
+        {cities.map((city, index) => (
+          <li key={index}>{city.attributes.name}</li>
         ))}
       </ul>
+      <TestComponent />
     </div>
   )
 })
