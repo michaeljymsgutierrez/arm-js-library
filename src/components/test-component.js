@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { RS } from '../App'
 
 const TestComponent = observer(() => {
-  const { cities, citiesResults } = RS;
+  const { cities, citiesResults } = RS
 
   useEffect(() => {
     RS.query('cities', {
@@ -17,13 +17,12 @@ const TestComponent = observer(() => {
     })
   }, [])
 
-
   return (
     <div>
       <label>Cities from test component</label>
       <ul>
-        {cities.map((v, i) => (
-          <li key={i}>{v.attributes.name}</li>
+        {cities.map((city, index) => (
+          <li key={index}>{city.attributes.name}</li>
         ))}
       </ul>
     </div>
