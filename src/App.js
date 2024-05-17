@@ -8,7 +8,7 @@ export const Store = new ReactStore(['cities', 'areas'])
 Store.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  // const cities = Store.getCollection('cities')
+  const cities = Store.getCollection('cities')
   // const citiesResults = Store.getAlias('citiesResults')
 
   // useEffect(() => {
@@ -22,16 +22,17 @@ const App = observer(() => {
   //     sort: 'priority',
   //   })
   // }, [])
+  console.log('Parent rerendering...');
 
   return (
     <div className="App">
       <div>React Store</div>
       <label>Cities from parent component</label>
-      {/* <ul> */}
-      {/*   {cities?.map((city, index) => ( */}
-      {/*     <li key={index}>{city.attributes.name}</li> */}
-      {/*   ))} */}
-      {/* </ul> */}
+      <ul>
+        {cities?.map((city, index) => (
+          <li key={index}>{city.attributes.name}</li>
+        ))}
+      </ul>
       {/* ---- */}
       {/* <ul> */}
       {/*   {citiesResults?.map((city, index) => ( */}

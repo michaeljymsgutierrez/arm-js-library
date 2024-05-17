@@ -6,6 +6,8 @@ const TestComponent = observer(() => {
   const cities = Store.getCollection('cities')
   const citiesResults = Store.getAlias('citiesResults')
 
+  console.log('Child rerendering...');
+
   useEffect(() => {
     Store.query(
       'cities',
@@ -22,6 +24,13 @@ const TestComponent = observer(() => {
     // })
   }, [])
 
+  function updateCity() {
+    const firstCity = cities[0]
+    const secondCity = cities[1]
+    firstCity.attributes.name = 'Los Angeles'
+    secondCity.attributes.name = 'Las Vegas'
+  }
+
   return (
     <div>
       <label>Cities from test component</label>
@@ -36,6 +45,7 @@ const TestComponent = observer(() => {
           <li key={index}>{city.attributes.name} - from alias</li>
         ))}
       </ul>
+      <button onClick={updateCity}>Update First City</button>
     </div>
   )
 })
