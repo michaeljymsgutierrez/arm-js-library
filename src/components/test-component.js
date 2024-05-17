@@ -1,22 +1,22 @@
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import { RS } from '../App'
+import { Store } from '../App'
 
 const TestComponent = observer(() => {
-  const { cities, citiesResults } = RS
+  const cities = Store.getCollection('cities')
+  const citiesResults = Store.getAlias('citiesResults')
 
   useEffect(() => {
-    RS.alias('citiesResults').query('cities', {
-      filter: { 'area.id': 131 },
-      sort: 'priority',
-    })
+    Store.query(
+      'cities',
+      {
+        filter: { 'area.id': 131 },
+        sort: 'priority',
+      },
+      { alias: 'citiesResults' }
+    )
 
-    // RS.query('cities', {
-    //   filter: { 'area.id': 131 },
-    //   sort: 'priority',
-    // }, { alias: 'citiesResults' })
-
-    // RS.query('cities', {
+    // Store.query('cities', {
     //   filter: { 'area.id': 131, id: 2 },
     //   sort: 'priority',
     // })
@@ -26,14 +26,14 @@ const TestComponent = observer(() => {
     <div>
       <label>Cities from test component</label>
       <ul>
-        {cities.map((city, index) => (
-          <li key={index}>{city.attributes.name}</li>
+        {cities?.map((city, index) => (
+          <li key={index}>{city.attributes.name} - from collection</li>
         ))}
       </ul>
       ----
       <ul>
         {citiesResults?.map((city, index) => (
-          <li key={index}>{city.attributes.name} - Test</li>
+          <li key={index}>{city.attributes.name} - from alias</li>
         ))}
       </ul>
     </div>

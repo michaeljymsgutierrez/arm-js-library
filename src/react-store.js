@@ -1,42 +1,49 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import {
-  makeObservable,
-  extendObservable,
-  makeAutoObservable,
-  observable,
-  override,
-  computed,
-  action,
-  flow,
-} from 'mobx'
+import { makeObservable, observable, computed, action, flow } from 'mobx'
 
 export default class ReactStore {
-  constructor(resourceKeys) {
+  constructor(collections = []) {
     this.namespace = 'api/v1'
     this.host = window.location.origin
-    this.initializeResourceKeys(resourceKeys)
-    this.initializeAxiosConfig()
-    makeAutoObservable(this)
+    this.collections = {}
+    this.aliases = {}
+
+    this._initializeCollections(collections)
+    this._initializeAxiosConfig()
+
+    makeObservable(this, {
+      collections: observable,
+      aliases: observable,
+      _pushPayloadToCollection: action,
+      addCollection: action,
+      addAlias: action,
+    })
   }
 
-  initializeAxiosConfig() {
-    axios.defaults.baseURL = this.getBaseURL()
+  _initializeAxiosConfig() {
+    axios.defaults.baseURL = this._getBaseURL()
     axios.defaults.headers.common['Authorization'] =
-      this.getAuthorizationToken()
+      this._getAuthorizationToken()
     axios.defaults.headers.common['Content-Type'] = 'application/vnd.api+json'
     axios.defaults.headers.common['X-Client-Platform'] = 'Web'
   }
 
-  initializeResourceKeys(resourceKeys) {
-    resourceKeys.forEach((resourceKey) => {
-      this[resourceKey] = []
-    })
+  _initializeCollections(collections) {
+    collections.forEach((collection) => this.addCollection(collection, []))
+  }
+
+  _getBaseURL() {
+    return `${this.host}/${this.namespace}`
+  }
+
+  _getAuthorizationToken() {
+    return `Token ${window.localStorage.getItem('token')}`
   }
 
   setHost(host) {
     this.host = host
-    this.initializeAxiosConfig()
+    this._initializeAxiosConfig()
   }
 
   setNamespace(namespace) {
@@ -47,43 +54,39 @@ export default class ReactStore {
     axios.defaults.headers.common[`${key}`] = value
   }
 
-  getBaseURL() {
-    return `${this.host}/${this.namespace}`
+  addCollection(collectionName, collectionData) {
+    this.collections[collectionName] = collectionData
   }
 
-  getAuthorizationToken() {
-    return `Token ${window.localStorage.getItem('token')}`
+  getCollection(collectionName) {
+    return this.collections[collectionName]
   }
 
-  addResourceKey(resourceName, resourceData = []) {
-    this[resourceName] = resourceData
+  addAlias(aliasName, aliasData) {
+    this.aliases[aliasName] = aliasData
   }
 
-  pushPayload(resourceName, resourceData) {
-    let currentResourceCollection = this[resourceName]
-    let updatedResourceCollection = lodash.sortBy(
-      lodash.unionWith(currentResourceCollection, resourceData, lodash.isEqual),
+  getAlias(aliasName) {
+    return this.aliases[aliasName]
+  }
+
+  _pushPayloadToCollection(collectionName, collectionData) {
+    let currentCollection = this[collectionName]
+    let updatedCollection = lodash.sortBy(
+      lodash.unionWith(currentCollection, collectionData, lodash.isEqual),
       ['id']
     )
-    this[resourceName] = updatedResourceCollection
+    this.collections[collectionName] = updatedCollection
   }
 
-  alias(aliasName) {
-    const _this = this
-    return {
-      query: function (resource, params) {
-        _this.query(...arguments, aliasName)
-      },
-    }
-  }
-
-  async query(resource, params = {}, alias = null) {
-    const request = await axios.get(resource, {
+  async query(resourceName, params = {}, config = {}) {
+    const resourceRequest = await axios.get(resourceName, {
       params: params,
     })
-    const results = request?.data?.data || []
+    const resourceResults = resourceRequest?.data?.data || []
 
-    this.pushPayload(resource, results)
-    if (alias) this[alias] = results
+    if (config.alias) this.addAlias(config.alias, resourceResults)
+
+    this._pushPayloadToCollection(resourceName, resourceResults)
   }
 }

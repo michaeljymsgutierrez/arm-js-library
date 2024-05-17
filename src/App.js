@@ -3,20 +3,21 @@ import { observer } from 'mobx-react-lite'
 import ReactStore from './react-store'
 import TestComponent from './components/test-component'
 
-export const RS = new ReactStore(['cities', 'areas'])
+export const Store = new ReactStore(['cities', 'areas'])
 
-RS.setHost('https://staging.metromart.com')
+Store.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  const { cities, citiesResults } = RS
+  // const cities = Store.getCollection('cities')
+  // const citiesResults = Store.getAlias('citiesResults')
 
   // useEffect(() => {
-  //   RS.query('cities', {
+  //   Store.query('cities', {
   //     filter: { 'area.id': 131 },
   //     sort: 'priority',
   //   })
   //
-  //   RS.query('cities', {
+  //   Store.query('cities', {
   //     filter: { 'area.id': 131, id: 2 },
   //     sort: 'priority',
   //   })
@@ -26,17 +27,17 @@ const App = observer(() => {
     <div className="App">
       <div>React Store</div>
       <label>Cities from parent component</label>
-      <ul>
-        {cities.map((city, index) => (
-          <li key={index}>{city.attributes.name}</li>
-        ))}
-      </ul>
-      ----
-      <ul>
-        {citiesResults?.map((city, index) => (
-          <li key={index}>{city.attributes.name} - Test</li>
-        ))}
-      </ul>
+      {/* <ul> */}
+      {/*   {cities?.map((city, index) => ( */}
+      {/*     <li key={index}>{city.attributes.name}</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
+      {/* ---- */}
+      {/* <ul> */}
+      {/*   {citiesResults?.map((city, index) => ( */}
+      {/*     <li key={index}>{city.attributes.name} - Test</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
       <TestComponent />
     </div>
   )
