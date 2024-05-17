@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import ReactStore from './react-store'
+import ApiResourceManager from './api-resource-manager'
 import TestComponent from './components/test-component'
 
-export const Store = new ReactStore(['cities', 'areas'])
+export const Store = new ApiResourceManager(['cities', 'areas'])
 
 Store.setHost('https://staging.metromart.com')
 

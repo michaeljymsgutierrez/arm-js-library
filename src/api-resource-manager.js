@@ -2,7 +2,7 @@ import axios from 'axios'
 import * as lodash from 'lodash'
 import { makeObservable, observable, computed, action, flow } from 'mobx'
 
-export default class ReactStore {
+export default class ApiResourceManager {
   constructor(collections = []) {
     this.namespace = 'api/v1'
     this.host = window.location.origin
