@@ -40,11 +40,11 @@ const TestComponent = observer(() => {
         ))}
       </ul>
       ----
-      <ul>
-        {citiesResults?.map((city, index) => (
-          <li key={index}>{city.attributes.name} - from alias</li>
-        ))}
-      </ul>
+      {/* <ul> */}
+      {/*   {citiesResults?.map((city, index) => ( */}
+      {/*     <li key={index}>{city.attributes.name} - from alias</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
       <button onClick={updateCity}>Update First City</button>
     </div>
   )
