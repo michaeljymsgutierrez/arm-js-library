@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import { makeObservable, observable, computed, action, flow } from 'mobx'
+import { makeObservable, observable, computed, action, flow, toJS } from 'mobx'
 
 export default class ApiResourceManager {
   constructor(collections = []) {
@@ -62,8 +62,13 @@ export default class ApiResourceManager {
     return this.collections[collectionName]
   }
 
-  addAlias(aliasName, aliasData) {
-    this.aliases[aliasName] = aliasData
+  addAlias(aliasName, aliasData, collectionName) {
+    const currentCollection = this.collections[collectionName]
+    const rawCurrentCollection = toJS(currentCollection)
+    const rawAliasData = toJS(aliasData)
+    console.log(rawCurrentCollection)
+    const aliasCollection = []
+    // this.aliases[aliasName] = aliasData
   }
 
   getAlias(aliasName) {
@@ -85,8 +90,8 @@ export default class ApiResourceManager {
     })
     const resourceResults = resourceRequest?.data?.data || []
 
-    if (config.alias) this.addAlias(config.alias, resourceResults)
-
     this._pushPayloadToCollection(resourceName, resourceResults)
+
+    if (config.alias) this.addAlias(config.alias, resourceResults, resourceName)
   }
 }
