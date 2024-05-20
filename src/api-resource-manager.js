@@ -62,7 +62,7 @@ export default class ApiResourceManager {
     return this.collections[collectionName]
   }
 
-  addAlias(aliasName, aliasData) {
+  addAlias(aliasName, aliasData, collectionName) {
     // const currentCollection = this.collections[collectionName]
     // const rawCurrentCollection = toJS(currentCollection)
     // const rawAliasData = toJS(aliasData)
@@ -97,9 +97,8 @@ export default class ApiResourceManager {
     })
     const resourceResults = resourceRequest?.data?.data || []
 
-    if (config.alias) this.addAlias(config.alias, resourceResults)
-
     this._pushPayloadToCollection(resourceName, resourceResults)
 
+    if (config.alias) this.addAlias(config.alias, resourceResults, resourceName)
   }
 }
