@@ -28,11 +28,11 @@ const App = observer(() => {
     <div className="App">
       <div>React Store</div>
       <label>Cities from parent component</label>
-      <ul>
-        {cities?.map((city, index) => (
-          <li key={index}>{city.attributes.name}</li>
-        ))}
-      </ul>
+      {/* <ul> */}
+      {/*   {cities?.map((city, index) => ( */}
+      {/*     <li key={index}>{city.attributes.name}</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
       {/* ---- */}
       {/* <ul> */}
       {/*   {citiesResults?.map((city, index) => ( */}

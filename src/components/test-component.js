@@ -6,22 +6,22 @@ const TestComponent = observer(() => {
   const cities = Store.getCollection('cities')
   const citiesResults = Store.getAlias('citiesResults')
 
-  console.log('Child rerendering...');
+  console.log('Child rerendering...')
 
   useEffect(() => {
+    Store.query('cities', {
+      filter: { 'area.id': 131 },
+      sort: 'priority',
+    })
+
     Store.query(
       'cities',
       {
-        filter: { 'area.id': 131 },
+        filter: { 'area.id': 131, id: 2 },
         sort: 'priority',
       },
       { alias: 'citiesResults' }
     )
-
-    // Store.query('cities', {
-    //   filter: { 'area.id': 131, id: 2 },
-    //   sort: 'priority',
-    // })
   }, [])
 
   function updateCity() {
