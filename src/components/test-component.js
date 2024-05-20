@@ -17,7 +17,7 @@ const TestComponent = observer(() => {
     Store.query(
       'cities',
       {
-        filter: { 'area.id': 131, id: 2 },
+        filter: { 'area.id': 131, id: '17,21' },
         sort: 'priority',
       },
       { alias: 'citiesResults' }

@@ -62,13 +62,20 @@ export default class ApiResourceManager {
     return this.collections[collectionName]
   }
 
-  addAlias(aliasName, aliasData, collectionName) {
-    const currentCollection = this.collections[collectionName]
-    const rawCurrentCollection = toJS(currentCollection)
-    const rawAliasData = toJS(aliasData)
-    console.log(rawCurrentCollection)
-    const aliasCollection = []
-    // this.aliases[aliasName] = aliasData
+  addAlias(aliasName, aliasData) {
+    // const currentCollection = this.collections[collectionName]
+    // const rawCurrentCollection = toJS(currentCollection)
+    // const rawAliasData = toJS(aliasData)
+    // const updatedAliasData = []
+    //
+    // rawAliasData.forEach(aliasData => {
+    //   const currentCollectionIndex = lodash.findIndex(rawCurrentCollection, aliasData)
+    //
+    //   if (currentCollectionIndex) updatedAliasData.push(currentCollection[currentCollectionIndex])
+    //     console.log(currentCollectionIndex, currentCollection[currentCollectionIndex])
+    // })
+    // this.aliases[aliasName] = updatedAliasData
+    this.aliases[aliasName] = aliasData
   }
 
   getAlias(aliasName) {
@@ -90,8 +97,9 @@ export default class ApiResourceManager {
     })
     const resourceResults = resourceRequest?.data?.data || []
 
+    if (config.alias) this.addAlias(config.alias, resourceResults)
+
     this._pushPayloadToCollection(resourceName, resourceResults)
 
-    if (config.alias) this.addAlias(config.alias, resourceResults, resourceName)
   }
 }
