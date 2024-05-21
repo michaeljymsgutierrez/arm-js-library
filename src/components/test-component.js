@@ -1,24 +1,24 @@
 import { useEffect } from 'react'
 import * as lodash from 'lodash'
 import { observer } from 'mobx-react-lite'
-import { Store } from '../App'
+import { ARM } from '../App'
 
 const TestComponent = observer(() => {
-  const cities = Store.getCollection('cities')
-  const citiesResults = Store.getAlias('citiesResults')
-  const currentCity = Store.getAlias('currentCity')
+  const cities = ARM.getCollection('cities')
+  const citiesResults = ARM.getAlias('citiesResults')
+  const currentCity = ARM.getAlias('currentCity')
 
   console.log('Child rerendering...')
 
   useEffect(() => {
-    Store.queryRecord('cities', 17, {}, { alias: 'currentCity'})
+    ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
 
-    // Store.query('cities', {
+    // ARM.query('cities', {
     //   filter: { 'area.id': 131 },
     //   sort: 'priority',
     // })
     //
-    // Store.query(
+    // ARM.query(
     //   'cities',
     //   {
     //     filter: { 'area.id': 131, id: '17,21' },

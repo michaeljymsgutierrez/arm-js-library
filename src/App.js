@@ -3,22 +3,22 @@ import { observer } from 'mobx-react-lite'
 import ApiResourceManager from './api-resource-manager'
 import TestComponent from './components/test-component'
 
-export const Store = new ApiResourceManager(['cities', 'areas'])
+export const ARM = new ApiResourceManager(['cities', 'areas'])
 
-Store.setHost('https://staging.metromart.com')
+ARM.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  const currentCity = Store.getAlias('currentCity')
-  // const cities = Store.getCollection('cities')
-  // const citiesResults = Store.getAlias('citiesResults')
+  const currentCity = ARM.getAlias('currentCity')
+  // const cities = ARM.getCollection('cities')
+  // const citiesResults = ARM.getAlias('citiesResults')
 
   // useEffect(() => {
-  //   Store.query('cities', {
+  //   ARM.query('cities', {
   //     filter: { 'area.id': 131 },
   //     sort: 'priority',
   //   })
   //
-  //   Store.query('cities', {
+  //   ARM.query('cities', {
   //     filter: { 'area.id': 131, id: 2 },
   //     sort: 'priority',
   //   })
