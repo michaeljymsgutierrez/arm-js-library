@@ -167,5 +167,7 @@ export default class ApiResourceManager {
     })
   }
 
-  async findAll(findAllResourceName, findAllConfig = {}) {}
+  async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {
+
+  }
 }
