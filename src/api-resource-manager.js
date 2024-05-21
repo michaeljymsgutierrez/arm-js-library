@@ -77,9 +77,10 @@ export default class ApiResourceManager {
 
   _pushPayloadToCollection(collectionName, collectionData) {
     let currentCollection = this.collections[collectionName]
-    let updatedCollection = lodash.sortBy(
-      lodash.unionWith(currentCollection, collectionData, lodash.isEqual),
-      ['id']
+    let updatedCollection = lodash.unionWith(
+      currentCollection,
+      collectionData,
+      lodash.isEqual
     )
     this.collections[collectionName] = updatedCollection
 
