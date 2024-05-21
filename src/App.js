@@ -8,7 +8,8 @@ export const Store = new ApiResourceManager(['cities', 'areas'])
 Store.setHost('https://staging.metromart.com')
 
 const App = observer(() => {
-  const cities = Store.getCollection('cities')
+  const currentCity = Store.getAlias('currentCity')
+  // const cities = Store.getCollection('cities')
   // const citiesResults = Store.getAlias('citiesResults')
 
   // useEffect(() => {
@@ -39,6 +40,10 @@ const App = observer(() => {
       {/*     <li key={index}>{city.attributes.name} - Test</li> */}
       {/*   ))} */}
       {/* </ul> */}
+      ----
+      <ul>
+        <li>{currentCity?.attributes.name} - from alias of single data</li>
+      </ul>
       <TestComponent />
     </div>
   )
