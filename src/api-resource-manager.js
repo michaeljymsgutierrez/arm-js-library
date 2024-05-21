@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import { makeObservable, observable, computed, action, flow, toJS } from 'mobx'
+import { makeObservable, observable, computed, action, flow, toJS, set } from 'mobx'
 
 const { find, unionWith, isArray, isObject, isEqual } = lodash
 

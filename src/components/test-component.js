@@ -35,6 +35,34 @@ const TestComponent = observer(() => {
     // secondCity.attributes.name = 'Las Vegas'
     currentCity.attributes.name = 'Los Angeles'
 
+    // set
+    //   mobx
+    //   lodash
+    //
+    //   currentCity
+    //
+    //   set(object, { key: value })
+    //   set(object, 'key.attribute.name', value)
+    //
+    //
+    //   currentCity.set('key.attribute.name', value)
+    //   currentCity.set('relationships.area.data.id', value)
+    //   currentCity.setProperties({
+    //     name: 'Makati',
+    //     slug: '/makati'
+    //   })
+    //
+    // ARM.set(currentCity, {
+    //   attibutes: {
+    //     name: 'Makati', slug: '/makati'
+    //   },
+    //   relationships: {
+    //     area: { data: { id: 1
+    //       }
+    //     }
+    //   }
+    // })
+
     // set(firstCity, { attributes: { name: event.target.value }})
     // firstCity.set('name', 'Makati')
   }
