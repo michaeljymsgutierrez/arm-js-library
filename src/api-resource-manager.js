@@ -124,7 +124,7 @@ export default class ApiResourceManager {
     3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
     4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
     5. peekAll - get data from local store that returns collection of data
-    6. peekRecod - get data from local store that returns single data
+    6. peekRecord - get data from local store that returns single data
   */
 
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
