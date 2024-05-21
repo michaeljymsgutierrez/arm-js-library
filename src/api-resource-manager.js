@@ -117,13 +117,15 @@ export default class ApiResourceManager {
     })
   }
 
-  // TO DO: API ajax functions
-  // 1. query - call endpoint that returns collection of data
-  // 2. queryRecord - call endpoint that returns single data
-  // 3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
-  // 4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
-  // 5. peekAll - get data from local store that returns collection of data
-  // 6. peekRecod - get data from local store that returns single data
+  /*
+    TO DO: API ajax functions
+    1. query - call endpoint that returns collection of data
+    2. queryRecord - call endpoint that returns single data
+    3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
+    4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
+    5. peekAll - get data from local store that returns collection of data
+    6. peekRecod - get data from local store that returns single data
+  */
 
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
     const queryResourceRequest = await axios.get(queryResourceName, {
