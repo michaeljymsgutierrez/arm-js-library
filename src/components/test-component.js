@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import * as lodash from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Store } from '../App'
 
@@ -25,10 +26,13 @@ const TestComponent = observer(() => {
   }, [])
 
   function updateCity() {
-    const firstCity = cities[0]
-    const secondCity = cities[1]
+    const firstCity = lodash.find(citiesResults, { id: 17 })
+    const secondCity = lodash.find(citiesResults, { id: 21 })
     firstCity.attributes.name = 'Los Angeles'
     secondCity.attributes.name = 'Las Vegas'
+
+    // set(firstCity, { attributes: { name: event.target.value }})
+    // firstCity.set('name', 'Makati')
   }
 
   return (

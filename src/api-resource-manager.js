@@ -62,20 +62,13 @@ export default class ApiResourceManager {
     return this.collections[collectionName]
   }
 
-  addAlias(aliasName, aliasData, collectionName) {
-    // const currentCollection = this.collections[collectionName]
-    // const rawCurrentCollection = toJS(currentCollection)
-    // const rawAliasData = toJS(aliasData)
-    // const updatedAliasData = []
-    //
-    // rawAliasData.forEach(aliasData => {
-    //   const currentCollectionIndex = lodash.findIndex(rawCurrentCollection, aliasData)
-    //
-    //   if (currentCollectionIndex) updatedAliasData.push(currentCollection[currentCollectionIndex])
-    //     console.log(currentCollectionIndex, currentCollection[currentCollectionIndex])
-    // })
-    // this.aliases[aliasName] = updatedAliasData
-    this.aliases[aliasName] = aliasData
+  addAlias(aliasName, aliasedData, updatedCollection) {
+    let updatedAliasedData = []
+
+    aliasedData.forEach((data) =>
+      updatedAliasedData.push(lodash.find(updatedCollection, data))
+    )
+    this.aliases[aliasName] = updatedAliasedData
   }
 
   getAlias(aliasName) {
@@ -89,6 +82,10 @@ export default class ApiResourceManager {
       ['id']
     )
     this.collections[collectionName] = updatedCollection
+
+    return new Promise((resolve, reject) => {
+      resolve(this.collections[collectionName])
+    })
   }
 
   async query(resourceName, params = {}, config = {}) {
@@ -97,8 +94,11 @@ export default class ApiResourceManager {
     })
     const resourceResults = resourceRequest?.data?.data || []
 
-    this._pushPayloadToCollection(resourceName, resourceResults)
-
-    if (config.alias) this.addAlias(config.alias, resourceResults, resourceName)
+    this._pushPayloadToCollection(resourceName, resourceResults).then(
+      (updatedCollection) => {
+        if (config.alias)
+          this.addAlias(config.alias, resourceResults, updatedCollection)
+      }
+    )
   }
 }
