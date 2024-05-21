@@ -2,6 +2,8 @@ import axios from 'axios'
 import * as lodash from 'lodash'
 import { makeObservable, observable, computed, action, flow, toJS } from 'mobx'
 
+const { find, unionWith, isArray, isObject, isEqual } = lodash
+
 export default class ApiResourceManager {
   constructor(collections = []) {
     this.namespace = 'api/v1'
@@ -63,20 +65,20 @@ export default class ApiResourceManager {
   }
 
   addAlias(aliasName, aliasedData, updatedCollection) {
-    let isAliasedDataArray = lodash.isArray(aliasedData)
-    let isAliasedDataObject = lodash.isObject(aliasedData)
+    let isAliasedDataArray = isArray(aliasedData)
+    let isAliasedDataObject = isObject(aliasedData)
     let updatedAliasedData = null
 
     if (isAliasedDataArray) {
       updatedAliasedData = []
       aliasedData.forEach((data) =>
-        updatedAliasedData.push(lodash.find(updatedCollection, data))
+        updatedAliasedData.push(find(updatedCollection, data))
       )
     }
 
     if (isAliasedDataObject) {
       updatedAliasedData = {}
-      updatedAliasedData = lodash.find(updatedCollection, aliasedData)
+      updatedAliasedData = find(updatedCollection, aliasedData)
     }
 
     this.aliases[aliasName] = updatedAliasedData
@@ -88,26 +90,18 @@ export default class ApiResourceManager {
 
   _pushPayloadToCollection(collectionName, collectionData) {
     let currentCollection = this.collections[collectionName]
-    let isCollectionDataArray = lodash.isArray(collectionData)
-    let isCollectionDataObject = lodash.isObject(collectionData)
-    let updatedCollection = lodash.unionWith(
-      currentCollection,
-      [],
-      lodash.isEqual
-    )
+    let isCollectionDataArray = isArray(collectionData)
+    let isCollectionDataObject = isObject(collectionData)
+    let updatedCollection = unionWith(currentCollection, [], isEqual)
 
     if (isCollectionDataArray)
-      updatedCollection = lodash.unionWith(
-        currentCollection,
-        collectionData,
-        lodash.isEqual
-      )
+      updatedCollection = unionWith(currentCollection, collectionData, isEqual)
 
     if (isCollectionDataObject)
-      updatedCollection = lodash.unionWith(
+      updatedCollection = unionWith(
         currentCollection,
         [collectionData],
-        lodash.isEqual
+        isEqual
       )
 
     this.collections[collectionName] = updatedCollection
@@ -172,4 +166,6 @@ export default class ApiResourceManager {
         )
     })
   }
+
+  async findAll(findAllResourceName, findAllConfig = {}) {}
 }
