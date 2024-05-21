@@ -8,6 +8,8 @@ const TestComponent = observer(() => {
   const citiesResults = ARM.getAlias('citiesResults')
   const currentCity = ARM.getAlias('currentCity')
 
+  console.log(currentCity)
+
   console.log('Child rerendering...')
 
   useEffect(() => {

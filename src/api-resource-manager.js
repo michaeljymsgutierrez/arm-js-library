@@ -2,7 +2,7 @@ import axios from 'axios'
 import * as lodash from 'lodash'
 import { makeObservable, observable, computed, action, flow, toJS, set } from 'mobx'
 
-const { find, unionWith, isArray, isObject, isEqual } = lodash
+const { find, unionWith, isArray, isObject, isPresent, isEmpty, isEqual } = lodash
 
 export default class ApiResourceManager {
   constructor(collections = []) {
@@ -103,6 +103,8 @@ export default class ApiResourceManager {
         [collectionData],
         isEqual
       )
+
+    console.log(updatedCollection)
 
     this.collections[collectionName] = updatedCollection
 
