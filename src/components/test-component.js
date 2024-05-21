@@ -8,7 +8,7 @@ const TestComponent = observer(() => {
   const citiesResults = ARM.getAlias('citiesResults')
   const currentCity = ARM.getAlias('currentCity')
 
-  console.log(currentCity)
+  console.log(cities)
 
   console.log('Child rerendering...')
 

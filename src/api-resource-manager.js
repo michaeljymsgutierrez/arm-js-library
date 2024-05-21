@@ -1,8 +1,17 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import { makeObservable, observable, computed, action, flow, toJS, set } from 'mobx'
+import {
+  makeObservable,
+  observable,
+  computed,
+  action,
+  flow,
+  toJS,
+  set,
+} from 'mobx'
 
-const { find, unionWith, isArray, isObject, isPresent, isEmpty, isEqual } = lodash
+const { find, unionWith, isArray, isObject, isPresent, isEmpty, isEqual } =
+  lodash
 
 export default class ApiResourceManager {
   constructor(collections = []) {
@@ -18,8 +27,8 @@ export default class ApiResourceManager {
       collections: observable,
       aliases: observable,
       _pushPayloadToCollection: action,
-      addCollection: action,
-      addAlias: action,
+      _addCollection: action,
+      _addAlias: action,
     })
   }
 
@@ -39,7 +48,7 @@ export default class ApiResourceManager {
   }
 
   _initializeCollections(collections) {
-    collections.forEach((collection) => this.addCollection(collection, []))
+    collections.forEach((collection) => this._addCollection(collection, []))
   }
 
   _getBaseURL() {
@@ -50,33 +59,11 @@ export default class ApiResourceManager {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
-  /*
-    Define internal/external functions here.
-    These functions are functions that are being used inside ARM class and new ARM instance.
-  */
-
-  setHost(host) {
-    this.host = host
-    this._initializeAxiosConfig()
-  }
-
-  setNamespace(namespace) {
-    this.namespace = namespace
-  }
-
-  setHeadersCommon(key, value) {
-    axios.defaults.headers.common[`${key}`] = value
-  }
-
-  addCollection(collectionName, collectionData) {
+  _addCollection(collectionName, collectionData) {
     this.collections[collectionName] = collectionData
   }
 
-  getCollection(collectionName) {
-    return this.collections[collectionName]
-  }
-
-  addAlias(aliasName, aliasedData, updatedCollection) {
+  _addAlias(aliasName, aliasedData, updatedCollection) {
     let isAliasedDataArray = isArray(aliasedData)
     let isAliasedDataObject = isObject(aliasedData)
     let updatedAliasedData = null
@@ -94,10 +81,6 @@ export default class ApiResourceManager {
     }
 
     this.aliases[aliasName] = updatedAliasedData
-  }
-
-  getAlias(aliasName) {
-    return this.aliases[aliasName]
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
@@ -124,6 +107,32 @@ export default class ApiResourceManager {
   }
 
   /*
+    Define internal/external functions here.
+    These functions are functions that are being used inside ARM class and new ARM instance.
+  */
+
+  setHost(host) {
+    this.host = host
+    this._initializeAxiosConfig()
+  }
+
+  setNamespace(namespace) {
+    this.namespace = namespace
+  }
+
+  setHeadersCommon(key, value) {
+    axios.defaults.headers.common[`${key}`] = value
+  }
+
+  getCollection(collectionName) {
+    return this.collections[collectionName]
+  }
+
+  getAlias(aliasName) {
+    return this.aliases[aliasName]
+  }
+
+  /*
     TO DO: API ajax functions
     1. query - call endpoint that returns collection of data
     2. queryRecord - call endpoint that returns single data
@@ -142,7 +151,7 @@ export default class ApiResourceManager {
     this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
       (updatedCollection) => {
         if (queryConfig.alias)
-          this.addAlias(
+          this._addAlias(
             queryConfig.alias,
             queryResourceResults,
             updatedCollection
@@ -171,7 +180,7 @@ export default class ApiResourceManager {
       queryRecordResourceResults
     ).then((updatedCollection) => {
       if (queryRecordConfig.alias)
-        this.addAlias(
+        this._addAlias(
           queryRecordConfig.alias,
           queryRecordResourceResults,
           updatedCollection
@@ -179,7 +188,5 @@ export default class ApiResourceManager {
     })
   }
 
-  async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {
-
-  }
+  async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
 }
