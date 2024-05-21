@@ -23,12 +23,19 @@ export default class ApiResourceManager {
     })
   }
 
+  /*
+    Define internal functions here.
+    Internal functions are functions that are being used inside ARM class
+    and not being exposed on new ARM instance.
+    These function will be set to protected later on when tried to use on new ARM instance.
+  */
+
   _initializeAxiosConfig() {
     axios.defaults.baseURL = this._getBaseURL()
-    axios.defaults.headers.common['Authorization'] =
-      this._getAuthorizationToken()
-    axios.defaults.headers.common['Content-Type'] = 'application/vnd.api+json'
-    axios.defaults.headers.common['X-Client-Platform'] = 'Web'
+    // axios.defaults.headers.common['Authorization'] =
+    //   this._getAuthorizationToken()
+    // axios.defaults.headers.common['Content-Type'] = 'application/vnd.api+json'
+    // axios.defaults.headers.common['X-Client-Platform'] = 'Web'
   }
 
   _initializeCollections(collections) {
@@ -42,6 +49,11 @@ export default class ApiResourceManager {
   _getAuthorizationToken() {
     return `Token ${window.localStorage.getItem('token')}`
   }
+
+  /*
+    Define internal/external functions here.
+    These functions are functions that are being used inside ARM class and new ARM instance.
+  */
 
   setHost(host) {
     this.host = host
@@ -103,8 +115,6 @@ export default class ApiResourceManager {
         [collectionData],
         isEqual
       )
-
-    console.log(updatedCollection)
 
     this.collections[collectionName] = updatedCollection
 

@@ -35,7 +35,8 @@ const TestComponent = observer(() => {
     // const secondCity = lodash.find(citiesResults, { id: 21 })
     // firstCity.attributes.name = 'Los Angeles'
     // secondCity.attributes.name = 'Las Vegas'
-    currentCity.attributes.name = 'Los Angeles'
+    // currentCity.attributes.name = 'Los Angeles'
+    console.log(currentCity)
 
     // set
     //   mobx
