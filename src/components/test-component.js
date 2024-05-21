@@ -8,26 +8,28 @@ const TestComponent = observer(() => {
   const citiesResults = ARM.getAlias('citiesResults')
   const currentCity = ARM.getAlias('currentCity')
 
+  console.log(currentCity)
   console.log(cities)
 
   console.log('Child rerendering...')
 
   useEffect(() => {
-    ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
+    // ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
+    ARM.queryRecord('cities', 19, {}, { alias: 'currentCity'})
 
     // ARM.query('cities', {
     //   filter: { 'area.id': 131 },
     //   sort: 'priority',
     // })
     //
-    // ARM.query(
-    //   'cities',
-    //   {
-    //     filter: { 'area.id': 131, id: '17,21' },
-    //     sort: 'priority',
-    //   },
-    //   { alias: 'citiesResults' }
-    // )
+    ARM.query(
+      'cities',
+      {
+        filter: { 'area.id': 131, id: '17,21' },
+        sort: 'priority',
+      },
+      { alias: 'citiesResults' }
+    )
   }, [])
 
   function updateCity() {
@@ -79,11 +81,11 @@ const TestComponent = observer(() => {
         ))}
       </ul>
       ----
-      <ul>
-        {citiesResults?.map((city, index) => (
-          <li key={index}>{city.attributes.name} - from alias</li>
-        ))}
-      </ul>
+      {/* <ul> */}
+      {/*   {citiesResults?.map((city, index) => ( */}
+      {/*     <li key={index}>{city.attributes.name} - from alias</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
       ----
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>

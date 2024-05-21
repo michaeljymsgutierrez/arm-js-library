@@ -1,16 +1,9 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
-import {
-  makeObservable,
-  observable,
-  computed,
-  action,
-  flow,
-  toJS,
-  set,
-} from 'mobx'
+import CryptoJS from 'crypto-js'
+import { makeObservable, observable, computed, action, toJS, set } from 'mobx'
 
-const { find, unionWith, isArray, isObject, isPresent, isEmpty, isEqual } =
+const { find, unionWith, isArray, isPlainObject, isPresent, isEmpty, isEqual } =
   lodash
 
 export default class ApiResourceManager {
@@ -65,7 +58,7 @@ export default class ApiResourceManager {
 
   _addAlias(aliasName, aliasedData, updatedCollection) {
     let isAliasedDataArray = isArray(aliasedData)
-    let isAliasedDataObject = isObject(aliasedData)
+    let isAliasedDataObject = isPlainObject(aliasedData)
     let updatedAliasedData = null
 
     if (isAliasedDataArray) {
@@ -83,21 +76,30 @@ export default class ApiResourceManager {
     this.aliases[aliasName] = updatedAliasedData
   }
 
+  _generateHashID(object) {
+    let stringifyObject = JSON.stringify(object)
+    return CryptoJS.MD5(stringifyObject).toString()
+  }
+
   _pushPayloadToCollection(collectionName, collectionData) {
     let currentCollection = this.collections[collectionName]
     let isCollectionDataArray = isArray(collectionData)
-    let isCollectionDataObject = isObject(collectionData)
+    let isCollectionDataObject = isPlainObject(collectionData)
     let updatedCollection = unionWith(currentCollection, [], isEqual)
 
-    if (isCollectionDataArray)
+    if (isCollectionDataArray) {
+      collectionData.forEach(data => { data.hashId = this._generateHashID(data) })
       updatedCollection = unionWith(currentCollection, collectionData, isEqual)
+    }
 
-    if (isCollectionDataObject)
+    if (isCollectionDataObject) {
+      collectionData.hashId = this._generateHashID(collectionData)
       updatedCollection = unionWith(
         currentCollection,
         [collectionData],
         isEqual
       )
+    }
 
     this.collections[collectionName] = updatedCollection
 
