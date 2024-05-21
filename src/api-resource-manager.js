@@ -63,11 +63,22 @@ export default class ApiResourceManager {
   }
 
   addAlias(aliasName, aliasedData, updatedCollection) {
-    let updatedAliasedData = []
+    let isAliasedDataArray = lodash.isArray(aliasedData)
+    let isAliasedDataObject = lodash.isObject(aliasedData)
+    let updatedAliasedData = null
 
-    aliasedData.forEach((data) =>
-      updatedAliasedData.push(lodash.find(updatedCollection, data))
-    )
+    if (isAliasedDataArray) {
+      updatedAliasedData = []
+      aliasedData.forEach((data) =>
+        updatedAliasedData.push(lodash.find(updatedCollection, data))
+      )
+    }
+
+    if (isAliasedDataObject) {
+      updatedAliasedData = {}
+      updatedAliasedData = lodash.find(updatedCollection, aliasedData)
+    }
+
     this.aliases[aliasName] = updatedAliasedData
   }
 
@@ -76,17 +87,34 @@ export default class ApiResourceManager {
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
-    // let currentCollection = this.collections[collectionName]
-    // let updatedCollection = lodash.unionWith(
-    //   currentCollection,
-    //   collectionData,
-    //   lodash.isEqual
-    // )
-    // this.collections[collectionName] = updatedCollection
-    //
-    // return new Promise((resolve, reject) => {
-    //   resolve(this.collections[collectionName])
-    // })
+    let currentCollection = this.collections[collectionName]
+    let isCollectionDataArray = lodash.isArray(collectionData)
+    let isCollectionDataObject = lodash.isObject(collectionData)
+    let updatedCollection = lodash.unionWith(
+      currentCollection,
+      [],
+      lodash.isEqual
+    )
+
+    if (isCollectionDataArray)
+      updatedCollection = lodash.unionWith(
+        currentCollection,
+        collectionData,
+        lodash.isEqual
+      )
+
+    if (isCollectionDataObject)
+      updatedCollection = lodash.unionWith(
+        currentCollection,
+        [collectionData],
+        lodash.isEqual
+      )
+
+    this.collections[collectionName] = updatedCollection
+
+    return new Promise((resolve, reject) => {
+      resolve(this.collections[collectionName])
+    })
   }
 
   // TO DO: API ajax functions
@@ -127,12 +155,19 @@ export default class ApiResourceManager {
         params: queryRecordParams,
       }
     )
-    const queryReocrdResourceResults =
+    const queryRecordResourceResults =
       queryRecordResourceRequest?.data?.data || {}
 
     this._pushPayloadToCollection(
       queryRecordResourceName,
-      queryRecordResourceRequest
-    )
+      queryRecordResourceResults
+    ).then((updatedCollection) => {
+      if (queryRecordConfig.alias)
+        this.addAlias(
+          queryRecordConfig.alias,
+          queryRecordResourceResults,
+          updatedCollection
+        )
+    })
   }
 }
