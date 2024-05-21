@@ -10,19 +10,21 @@ const TestComponent = observer(() => {
   console.log('Child rerendering...')
 
   useEffect(() => {
-    Store.query('cities', {
-      filter: { 'area.id': 131 },
-      sort: 'priority',
-    })
+    Store.queryRecord('cities', 17, null, null)
 
-    Store.query(
-      'cities',
-      {
-        filter: { 'area.id': 131, id: '17,21' },
-        sort: 'priority',
-      },
-      { alias: 'citiesResults' }
-    )
+    // Store.query('cities', {
+    //   filter: { 'area.id': 131 },
+    //   sort: 'priority',
+    // })
+    //
+    // Store.query(
+    //   'cities',
+    //   {
+    //     filter: { 'area.id': 131, id: '17,21' },
+    //     sort: 'priority',
+    //   },
+    //   { alias: 'citiesResults' }
+    // )
   }, [])
 
   function updateCity() {

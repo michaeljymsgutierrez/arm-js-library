@@ -76,17 +76,17 @@ export default class ApiResourceManager {
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
-    let currentCollection = this.collections[collectionName]
-    let updatedCollection = lodash.unionWith(
-      currentCollection,
-      collectionData,
-      lodash.isEqual
-    )
-    this.collections[collectionName] = updatedCollection
-
-    return new Promise((resolve, reject) => {
-      resolve(this.collections[collectionName])
-    })
+    // let currentCollection = this.collections[collectionName]
+    // let updatedCollection = lodash.unionWith(
+    //   currentCollection,
+    //   collectionData,
+    //   lodash.isEqual
+    // )
+    // this.collections[collectionName] = updatedCollection
+    //
+    // return new Promise((resolve, reject) => {
+    //   resolve(this.collections[collectionName])
+    // })
   }
 
   // TO DO: API ajax functions
@@ -97,17 +97,42 @@ export default class ApiResourceManager {
   // 5. peekAll - get data from local store that returns collection of data
   // 6. peekRecod - get data from local store that returns single data
 
-  async query(resourceName, params = {}, config = {}) {
-    const resourceRequest = await axios.get(resourceName, {
-      params: params,
+  async query(queryResourceName, queryParams = {}, queryConfig = {}) {
+    const queryResourceRequest = await axios.get(queryResourceName, {
+      params: queryParams,
     })
-    const resourceResults = resourceRequest?.data?.data || []
+    const queryResourceResults = queryResourceRequest?.data?.data || []
 
-    this._pushPayloadToCollection(resourceName, resourceResults).then(
+    this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
       (updatedCollection) => {
-        if (config.alias)
-          this.addAlias(config.alias, resourceResults, updatedCollection)
+        if (queryConfig.alias)
+          this.addAlias(
+            queryConfig.alias,
+            queryResourceResults,
+            updatedCollection
+          )
       }
+    )
+  }
+
+  async queryRecord(
+    queryRecordResourceName,
+    queryRecordResourceId,
+    queryRecordParams = {},
+    queryRecordConfig = {}
+  ) {
+    const queryRecordResourceRequest = await axios.get(
+      `${queryRecordResourceName}/${queryRecordResourceId}`,
+      {
+        params: queryRecordParams,
+      }
+    )
+    const queryReocrdResourceResults =
+      queryRecordResourceRequest?.data?.data || {}
+
+    this._pushPayloadToCollection(
+      queryRecordResourceName,
+      queryRecordResourceRequest
     )
   }
 }
