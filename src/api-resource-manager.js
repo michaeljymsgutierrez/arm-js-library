@@ -50,7 +50,7 @@ export default class ApiResourceManager {
   }
 
   _initializeCollections(collections) {
-    collections.forEach((collection) => this._addCollection(collection, []))
+    forEach(collections, (collection) => this._addCollection(collection, []))
   }
 
   _getBaseURL() {
