@@ -9,7 +9,6 @@ const {
   forEach,
   gt,
   lt,
-  unionWith,
   isArray,
   isPlainObject,
   isEmpty,
@@ -67,23 +66,30 @@ export default class ApiResourceManager {
   }
 
   _addAlias(aliasName, aliasedData, updatedCollection) {
-    let isAliasedDataArray = isArray(aliasedData)
-    let isAliasedDataObject = isPlainObject(aliasedData)
-    let updatedAliasedData = null
+    const isAliasedDataArray = isArray(aliasedData)
+    const isAliasedDataObject = isPlainObject(aliasedData)
 
     if (isAliasedDataArray) {
-      updatedAliasedData = []
-      aliasedData.forEach((data) =>
-        updatedAliasedData.push(find(updatedCollection, data))
-      )
+      this.aliases[aliasName] = []
+
+      forEach(aliasedData, (data) => {
+        const collection = find(updatedCollection, {
+          hashId: data.hashId,
+        })
+
+        this.aliases[aliasName].push(collection)
+      })
     }
 
     if (isAliasedDataObject) {
-      updatedAliasedData = {}
-      updatedAliasedData = find(updatedCollection, aliasedData)
-    }
+      this.aliases[aliasName] = {}
 
-    this.aliases[aliasName] = updatedAliasedData
+      const collection = find(updatedCollection, {
+        hashId: aliasedData.hashId,
+      })
+
+      this.aliases[aliasName] = collection
+    }
   }
 
   _generateHashID(object) {
