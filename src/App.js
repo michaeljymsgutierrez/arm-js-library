@@ -11,7 +11,7 @@ ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
 ARM.setHeadersCommon('X-Client-Platform', 'Web')
 
 const App = observer(() => {
-  const currentCity = ARM.getAlias('currentCity')
+  // const currentCity = ARM.getAlias('currentCity')
   // const cities = ARM.getCollection('cities')
   // const citiesResults = ARM.getAlias('citiesResults')
 
@@ -30,8 +30,8 @@ const App = observer(() => {
 
   return (
     <div className="App">
-      <div>React Store</div>
-      <label>Cities from parent component</label>
+      <div>API Resource Manager</div>
+      {/* <label>Cities from parent component</label> */}
       {/* <ul> */}
       {/*   {cities?.map((city, index) => ( */}
       {/*     <li key={index}>{city.attributes.name}</li> */}

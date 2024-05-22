@@ -1,18 +1,30 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
+import * as mobx from 'mobx'
 import CryptoJS from 'crypto-js'
-import { makeObservable, observable, computed, action, toJS, set } from 'mobx'
 
 const {
+  set: setProperties,
+  makeObservable,
+  observable,
+  computed,
+  action,
+  toJS,
+} = mobx
+
+const {
+  get: getProperty,
+  set: setProperty,
+  keysIn,
   find,
   findIndex,
   forEach,
-  gt,
-  lt,
   isArray,
   isPlainObject,
   isEmpty,
   isEqual,
+  gt,
+  lt,
 } = lodash
 
 export default class ApiResourceManager {
@@ -42,6 +54,7 @@ export default class ApiResourceManager {
   */
 
   _initializeAxiosConfig() {
+    // Decide what are request default configurations
     axios.defaults.baseURL = this._getBaseURL()
     // axios.defaults.headers.common['Authorization'] =
     //   this._getAuthorizationToken()
@@ -97,6 +110,33 @@ export default class ApiResourceManager {
     return CryptoJS.MD5(stringifyObject).toString()
   }
 
+  _getProperty(key) {
+    return getProperty(this, key)
+  }
+
+  _setProperty(key, value) {
+    setProperty(this, key, value)
+  }
+
+  _setProperties(objectKeysValues) {
+    // This is where you left off Chael
+    // setProperties(this, objectKeysValues)
+    // setProperties(this, {   ...this, ...objectKeysValues, })
+  }
+
+  _injectActions(collection) {
+    const actions = {
+      getProperty:this._getProperty,
+      setProperty: this._setProperty,
+      setProperties: this._setProperties
+    }
+    const actionKeys = keysIn(actions)
+
+    forEach(actionKeys, actionKey => {
+      collection[actionKey] = actions[actionKey]
+    })
+  }
+
   _pushPayloadToCollection(collectionName, collectionData) {
     const isCollectionDataArray = isArray(collectionData)
     const isCollectionDataObject = isPlainObject(collectionData)
@@ -106,6 +146,8 @@ export default class ApiResourceManager {
         const collectionIndex = findIndex(this.collections[collectionName], {
           hashId: collection.hashId,
         })
+
+        this._injectActions(collection)
 
         if (lt(collectionIndex, 0))
           this.collections[collectionName].push(collection)
