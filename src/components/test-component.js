@@ -81,11 +81,11 @@ const TestComponent = observer(() => {
         ))}
       </ul>
       ----
-      {/* <ul> */}
-      {/*   {citiesResults?.map((city, index) => ( */}
-      {/*     <li key={index}>{city.attributes.name} - from alias</li> */}
-      {/*   ))} */}
-      {/* </ul> */}
+      <ul>
+        {citiesResults?.map((city, index) => (
+          <li key={index}>{city.attributes.name} - from alias</li>
+        ))}
+      </ul>
       ----
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>

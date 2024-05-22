@@ -44,9 +44,9 @@ const App = observer(() => {
       {/*   ))} */}
       {/* </ul> */}
       ----
-      <ul>
-        <li>{currentCity?.attributes.name} - from alias of single data</li>
-      </ul>
+      {/* <ul> */}
+      {/*   <li>{currentCity?.attributes.name} - from alias of single data</li> */}
+      {/* </ul> */}
       <TestComponent />
     </div>
   )
