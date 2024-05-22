@@ -3,8 +3,18 @@ import * as lodash from 'lodash'
 import CryptoJS from 'crypto-js'
 import { makeObservable, observable, computed, action, toJS, set } from 'mobx'
 
-const { find, unionWith, isArray, isPlainObject, isPresent, isEmpty, isEqual } =
-  lodash
+const {
+  find,
+  findIndex,
+  forEach,
+  gt,
+  lt,
+  unionWith,
+  isArray,
+  isPlainObject,
+  isEmpty,
+  isEqual,
+} = lodash
 
 export default class ApiResourceManager {
   constructor(collections = []) {
@@ -77,31 +87,39 @@ export default class ApiResourceManager {
   }
 
   _generateHashID(object) {
-    let stringifyObject = JSON.stringify(object)
+    const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
-    let currentCollection = this.collections[collectionName]
-    let isCollectionDataArray = isArray(collectionData)
-    let isCollectionDataObject = isPlainObject(collectionData)
-    let updatedCollection = unionWith(currentCollection, [], isEqual)
+    const isCollectionDataArray = isArray(collectionData)
+    const isCollectionDataObject = isPlainObject(collectionData)
 
     if (isCollectionDataArray) {
-      collectionData.forEach(data => { data.hashId = this._generateHashID(data) })
-      updatedCollection = unionWith(currentCollection, collectionData, isEqual)
+      forEach(collectionData, (collection) => {
+        const collectionIndex = findIndex(this.collections[collectionName], {
+          hashId: collection.hashId,
+        })
+
+        if (lt(collectionIndex, 0))
+          this.collections[collectionName].push(collection)
+
+        if (gt(collectionIndex, 0))
+          this.collections[collectionName][collectionIndex] = collection
+      })
     }
 
     if (isCollectionDataObject) {
-      collectionData.hashId = this._generateHashID(collectionData)
-      updatedCollection = unionWith(
-        currentCollection,
-        [collectionData],
-        isEqual
-      )
-    }
+      const collectionIndex = findIndex(this.collections[collectionName], {
+        hashId: collectionData.hashId,
+      })
 
-    this.collections[collectionName] = updatedCollection
+      if (lt(collectionIndex, 0))
+        this.collections[collectionName].push(collectionData)
+
+      if (gt(collectionIndex, 0))
+        this.collections[collectionName][collectionIndex] = collectionData
+    }
 
     return new Promise((resolve, reject) => {
       resolve(this.collections[collectionName])
@@ -150,6 +168,10 @@ export default class ApiResourceManager {
     })
     const queryResourceResults = queryResourceRequest?.data?.data || []
 
+    forEach(queryResourceResults, (queryResourceResult) => {
+      queryResourceResult.hashId = this._generateHashID(queryResourceResult)
+    })
+
     this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
       (updatedCollection) => {
         if (queryConfig.alias)
@@ -176,6 +198,10 @@ export default class ApiResourceManager {
     )
     const queryRecordResourceResults =
       queryRecordResourceRequest?.data?.data || {}
+
+    queryRecordResourceResults.hashId = this._generateHashID(
+      queryRecordResourceResults
+    )
 
     this._pushPayloadToCollection(
       queryRecordResourceName,

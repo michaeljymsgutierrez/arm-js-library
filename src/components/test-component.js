@@ -7,20 +7,17 @@ const TestComponent = observer(() => {
   const cities = ARM.getCollection('cities')
   const citiesResults = ARM.getAlias('citiesResults')
   const currentCity = ARM.getAlias('currentCity')
-
-  console.log(currentCity)
-  console.log(cities)
-
-  console.log('Child rerendering...')
-
+  //
+  // console.log('Child rerendering...')
+  //
   useEffect(() => {
     // ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
     ARM.queryRecord('cities', 19, {}, { alias: 'currentCity'})
 
-    // ARM.query('cities', {
-    //   filter: { 'area.id': 131 },
-    //   sort: 'priority',
-    // })
+    ARM.query('cities', {
+      filter: { 'area.id': 131 , id: '22,23' },
+      sort: 'priority',
+    })
     //
     ARM.query(
       'cities',
@@ -38,7 +35,7 @@ const TestComponent = observer(() => {
     // firstCity.attributes.name = 'Los Angeles'
     // secondCity.attributes.name = 'Las Vegas'
     // currentCity.attributes.name = 'Los Angeles'
-    console.log(currentCity)
+    // console.log(currentCity)
 
     // set
     //   mobx
