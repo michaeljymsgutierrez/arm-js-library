@@ -58,17 +58,37 @@ const TestComponent = observer(() => {
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>
       </ul>
-      <br />
-      <label>
-        City: &nbsp;
-        <input
-          value={currentCity?.getProperty('attributes.name')}
-          onChange={(event) =>
-            currentCity?.setProperty('attributes.name', event.target.value)
-          }
-        />
-      </label>
-
+      <div>
+        <div>
+          Name:
+          <input
+            value={currentCity?.getProperty('attributes.name')}
+            onChange={(event) =>
+              currentCity?.setProperty('attributes.name', event.target.value)
+            }
+          />
+        </div>
+        <div>
+          Priority:
+          <input
+            type="number"
+            value={currentCity?.getProperty('attributes.priority')}
+            onChange={(event) =>
+              currentCity?.setProperty('attributes.priority', event.target.value)
+            }
+          />
+        </div>
+        <div>
+          Latitude:
+          <input
+            value={currentCity?.getProperty('attributes.label-latitude')}
+            onChange={(event) =>
+              currentCity?.setProperty('attributes.label-latitude', event.target.value)
+            }
+          />
+        </div>
+      </div>
+      <br/>
       <button onClick={updateCity}>Update</button>
     </div>
   )

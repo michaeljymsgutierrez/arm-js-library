@@ -4,7 +4,6 @@ import * as mobx from 'mobx'
 import CryptoJS from 'crypto-js'
 
 const {
-  set: setProperties,
   makeObservable,
   observable,
   computed,
