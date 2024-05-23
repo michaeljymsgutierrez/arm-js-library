@@ -58,9 +58,9 @@ const TestComponent = observer(() => {
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>
       </ul>
-      <div class="form-container">
-        <div class="form-field">
-          <span class="form-field-label">Name:</span>
+      <div className="form-container">
+        <div className="form-field">
+          <span className="form-field-label">Name:</span>
           <input
             value={currentCity?.getProperty('attributes.name')}
             onChange={(event) =>
@@ -68,8 +68,8 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div class="form-field">
-          <span class="form-field-label">Priority:</span>
+        <div className="form-field">
+          <span className="form-field-label">Priority:</span>
           <input
             type="number"
             value={currentCity?.getProperty('attributes.priority')}
@@ -78,8 +78,8 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div class="form-field">
-          <span class="form-field-label">Latitude:</span>
+        <div className="form-field">
+          <span className="form-field-label">Latitude:</span>
           <input
             value={currentCity?.getProperty('attributes.label-latitude')}
             onChange={(event) =>
@@ -87,8 +87,8 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div class="form-field">
-          <span class="form-field-label">Longitude:</span>
+        <div className="form-field">
+          <span className="form-field-label">Longitude:</span>
           <input
             value={currentCity?.getProperty('attributes.label-longitude')}
             onChange={(event) =>
@@ -96,7 +96,7 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div class="form-field">
+        <div className="form-field">
           <button onClick={updateCity}>Update</button>
         </div>
       </div>
