@@ -108,7 +108,7 @@ export default class ApiResourceManager {
     }
   }
 
-  _generateHashID(object) {
+  _generateHashId(object) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
@@ -229,7 +229,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
 
     forEach(queryResourceResults, (queryResourceResult) => {
-      queryResourceResult.hashId = this._generateHashID(queryResourceResult)
+      queryResourceResult.hashId = this._generateHashId(queryResourceResult)
     })
 
     this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
@@ -259,7 +259,7 @@ export default class ApiResourceManager {
     const queryRecordResourceResults =
       queryRecordResourceRequest?.data?.data || {}
 
-    queryRecordResourceResults.hashId = this._generateHashID(
+    queryRecordResourceResults.hashId = this._generateHashId(
       queryRecordResourceResults
     )
 
