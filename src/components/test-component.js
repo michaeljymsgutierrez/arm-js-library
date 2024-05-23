@@ -58,9 +58,9 @@ const TestComponent = observer(() => {
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>
       </ul>
-      <div>
-        <div>
-          Name:
+      <div class="form-container">
+        <div class="form-field">
+          <span class="form-field-label">Name:</span>
           <input
             value={currentCity?.getProperty('attributes.name')}
             onChange={(event) =>
@@ -68,8 +68,8 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div>
-          Priority:
+        <div class="form-field">
+          <span class="form-field-label">Priority:</span>
           <input
             type="number"
             value={currentCity?.getProperty('attributes.priority')}
@@ -78,8 +78,8 @@ const TestComponent = observer(() => {
             }
           />
         </div>
-        <div>
-          Latitude:
+        <div class="form-field">
+          <span class="form-field-label">Latitude:</span>
           <input
             value={currentCity?.getProperty('attributes.label-latitude')}
             onChange={(event) =>
@@ -87,9 +87,19 @@ const TestComponent = observer(() => {
             }
           />
         </div>
+        <div class="form-field">
+          <span class="form-field-label">Longitude:</span>
+          <input
+            value={currentCity?.getProperty('attributes.label-longitude')}
+            onChange={(event) =>
+              currentCity?.setProperty('attributes.label-longitude', event.target.value)
+            }
+          />
+        </div>
+        <div class="form-field">
+          <button onClick={updateCity}>Update</button>
+        </div>
       </div>
-      <br/>
-      <button onClick={updateCity}>Update</button>
     </div>
   )
 })
