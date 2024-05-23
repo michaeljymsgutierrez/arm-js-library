@@ -19,12 +19,15 @@ const {
   find,
   findIndex,
   forEach,
+  isObject,
   isArray,
   isPlainObject,
   isEmpty,
   isEqual,
   gt,
   lt,
+  flatMap,
+  entries,
 } = lodash
 
 export default class ApiResourceManager {
@@ -119,20 +122,29 @@ export default class ApiResourceManager {
   }
 
   _setProperties(objectKeysValues) {
-    // This is where you left off Chael
-    // setProperties(this, objectKeysValues)
-    // setProperties(this, {   ...this, ...objectKeysValues, })
+    function objectToArray(obj, prefix = '') {
+      return flatMap(entries(obj), ([key, value]) => {
+        const newKey = prefix ? `${prefix}.${key}` : key
+        if (isObject(value) && !isArray(value) && value !== null) {
+          return objectToArray(value, newKey)
+        } else {
+          return { key: newKey, value: value }
+        }
+      })
+    }
+    const keysAndValues = objectToArray(objectKeysValues)
+    forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
   }
 
   _injectActions(collection) {
     const actions = {
-      getProperty:this._getProperty,
+      getProperty: this._getProperty,
       setProperty: this._setProperty,
-      setProperties: this._setProperties
+      setProperties: this._setProperties,
     }
     const actionKeys = keysIn(actions)
 
-    forEach(actionKeys, actionKey => {
+    forEach(actionKeys, (actionKey) => {
       collection[actionKey] = actions[actionKey]
     })
   }

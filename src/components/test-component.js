@@ -37,8 +37,7 @@ const TestComponent = observer(() => {
     // console.log(firstCity.getProperty('attributes.name'))
 
     // firstCity.setProperty('attributes.name', 'Baltimore City')
-    firstCity.setProperties({ attributes: { names: 'Baltimore City' }})
-    console.log(JSON.stringify(firstCity))
+    firstCity.setProperties({ attributes: { name: 'Baltimore City' }})
   }
 
   return (
