@@ -12,10 +12,10 @@ const TestComponent = observer(() => {
 
   useEffect(() => {
     // ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
-    ARM.queryRecord('cities', 19, {}, { alias: 'currentCity'})
+    ARM.queryRecord('cities', 19, {}, { alias: 'currentCity' })
 
     ARM.query('cities', {
-      filter: { 'area.id': 131 , id: '22,23' },
+      filter: { 'area.id': 131, id: '22,23' },
       sort: 'priority',
     })
     //
@@ -37,7 +37,7 @@ const TestComponent = observer(() => {
     // console.log(firstCity.getProperty('attributes.name'))
 
     // firstCity.setProperty('attributes.name', 'Baltimore City')
-    firstCity.setProperties({ attributes: { name: 'Baltimore City' }})
+    firstCity.setProperties({ attributes: { name: 'Baltimore City' } })
   }
 
   return (
@@ -58,7 +58,18 @@ const TestComponent = observer(() => {
       <ul>
         <li>{currentCity?.attributes.name} - from alias of single data</li>
       </ul>
-      <button onClick={updateCity}>Update First City</button>
+      <br />
+      <label>
+        City: &nbsp;
+        <input
+          value={currentCity?.getProperty('attributes.name')}
+          onChange={(event) =>
+            currentCity?.setProperty('attributes.name', event.target.value)
+          }
+        />
+      </label>
+
+      <button onClick={updateCity}>Update</button>
     </div>
   )
 })

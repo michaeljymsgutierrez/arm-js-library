@@ -174,6 +174,8 @@ export default class ApiResourceManager {
         hashId: collectionData.hashId,
       })
 
+      this._injectActions(collectionData)
+
       if (lt(collectionIndex, 0))
         this.collections[collectionName].push(collectionData)
 
