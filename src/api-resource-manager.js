@@ -131,8 +131,8 @@ export default class ApiResourceManager {
 
   _injectActions(collection) {
     const actions = {
-      getProperty: this._getProperty,
-      setProperty: this._setProperty,
+      get: this._getProperty,
+      set: this._setProperty,
       setProperties: this._setProperties,
     }
     const actionKeys = keysIn(actions)

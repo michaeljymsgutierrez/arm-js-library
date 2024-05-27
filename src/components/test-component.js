@@ -33,10 +33,10 @@ const TestComponent = observer(() => {
     const firstCity = lodash.find(citiesResults, { id: 17 })
     // const secondCity = lodash.find(citiesResults, { id: 21 })
 
-    // console.log(firstCity.getProperty('id'))
-    // console.log(firstCity.getProperty('attributes.name'))
+    // console.log(firstCity.get('id'))
+    // console.log(firstCity.get('attributes.name'))
 
-    // firstCity.setProperty('attributes.name', 'Baltimore City')
+    // firstCity.set('attributes.name', 'Baltimore City')
     firstCity.setProperties({ attributes: { name: 'Baltimore City' } })
   }
 
@@ -57,15 +57,17 @@ const TestComponent = observer(() => {
       ----
       <ul>
         {/* <li>{currentCity?.attributess.name} - from alias of single data</li> */}
-        <li>{currentCity?.getProperty('attributess.name')} - from alias of single data</li>
+        <li>
+          {currentCity?.get('attributess.name')} - from alias of single data
+        </li>
       </ul>
       <div className="form-container">
         <div className="form-field">
           <span className="form-field-label">Name:</span>
           <input
-            value={currentCity?.getProperty('attributes.name')}
+            value={currentCity?.get('attributes.name')}
             onChange={(event) =>
-              currentCity?.setProperty('attributes.name', event.target.value)
+              currentCity?.set('attributes.name', event.target.value)
             }
           />
         </div>
@@ -73,27 +75,27 @@ const TestComponent = observer(() => {
           <span className="form-field-label">Priority:</span>
           <input
             type="number"
-            value={currentCity?.getProperty('attributes.priority')}
+            value={currentCity?.get('attributes.priority')}
             onChange={(event) =>
-              currentCity?.setProperty('attributes.priority', event.target.value)
+              currentCity?.set('attributes.priority', event.target.value)
             }
           />
         </div>
         <div className="form-field">
           <span className="form-field-label">Latitude:</span>
           <input
-            value={currentCity?.getProperty('attributes.label-latitude')}
+            value={currentCity?.get('attributes.label-latitude')}
             onChange={(event) =>
-              currentCity?.setProperty('attributes.label-latitude', event.target.value)
+              currentCity?.set('attributes.label-latitude', event.target.value)
             }
           />
         </div>
         <div className="form-field">
           <span className="form-field-label">Longitude:</span>
           <input
-            value={currentCity?.getProperty('attributes.label-longitude')}
+            value={currentCity?.get('attributes.label-longitude')}
             onChange={(event) =>
-              currentCity?.setProperty('attributes.label-longitude', event.target.value)
+              currentCity?.set('attributes.label-longitude', event.target.value)
             }
           />
         </div>
