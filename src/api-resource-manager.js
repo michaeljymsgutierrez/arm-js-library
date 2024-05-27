@@ -200,11 +200,15 @@ export default class ApiResourceManager {
   }
 
   getCollection(collectionName) {
-    return this.collections[collectionName]
+    return this.collections[collectionName] || []
   }
 
-  getAlias(aliasName) {
-    return this.aliases[aliasName]
+  getAlias(aliasName, fallbackData) {
+    const isFallbackDataObject = isPlainObject(fallbackData)
+
+    if (isFallbackDataObject) this._injectActions(fallbackData)
+
+    return this.aliases[aliasName] || fallbackData
   }
 
   /*
