@@ -3,13 +3,7 @@ import * as lodash from 'lodash'
 import * as mobx from 'mobx'
 import CryptoJS from 'crypto-js'
 
-const {
-  makeObservable,
-  observable,
-  computed,
-  action,
-  toJS,
-} = mobx
+const { makeObservable, observable, computed, action, toJS } = mobx
 
 const {
   get: getProperty,
@@ -230,6 +224,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
 
     forEach(queryResourceResults, (queryResourceResult) => {
+      queryResourceResult.collectionName = queryResourceName
       queryResourceResult.hashId = this._generateHashId(queryResourceResult)
     })
 
@@ -260,6 +255,7 @@ export default class ApiResourceManager {
     const queryRecordResourceResults =
       queryRecordResourceRequest?.data?.data || {}
 
+    queryRecordResourceResults.collectionName = queryRecordResourceName
     queryRecordResourceResults.hashId = this._generateHashId(
       queryRecordResourceResults
     )
