@@ -12,7 +12,7 @@ const TestComponent = observer(() => {
 
   useEffect(() => {
     // ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
-    ARM.queryRecord('cities', 19, {}, { alias: 'currentCity' })
+    ARM.queryRecord('cities', 20, {}, { alias: 'currentCity' })
 
     ARM.query('cities', {
       filter: { 'area.id': 131, id: '22,23' },
@@ -56,7 +56,8 @@ const TestComponent = observer(() => {
       </ul>
       ----
       <ul>
-        <li>{currentCity?.attributes.name} - from alias of single data</li>
+        {/* <li>{currentCity?.attributess.name} - from alias of single data</li> */}
+        <li>{currentCity?.getProperty('attributess.name')} - from alias of single data</li>
       </ul>
       <div className="form-container">
         <div className="form-field">
