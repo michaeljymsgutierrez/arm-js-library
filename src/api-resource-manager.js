@@ -231,6 +231,7 @@ export default class ApiResourceManager {
       params: queryParams,
     })
     const queryResourceResults = queryResourceRequest?.data?.data || []
+    const queryResourceIncludeResults = queryResourceRequest?.data?.included || []
 
     forEach(queryResourceResults, (queryResourceResult) => {
       queryResourceResult.collectionName = queryResourceName
