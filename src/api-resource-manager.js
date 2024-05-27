@@ -29,6 +29,7 @@ export default class ApiResourceManager {
     this.host = window.location.origin
     this.collections = {}
     this.aliases = {}
+    this.payloadIncludeReference = 'type'
 
     this._initializeCollections(collections)
     this._initializeAxiosConfig()
@@ -197,6 +198,10 @@ export default class ApiResourceManager {
 
   setHeadersCommon(key, value) {
     axios.defaults.headers.common[`${key}`] = value
+  }
+
+  setPayloadIncludeReference(key) {
+    this.payloadIncludeReference = key
   }
 
   getCollection(collectionName) {
