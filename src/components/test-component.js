@@ -16,6 +16,7 @@ const TestComponent = observer(() => {
 
     ARM.query('cities', {
       filter: { 'area.id': 131, id: '22,23' },
+      include: 'areas',
       sort: 'priority',
     })
     //
