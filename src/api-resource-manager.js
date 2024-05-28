@@ -61,8 +61,6 @@ export default class ApiResourceManager {
     axios.defaults.baseURL = this._getBaseURL()
     // axios.defaults.headers.common['Authorization'] =
     //   this._getAuthorizationToken()
-    // axios.defaults.headers.common['Content-Type'] = 'application/vnd.api+json'
-    // axios.defaults.headers.common['X-Client-Platform'] = 'Web'
   }
 
   _initializeCollections(collections) {
