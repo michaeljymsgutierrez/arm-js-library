@@ -222,6 +222,12 @@ export default class ApiResourceManager {
     this.payloadIncludedReference = key
   }
 
+  setGlobal() {
+    console.log(this)
+    if (window) window.ARM = this
+    if (global) global.ARM = this
+  }
+
   getCollection(collectionName) {
     return this.collections[collectionName] || []
   }

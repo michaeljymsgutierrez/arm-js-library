@@ -6,10 +6,11 @@ import TestComponent from './components/test-component'
 
 export const ARM = new ApiResourceManager(['cities', 'areas'])
 
-ARM.setHost('https://team-staging.metromart.com')
+ARM.setHost('https://www.metromart.com')
 ARM.setHeadersCommon('Authorization', `Token ${window.localStorage.getItem('token')}`)
 ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
 ARM.setHeadersCommon('X-Client-Platform', 'Web')
+ARM.setGlobal()
 
 const App = observer(() => {
   // const currentCity = ARM.getAlias('currentCity')
