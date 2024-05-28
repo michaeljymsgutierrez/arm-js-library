@@ -130,6 +130,10 @@ export default class ApiResourceManager {
     forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
   }
 
+  /*
+    Function for injecting
+    getter and setter on observable collection
+  */
   _injectActions(collection) {
     const actions = {
       get: this._getProperty,
@@ -141,6 +145,16 @@ export default class ApiResourceManager {
     forEach(actionKeys, (actionKey) => {
       collection[actionKey] = actions[actionKey]
     })
+  }
+
+  /*
+    Function for injecting reference keys such as:
+    collectionName - identifier for which the collection data belongs to
+    hashId - identifier for which collection data should be updated
+  */
+  _injectReferenceKeys(collectionName, collectionData) {
+    collectionData.collectionName = collectionName
+    collectionData.hashId = this._generateHashId(collectionData)
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
