@@ -231,7 +231,8 @@ export default class ApiResourceManager {
       params: queryParams,
     })
     const queryResourceResults = queryResourceRequest?.data?.data || []
-    const queryResourceIncludedResults = queryResourceRequest?.data?.included || []
+    const queryResourceIncludedResults =
+      queryResourceRequest?.data?.included || []
 
     forEach(queryResourceResults, (queryResourceResult) => {
       queryResourceResult.collectionName = queryResourceName
@@ -239,10 +240,18 @@ export default class ApiResourceManager {
     })
 
     forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
-      queryResourceIncludedResult.collectionName = getProperty(queryResourceIncludedResult, this.payloadIncludeReference)
-      queryResourceIncludedResult.hashId = this._generateHashId(queryResourceIncludedResult)
+      queryResourceIncludedResult.collectionName = getProperty(
+        queryResourceIncludedResult,
+        this.payloadIncludeReference
+      )
+      queryResourceIncludedResult.hashId = this._generateHashId(
+        queryResourceIncludedResult
+      )
 
-      this._pushPayloadToCollection(queryResourceIncludedResult.collectionName, queryResourceIncludedResult)
+      this._pushPayloadToCollection(
+        queryResourceIncludedResult.collectionName,
+        queryResourceIncludedResult
+      )
     })
 
     this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
