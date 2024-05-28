@@ -247,6 +247,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
     const queryResourceIncludedResults =
       queryResourceRequest?.data?.included || []
+    let updatedCollection = []
 
     forEach(queryResourceResults, (queryResourceResult) =>
       this._injectReferenceKeys(queryResourceName, queryResourceResult)
@@ -263,16 +264,13 @@ export default class ApiResourceManager {
       )
     })
 
-    this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
-      (updatedCollection) => {
-        if (queryConfig.alias)
-          this._addAlias(
-            queryConfig.alias,
-            queryResourceResults,
-            updatedCollection
-          )
-      }
+    updatedCollection = await this._pushPayloadToCollection(
+      queryResourceName,
+      queryResourceResults
     )
+
+    if (queryConfig.alias)
+      this._addAlias(queryConfig.alias, queryResourceResults, updatedCollection)
   }
 
   async queryRecord(
