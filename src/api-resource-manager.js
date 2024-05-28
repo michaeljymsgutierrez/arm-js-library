@@ -318,7 +318,7 @@ export default class ApiResourceManager {
       queryRecordResourceResults
     )
 
-    if (queryConfig.alias)
+    if (queryRecordConfig.alias)
       this._addAlias(
         queryRecordConfig.alias,
         queryRecordResourceResults,
