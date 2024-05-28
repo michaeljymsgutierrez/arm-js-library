@@ -29,7 +29,7 @@ export default class ApiResourceManager {
     this.host = window.location.origin
     this.collections = {}
     this.aliases = {}
-    this.payloadIncludeReference = 'type'
+    this.payloadIncludedReference = 'type'
 
     this._initializeCollections(collections)
     this._initializeAxiosConfig()
@@ -215,7 +215,7 @@ export default class ApiResourceManager {
   }
 
   setPayloadIncludeReference(key) {
-    this.payloadIncludeReference = key
+    this.payloadIncludedReference = key
   }
 
   getCollection(collectionName) {
@@ -248,20 +248,15 @@ export default class ApiResourceManager {
     const queryResourceIncludedResults =
       queryResourceRequest?.data?.included || []
 
-    forEach(queryResourceResults, (queryResourceResult) => {
-      queryResourceResult.collectionName = queryResourceName
-      queryResourceResult.hashId = this._generateHashId(queryResourceResult)
-    })
+    forEach(queryResourceResults, (queryResourceResult) =>
+      this._injectReferenceKeys(queryResourceName, queryResourceResult)
+    )
 
     forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
-      queryResourceIncludedResult.collectionName = getProperty(
-        queryResourceIncludedResult,
-        this.payloadIncludeReference
-      )
-      queryResourceIncludedResult.hashId = this._generateHashId(
+      this._injectReferenceKeys(
+        getProperty(queryResourceIncludedResult, this.payloadIncludedReference),
         queryResourceIncludedResult
       )
-
       this._pushPayloadToCollection(
         queryResourceIncludedResult.collectionName,
         queryResourceIncludedResult
