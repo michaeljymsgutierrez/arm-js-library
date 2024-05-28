@@ -27,7 +27,7 @@ const App = observer(() => {
   //     sort: 'priority',
   //   })
   // }, [])
-  console.log('Parent rerendering...';
+  console.log('Parent rerendering...');
 
   return (
     <div className="App">
