@@ -66,7 +66,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "autopush": "git add . && git commit -m 'Pushed for now' && git push origin main"
+    "autopush": "git add . && git commit -m 'Auto push' && git push origin main"
   },
   "eslintConfig": {
     "extends": [
