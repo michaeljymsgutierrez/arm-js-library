@@ -12,7 +12,9 @@ const TestComponent = observer(() => {
 
   useEffect(() => {
     // ARM.queryRecord('cities', 17, {}, { alias: 'currentCity'})
-    ARM.queryRecord('cities', 20, {}, { alias: 'currentCity' })
+    ARM.queryRecord('cities', 20, {
+      include: 'areas',
+    }, { alias: 'currentCity' })
 
     ARM.query('cities', {
       filter: { 'area.id': 131, id: '22,23' },
