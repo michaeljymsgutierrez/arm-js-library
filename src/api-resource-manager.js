@@ -231,11 +231,18 @@ export default class ApiResourceManager {
       params: queryParams,
     })
     const queryResourceResults = queryResourceRequest?.data?.data || []
-    const queryResourceIncludeResults = queryResourceRequest?.data?.included || []
+    const queryResourceIncludedResults = queryResourceRequest?.data?.included || []
 
     forEach(queryResourceResults, (queryResourceResult) => {
       queryResourceResult.collectionName = queryResourceName
       queryResourceResult.hashId = this._generateHashId(queryResourceResult)
+    })
+
+    forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
+      queryResourceIncludedResult.collectionName = getProperty(queryResourceIncludedResult, this.payloadIncludeReference)
+      queryResourceIncludedResult.hashId = this._generateHashId(queryResourceIncludedResult)
+
+      this._pushPayloadToCollection(queryResourceIncludedResult.collectionName, queryResourceIncludedResult)
     })
 
     this._pushPayloadToCollection(queryResourceName, queryResourceResults).then(
