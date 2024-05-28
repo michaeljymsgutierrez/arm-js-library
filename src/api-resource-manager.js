@@ -223,7 +223,6 @@ export default class ApiResourceManager {
   }
 
   setGlobal() {
-    console.log(this)
     if (window) window.ARM = this
     if (global) global.ARM = this
   }
