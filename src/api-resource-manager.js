@@ -289,6 +289,7 @@ export default class ApiResourceManager {
       queryRecordResourceRequest?.data?.data || {}
     const queryRecordResourceIncludedResults =
       queryRecordResourceResults?.data?.included || []
+    let updatedCollection = []
 
     this._injectReferenceKeys(
       queryRecordResourceName,
@@ -312,17 +313,17 @@ export default class ApiResourceManager {
       }
     )
 
-    this._pushPayloadToCollection(
+    updatedCollection = await this._pushPayloadToCollection(
       queryRecordResourceName,
       queryRecordResourceResults
-    ).then((updatedCollection) => {
-      if (queryRecordConfig.alias)
-        this._addAlias(
-          queryRecordConfig.alias,
-          queryRecordResourceResults,
-          updatedCollection
-        )
-    })
+    )
+
+    if (queryConfig.alias)
+      this._addAlias(
+        queryRecordConfig.alias,
+        queryRecordResourceResults,
+        updatedCollection
+      )
   }
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
