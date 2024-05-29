@@ -156,6 +156,10 @@ export default class ApiResourceManager {
       : collectionHashId
   }
 
+  /*
+    Function for pushing data obtained from API methods
+    to respective collections
+  */
   _pushPayloadToCollection(collectionName, collectionData) {
     const isCollectionDataArray = isArray(collectionData)
     const isCollectionDataObject = isPlainObject(collectionData)
