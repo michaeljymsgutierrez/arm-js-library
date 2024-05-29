@@ -350,6 +350,10 @@ export default class ApiResourceManager {
     this._injectReferenceKeys(collectionName, collectionData)
     this._injectActions(collectionData)
     this.collections[collectionName].push(collectionData)
+
+    return find(this.collections[collectionName], {
+      hashId: collectionData.hashId,
+    })
   }
 
   /*
