@@ -14,21 +14,22 @@ const {
 const {
   get: getProperty,
   set: setProperty,
-  keysIn,
   find,
   findIndex,
-  forEach,
   isObject,
   isArray,
   isPlainObject,
   isNumber,
+  isNull,
   // isEmpty,
   // isEqual,
   gt,
   lt,
   flatMap,
-  entries,
   map,
+  entries,
+  forEach,
+  keysIn,
 } = lodash
 
 export default class ApiResourceManager {
@@ -144,9 +145,15 @@ export default class ApiResourceManager {
     collectionName - identifier for which the collection data belongs to
     hashId - identifier for which collection data should be updated
   */
-  _injectReferenceKeys(collectionName, collectionData) {
+  _injectReferenceKeys(
+    collectionName,
+    collectionData,
+    collectionHashId = null
+  ) {
     collectionData.collectionName = collectionName
-    collectionData.hashId = this._generateHashId(collectionData)
+    collectionData.hashId = isNull(collectionHashId)
+      ? this._generateHashId(collectionData)
+      : collectionHashId
   }
 
   _pushPayloadToCollection(collectionName, collectionData) {
@@ -207,8 +214,10 @@ export default class ApiResourceManager {
   async _saveRecord() {
     const isValidId = isNumber(this.id)
     const currentHashId = this.hashId
+    const resourceId = this.id
+    const resourceName = this.collectionName
     const resourceURL = isValidId
-      ? `${this.collectionName}/${this.id}`
+      ? `${resourceName}/${resourceId}`
       : this.collectionName
     const resourceMethod = isValidId ? 'patch' : 'post'
     const resourceData = { data: this }
@@ -222,6 +231,34 @@ export default class ApiResourceManager {
     const saveRecordResourceIncludedResults =
       saveRecordResourceResults?.data?.included || []
     let updatedCollectionData = []
+
+    this._injectReferenceKeys(
+      resourceName,
+      saveRecordResourceResults,
+      currentHashId
+    )
+
+    forEach(
+      saveRecordResourceIncludedResults,
+      (saveRecordResourceIncludedResult) => {
+        this._injectReferenceKeys(
+          getProperty(
+            saveRecordResourceIncludedResult,
+            this.payloadIncludedReference
+          ),
+          saveRecordResourceIncludedResult
+        )
+        this._pushPayloadToCollection(
+          saveRecordResourceIncludedResult.collectionName,
+          saveRecordResourceIncludedResult
+        )
+      }
+    )
+
+    updatedCollectionData = await this._pushPayloadToCollection(
+      resourceName,
+      saveRecordResourceResults
+    )
   }
 
   /*
