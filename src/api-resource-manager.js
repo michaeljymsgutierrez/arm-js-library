@@ -259,6 +259,8 @@ export default class ApiResourceManager {
       resourceName,
       saveRecordResourceResults
     )
+
+    return updatedCollectionData
   }
 
   /*
@@ -341,6 +343,8 @@ export default class ApiResourceManager {
 
     if (queryConfig.alias)
       this._addAlias(queryConfig.alias, updatedCollectionData)
+
+    return updatedCollectionData
   }
 
   async queryRecord(
@@ -390,6 +394,8 @@ export default class ApiResourceManager {
 
     if (queryRecordConfig.alias)
       this._addAlias(queryRecordConfig.alias, updatedCollectionData)
+
+    return updatedCollectionData
   }
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
