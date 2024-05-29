@@ -213,6 +213,11 @@ export default class ApiResourceManager {
       url: resourceURL,
       data: resourceData
     })
+    const saveRecordResourceResults =
+      saveRecordResourceRequest?.data?.data || {}
+    const saveRecordResourceIncludedResults =
+      saveRecordResourceResults?.data?.included || []
+    let updatedCollection = []
   }
 
   /*
