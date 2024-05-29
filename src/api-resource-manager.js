@@ -7,8 +7,6 @@ const {
   makeObservable,
   observable,
   action,
-  //computed,
-  //toJS
 } = mobx
 
 const {
@@ -21,8 +19,6 @@ const {
   isPlainObject,
   isNumber,
   isNull,
-  // isEmpty,
-  // isEqual,
   gt,
   lt,
   flatMap,
@@ -59,9 +55,12 @@ export default class ApiResourceManager {
     These function will be set to protected later on when tried to use on new ARM instance.
   */
 
+  /*
+    Function for initializeing Axios Configurations.
+  */
   _initializeAxiosConfig() {
-    // Decide what are request default configurations
     axios.defaults.baseURL = this._getBaseURL()
+    // Decide what are request default configurations
     // axios.defaults.headers.common['Authorization'] =
     //   this._getAuthorizationToken()
   }
@@ -124,17 +123,29 @@ export default class ApiResourceManager {
     Functions for property management.
     Property management are set of function for setting and getting
     values from observable collection.
-    This functions are also injectables.
+    This functions are injectables.
   */
 
+  /*
+    Function for getting single property of observable collection
+    where it is being injected.
+  */
   _getProperty(key) {
     return getProperty(this, key)
   }
 
+  /*
+    Function for setting single property of observable collection
+    where it is being injected.
+  */
   _setProperty(key, value) {
     setProperty(this, key, value)
   }
 
+  /*
+    Function for setting multiple properties of observable collection
+    where it is being injected.
+  */
   _setProperties(objectKeysValues) {
     function objectToArray(obj, prefix = '') {
       return flatMap(entries(obj), ([key, value]) => {
@@ -151,8 +162,64 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for injecting
-    getter and setter on observable collection.
+    Function for persisting collection on the server,
+    where it is being injected.
+  */
+  async _saveRecord() {
+    const isValidId = isNumber(this.id)
+    const currentHashId = this.hashId
+    const resourceId = this.id
+    const resourceName = this.collectionName
+    const resourceURL = isValidId
+      ? `${resourceName}/${resourceId}`
+      : this.collectionName
+    const resourceMethod = isValidId ? 'patch' : 'post'
+    const resourceData = { data: this }
+    const saveRecordResourceRequest = await axios({
+      method: resourceMethod,
+      url: resourceURL,
+      data: resourceData,
+    })
+    const saveRecordResourceResults =
+      saveRecordResourceRequest?.data?.data || {}
+    const saveRecordResourceIncludedResults =
+      saveRecordResourceResults?.data?.included || []
+    let updatedCollectionData = []
+
+    this._injectReferenceKeys(
+      resourceName,
+      saveRecordResourceResults,
+      currentHashId
+    )
+
+    forEach(
+      saveRecordResourceIncludedResults,
+      (saveRecordResourceIncludedResult) => {
+        this._injectReferenceKeys(
+          getProperty(
+            saveRecordResourceIncludedResult,
+            this.payloadIncludedReference
+          ),
+          saveRecordResourceIncludedResult
+        )
+        this._pushPayloadToCollection(
+          saveRecordResourceIncludedResult.collectionName,
+          saveRecordResourceIncludedResult
+        )
+      }
+    )
+
+    updatedCollectionData = await this._pushPayloadToCollection(
+      resourceName,
+      saveRecordResourceResults
+    )
+
+    return updatedCollectionData
+  }
+
+  /*
+    Function for injecting actions
+    on observable collection.
   */
   _injectActions(collection) {
     const actions = {
@@ -241,58 +308,6 @@ export default class ApiResourceManager {
     return new Promise((resolve, reject) => {
       resolve(updatedCollectionData)
     })
-  }
-
-  async _saveRecord() {
-    const isValidId = isNumber(this.id)
-    const currentHashId = this.hashId
-    const resourceId = this.id
-    const resourceName = this.collectionName
-    const resourceURL = isValidId
-      ? `${resourceName}/${resourceId}`
-      : this.collectionName
-    const resourceMethod = isValidId ? 'patch' : 'post'
-    const resourceData = { data: this }
-    const saveRecordResourceRequest = await axios({
-      method: resourceMethod,
-      url: resourceURL,
-      data: resourceData,
-    })
-    const saveRecordResourceResults =
-      saveRecordResourceRequest?.data?.data || {}
-    const saveRecordResourceIncludedResults =
-      saveRecordResourceResults?.data?.included || []
-    let updatedCollectionData = []
-
-    this._injectReferenceKeys(
-      resourceName,
-      saveRecordResourceResults,
-      currentHashId
-    )
-
-    forEach(
-      saveRecordResourceIncludedResults,
-      (saveRecordResourceIncludedResult) => {
-        this._injectReferenceKeys(
-          getProperty(
-            saveRecordResourceIncludedResult,
-            this.payloadIncludedReference
-          ),
-          saveRecordResourceIncludedResult
-        )
-        this._pushPayloadToCollection(
-          saveRecordResourceIncludedResult.collectionName,
-          saveRecordResourceIncludedResult
-        )
-      }
-    )
-
-    updatedCollectionData = await this._pushPayloadToCollection(
-      resourceName,
-      saveRecordResourceResults
-    )
-
-    return updatedCollectionData
   }
 
   /*
