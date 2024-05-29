@@ -123,7 +123,7 @@ export default class ApiResourceManager {
   /*
     Functions for property management.
     Property management are set of function for setting and getting
-    values from observable properties.
+    values from observable collection.
     This functions are also injectables.
   */
 
@@ -152,7 +152,7 @@ export default class ApiResourceManager {
 
   /*
     Function for injecting
-    getter and setter on observable collection
+    getter and setter on observable collection.
   */
   _injectActions(collection) {
     const actions = {
@@ -186,7 +186,7 @@ export default class ApiResourceManager {
 
   /*
     Function for pushing data obtained from API methods
-    to respective collections
+    to respective collections.
   */
   _pushPayloadToCollection(collectionName, collectionData) {
     const isCollectionDataArray = isArray(collectionData)
