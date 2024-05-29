@@ -349,7 +349,7 @@ export default class ApiResourceManager {
     return this.aliases[aliasName] || fallbackData
   }
 
-  _createRecord(collectionName, collectionData = { id: uuidv4() }) {
+  createRecord(collectionName, collectionData = { id: uuidv4() }) {
     this._injectReferenceKeys(collectionName, collectionData)
     this._injectActions(collectionData)
     this.collections[collectionName].push(collectionData)
