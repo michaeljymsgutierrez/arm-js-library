@@ -97,6 +97,9 @@ export default class ApiResourceManager {
     this.collections[collectionName] = collectionData
   }
 
+  /*
+    Function for aliasing data defined on API methods.
+  */
   _addAlias(aliasName, updatedCollectionData) {
     const isUpdatedCollectionDataArray = isArray(updatedCollectionData)
     const isUpdatedCollectionDataObject = isPlainObject(updatedCollectionData)
@@ -109,10 +112,20 @@ export default class ApiResourceManager {
     }
   }
 
+  /*
+    Function for generating collection data unique id.
+  */
   _generateHashId(object) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
+
+  /*
+    Functions for property management.
+    Property management are set of function for setting and getting
+    values from observable properties.
+    This functions are also injectables.
+  */
 
   _getProperty(key) {
     return getProperty(this, key)
