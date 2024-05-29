@@ -18,6 +18,7 @@ const {
   isNull,
   gt,
   lt,
+  has,
   flatMap,
   map,
   entries,
@@ -346,7 +347,9 @@ export default class ApiResourceManager {
     return this.aliases[aliasName] || fallbackData
   }
 
-  createRecord(collectionName, collectionData = { id: uuidv4() }) {
+  createRecord(collectionName, collectionData = {}) {
+    collectionData.id = uuidv4()
+
     this._injectReferenceKeys(collectionName, collectionData)
     this._injectActions(collectionData)
     this.collections[collectionName].push(collectionData)
