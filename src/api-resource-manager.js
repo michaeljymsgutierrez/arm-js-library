@@ -21,6 +21,7 @@ const {
   isObject,
   isArray,
   isPlainObject,
+  isNumber,
   // isEmpty,
   // isEqual,
   gt,
@@ -201,8 +202,17 @@ export default class ApiResourceManager {
     })
   }
 
-  _saveRecord() {
-    console.log(this)
+  async _saveRecord() {
+    const isValidId = isNumber(this.id)
+    const currentHashId = this.hashId
+    const resourceURL = isValidId ? `${this.collectionName}/${this.id}` : this.collectionName
+    const resourceMethod = isValidId ? 'patch' : 'post'
+    const resourceData = { data: this }
+    const saveRecordResourceRequest = await axios({
+      method: resourceMethod,
+      url: resourceURL,
+      data: resourceData
+    })
   }
 
   /*
