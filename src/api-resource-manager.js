@@ -28,6 +28,7 @@ const {
   lt,
   flatMap,
   entries,
+  map,
 } = lodash
 
 export default class ApiResourceManager {
@@ -80,30 +81,15 @@ export default class ApiResourceManager {
     this.collections[collectionName] = collectionData
   }
 
-  _addAlias(aliasName, aliasedData, updatedCollection) {
-    const isAliasedDataArray = isArray(aliasedData)
-    const isAliasedDataObject = isPlainObject(aliasedData)
+  _addAlias(aliasName, updatedCollectionData) {
+    const isUpdatedCollectionDataArray = isArray(updatedCollectionData)
+    const isUpdatedCollectionDataObject = isPlainObject(updatedCollectionData)
 
-    if (isAliasedDataArray) {
-      this.aliases[aliasName] = []
+    if (isUpdatedCollectionDataArray)
+      this.aliases[aliasName] = updatedCollectionData || []
 
-      forEach(aliasedData, (data) => {
-        const collection = find(updatedCollection, {
-          hashId: data.hashId,
-        })
-
-        this.aliases[aliasName].push(collection)
-      })
-    }
-
-    if (isAliasedDataObject) {
-      this.aliases[aliasName] = {}
-
-      const collection = find(updatedCollection, {
-        hashId: aliasedData.hashId,
-      })
-
-      this.aliases[aliasName] = collection
+    if (isUpdatedCollectionDataObject) {
+      this.aliases[aliasName] = updatedCollectionData || {}
     }
   }
 
@@ -166,8 +152,11 @@ export default class ApiResourceManager {
   _pushPayloadToCollection(collectionName, collectionData) {
     const isCollectionDataArray = isArray(collectionData)
     const isCollectionDataObject = isPlainObject(collectionData)
+    let updatedCollectionData = null
 
     if (isCollectionDataArray) {
+      const collectionDataHashIds = map(collectionData, 'hashId')
+
       forEach(collectionData, (collection) => {
         const collectionIndex = findIndex(this.collections[collectionName], {
           hashId: collection.hashId,
@@ -181,9 +170,18 @@ export default class ApiResourceManager {
         if (gt(collectionIndex, 0))
           this.collections[collectionName][collectionIndex] = collection
       })
+
+      updatedCollectionData = map(
+        collectionDataHashIds,
+        (collectionDataHashId) =>
+          find(this.collections[collectionName], {
+            hashId: collectionDataHashId,
+          })
+      )
     }
 
     if (isCollectionDataObject) {
+      const collectionDataHashId = collectionData.hashId
       const collectionIndex = findIndex(this.collections[collectionName], {
         hashId: collectionData.hashId,
       })
@@ -195,29 +193,35 @@ export default class ApiResourceManager {
 
       if (gt(collectionIndex, 0))
         this.collections[collectionName][collectionIndex] = collectionData
+
+      updatedCollectionData = find(this.collections[collectionName], {
+        hashId: collectionDataHashId,
+      })
     }
 
     return new Promise((resolve, reject) => {
-      resolve(this.collections[collectionName])
+      resolve(updatedCollectionData)
     })
   }
 
   async _saveRecord() {
     const isValidId = isNumber(this.id)
     const currentHashId = this.hashId
-    const resourceURL = isValidId ? `${this.collectionName}/${this.id}` : this.collectionName
+    const resourceURL = isValidId
+      ? `${this.collectionName}/${this.id}`
+      : this.collectionName
     const resourceMethod = isValidId ? 'patch' : 'post'
     const resourceData = { data: this }
     const saveRecordResourceRequest = await axios({
       method: resourceMethod,
       url: resourceURL,
-      data: resourceData
+      data: resourceData,
     })
     const saveRecordResourceResults =
       saveRecordResourceRequest?.data?.data || {}
     const saveRecordResourceIncludedResults =
       saveRecordResourceResults?.data?.included || []
-    let updatedCollection = []
+    let updatedCollectionData = []
   }
 
   /*
@@ -276,7 +280,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
     const queryResourceIncludedResults =
       queryResourceRequest?.data?.included || []
-    let updatedCollection = []
+    let updatedCollectionData = []
 
     forEach(queryResourceResults, (queryResourceResult) =>
       this._injectReferenceKeys(queryResourceName, queryResourceResult)
@@ -293,13 +297,13 @@ export default class ApiResourceManager {
       )
     })
 
-    updatedCollection = await this._pushPayloadToCollection(
+    updatedCollectionData = await this._pushPayloadToCollection(
       queryResourceName,
       queryResourceResults
     )
 
     if (queryConfig.alias)
-      this._addAlias(queryConfig.alias, queryResourceResults, updatedCollection)
+      this._addAlias(queryConfig.alias, updatedCollectionData)
   }
 
   async queryRecord(
@@ -318,7 +322,7 @@ export default class ApiResourceManager {
       queryRecordResourceRequest?.data?.data || {}
     const queryRecordResourceIncludedResults =
       queryRecordResourceResults?.data?.included || []
-    let updatedCollection = []
+    let updatedCollectionData = []
 
     this._injectReferenceKeys(
       queryRecordResourceName,
@@ -342,17 +346,13 @@ export default class ApiResourceManager {
       }
     )
 
-    updatedCollection = await this._pushPayloadToCollection(
+    updatedCollectionData = await this._pushPayloadToCollection(
       queryRecordResourceName,
       queryRecordResourceResults
     )
 
     if (queryRecordConfig.alias)
-      this._addAlias(
-        queryRecordConfig.alias,
-        queryRecordResourceResults,
-        updatedCollection
-      )
+      this._addAlias(queryRecordConfig.alias, updatedCollectionData)
   }
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
