@@ -66,18 +66,33 @@ export default class ApiResourceManager {
     //   this._getAuthorizationToken()
   }
 
+  /*
+    Function for initializing collections from ARM instance.
+  */
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
 
+  /*
+    Function for getting baseURL from
+    host and namespace defined.
+  */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`
   }
 
+  /*
+    Function for getting token,
+    by default it is being fetched on saved local storage
+    key 'token'.
+  */
   _getAuthorizationToken() {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
+  /*
+    Function for adding new collection and collection data.
+  */
   _addCollection(collectionName, collectionData) {
     this.collections[collectionName] = collectionData
   }
