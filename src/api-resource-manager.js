@@ -142,6 +142,7 @@ export default class ApiResourceManager {
     const actions = {
       get: this._getProperty,
       set: this._setProperty,
+      save: this._saveRecord,
       setProperties: this._setProperties,
     }
     const actionKeys = keysIn(actions)
@@ -198,6 +199,10 @@ export default class ApiResourceManager {
     return new Promise((resolve, reject) => {
       resolve(this.collections[collectionName])
     })
+  }
+
+  _saveRecord() {
+    console.log(this)
   }
 
   /*
