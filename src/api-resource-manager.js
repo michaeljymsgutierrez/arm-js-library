@@ -1,13 +1,13 @@
+[warn] --jsx-bracket-same-line is deprecated.
+[warn] Ignored unknown option --loglevel=error. Did you mean --log-level?
+[warn] Ignored unknown option --stdin.
 import axios from 'axios'
 import * as lodash from 'lodash'
 import * as mobx from 'mobx'
+import { v4 as uuidv4 } from 'uuid'
 import CryptoJS from 'crypto-js'
 
-const {
-  makeObservable,
-  observable,
-  action,
-} = mobx
+const { makeObservable, observable, action } = mobx
 
 const {
   get: getProperty,
@@ -347,6 +347,12 @@ export default class ApiResourceManager {
     if (isFallbackDataObject) this._injectActions(fallbackData)
 
     return this.aliases[aliasName] || fallbackData
+  }
+
+  _createRecord(collectionName, collectionData = { id: uuidv4() }) {
+    this._injectReferenceKeys(collectionName, collectionData)
+    this._injectActions(collectionData)
+    this.collections[collectionName].push(collectionData)
   }
 
   /*
