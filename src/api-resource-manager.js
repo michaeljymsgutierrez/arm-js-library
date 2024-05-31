@@ -224,7 +224,7 @@ export default class ApiResourceManager {
       get: this._getProperty,
       set: this._setProperty,
       save: this._saveRecord,
-      setProperties: this._setProperties,
+      setProperties: this._setProperties
     }
     const actionKeys = keysIn(actions)
 
