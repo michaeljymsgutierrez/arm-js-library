@@ -19,7 +19,7 @@ const App = observer(() => {
 
   useEffect(() => {
     ARM.query('related-keywords', {
-      page: { size: 5, number: 1 }
+      sort: '-id'
     }, { alias: 'relatedKeywords' })
   }, [])
 
