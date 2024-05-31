@@ -18,7 +18,9 @@ const App = observer(() => {
   const relatedKeywords = ARM.getAlias('relatedKeywords', [])
 
   useEffect(() => {
-    ARM.query('related-keywords', {}, { alias: 'relatedKeywords' })
+    ARM.query('related-keywords', {
+      page: { size: 5, number: 1 }
+    }, { alias: 'relatedKeywords' })
   }, [])
 
   return (
