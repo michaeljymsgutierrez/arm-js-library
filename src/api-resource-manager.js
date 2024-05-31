@@ -163,16 +163,19 @@ export default class ApiResourceManager {
     Function for persisting collection on the server,
     where it is being injected.
   */
-  async _saveRecord() {
-    const isValidId = isNumber(this.id)
-    const currentHashId = this.hashId
-    const resourceId = this.id
-    const resourceName = this.collectionName
+  async _saveRecord(record) {
+    const collection = find(this.collections[record.collectionName], {
+      hashId: record.hashId,
+    })
+    const isValidId = isNumber(collection.id)
+    const currentHashId = collection.hashId
+    const resourceId = collection.id
+    const resourceName = collection.collectionName
     const resourceURL = isValidId
       ? `${resourceName}/${resourceId}`
       : this.collectionName
     const resourceMethod = isValidId ? 'patch' : 'post'
-    const resourceData = { data: this }
+    const resourceData = { data: record }
     const saveRecordResourceRequest = await axios({
       method: resourceMethod,
       url: resourceURL,
@@ -223,8 +226,10 @@ export default class ApiResourceManager {
     const actions = {
       get: this._getProperty,
       set: this._setProperty,
-      save: this._saveRecord,
-      setProperties: this._setProperties
+      save: () => {
+        this._saveRecord(collection)
+      },
+      setProperties: this._setProperties,
     }
     const actionKeys = keysIn(actions)
 
