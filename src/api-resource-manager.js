@@ -218,6 +218,61 @@ export default class ApiResourceManager {
     return updatedCollectionData
   }
 
+  async _deleteRecord(record) {
+    // const collection = find(this.collections[record.collectionName], {
+    //   hashId: record.hashId,
+    // })
+    // const isValidId = isNumber(collection.id)
+    // const currentHashId = collection.hashId
+    // const resourceId = collection.id
+    // const resourceName = collection.collectionName
+    // const resourceURL = isValidId
+    //   ? `${resourceName}/${resourceId}`
+    //   : this.collectionName
+    // const resourceMethod = isValidId ? 'patch' : 'post'
+    // const resourceData = { data: record }
+    // const saveRecordResourceRequest = await axios({
+    //   method: resourceMethod,
+    //   url: resourceURL,
+    //   data: resourceData,
+    // })
+    // const saveRecordResourceResults =
+    //   saveRecordResourceRequest?.data?.data || {}
+    // const saveRecordResourceIncludedResults =
+    //   saveRecordResourceResults?.data?.included || []
+    // let updatedCollectionData = []
+    //
+    // this._injectReferenceKeys(
+    //   resourceName,
+    //   saveRecordResourceResults,
+    //   currentHashId
+    // )
+    //
+    // forEach(
+    //   saveRecordResourceIncludedResults,
+    //   (saveRecordResourceIncludedResult) => {
+    //     this._injectReferenceKeys(
+    //       getProperty(
+    //         saveRecordResourceIncludedResult,
+    //         this.payloadIncludedReference
+    //       ),
+    //       saveRecordResourceIncludedResult
+    //     )
+    //     this._pushPayloadToCollection(
+    //       saveRecordResourceIncludedResult.collectionName,
+    //       saveRecordResourceIncludedResult
+    //     )
+    //   }
+    // )
+    //
+    // updatedCollectionData = await this._pushPayloadToCollection(
+    //   resourceName,
+    //   saveRecordResourceResults
+    // )
+    //
+    // return updatedCollectionData
+  }
+
   /*
     Function for injecting actions
     on observable collection.
