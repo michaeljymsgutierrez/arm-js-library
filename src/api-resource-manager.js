@@ -159,6 +159,12 @@ export default class ApiResourceManager {
     forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
   }
 
+  unloadRecord(record) {
+    const collection = findIndex(this.collections[record.collectionName], {
+      hashId: record.hashId,
+    })
+  }
+
   /*
     Function for persisting collection on the server,
     where it is being injected.
