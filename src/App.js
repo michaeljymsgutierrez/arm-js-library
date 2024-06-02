@@ -84,7 +84,7 @@ const App = observer(() => {
             <td>{address.get('attributes.kind')}</td>
             <td>
               <button onClick={() => address.save()}>Save Record</button>
-              <button>Delete Record</button>
+              <button onClick={() => address.destroyRecord()}>Delete Record</button>
               <button
                 onClick={() => {
                   ARM.unloadRecord(address)

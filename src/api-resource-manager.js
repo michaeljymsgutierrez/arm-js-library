@@ -211,7 +211,7 @@ export default class ApiResourceManager {
       saveRecordResourceRequest?.data?.data || {}
     const saveRecordResourceIncludedResults =
       saveRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = []
+    let updatedCollectionRecords = {}
 
     this._injectReferenceKeys(
       resourceName,
@@ -245,7 +245,62 @@ export default class ApiResourceManager {
   }
 
   async _deleteRecord(currentRecord) {
+    const collectionRecord = find(
+      this.collections[currentRecord.collectionName],
+      {
+        hashId: currentRecord.hashId,
+      }
+    )
+    const isValidId = isNumber(collectionRecord.id)
+    const currentHashId = collectionRecord.hashId
+    const resourceId = collectionRecord.id
+    const resourceName = collectionRecord.collectionName
+    const resourceURL = isValidId
+      ? `${resourceName}/${resourceId}`
+      : collectionRecord.collectionName
+    const resourceMethod = 'delete'
+    const resourceData = { data: collectionRecord }
+    const deleteRecordResourceRequest = await axios({
+      method: resourceMethod,
+      url: resourceURL
+    })
+    const deleteRecordResourceResults =
+      deleteRecordResourceRequest?.data?.data || {}
+    const deleteRecordResourceIncludedResults =
+      deleteRecordResourceResults?.data?.included || []
+    let updatedCollectionRecords = {}
 
+    // this._injectReferenceKeys(
+    //   resourceName,
+    //   saveRecordResourceResults,
+    //   currentHashId
+    // )
+
+    forEach(
+      deleteRecordResourceIncludedResults,
+      (deleteRecordResourceIncludedResult) => {
+        this._injectReferenceKeys(
+          getProperty(
+            deleteRecordResourceIncludedResult,
+            this.payloadIncludedReference
+          ),
+          deleteRecordResourceIncludedResult
+        )
+        this._pushPayloadToCollection(
+          deleteRecordResourceIncludedResult.collectionName,
+          deleteRecordResourceIncludedResult
+        )
+      }
+    )
+
+    updatedCollectionRecords = deleteRecordResourceResults
+    //
+    // updatedCollectionRecords = await this._pushPayloadToCollection(
+    //   resourceName,
+    //   saveRecordResourceResults
+    // )
+    //
+    return updatedCollectionRecords
   }
 
   /*
