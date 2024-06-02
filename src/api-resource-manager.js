@@ -544,4 +544,7 @@ export default class ApiResourceManager {
   }
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
+  async findRecord() {}
+  async peekAll() {}
+  async peekRecord() {}
 }
