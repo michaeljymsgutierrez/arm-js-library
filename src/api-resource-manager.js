@@ -18,7 +18,6 @@ const {
   isNull,
   gte,
   lt,
-  has,
   flatMap,
   map,
   entries,
@@ -461,7 +460,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
     const queryResourceIncludedResults =
       queryResourceRequest?.data?.included || []
-    let updatedCollectionData = []
+    let updatedCollectionRecords = []
 
     forEach(queryResourceResults, (queryResourceResult) =>
       this._injectReferenceKeys(queryResourceName, queryResourceResult)
@@ -478,15 +477,15 @@ export default class ApiResourceManager {
       )
     })
 
-    updatedCollectionData = await this._pushPayloadToCollection(
+    updatedCollectionRecords = await this._pushPayloadToCollection(
       queryResourceName,
       queryResourceResults
     )
 
     if (queryConfig.alias)
-      this._addAlias(queryConfig.alias, updatedCollectionData)
+      this._addAlias(queryConfig.alias, updatedCollectionRecords)
 
-    return updatedCollectionData
+    return updatedCollectionRecords
   }
 
   async queryRecord(
@@ -505,7 +504,7 @@ export default class ApiResourceManager {
       queryRecordResourceRequest?.data?.data || {}
     const queryRecordResourceIncludedResults =
       queryRecordResourceResults?.data?.included || []
-    let updatedCollectionData = []
+    let updatedCollectionRecords = []
 
     this._injectReferenceKeys(
       queryRecordResourceName,
@@ -529,15 +528,15 @@ export default class ApiResourceManager {
       }
     )
 
-    updatedCollectionData = await this._pushPayloadToCollection(
+    updatedCollectionRecords = await this._pushPayloadToCollection(
       queryRecordResourceName,
       queryRecordResourceResults
     )
 
     if (queryRecordConfig.alias)
-      this._addAlias(queryRecordConfig.alias, updatedCollectionData)
+      this._addAlias(queryRecordConfig.alias, updatedCollectionRecords)
 
-    return updatedCollectionData
+    return updatedCollectionRecords
   }
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
