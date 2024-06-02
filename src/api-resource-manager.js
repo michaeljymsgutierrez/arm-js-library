@@ -180,7 +180,7 @@ export default class ApiResourceManager {
     const resourceURL = isValidId
       ? `${resourceName}/${resourceId}`
       : this.collectionName
-    const resourceMethod = isValidId ? 'patch' : 'post'
+    const resourceMethod = isValidId ? 'put' : 'post'
     const resourceData = { data: record }
     const saveRecordResourceRequest = await axios({
       method: resourceMethod,

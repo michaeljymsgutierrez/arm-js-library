@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ApiResourceManager from './api-resource-manager'
 
-export const ARM = new ApiResourceManager(['related-keywords'])
+export const ARM = new ApiResourceManager(['addresses'])
 
-ARM.setHost('https://team-staging.metromart.com')
+ARM.setHost('https://www.metromart.com')
 ARM.setHeadersCommon(
   'Authorization',
   `Token ${window.localStorage.getItem('token')}`
@@ -15,32 +15,34 @@ ARM.setHeadersCommon('X-Client-Platform', 'Web')
 ARM.setGlobal()
 
 const App = observer(() => {
-  const relatedKeywords = ARM.getAlias('relatedKeywords', [])
+  const customerAdderesses = ARM.getAlias('customerAdderesses', [])
 
   useEffect(() => {
-    ARM.query('related-keywords', {
+    ARM.query('addresses', {
       sort: '-id'
-    }, { alias: 'relatedKeywords' })
+    }, { alias: 'customerAdderesses' })
   }, [])
 
   return (
     <div className="App">
-      <h3>Related Keywords</h3>
+      <h3>Customer Addresses</h3>
       <table>
         <tr>
           <th>ID</th>
-          <th>NAME</th>
+          <th>ADDRESS1</th>
+          <th>ADDRESS2</th>
           <th>KIND</th>
           <th>ACTION</th>
         </tr>
 
-        {relatedKeywords.map((relatedKeyword, index) => (
+        {customerAdderesses.map((customerAdderess, index) => (
           <tr key={index}>
-            <td>{relatedKeyword.get('id')}</td>
-            <td>{relatedKeyword.get('attributes.name')}</td>
-            <td>{relatedKeyword.get('attributes.kind')}</td>
+            <td>{customerAdderess.get('id')}</td>
+            <td>{customerAdderess.get('attributes.address1')}</td>
+            <td>{customerAdderess.get('attributes.address2')}</td>
+            <td>{customerAdderess.get('attributes.kind')}</td>
             <td>
-              <button onClick={() => relatedKeyword.save()}>Save</button>
+              <button onClick={() => customerAdderess.save()}>Save</button>
               <button>Delete</button>
             </td>
           </tr>
