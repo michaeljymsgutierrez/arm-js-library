@@ -372,12 +372,12 @@ export default class ApiResourceManager {
     return this.collections[collectionName] || []
   }
 
-  getAlias(aliasName, fallbackData) {
-    const isFallbackDataObject = isPlainObject(fallbackData)
+  getAlias(aliasName, fallbackRecords) {
+    const isFallbacRecordsObject = isPlainObject(fallbackRecords)
 
-    if (isFallbackDataObject) this._injectActions(fallbackData)
+    if (isFallbacRecordsObject) this._injectActions(fallbackRecords)
 
-    return this.aliases[aliasName] || fallbackData
+    return this.aliases[aliasName] || fallbackRecords
   }
 
   createRecord(collectionName, collectionRecord = {}) {
