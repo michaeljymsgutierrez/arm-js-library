@@ -242,19 +242,19 @@ export default class ApiResourceManager {
 
   /*
     Function for injecting actions
-    on observable collection.
+    on collection record.
   */
-  _injectActions(collection) {
+  _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
       set: this._setProperty,
-      save: () => this._saveRecord(collection),
+      save: () => this._saveRecord(collectionRecord),
       setProperties: this._setProperties,
     }
     const actionKeys = keysIn(actions)
 
     forEach(actionKeys, (actionKey) => {
-      collection[actionKey] = actions[actionKey]
+      collectionRecord[actionKey] = actions[actionKey]
     })
   }
 
