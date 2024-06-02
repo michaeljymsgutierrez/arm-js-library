@@ -178,22 +178,22 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for persisting collection on the server,
+    Function for persisting collection record on the server,
     where it is being injected.
   */
-  async _saveRecord(record) {
-    const collection = find(this.collections[record.collectionName], {
-      hashId: record.hashId,
+  async _saveRecord(currentRecord) {
+    const collectionRecord = find(this.collections[currentRecord.collectionName], {
+      hashId: currentRecord.hashId
     })
-    const isValidId = isNumber(collection.id)
-    const currentHashId = collection.hashId
-    const resourceId = collection.id
-    const resourceName = collection.collectionName
+    const isValidId = isNumber(collectionRecord.id)
+    const currentHashId = collectionRecord.hashId
+    const resourceId = collectionRecord.id
+    const resourceName = collectionRecord.collectionName
     const resourceURL = isValidId
       ? `${resourceName}/${resourceId}`
-      : this.collectionName
+      : collectionRecord.collectionName
     const resourceMethod = isValidId ? 'put' : 'post'
-    const resourceData = { data: record }
+    const resourceData = { data: collectionRecord }
     const saveRecordResourceRequest = await axios({
       method: resourceMethod,
       url: resourceURL,
@@ -203,7 +203,7 @@ export default class ApiResourceManager {
       saveRecordResourceRequest?.data?.data || {}
     const saveRecordResourceIncludedResults =
       saveRecordResourceResults?.data?.included || []
-    let updatedCollectionData = []
+    let updatedCollectionRecords = []
 
     this._injectReferenceKeys(
       resourceName,
@@ -228,12 +228,12 @@ export default class ApiResourceManager {
       }
     )
 
-    updatedCollectionData = await this._pushPayloadToCollection(
+    updatedCollectionRecords = await this._pushPayloadToCollection(
       resourceName,
       saveRecordResourceResults
     )
 
-    return updatedCollectionData
+    return updatedCollectionRecords
   }
 
   async _deleteRecord(record) {
