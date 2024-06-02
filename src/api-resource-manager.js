@@ -327,61 +327,69 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for pushing data obtained from API methods
+    Function for pushing collection records obtained from API methods
     to respective collections.
   */
-  _pushPayloadToCollection(collectionName, collectionData) {
-    const isCollectionDataArray = isArray(collectionData)
-    const isCollectionDataObject = isPlainObject(collectionData)
-    let updatedCollectionData = null
+  _pushPayloadToCollection(collectionName, collectionRecords) {
+    const isCollectionRecordsArray = isArray(collectionRecords)
+    const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    let updatedCollectionRecords = null
 
-    if (isCollectionDataArray) {
-      const collectionDataHashIds = map(collectionData, 'hashId')
+    if (isCollectionRecordsArray) {
+      const collectionRecordsHashIds = map(collectionRecords, 'hashId')
 
-      forEach(collectionData, (collection) => {
-        const collectionIndex = findIndex(this.collections[collectionName], {
-          hashId: collection.hashId,
-        })
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordIndex = findIndex(
+          this.collections[collectionName],
+          {
+            hashId: collectionRecord.hashId,
+          }
+        )
 
-        this._injectActions(collection)
+        this._injectActions(collectionRecord)
 
-        if (lt(collectionIndex, 0))
-          this.collections[collectionName].push(collection)
+        if (lt(collectionRecordIndex, 0))
+          this.collections[collectionName].push(collectionRecord)
 
-        if (gte(collectionIndex, 0))
-          this.collections[collectionName][collectionIndex] = collection
+        if (gte(collectionRecordIndex, 0))
+          this.collections[collectionName][collectionRecordIndex] =
+            collectionRecord
       })
 
-      updatedCollectionData = map(
-        collectionDataHashIds,
-        (collectionDataHashId) =>
+      updatedCollectionRecords = map(
+        collectionRecordsHashIds,
+        (collectionRecordHashId) =>
           find(this.collections[collectionName], {
-            hashId: collectionDataHashId,
+            hashId: collectionRecordHashId,
           })
       )
     }
 
-    if (isCollectionDataObject) {
-      const collectionDataHashId = collectionData.hashId
-      const collectionIndex = findIndex(this.collections[collectionName], {
-        hashId: collectionData.hashId,
-      })
+    if (isCollectionRecordsObject) {
+      const collectionRecordHashId = collectionRecords.hashId
+      const collectionRecordIndex = findIndex(
+        this.collections[collectionName],
+        {
+          hashId: collectionRecords.hashId,
+        }
+      )
 
-      this._injectActions(collectionData)
+      this._injectActions(collectionRecords)
 
-      if (lt(collectionIndex, 0))
-        this.collections[collectionName].push(collectionData)
+      if (lt(collectionRecordIndex, 0))
+        this.collections[collectionName].push(collectionRecords)
 
-      if (gte(collectionIndex, 0))
-        this.collections[collectionName][collectionIndex] = collectionData
+      if (gte(collectionRecordIndex, 0))
+        this.collections[collectionName][collectionRecordIndex] =
+          collectionRecords
 
-      updatedCollectionData = find(this.collections[collectionName], {
-        hashId: collectionDataHashId,
+      updatedCollectionRecords = find(this.collections[collectionName], {
+        hashId: collectionRecordHashId,
       })
     }
 
     return new Promise((resolve, reject) => {
-      resolve(updatedCollectionData)
+      resolve(updatedCollectionRecords)
     })
   }
 
