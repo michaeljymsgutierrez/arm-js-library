@@ -427,6 +427,10 @@ export default class ApiResourceManager {
     return this.collections[collectionName] || []
   }
 
+  clearCollection(collectionName) {
+    this.collections[collectionName] = []
+  }
+
   getAlias(aliasName, fallbackRecords) {
     const isFallbacRecordsObject = isPlainObject(fallbackRecords)
 
