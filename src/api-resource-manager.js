@@ -260,18 +260,18 @@ export default class ApiResourceManager {
 
   /*
     Function for injecting reference keys such as:
-    collectionName - identifier for which the collection data belongs to
-    hashId - identifier for which collection data should be updated
+    collectionName - identifier for which collection the collection record belongs to
+    collectionRecordHashId - identifier for which collection record should be updated
   */
   _injectReferenceKeys(
     collectionName,
-    collectionData,
-    collectionHashId = null
+    collectionRecord,
+    collectionRecordHashId = null
   ) {
-    collectionData.collectionName = collectionName
-    collectionData.hashId = isNull(collectionHashId)
-      ? this._generateHashId(collectionData)
-      : collectionHashId
+    collectionRecord.collectionName = collectionName
+    collectionRecord.hashId = isNull(collectionRecordHashId)
+      ? this._generateHashId(collectionRecord)
+      : collectionRecordHashId
   }
 
   /*
