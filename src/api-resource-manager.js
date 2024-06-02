@@ -87,24 +87,24 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for adding new collection and collection data.
+    Function for adding new collection and collection records.
   */
-  _addCollection(collectionName, collectionData) {
-    this.collections[collectionName] = collectionData
+  _addCollection(collectionName, collectionRecords) {
+    this.collections[collectionName] = collectionRecords
   }
 
   /*
     Function for aliasing data defined on API methods.
   */
-  _addAlias(aliasName, updatedCollectionData) {
-    const isUpdatedCollectionDataArray = isArray(updatedCollectionData)
-    const isUpdatedCollectionDataObject = isPlainObject(updatedCollectionData)
+  _addAlias(aliasName, aliasRecords) {
+    const isAliasRecordsArray = isArray(aliasRecords)
+    const isAliasRecordsObject = isPlainObject(aliasRecords)
 
-    if (isUpdatedCollectionDataArray)
-      this.aliases[aliasName] = updatedCollectionData || []
+    if (isAliasRecordsArray)
+      this.aliases[aliasName] = aliasRecords || []
 
-    if (isUpdatedCollectionDataObject) {
-      this.aliases[aliasName] = updatedCollectionData || {}
+    if (isAliasRecordsObject) {
+      this.aliases[aliasName] = aliasRecords || {}
     }
   }
 
