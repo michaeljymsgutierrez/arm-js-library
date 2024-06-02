@@ -16,7 +16,7 @@ const {
   isPlainObject,
   isNumber,
   isNull,
-  gt,
+  gte,
   lt,
   has,
   flatMap,
@@ -160,10 +160,22 @@ export default class ApiResourceManager {
   }
 
   unloadRecord(record) {
+    const aliasesKeys = keysIn(this.aliases)
     const collectionIndex = findIndex(this.collections[record.collectionName], {
       hashId: record.hashId,
     })
-    this.collections[record.collectionName].splice(collectionIndex, 1)
+
+    if (gte(collectionIndex, 0))
+      this.collections[record.collectionName].splice(collectionIndex, 1)
+
+    forEach(aliasesKeys, (aliasKey) => {
+      const aliasCollectionIndex = findIndex(this.aliases[aliasKey], {
+        hashId: record.hashId,
+      })
+
+      if (gte(aliasCollectionIndex, 0))
+        this.aliases[aliasKey].splice(collectionIndex, 1)
+    })
   }
 
   /*
@@ -336,7 +348,7 @@ export default class ApiResourceManager {
         if (lt(collectionIndex, 0))
           this.collections[collectionName].push(collection)
 
-        if (gt(collectionIndex, 0))
+        if (gte(collectionIndex, 0))
           this.collections[collectionName][collectionIndex] = collection
       })
 
@@ -360,7 +372,7 @@ export default class ApiResourceManager {
       if (lt(collectionIndex, 0))
         this.collections[collectionName].push(collectionData)
 
-      if (gt(collectionIndex, 0))
+      if (gte(collectionIndex, 0))
         this.collections[collectionName][collectionIndex] = collectionData
 
       updatedCollectionData = find(this.collections[collectionName], {
