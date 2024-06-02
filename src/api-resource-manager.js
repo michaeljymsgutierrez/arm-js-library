@@ -262,19 +262,13 @@ export default class ApiResourceManager {
     const resourceData = { data: collectionRecord }
     const deleteRecordResourceRequest = await axios({
       method: resourceMethod,
-      url: resourceURL
+      url: resourceURL,
     })
     const deleteRecordResourceResults =
       deleteRecordResourceRequest?.data?.data || {}
     const deleteRecordResourceIncludedResults =
       deleteRecordResourceResults?.data?.included || []
     let updatedCollectionRecords = {}
-
-    // this._injectReferenceKeys(
-    //   resourceName,
-    //   saveRecordResourceResults,
-    //   currentHashId
-    // )
 
     forEach(
       deleteRecordResourceIncludedResults,
@@ -293,13 +287,10 @@ export default class ApiResourceManager {
       }
     )
 
+    this.unloadRecord(currentRecord)
+
     updatedCollectionRecords = deleteRecordResourceResults
-    //
-    // updatedCollectionRecords = await this._pushPayloadToCollection(
-    //   resourceName,
-    //   saveRecordResourceResults
-    // )
-    //
+
     return updatedCollectionRecords
   }
 
