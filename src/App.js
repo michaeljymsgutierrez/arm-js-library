@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ApiResourceManager from './api-resource-manager'
 
-export const ARM = new ApiResourceManager(['addresses'])
+export const ARM = new ApiResourceManager(['addresses', 'users'])
 
 ARM.setHost('https://www.metromart.com')
 ARM.setHeadersCommon(
@@ -23,6 +23,7 @@ const App = observer(() => {
       'addresses',
       {
         sort: '-id',
+        include: 'user'
       },
       { alias: 'customerAddresses' }
     )
