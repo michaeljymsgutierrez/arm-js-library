@@ -15,12 +15,13 @@ ARM.setHeadersCommon('X-Client-Platform', 'Web')
 ARM.setGlobal()
 
 const App = observer(() => {
-  const customerAdderesses = ARM.getAlias('customerAdderesses', [])
+  // const customerAddresses = ARM.getAlias('customerAddresses', [])
+  const customerAddresses = ARM.getCollection('addresses', [])
 
   useEffect(() => {
     ARM.query('addresses', {
       sort: '-id'
-    }, { alias: 'customerAdderesses' })
+    }, { alias: 'customerAddresses' })
   }, [])
 
   return (
@@ -35,15 +36,18 @@ const App = observer(() => {
           <th>ACTION</th>
         </tr>
 
-        {customerAdderesses.map((customerAdderess, index) => (
+        {customerAddresses.map((customerAddress, index) => (
           <tr key={index}>
-            <td>{customerAdderess.get('id')}</td>
-            <td>{customerAdderess.get('attributes.address1')}</td>
-            <td>{customerAdderess.get('attributes.address2')}</td>
-            <td>{customerAdderess.get('attributes.kind')}</td>
+            <td>{customerAddress.get('id')}</td>
+            <td>{customerAddress.get('attributes.address1')}</td>
+            <td>{customerAddress.get('attributes.address2')}</td>
+            <td>{customerAddress.get('attributes.kind')}</td>
             <td>
-              <button onClick={() => customerAdderess.save()}>Save</button>
-              <button>Delete</button>
+              <button onClick={() => customerAddress.save()}>Save Record</button>
+              <button>Delete Record</button>
+              <button onClick={() => {
+                ARM.unloadRecord(customerAddress)
+              }}>Unload Record</button>
             </td>
           </tr>
         ))}

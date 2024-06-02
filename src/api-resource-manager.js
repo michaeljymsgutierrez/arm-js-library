@@ -160,9 +160,10 @@ export default class ApiResourceManager {
   }
 
   unloadRecord(record) {
-    const collection = findIndex(this.collections[record.collectionName], {
+    const collectionIndex = findIndex(this.collections[record.collectionName], {
       hashId: record.hashId,
     })
+    this.collections[record.collectionName].splice(collectionIndex, 1)
   }
 
   /*
