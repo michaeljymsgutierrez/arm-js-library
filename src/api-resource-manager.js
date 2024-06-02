@@ -244,7 +244,9 @@ export default class ApiResourceManager {
     return updatedCollectionRecords
   }
 
-  async _deleteRecord(record) {}
+  async _deleteRecord(currentRecord) {
+
+  }
 
   /*
     Function for injecting actions
@@ -254,8 +256,9 @@ export default class ApiResourceManager {
     const actions = {
       get: this._getProperty,
       set: this._setProperty,
-      save: () => this._saveRecord(collectionRecord),
       setProperties: this._setProperties,
+      save: () => this._saveRecord(collectionRecord),
+      destroyRecord: () => this._deleteRecord(collectionRecord),
     }
     const actionKeys = keysIn(actions)
 
