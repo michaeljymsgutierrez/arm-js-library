@@ -100,8 +100,7 @@ export default class ApiResourceManager {
     const isAliasRecordsArray = isArray(aliasRecords)
     const isAliasRecordsObject = isPlainObject(aliasRecords)
 
-    if (isAliasRecordsArray)
-      this.aliases[aliasName] = aliasRecords || []
+    if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || []
 
     if (isAliasRecordsObject) {
       this.aliases[aliasName] = aliasRecords || {}
@@ -158,22 +157,28 @@ export default class ApiResourceManager {
     forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
   }
 
-  unloadRecord(record) {
+  unloadRecord(currentRecord) {
     const aliasesKeys = keysIn(this.aliases)
-    const collectionIndex = findIndex(this.collections[record.collectionName], {
-      hashId: record.hashId,
-    })
+    const collectionRecordIndex = findIndex(
+      this.collections[currentRecord.collectionName],
+      {
+        hashId: currentRecord.hashId,
+      }
+    )
 
-    if (gte(collectionIndex, 0))
-      this.collections[record.collectionName].splice(collectionIndex, 1)
+    if (gte(collectionRecordIndex, 0))
+      this.collections[currentRecord.collectionName].splice(
+        collectionRecordIndex,
+        1
+      )
 
     forEach(aliasesKeys, (aliasKey) => {
-      const aliasCollectionIndex = findIndex(this.aliases[aliasKey], {
-        hashId: record.hashId,
+      const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+        hashId: currentRecord.hashId,
       })
 
-      if (gte(aliasCollectionIndex, 0))
-        this.aliases[aliasKey].splice(collectionIndex, 1)
+      if (gte(aliasRecordIndex, 0))
+        this.aliases[aliasKey].splice(aliasRecordIndex, 1)
     })
   }
 
@@ -182,9 +187,12 @@ export default class ApiResourceManager {
     where it is being injected.
   */
   async _saveRecord(currentRecord) {
-    const collectionRecord = find(this.collections[currentRecord.collectionName], {
-      hashId: currentRecord.hashId
-    })
+    const collectionRecord = find(
+      this.collections[currentRecord.collectionName],
+      {
+        hashId: currentRecord.hashId,
+      }
+    )
     const isValidId = isNumber(collectionRecord.id)
     const currentHashId = collectionRecord.hashId
     const resourceId = collectionRecord.id
@@ -236,9 +244,7 @@ export default class ApiResourceManager {
     return updatedCollectionRecords
   }
 
-  async _deleteRecord(record) {
-
-  }
+  async _deleteRecord(record) {}
 
   /*
     Function for injecting actions
@@ -388,7 +394,7 @@ export default class ApiResourceManager {
     this.collections[collectionName].push(collectionRecord)
 
     return find(this.collections[collectionName], {
-      hashId: collectionRecord.hashId
+      hashId: collectionRecord.hashId,
     })
   }
 
