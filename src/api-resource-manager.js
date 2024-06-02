@@ -380,15 +380,15 @@ export default class ApiResourceManager {
     return this.aliases[aliasName] || fallbackData
   }
 
-  createRecord(collectionName, collectionData = {}) {
-    collectionData.id = uuidv4()
+  createRecord(collectionName, collectionRecord = {}) {
+    collectionRecord.id = uuidv4()
 
-    this._injectReferenceKeys(collectionName, collectionData)
-    this._injectActions(collectionData)
-    this.collections[collectionName].push(collectionData)
+    this._injectReferenceKeys(collectionName, collectionRecord)
+    this._injectActions(collectionRecord)
+    this.collections[collectionName].push(collectionRecord)
 
     return find(this.collections[collectionName], {
-      hashId: collectionData.hashId,
+      hashId: collectionRecord.hashId
     })
   }
 
