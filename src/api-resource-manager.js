@@ -461,7 +461,7 @@ export default class ApiResourceManager {
     const queryResourceResults = queryResourceRequest?.data?.data || []
     const queryResourceIncludedResults =
       queryResourceRequest?.data?.included || []
-    let updatedCollectionRecords = []
+    let updatedCollectionRecords = null
 
     forEach(queryResourceResults, (queryResourceResult) =>
       this._injectReferenceKeys(queryResourceName, queryResourceResult)
@@ -505,7 +505,7 @@ export default class ApiResourceManager {
       queryRecordResourceRequest?.data?.data || {}
     const queryRecordResourceIncludedResults =
       queryRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = []
+    let updatedCollectionRecords = null
 
     this._injectReferenceKeys(
       queryRecordResourceName,
