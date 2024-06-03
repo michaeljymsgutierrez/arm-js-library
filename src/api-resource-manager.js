@@ -110,7 +110,7 @@ export default class ApiResourceManager {
   /*
     Function for generating collection data unique id.
   */
-  _generateHashId(object) {
+  _generateHashId(object = { id: uuidv4() }) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
