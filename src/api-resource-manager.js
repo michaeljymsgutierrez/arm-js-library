@@ -542,8 +542,14 @@ export default class ApiResourceManager {
 
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
   async findRecord() {}
-  async peekAll() {}
-  async peekRecord() {}
+
+  peekAll(collectionName) {
+    return this.collections[collectionName]
+  }
+
+  peekRecord(collectionName, collectionRecordId) {
+
+  }
 }
 
 /*
