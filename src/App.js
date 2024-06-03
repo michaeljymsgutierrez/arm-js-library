@@ -87,11 +87,7 @@ const App = observer(() => {
               <button onClick={() => address.destroyRecord()}>
                 Delete Record
               </button>
-              <button
-                onClick={() => {
-                  ARM.unloadRecord(address)
-                }}
-              >
+              <button onClick={() => ARM.unloadRecord(address)}>
                 Unload Record
               </button>
             </td>
