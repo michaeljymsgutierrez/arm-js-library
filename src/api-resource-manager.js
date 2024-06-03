@@ -604,12 +604,12 @@ export default class ApiResourceManager {
 /*
   Notes:
   TO DO: API ajax functions
-  1. query - call endpoint that returns collection of data
-  2. queryRecord - call endpoint that returns single data
-  3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
-  4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
-  5. peekAll - get data from local store that returns collection of data
-  6. peekRecord - get data from local store that returns single data
+  1. query - get records from server (can pass params for specific criteria)
+  2. queryRecord - get record  from server (can pass params for specific criteria)
+  3. findAll - get all records from server (can pass params for specific criteria)
+  4. findRecord - get single record by id from server
+  5. peekAll - get all records from local cache
+  6. peekRecord - get single record by id from local cache
 
   TO DO: Records new properties
   1. isPristine - check if record is not modified
