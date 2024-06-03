@@ -450,7 +450,7 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for getting latest record from server
+    Functions for retrieving collection of records
   */
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
     const queryResourceRequest = await axios.get(queryResourceName, {
