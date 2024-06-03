@@ -1,33 +1,11 @@
 import './App.css'
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import ApiResourceManager from './api-resource-manager'
-
-export const ARM = new ApiResourceManager(['addresses', 'users'])
-
-ARM.setHost('https://www.metromart.com')
-ARM.setHeadersCommon(
-  'Authorization',
-  `Token ${window.localStorage.getItem('token')}`
-)
-ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
-ARM.setHeadersCommon('X-Client-Platform', 'Web')
-ARM.setGlobal()
+import Model from './model'
+import Controller from './controller'
 
 const App = observer(() => {
-  const customerAddresses = ARM.getAlias('customerAddresses', [])
-  const addresses = ARM.getCollection('addresses', [])
-
-  useEffect(() => {
-    ARM.query(
-      'addresses',
-      {
-        sort: '-id',
-        include: 'user',
-      },
-      { alias: 'customerAddresses' }
-    )
-  }, [])
+  const model = Model()
+  const controller = Controller(model)
 
   return (
     <div className="App">
@@ -44,7 +22,7 @@ const App = observer(() => {
         </thead>
 
         <tbody>
-          {customerAddresses.map((customerAddress, index) => (
+          {controller.customerAddresses.map((customerAddress, index) => (
             <tr key={index}>
               <td>{customerAddress.get('id')}</td>
               <td>{customerAddress.get('attributes.address1')}</td>
@@ -56,9 +34,7 @@ const App = observer(() => {
                 </button>
                 <button>Delete Record</button>
                 <button
-                  onClick={() => {
-                    ARM.unloadRecord(customerAddress)
-                  }}
+                  onClick={() => controller.unloadRecord(customerAddress)}
                 >
                   Unload Record
                 </button>
@@ -83,7 +59,7 @@ const App = observer(() => {
         </thead>
 
         <tbody>
-          {addresses.map((address, index) => (
+          {controller.addresses.map((address, index) => (
             <tr key={index}>
               <td>{address.get('id')}</td>
               <td>{address.get('attributes.address1')}</td>
@@ -94,7 +70,7 @@ const App = observer(() => {
                 <button onClick={() => address.destroyRecord()}>
                   Delete Record
                 </button>
-                <button onClick={() => ARM.unloadRecord(address)}>
+                <button onClick={() => controller.unloadRecord(address)}>
                   Unload Record
                 </button>
               </td>
