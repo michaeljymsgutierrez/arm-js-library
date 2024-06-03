@@ -618,13 +618,13 @@ export default class ApiResourceManager {
     - always request to server
   4. findRecord
     - response payload is a single record
-    - support query params
+    - support query params (by default query by id)
     - always request to server
   5. peekAll
     - get all records from local cache
     - will not request to server
   6. peekRecord
-    - get single record from local cache
+    - get single record from local cache (by default get by id)
     - will not request to server
 
   TO DO: Records new properties
