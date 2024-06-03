@@ -450,7 +450,7 @@ export default class ApiResourceManager {
   }
 
   /*
-    Functions for retrieving collection of records
+    Functions for retrieving collection of records from server
   */
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
     const queryResourceRequest = await axios.get(queryResourceName, {
@@ -619,7 +619,7 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for getting local cache record from collections
+    Functions for retrieving collection of records from local cache
   */
   peekAll(collectionName) {
     return this.collections[collectionName]
