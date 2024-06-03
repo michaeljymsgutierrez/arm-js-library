@@ -321,6 +321,8 @@ export default class ApiResourceManager {
     collectionRecord,
     collectionRecordHashId = null
   ) {
+    collectionRecord.isPristine = true
+    collectionRecord.isDirty = false
     collectionRecord.collectionName = collectionName
     collectionRecord.hashId = isNull(collectionRecordHashId)
       ? this._generateHashId(collectionRecord)
