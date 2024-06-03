@@ -537,7 +537,38 @@ export default class ApiResourceManager {
     return updatedCollectionRecords
   }
 
-  async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
+  async findAll(findAllResourceName, findAllConfig = {}) {
+    const findAllResourceRequest = await axios.get(findAllResourceName)
+    const findAllResourceResults = findAllResourceRequest?.data?.data || []
+    const findAllResourceIncludedResults =
+      findAllResourceRequest?.data?.included || []
+    let updatedCollectionRecords = null
+
+    forEach(findAllResourceResults, (findAllResourceResult) =>
+      this._injectReferenceKeys(findAllResourceName, findAllResourceResult)
+    )
+
+    forEach(findAllResourceIncludedResults, (findAllResourceIncludedResult) => {
+      this._injectReferenceKeys(
+        getProperty(findAllResourceIncludedResult, this.payloadIncludedReference),
+        findAllResourceIncludedResult
+      )
+      this._pushPayloadToCollection(
+        findAllResourceIncludedResult.collectionName,
+        findAllResourceIncludedResult
+      )
+    })
+
+    updatedCollectionRecords = await this._pushPayloadToCollection(
+      findAllResourceName,
+      findAllResourceResults
+    )
+
+    if (findAllConfig.alias)
+      this._addAlias(findAllConfig.alias, updatedCollectionRecords)
+
+    return updatedCollectionRecords
+  }
 
   async findRecord(
     findRecordResourceName,
