@@ -543,12 +543,17 @@ export default class ApiResourceManager {
   async findAll(findAllResourceName, findAllParams = {}, findAllConfig = {}) {}
   async findRecord() {}
 
+  /*
+    Function for getting local cache record from collections
+  */
   peekAll(collectionName) {
     return this.collections[collectionName]
   }
 
   peekRecord(collectionName, collectionRecordId) {
-
+    return find(this.collections[collectionName], {
+      id: collectionRecordId,
+    })
   }
 }
 
