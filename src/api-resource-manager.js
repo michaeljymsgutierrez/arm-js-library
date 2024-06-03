@@ -452,7 +452,7 @@ export default class ApiResourceManager {
   }
 
   /*
-    AJAX Functions
+    Function for getting latest record from server
   */
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
     const queryResourceRequest = await axios.get(queryResourceName, {
