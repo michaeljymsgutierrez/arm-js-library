@@ -604,12 +604,28 @@ export default class ApiResourceManager {
 /*
   Notes:
   TO DO: API ajax functions
-  1. query - get records from server (can pass params for specific criteria)
-  2. queryRecord - get record  from server (can pass params for specific criteria)
-  3. findAll - get all records from server (can pass params for specific criteria)
-  4. findRecord - get single record by id from server
-  5. peekAll - get all records from local cache
-  6. peekRecord - get single record by id from local cache
+  1. query
+    - response payload is a collection of records
+    - support query params
+    - always request to server
+  2. queryRecord
+    - response payload is a single record
+    - support query params
+    - always request to server
+  3. findAll
+    - response payload is a collection of records
+    - not support query params
+    - always request to server
+  4. findRecord
+    - response payload is a single record
+    - support query params
+    - always request to server
+  5. peekAll
+    - get all records from local cache
+    - will not request to server
+  6. peekRecord
+    - get single record from local cache
+    - will not request to server
 
   TO DO: Records new properties
   1. isPristine - check if record is not modified
