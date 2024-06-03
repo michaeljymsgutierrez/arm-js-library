@@ -489,12 +489,11 @@ export default class ApiResourceManager {
 
   async queryRecord(
     queryRecordResourceName,
-    queryRecordResourceId,
     queryRecordParams = {},
     queryRecordConfig = {}
   ) {
     const queryRecordResourceRequest = await axios.get(
-      `${queryRecordResourceName}/${queryRecordResourceId}`,
+      queryRecordResourceName,
       {
         params: queryRecordParams,
       }
@@ -558,10 +557,7 @@ export default class ApiResourceManager {
       findRecordResourceResults?.data?.included || []
     let updatedCollectionRecords = null
 
-    this._injectReferenceKeys(
-      findRecordResourceName,
-      findRecordResourceResults
-    )
+    this._injectReferenceKeys(findRecordResourceName, findRecordResourceResults)
 
     forEach(
       findRecordResourceIncludedResults,
