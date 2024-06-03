@@ -102,9 +102,7 @@ export default class ApiResourceManager {
 
     if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || []
 
-    if (isAliasRecordsObject) {
-      this.aliases[aliasName] = aliasRecords || {}
-    }
+    if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
   }
 
   /*
