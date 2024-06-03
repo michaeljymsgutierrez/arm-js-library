@@ -252,14 +252,14 @@ export default class ApiResourceManager {
       }
     )
     const isValidId = isNumber(collectionRecord.id)
-    const currentHashId = collectionRecord.hashId
+    // const currentHashId = collectionRecord.hashId
     const resourceId = collectionRecord.id
     const resourceName = collectionRecord.collectionName
     const resourceURL = isValidId
       ? `${resourceName}/${resourceId}`
       : collectionRecord.collectionName
     const resourceMethod = 'delete'
-    const resourceData = { data: collectionRecord }
+    // const resourceData = { data: collectionRecord }
     const deleteRecordResourceRequest = await axios({
       method: resourceMethod,
       url: resourceURL,
