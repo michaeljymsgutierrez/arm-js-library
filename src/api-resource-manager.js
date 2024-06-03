@@ -452,15 +452,8 @@ export default class ApiResourceManager {
   }
 
   /*
-    TO DO: API ajax functions
-    1. query - call endpoint that returns collection of data
-    2. queryRecord - call endpoint that returns single data
-    3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
-    4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
-    5. peekAll - get data from local store that returns collection of data
-    6. peekRecord - get data from local store that returns single data
+    AJAX Functions
   */
-
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
     const queryResourceRequest = await axios.get(queryResourceName, {
       params: queryParams,
@@ -552,3 +545,23 @@ export default class ApiResourceManager {
   async peekAll() {}
   async peekRecord() {}
 }
+
+/*
+  Notes:
+  TO DO: API ajax functions
+  1. query - call endpoint that returns collection of data
+  2. queryRecord - call endpoint that returns single data
+  3. findAll - get data from local store first before, if data not then direct call endpoint that returns collection of data
+  4. findRecord - get data from local store first before, if data not found then direct call endpoint that returns single data
+  5. peekAll - get data from local store that returns collection of data
+  6. peekRecord - get data from local store that returns single data
+
+  TO DO: Records new properties
+  1. isPristine - check if record is not modified
+  2. isDirty - check if record is modified
+  3. rollBackAttributes - rollback record to is initial state
+
+  TO DO: Alias and Ajax Functions (need to think more)
+  1. Removed async await
+  2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request
+*/
