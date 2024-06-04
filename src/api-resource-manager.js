@@ -194,53 +194,20 @@ export default class ApiResourceManager {
     )
     const isValidId = isNumber(collectionRecord.id)
     const currentHashId = collectionRecord.hashId
-    const resourceId = collectionRecord.id
-    const resourceName = collectionRecord.collectionName
-    const resourceURL = isValidId
-      ? `${resourceName}/${resourceId}`
-      : collectionRecord.collectionName
-    const resourceMethod = isValidId ? 'put' : 'post'
-    const resourceData = { data: collectionRecord }
-    const saveRecordResourceRequest = await axios({
-      method: resourceMethod,
-      url: resourceURL,
-      data: resourceData,
+    const id = isValidId ? collectionRecord.id : null
+    const resource = collectionRecord.collectionName
+    const method = isValidId ? 'put' : 'post'
+    const payload = { data: collectionRecord }
+
+    this._request({
+      resourceMethod: method,
+      resourceName: resource,
+      resourceId: id,
+      resourceParams: {},
+      resourcePayload: payload,
+      resourceFallback: {},
+      resourceConfig: {},
     })
-    const saveRecordResourceResults =
-      saveRecordResourceRequest?.data?.data || {}
-    const saveRecordResourceIncludedResults =
-      saveRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = {}
-
-    this._injectReferenceKeys(
-      resourceName,
-      saveRecordResourceResults,
-      currentHashId
-    )
-
-    forEach(
-      saveRecordResourceIncludedResults,
-      (saveRecordResourceIncludedResult) => {
-        this._injectReferenceKeys(
-          getProperty(
-            saveRecordResourceIncludedResult,
-            this.payloadIncludedReference
-          ),
-          saveRecordResourceIncludedResult
-        )
-        this._pushPayloadToCollection(
-          saveRecordResourceIncludedResult.collectionName,
-          saveRecordResourceIncludedResult
-        )
-      }
-    )
-
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      resourceName,
-      saveRecordResourceResults
-    )
-
-    return updatedCollectionRecords
   }
 
   async _deleteRecord(currentRecord) {
@@ -470,6 +437,7 @@ export default class ApiResourceManager {
     if (isNumber(resourceId))
       requestOptions.url = `${resourceName}/${resourceId}`
     if (!isEmpty(resourceParams)) requestOptions.params = resourceParams
+    if (!isEmpty(resourcePayload)) requestOptions.data = resourcePayload
 
     const resourceRequest = await axios(requestOptions)
     const resourceResults = resourceRequest?.data?.data || resourceFallback
