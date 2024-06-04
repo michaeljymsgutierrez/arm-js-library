@@ -2,6 +2,14 @@ import { useEffect } from 'react'
 import { ARM } from './index.js'
 
 const Model = () => {
+    // ARM.query(
+    //   'addresses',
+    //   {
+    //     sort: '-id',
+    //     include: 'user',
+    //   },
+    //   { alias: 'customerAddresses' }
+    // )
   useEffect(() => {
     // ARM.query(
     //   'addresses',
