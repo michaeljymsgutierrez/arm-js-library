@@ -481,7 +481,7 @@ export default class ApiResourceManager {
         this._injectReferenceKeys(resourceName, resourceResult)
       )
 
-    if (isResourceResultsArray)
+    if (isResourceResultsObject)
       this._injectReferenceKeys(resourceName, resourceResults)
 
     forEach(resourceIncludedResults, (resourceIncludedResult) => {
