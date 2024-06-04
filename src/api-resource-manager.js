@@ -324,7 +324,10 @@ export default class ApiResourceManager {
     collectionRecord.isDirty = false
     collectionRecord.collectionName = collectionName
     collectionRecord.hashId = isNull(collectionRecordHashId)
-      ? this._generateHashId(collectionRecord)
+      ? this._generateHashId({
+          id: collectionRecord.id,
+          id: collectionRecord.collectionName,
+        })
       : collectionRecordHashId
   }
 
