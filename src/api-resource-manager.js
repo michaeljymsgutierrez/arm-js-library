@@ -526,54 +526,6 @@ export default class ApiResourceManager {
     this._request('get', resource, id, params, [], config)
   }
 
-  // async findRecord(
-  //   findRecordResourceName,
-  //   findRecordResourceId,
-  //   findRecordParams = {},
-  //   findRecordConfig = {}
-  // ) {
-  //   const findRecordResourceRequest = await axios.get(
-  //     `${findRecordResourceName}/${findRecordResourceId}`,
-  //     {
-  //       params: findRecordParams,
-  //     }
-  //   )
-  //   const findRecordResourceResults =
-  //     findRecordResourceRequest?.data?.data || {}
-  //   const findRecordResourceIncludedResults =
-  //     findRecordResourceResults?.data?.included || []
-  //   let updatedCollectionRecords = null
-  //
-  //   this._injectReferenceKeys(findRecordResourceName, findRecordResourceResults)
-  //
-  //   forEach(
-  //     findRecordResourceIncludedResults,
-  //     (findRecordResourceIncludedResult) => {
-  //       this._injectReferenceKeys(
-  //         getProperty(
-  //           findRecordResourceIncludedResult,
-  //           this.payloadIncludedReference
-  //         ),
-  //         findRecordResourceIncludedResult
-  //       )
-  //       this._pushPayloadToCollection(
-  //         findRecordResourceIncludedResult.collectionName,
-  //         findRecordResourceIncludedResult
-  //       )
-  //     }
-  //   )
-  //
-  //   updatedCollectionRecords = await this._pushPayloadToCollection(
-  //     findRecordResourceName,
-  //     findRecordResourceResults
-  //   )
-  //
-  //   if (findRecordConfig.alias)
-  //     this._addAlias(findRecordConfig.alias, updatedCollectionRecords)
-  //
-  //   return updatedCollectionRecords
-  // }
-
   /*
     Functions for retrieving collection of records from local cache
   */
