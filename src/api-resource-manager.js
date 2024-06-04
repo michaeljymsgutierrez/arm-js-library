@@ -455,6 +455,7 @@ export default class ApiResourceManager {
     resourceName,
     resourceId = null,
     resourceParams = {},
+    resourcePayload = {},
     resourceFallback,
     resourceConfig = {}
   ) {
@@ -509,19 +510,19 @@ export default class ApiResourceManager {
     Functions for retrieving collection of records from server
   */
   query(resource, params, config) {
-    this._request('get', resource, null, params, [], config)
+    this._request('get', resource, null, params, null, [], config)
   }
 
   queryRecord(resource, params, config) {
-    this._request('get', resource, null, params, {}, config)
+    this._request('get', resource, null, params, null, {}, config)
   }
 
   findAll(resource, config) {
-    this._request('get', resource, null, null, [], config)
+    this._request('get', resource, null, null, null, [], config)
   }
 
   findRecord(resource, id, params, config) {
-    this._request('get', resource, id, params, [], config)
+    this._request('get', resource, id, params, null, [], config)
   }
 
   /*
