@@ -3,15 +3,25 @@ import { ARM } from './index.js'
 
 const Model = () => {
   useEffect(() => {
-    ARM.queryRecord(
-      'addresses',
-      {
-        id: 2427861,
-        sort: '-id',
-        include: 'user',
-      },
-      { alias: 'customerAddresses' }
-    )
+    // ARM.query(
+    //   'addresses',
+    //   {
+    //     sort: '-id',
+    //     include: 'user',
+    //   },
+    //   { alias: 'customerAddresses' }
+    // )
+    // ARM.queryRecord(
+    //   'addresses',
+    //   {
+    //     sort: '-id',
+    //     include: 'user',
+    //   },
+    //   { alias: 'customerAddresses' }
+    // )
+    ARM.findAll('addresses', {
+      alias: 'customerAddresses',
+    })
   }, [])
 }
 

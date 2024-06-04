@@ -518,6 +518,10 @@ export default class ApiResourceManager {
     this._request('get', resource, null, params, {}, config)
   }
 
+  findAll(resource, config) {
+    this._request('get', resource, null, null, [], config)
+  }
+
   // async findAll(findAllResourceName, findAllConfig = {}) {
   //   const findAllResourceRequest = await axios.get(findAllResourceName)
   //   const findAllResourceResults = findAllResourceRequest?.data?.data || []
