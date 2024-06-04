@@ -11,14 +11,14 @@ const Model = () => {
     //   { alias: 'customerAddresses' }
     // )
   useEffect(() => {
-    // ARM.query(
-    //   'addresses',
-    //   {
-    //     sort: '-id',
-    //     include: 'user',
-    //   },
-    //   { alias: 'customerAddresses' }
-    // )
+    ARM.query(
+      'addresses',
+      {
+        sort: '-id',
+        include: 'user',
+      },
+      { alias: 'customerAddresses' }
+    )
 
     // ARM.queryRecord(
     //   'addresses',

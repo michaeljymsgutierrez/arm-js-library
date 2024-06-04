@@ -9,7 +9,7 @@ const App = observer(() => {
 
   return (
     <div className="App">
-      <h3>Customer Addresses From Alias</h3>
+      <h3>[ALIAS]: Customer Addresses</h3>
       <table>
         <thead>
           <tr>
@@ -46,7 +46,7 @@ const App = observer(() => {
 
       <hr />
 
-      <h3>Customer Addresses From Collection</h3>
+      <h3>[COLLECTION]: Customer Addresses</h3>
       <table>
         <thead>
           <tr>

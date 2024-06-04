@@ -326,7 +326,7 @@ export default class ApiResourceManager {
     collectionRecord.hashId = isNull(collectionRecordHashId)
       ? this._generateHashId({
           id: collectionRecord.id,
-          id: collectionRecord.collectionName,
+          collectionName: collectionRecord.collectionName,
         })
       : collectionRecordHashId
   }
