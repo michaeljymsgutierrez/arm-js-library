@@ -11,6 +11,7 @@ const Model = () => {
     //   },
     //   { alias: 'customerAddresses' }
     // )
+
     // ARM.queryRecord(
     //   'addresses',
     //   {
@@ -19,9 +20,21 @@ const Model = () => {
     //   },
     //   { alias: 'customerAddresses' }
     // )
-    ARM.findAll('addresses', {
-      alias: 'customerAddresses',
-    })
+
+    // ARM.findAll('addresses', {
+    //   alias: 'customerAddresses',
+    // })
+
+    // ARM.findRecord(
+    //   'addresses',
+    //   2427861,
+    //   {
+    //     include: 'user'
+    //   },
+    //   {
+    //     alias: 'customerAddresses',
+    //   }
+    // )
   }, [])
 }
 
