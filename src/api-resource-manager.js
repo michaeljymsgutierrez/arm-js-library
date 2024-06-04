@@ -451,42 +451,46 @@ export default class ApiResourceManager {
     })
   }
 
+  async _request(resourceMethod, resourceName, resourceId, resourceParams, resourceConfig) {
+
+  }
+
   /*
     Functions for retrieving collection of records from server
   */
   async query(queryResourceName, queryParams = {}, queryConfig = {}) {
-    const queryResourceRequest = await axios.get(queryResourceName, {
-      params: queryParams,
-    })
-    const queryResourceResults = queryResourceRequest?.data?.data || []
-    const queryResourceIncludedResults =
-      queryResourceRequest?.data?.included || []
-    let updatedCollectionRecords = null
-
-    forEach(queryResourceResults, (queryResourceResult) =>
-      this._injectReferenceKeys(queryResourceName, queryResourceResult)
-    )
-
-    forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
-      this._injectReferenceKeys(
-        getProperty(queryResourceIncludedResult, this.payloadIncludedReference),
-        queryResourceIncludedResult
-      )
-      this._pushPayloadToCollection(
-        queryResourceIncludedResult.collectionName,
-        queryResourceIncludedResult
-      )
-    })
-
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      queryResourceName,
-      queryResourceResults
-    )
-
-    if (queryConfig.alias)
-      this._addAlias(queryConfig.alias, updatedCollectionRecords)
-
-    return updatedCollectionRecords
+    // const queryResourceRequest = await axios.get(queryResourceName, {
+    //   params: queryParams,
+    // })
+    // const queryResourceResults = queryResourceRequest?.data?.data || []
+    // const queryResourceIncludedResults =
+    //   queryResourceRequest?.data?.included || []
+    // let updatedCollectionRecords = null
+    //
+    // forEach(queryResourceResults, (queryResourceResult) =>
+    //   this._injectReferenceKeys(queryResourceName, queryResourceResult)
+    // )
+    //
+    // forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
+    //   this._injectReferenceKeys(
+    //     getProperty(queryResourceIncludedResult, this.payloadIncludedReference),
+    //     queryResourceIncludedResult
+    //   )
+    //   this._pushPayloadToCollection(
+    //     queryResourceIncludedResult.collectionName,
+    //     queryResourceIncludedResult
+    //   )
+    // })
+    //
+    // updatedCollectionRecords = await this._pushPayloadToCollection(
+    //   queryResourceName,
+    //   queryResourceResults
+    // )
+    //
+    // if (queryConfig.alias)
+    //   this._addAlias(queryConfig.alias, updatedCollectionRecords)
+    //
+    // return updatedCollectionRecords
   }
 
   // async queryRecord(
