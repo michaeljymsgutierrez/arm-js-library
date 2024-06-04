@@ -489,136 +489,136 @@ export default class ApiResourceManager {
     return updatedCollectionRecords
   }
 
-  async queryRecord(
-    queryRecordResourceName,
-    queryRecordParams = {},
-    queryRecordConfig = {}
-  ) {
-    const queryRecordResourceRequest = await axios.get(
-      queryRecordResourceName,
-      {
-        params: queryRecordParams,
-      }
-    )
-    const queryRecordResourceResults =
-      queryRecordResourceRequest?.data?.data || {}
-    const queryRecordResourceIncludedResults =
-      queryRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = null
-
-    this._injectReferenceKeys(
-      queryRecordResourceName,
-      queryRecordResourceResults
-    )
-
-    forEach(
-      queryRecordResourceIncludedResults,
-      (queryRecordResourceIncludedResult) => {
-        this._injectReferenceKeys(
-          getProperty(
-            queryRecordResourceIncludedResult,
-            this.payloadIncludedReference
-          ),
-          queryRecordResourceIncludedResult
-        )
-        this._pushPayloadToCollection(
-          queryRecordResourceIncludedResult.collectionName,
-          queryRecordResourceIncludedResult
-        )
-      }
-    )
-
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      queryRecordResourceName,
-      queryRecordResourceResults
-    )
-
-    if (queryRecordConfig.alias)
-      this._addAlias(queryRecordConfig.alias, updatedCollectionRecords)
-
-    return updatedCollectionRecords
-  }
-
-  async findAll(findAllResourceName, findAllConfig = {}) {
-    const findAllResourceRequest = await axios.get(findAllResourceName)
-    const findAllResourceResults = findAllResourceRequest?.data?.data || []
-    const findAllResourceIncludedResults =
-      findAllResourceRequest?.data?.included || []
-    let updatedCollectionRecords = null
-
-    forEach(findAllResourceResults, (findAllResourceResult) =>
-      this._injectReferenceKeys(findAllResourceName, findAllResourceResult)
-    )
-
-    forEach(findAllResourceIncludedResults, (findAllResourceIncludedResult) => {
-      this._injectReferenceKeys(
-        getProperty(findAllResourceIncludedResult, this.payloadIncludedReference),
-        findAllResourceIncludedResult
-      )
-      this._pushPayloadToCollection(
-        findAllResourceIncludedResult.collectionName,
-        findAllResourceIncludedResult
-      )
-    })
-
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      findAllResourceName,
-      findAllResourceResults
-    )
-
-    if (findAllConfig.alias)
-      this._addAlias(findAllConfig.alias, updatedCollectionRecords)
-
-    return updatedCollectionRecords
-  }
-
-  async findRecord(
-    findRecordResourceName,
-    findRecordResourceId,
-    findRecordParams = {},
-    findRecordConfig = {}
-  ) {
-    const findRecordResourceRequest = await axios.get(
-      `${findRecordResourceName}/${findRecordResourceId}`,
-      {
-        params: findRecordParams,
-      }
-    )
-    const findRecordResourceResults =
-      findRecordResourceRequest?.data?.data || {}
-    const findRecordResourceIncludedResults =
-      findRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = null
-
-    this._injectReferenceKeys(findRecordResourceName, findRecordResourceResults)
-
-    forEach(
-      findRecordResourceIncludedResults,
-      (findRecordResourceIncludedResult) => {
-        this._injectReferenceKeys(
-          getProperty(
-            findRecordResourceIncludedResult,
-            this.payloadIncludedReference
-          ),
-          findRecordResourceIncludedResult
-        )
-        this._pushPayloadToCollection(
-          findRecordResourceIncludedResult.collectionName,
-          findRecordResourceIncludedResult
-        )
-      }
-    )
-
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      findRecordResourceName,
-      findRecordResourceResults
-    )
-
-    if (findRecordConfig.alias)
-      this._addAlias(findRecordConfig.alias, updatedCollectionRecords)
-
-    return updatedCollectionRecords
-  }
+  // async queryRecord(
+  //   queryRecordResourceName,
+  //   queryRecordParams = {},
+  //   queryRecordConfig = {}
+  // ) {
+  //   const queryRecordResourceRequest = await axios.get(
+  //     queryRecordResourceName,
+  //     {
+  //       params: queryRecordParams,
+  //     }
+  //   )
+  //   const queryRecordResourceResults =
+  //     queryRecordResourceRequest?.data?.data || {}
+  //   const queryRecordResourceIncludedResults =
+  //     queryRecordResourceResults?.data?.included || []
+  //   let updatedCollectionRecords = null
+  //
+  //   this._injectReferenceKeys(
+  //     queryRecordResourceName,
+  //     queryRecordResourceResults
+  //   )
+  //
+  //   forEach(
+  //     queryRecordResourceIncludedResults,
+  //     (queryRecordResourceIncludedResult) => {
+  //       this._injectReferenceKeys(
+  //         getProperty(
+  //           queryRecordResourceIncludedResult,
+  //           this.payloadIncludedReference
+  //         ),
+  //         queryRecordResourceIncludedResult
+  //       )
+  //       this._pushPayloadToCollection(
+  //         queryRecordResourceIncludedResult.collectionName,
+  //         queryRecordResourceIncludedResult
+  //       )
+  //     }
+  //   )
+  //
+  //   updatedCollectionRecords = await this._pushPayloadToCollection(
+  //     queryRecordResourceName,
+  //     queryRecordResourceResults
+  //   )
+  //
+  //   if (queryRecordConfig.alias)
+  //     this._addAlias(queryRecordConfig.alias, updatedCollectionRecords)
+  //
+  //   return updatedCollectionRecords
+  // }
+  //
+  // async findAll(findAllResourceName, findAllConfig = {}) {
+  //   const findAllResourceRequest = await axios.get(findAllResourceName)
+  //   const findAllResourceResults = findAllResourceRequest?.data?.data || []
+  //   const findAllResourceIncludedResults =
+  //     findAllResourceRequest?.data?.included || []
+  //   let updatedCollectionRecords = null
+  //
+  //   forEach(findAllResourceResults, (findAllResourceResult) =>
+  //     this._injectReferenceKeys(findAllResourceName, findAllResourceResult)
+  //   )
+  //
+  //   forEach(findAllResourceIncludedResults, (findAllResourceIncludedResult) => {
+  //     this._injectReferenceKeys(
+  //       getProperty(findAllResourceIncludedResult, this.payloadIncludedReference),
+  //       findAllResourceIncludedResult
+  //     )
+  //     this._pushPayloadToCollection(
+  //       findAllResourceIncludedResult.collectionName,
+  //       findAllResourceIncludedResult
+  //     )
+  //   })
+  //
+  //   updatedCollectionRecords = await this._pushPayloadToCollection(
+  //     findAllResourceName,
+  //     findAllResourceResults
+  //   )
+  //
+  //   if (findAllConfig.alias)
+  //     this._addAlias(findAllConfig.alias, updatedCollectionRecords)
+  //
+  //   return updatedCollectionRecords
+  // }
+  //
+  // async findRecord(
+  //   findRecordResourceName,
+  //   findRecordResourceId,
+  //   findRecordParams = {},
+  //   findRecordConfig = {}
+  // ) {
+  //   const findRecordResourceRequest = await axios.get(
+  //     `${findRecordResourceName}/${findRecordResourceId}`,
+  //     {
+  //       params: findRecordParams,
+  //     }
+  //   )
+  //   const findRecordResourceResults =
+  //     findRecordResourceRequest?.data?.data || {}
+  //   const findRecordResourceIncludedResults =
+  //     findRecordResourceResults?.data?.included || []
+  //   let updatedCollectionRecords = null
+  //
+  //   this._injectReferenceKeys(findRecordResourceName, findRecordResourceResults)
+  //
+  //   forEach(
+  //     findRecordResourceIncludedResults,
+  //     (findRecordResourceIncludedResult) => {
+  //       this._injectReferenceKeys(
+  //         getProperty(
+  //           findRecordResourceIncludedResult,
+  //           this.payloadIncludedReference
+  //         ),
+  //         findRecordResourceIncludedResult
+  //       )
+  //       this._pushPayloadToCollection(
+  //         findRecordResourceIncludedResult.collectionName,
+  //         findRecordResourceIncludedResult
+  //       )
+  //     }
+  //   )
+  //
+  //   updatedCollectionRecords = await this._pushPayloadToCollection(
+  //     findRecordResourceName,
+  //     findRecordResourceResults
+  //   )
+  //
+  //   if (findRecordConfig.alias)
+  //     this._addAlias(findRecordConfig.alias, updatedCollectionRecords)
+  //
+  //   return updatedCollectionRecords
+  // }
 
   /*
     Functions for retrieving collection of records from local cache
