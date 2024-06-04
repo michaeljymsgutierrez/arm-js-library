@@ -451,46 +451,57 @@ export default class ApiResourceManager {
     })
   }
 
-  async _request(resourceMethod, resourceName, resourceId, resourceParams, resourceConfig) {
+  async _request(
+    resourceMethod,
+    resourceName,
+    resourceId = null,
+    resourceParams = {},
+    resourceConfig = {}
+  ) {
+    const requestOptions = {
+      method: resourceMethod,
+      url: resourceName,
+    }
 
+    if (resourceId) requestOptions.url = `${resourceName}/${resourceId}`
+
+    const resourceRequest = await axios(requestOptions)
+    const resourceResults = resourceRequest?.data?.data || []
+    const resourceIncludedResults = resourceRequest?.data?.included || []
+    let updatedCollectionRecords = null
+
+    forEach(resourceResults, (resourceResult) =>
+      this._injectReferenceKeys(resourceName, resourceResult)
+    )
+
+    forEach(resourceIncludedResults, (resourceIncludedResult) => {
+      this._injectReferenceKeys(
+        getProperty(resourceIncludedResult, this.payloadIncludedReference),
+        resourceIncludedResult
+      )
+      this._pushPayloadToCollection(
+        resourceIncludedResult.collectionName,
+        resourceIncludedResult
+      )
+    })
+
+    updatedCollectionRecords = await this._pushPayloadToCollection(
+      resourceName,
+      resourceResults
+    )
+
+    if (resourceConfig.alias)
+      this._addAlias(resourceConfig.alias, updatedCollectionRecords)
+
+    // Work on this part!
+    // return updatedCollectionRecords
   }
 
   /*
     Functions for retrieving collection of records from server
   */
-  async query(queryResourceName, queryParams = {}, queryConfig = {}) {
-    // const queryResourceRequest = await axios.get(queryResourceName, {
-    //   params: queryParams,
-    // })
-    // const queryResourceResults = queryResourceRequest?.data?.data || []
-    // const queryResourceIncludedResults =
-    //   queryResourceRequest?.data?.included || []
-    // let updatedCollectionRecords = null
-    //
-    // forEach(queryResourceResults, (queryResourceResult) =>
-    //   this._injectReferenceKeys(queryResourceName, queryResourceResult)
-    // )
-    //
-    // forEach(queryResourceIncludedResults, (queryResourceIncludedResult) => {
-    //   this._injectReferenceKeys(
-    //     getProperty(queryResourceIncludedResult, this.payloadIncludedReference),
-    //     queryResourceIncludedResult
-    //   )
-    //   this._pushPayloadToCollection(
-    //     queryResourceIncludedResult.collectionName,
-    //     queryResourceIncludedResult
-    //   )
-    // })
-    //
-    // updatedCollectionRecords = await this._pushPayloadToCollection(
-    //   queryResourceName,
-    //   queryResourceResults
-    // )
-    //
-    // if (queryConfig.alias)
-    //   this._addAlias(queryConfig.alias, updatedCollectionRecords)
-    //
-    // return updatedCollectionRecords
+  query(resource, params, config) {
+    this._request('get', resource, null, params, config)
   }
 
   // async queryRecord(
