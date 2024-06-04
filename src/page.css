@@ -1,11 +1,27 @@
-.form-container {
-  padding: 5px;
+table {
+  border: solid 1px #ddeeee;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font:
+    normal 13px Arial,
+    sans-serif;
+}
+table thead th {
+  background-color: #ddefef;
+  border: solid 1px #ddeeee;
+  color: #336b6b;
+  padding: 10px;
+  text-align: left;
+  text-shadow: 1px 1px 1px #fff;
+}
+table tbody td {
+  border: solid 1px #ddeeee;
+  color: #333;
+  padding: 10px;
+  text-shadow: 1px 1px 1px #fff;
 }
 
-.form-field {
-  margin: 4px;
-}
-
-.form-field-label {
-  display: block;
+button {
+  margin-left: 2px;
+  margin-right: 2px;
 }

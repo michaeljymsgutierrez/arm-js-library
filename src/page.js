@@ -44,8 +44,6 @@ const App = observer(() => {
         </tbody>
       </table>
 
-      <hr />
-
       <h3>[COLLECTION]: Customer Addresses</h3>
       <table>
         <thead>
