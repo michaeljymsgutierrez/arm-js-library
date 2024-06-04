@@ -3,9 +3,10 @@ import { ARM } from './index.js'
 
 const Model = () => {
   useEffect(() => {
-    ARM.query(
+    ARM.queryRecord(
       'addresses',
       {
+        id: 2427861,
         sort: '-id',
         include: 'user',
       },

@@ -457,6 +457,7 @@ export default class ApiResourceManager {
     resourceName,
     resourceId = null,
     resourceParams = {},
+    resourceFallback,
     resourceConfig = {}
   ) {
     const requestOptions = {
@@ -464,17 +465,24 @@ export default class ApiResourceManager {
       url: resourceName,
     }
 
-    if (isNumber(resourceId)) requestOptions.url = `${resourceName}/${resourceId}`
+    if (isNumber(resourceId))
+      requestOptions.url = `${resourceName}/${resourceId}`
     if (!isEmpty(resourceParams)) requestOptions.params = resourceParams
 
     const resourceRequest = await axios(requestOptions)
-    const resourceResults = resourceRequest?.data?.data || []
+    const resourceResults = resourceRequest?.data?.data || resourceFallback
     const resourceIncludedResults = resourceRequest?.data?.included || []
+    const isResourceResultsObject = isPlainObject(resourceResults)
+    const isResourceResultsArray = isArray(resourceResults)
     let updatedCollectionRecords = null
 
-    forEach(resourceResults, (resourceResult) =>
-      this._injectReferenceKeys(resourceName, resourceResult)
-    )
+    if (isResourceResultsArray)
+      forEach(resourceResults, (resourceResult) =>
+        this._injectReferenceKeys(resourceName, resourceResult)
+      )
+
+    if (isResourceResultsArray)
+      this._injectReferenceKeys(resourceName, resourceResults)
 
     forEach(resourceIncludedResults, (resourceIncludedResult) => {
       this._injectReferenceKeys(
@@ -495,7 +503,7 @@ export default class ApiResourceManager {
     if (resourceConfig.alias)
       this._addAlias(resourceConfig.alias, updatedCollectionRecords)
 
-    // Work on this part!
+    // Work on this part!!!
     // return updatedCollectionRecords
   }
 
@@ -503,63 +511,13 @@ export default class ApiResourceManager {
     Functions for retrieving collection of records from server
   */
   query(resource, params, config) {
-    this._request('get', resource, null, params, config)
+    this._request('get', resource, null, params, [], config)
   }
 
   queryRecord(resource, params, config) {
-    this._request('get', resource, null, params, config)
+    this._request('get', resource, null, params, {}, config)
   }
 
-  // async queryRecord(
-  //   queryRecordResourceName,
-  //   queryRecordParams = {},
-  //   queryRecordConfig = {}
-  // ) {
-  //   const queryRecordResourceRequest = await axios.get(
-  //     queryRecordResourceName,
-  //     {
-  //       params: queryRecordParams,
-  //     }
-  //   )
-  //   const queryRecordResourceResults =
-  //     queryRecordResourceRequest?.data?.data || {}
-  //   const queryRecordResourceIncludedResults =
-  //     queryRecordResourceResults?.data?.included || []
-  //   let updatedCollectionRecords = null
-  //
-  //   this._injectReferenceKeys(
-  //     queryRecordResourceName,
-  //     queryRecordResourceResults
-  //   )
-  //
-  //   forEach(
-  //     queryRecordResourceIncludedResults,
-  //     (queryRecordResourceIncludedResult) => {
-  //       this._injectReferenceKeys(
-  //         getProperty(
-  //           queryRecordResourceIncludedResult,
-  //           this.payloadIncludedReference
-  //         ),
-  //         queryRecordResourceIncludedResult
-  //       )
-  //       this._pushPayloadToCollection(
-  //         queryRecordResourceIncludedResult.collectionName,
-  //         queryRecordResourceIncludedResult
-  //       )
-  //     }
-  //   )
-  //
-  //   updatedCollectionRecords = await this._pushPayloadToCollection(
-  //     queryRecordResourceName,
-  //     queryRecordResourceResults
-  //   )
-  //
-  //   if (queryRecordConfig.alias)
-  //     this._addAlias(queryRecordConfig.alias, updatedCollectionRecords)
-  //
-  //   return updatedCollectionRecords
-  // }
-  //
   // async findAll(findAllResourceName, findAllConfig = {}) {
   //   const findAllResourceRequest = await axios.get(findAllResourceName)
   //   const findAllResourceResults = findAllResourceRequest?.data?.data || []
