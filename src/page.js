@@ -29,14 +29,12 @@ const App = observer(() => {
               <td>{customerAddress.get('attributes.address2')}</td>
               <td>{customerAddress.get('attributes.kind')}</td>
               <td>
-                <button onClick={() => customerAddress.save()}>
-                  Save Record
-                </button>
-                <button>Delete Record</button>
+                <button onClick={() => customerAddress.save()}>Save</button>
+                <button>Delete</button>
                 <button
                   onClick={() => controller.unloadRecord(customerAddress)}
                 >
-                  Unload Record
+                  Unload
                 </button>
               </td>
             </tr>
@@ -64,12 +62,10 @@ const App = observer(() => {
               <td>{address.get('attributes.address2')}</td>
               <td>{address.get('attributes.kind')}</td>
               <td>
-                <button onClick={() => address.save()}>Save Record</button>
-                <button onClick={() => address.destroyRecord()}>
-                  Delete Record
-                </button>
+                <button onClick={() => address.save()}>Save</button>
+                <button onClick={() => address.destroyRecord()}>Delete</button>
                 <button onClick={() => controller.unloadRecord(address)}>
-                  Unload Record
+                  Unload
                 </button>
               </td>
             </tr>
