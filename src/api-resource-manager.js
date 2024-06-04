@@ -453,15 +453,15 @@ export default class ApiResourceManager {
     })
   }
 
-  async _request(
+  async _request({
     resourceMethod,
     resourceName,
-    resourceId = null,
-    resourceParams = {},
-    resourcePayload = {},
+    resourceId,
+    resourceParams,
+    resourcePayload,
     resourceFallback,
-    resourceConfig = {}
-  ) {
+    resourceConfig,
+  }) {
     const requestOptions = {
       method: resourceMethod,
       url: resourceName,
@@ -512,20 +512,52 @@ export default class ApiResourceManager {
   /*
     Functions for retrieving collection of records from server
   */
-  query(resource, params, config) {
-    this._request('get', resource, null, params, null, [], config)
+  query(resource, params = {}, config = {}) {
+    this._request({
+      resourceMethod: 'get',
+      resourceName: resource,
+      resourceId: null,
+      resourceParams: params,
+      resourcePayload: null,
+      resourceFallback: [],
+      resourceConfig: config,
+    })
   }
 
-  queryRecord(resource, params, config) {
-    this._request('get', resource, null, params, null, {}, config)
+  queryRecord(resource, params = {}, config = {}) {
+    this._request({
+      resourceMethod: 'get',
+      resourceName: resource,
+      resourceId: null,
+      resourceParams: params,
+      resourcePayload: null,
+      resourceFallback: {},
+      resourceConfig: config,
+    })
   }
 
-  findAll(resource, config) {
-    this._request('get', resource, null, null, null, [], config)
+  findAll(resource, config = {}) {
+    this._request({
+      resourceMethod: 'get',
+      resourceName: resource,
+      resourceId: null,
+      resourceParams: null,
+      resourcePayload: null,
+      resourceFallback: [],
+      resourceConfig: config,
+    })
   }
 
-  findRecord(resource, id, params, config) {
-    this._request('get', resource, id, params, null, [], config)
+  findRecord(resource, id, params = {}, config = {}) {
+    this._request({
+      resourceMethod: 'get',
+      resourceName: resource,
+      resourceId: id,
+      resourceParams: params,
+      resourcePayload: null,
+      resourceFallback: {},
+      resourceConfig: config,
+    })
   }
 
   /*
