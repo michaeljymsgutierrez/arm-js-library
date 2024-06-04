@@ -16,6 +16,7 @@ const {
   isPlainObject,
   isNumber,
   isNull,
+  isEmpty,
   gte,
   lt,
   flatMap,
@@ -463,7 +464,8 @@ export default class ApiResourceManager {
       url: resourceName,
     }
 
-    if (resourceId) requestOptions.url = `${resourceName}/${resourceId}`
+    if (isNumber(resourceId)) requestOptions.url = `${resourceName}/${resourceId}`
+    if (!isEmpty(resourceParams)) requestOptions.params = resourceParams
 
     const resourceRequest = await axios(requestOptions)
     const resourceResults = resourceRequest?.data?.data || []
@@ -501,6 +503,10 @@ export default class ApiResourceManager {
     Functions for retrieving collection of records from server
   */
   query(resource, params, config) {
+    this._request('get', resource, null, params, config)
+  }
+
+  queryRecord(resource, params, config) {
     this._request('get', resource, null, params, config)
   }
 
