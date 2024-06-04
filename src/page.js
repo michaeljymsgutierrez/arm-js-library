@@ -1,4 +1,4 @@
-import './App.css'
+import './page.css'
 import { observer } from 'mobx-react-lite'
 import Model from './model'
 import Controller from './controller'
