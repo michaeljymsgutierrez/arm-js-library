@@ -433,11 +433,14 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
+    const isResourceIdValid = isNumber(resourceId)
+    const hasResourceParams = !isEmpty(resourceParams)
+    const hasResourcePayload = !isEmpty(resourcePayload)
+    const resourcePayloadHashId = getProperty(resourcePayload, 'data.hashId') || null
 
-    if (isNumber(resourceId))
-      requestOptions.url = `${resourceName}/${resourceId}`
-    if (!isEmpty(resourceParams)) requestOptions.params = resourceParams
-    if (!isEmpty(resourcePayload)) requestOptions.data = resourcePayload
+    if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
+    if (hasResourceParams) requestOptions.params = resourceParams
+    if (hasResourcePayload) requestOptions.data = resourcePayload
 
     const resourceRequest = await axios(requestOptions)
     const resourceResults = resourceRequest?.data?.data || resourceFallback
@@ -452,7 +455,7 @@ export default class ApiResourceManager {
       )
 
     if (isResourceResultsObject)
-      this._injectReferenceKeys(resourceName, resourceResults)
+      this._injectReferenceKeys(resourceName, resourceResults, resourcePayloadHashId)
 
     forEach(resourceIncludedResults, (resourceIncludedResult) => {
       this._injectReferenceKeys(
