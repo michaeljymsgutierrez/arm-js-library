@@ -75,6 +75,8 @@ const App = observer(() => {
 
       <h3>[RECORD]: Customer Addresses</h3>
       <button onClick={() => controller.createRecord()}>Create</button>
+      <br/>
+      <br/>
     </div>
   )
 })
