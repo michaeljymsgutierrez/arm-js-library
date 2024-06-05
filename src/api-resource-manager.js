@@ -193,7 +193,6 @@ export default class ApiResourceManager {
       }
     )
     const isValidId = isNumber(collectionRecord.id)
-    const currentHashId = collectionRecord.hashId
     const id = isValidId ? collectionRecord.id : null
     const resource = collectionRecord.collectionName
     const method = isValidId ? 'put' : 'post'
