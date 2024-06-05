@@ -17,6 +17,7 @@ const {
   isNumber,
   isNull,
   isEmpty,
+  isEqual,
   gte,
   lt,
   flatMap,
@@ -439,6 +440,7 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
+    const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
@@ -449,11 +451,16 @@ export default class ApiResourceManager {
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) requestOptions.data = resourcePayload
 
-    const requestHashId = this._generateHashId(requestOptions)
-    const isRequestHashIdExisting = includes(this.requestHashIds, requestHashId)
+    if (isResourceMethodGet) {
+      const requestHashId = this._generateHashId(requestOptions)
+      const isRequestHashIdExisting = includes(
+        this.requestHashIds,
+        requestHashId
+      )
 
-    if (!isRequestHashIdExisting) this._pushRequestHashId(requestHashId)
-    if (isRequestHashIdExisting) return
+      if (!isRequestHashIdExisting) this._pushRequestHashId(requestHashId)
+      if (isRequestHashIdExisting) return
+    }
 
     const resourceRequest = await axios(requestOptions)
     const resourceResults = resourceRequest?.data?.data || resourceFallback
