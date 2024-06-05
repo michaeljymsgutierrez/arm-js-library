@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as lodash from 'lodash'
 import * as mobx from 'mobx'
-import { v4 as uuidv4 } from 'uuid'
+import { v1 as uuidv1 } from 'uuid'
 import CryptoJS from 'crypto-js'
 
 const { makeObservable, observable, action } = mobx
@@ -113,7 +113,7 @@ export default class ApiResourceManager {
   /*
     Function for generating collection data unique id.
   */
-  _generateHashId(object = { id: uuidv4() }) {
+  _generateHashId(object = { id: uuidv1() }) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
@@ -416,7 +416,7 @@ export default class ApiResourceManager {
   }
 
   createRecord(collectionName, collectionRecord = {}) {
-    collectionRecord.id = uuidv4()
+    collectionRecord.id = uuidv1()
 
     this._injectReferenceKeys(collectionName, collectionRecord)
     this._injectActions(collectionRecord)
