@@ -24,6 +24,7 @@ const {
   entries,
   forEach,
   keysIn,
+  includes,
 } = lodash
 
 export default class ApiResourceManager {
@@ -32,6 +33,7 @@ export default class ApiResourceManager {
     this.host = window.location.origin
     this.collections = {}
     this.aliases = {}
+    this.requestHashIds = []
     this.payloadIncludedReference = 'type'
 
     this._initializeCollections(collections)
@@ -40,6 +42,7 @@ export default class ApiResourceManager {
     makeObservable(this, {
       collections: observable,
       aliases: observable,
+      requestHashIds: observable,
       _pushPayloadToCollection: action,
       _addCollection: action,
       _addAlias: action,
@@ -364,6 +367,10 @@ export default class ApiResourceManager {
     })
   }
 
+  _pushRequestHashId(requestHashId) {
+    this.requestHashIds.push(requestHashId)
+  }
+
   /*
     Define internal/external functions here.
     These functions are functions that are being used inside ARM class and new ARM instance.
@@ -435,11 +442,18 @@ export default class ApiResourceManager {
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
-    const resourcePayloadHashId = getProperty(resourcePayload, 'data.hashId') || null
+    const resourcePayloadHashId =
+      getProperty(resourcePayload, 'data.hashId') || null
 
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) requestOptions.data = resourcePayload
+
+    const requestHashId = this._generateHashId(requestOptions)
+    const isRequestHashIdExisting = includes(this.requestHashIds, requestHashId)
+
+    if (!isRequestHashIdExisting) this._pushRequestHashId(requestHashId)
+    if (isRequestHashIdExisting) return
 
     const resourceRequest = await axios(requestOptions)
     const resourceResults = resourceRequest?.data?.data || resourceFallback
@@ -454,7 +468,11 @@ export default class ApiResourceManager {
       )
 
     if (isResourceResultsObject)
-      this._injectReferenceKeys(resourceName, resourceResults, resourcePayloadHashId)
+      this._injectReferenceKeys(
+        resourceName,
+        resourceResults,
+        resourcePayloadHashId
+      )
 
     forEach(resourceIncludedResults, (resourceIncludedResult) => {
       this._injectReferenceKeys(
