@@ -10,6 +10,7 @@ const Controller = (props) => {
 
   const createRecord = () => {
     const newRecord = ARM.createRecord('addresses')
+
     newRecord.setProperties({
       attributes: {
         address1: 'Imus, Cavite, Philippines',
@@ -28,12 +29,10 @@ const Controller = (props) => {
         },
         area: {
           data: {
-            type: 'areas',
             id: '166',
           },
         },
       },
-      type: 'addresses',
     })
 
     newRecord.save()
