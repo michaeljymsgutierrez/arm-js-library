@@ -599,6 +599,7 @@ export default class ApiResourceManager {
   1. isPristine - check if record is not modified
   2. isDirty - check if record is modified
   3. rollBackAttributes - rollback record to is initial state
+  4. reload - get latest record from server by id
 
   TO DO: Alias and Ajax Functions (need to think more)
   1. Removed async await
