@@ -1,6 +1,8 @@
 import { ARM } from './index.js'
 
 const Model = () => {
+  const modelCustomerAddresses = ARM.getAlias('customerAddresses', [])
+
   ARM.query(
     'addresses',
     {
@@ -9,6 +11,13 @@ const Model = () => {
     },
     { alias: 'customerAddresses' }
   )
+
+  if (modelCustomerAddresses.length > 1) {
+    const address = modelCustomerAddresses[0]
+    const hasAddressId = address.get('id')
+    console.log("Done fetching", address.get('id'))
+    ARM.findRecord('addresses', address.get('id'), { skip: hasAddressId })
+  }
 
   // ARM.queryRecord(
   //   'addresses',
