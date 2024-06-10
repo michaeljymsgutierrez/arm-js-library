@@ -9,6 +9,9 @@ const App = observer(() => {
 
   return (
     <div className="App">
+      <h3>Model loading state: {JSON.stringify(model.isLoading)}</h3>
+      <h3>Model error state: {JSON.stringify(model.isError)}</h3>
+
       <h3>[ALIAS]: Customer Addresses</h3>
       <table>
         <thead>

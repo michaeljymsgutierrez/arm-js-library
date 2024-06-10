@@ -485,50 +485,70 @@ export default class ApiResourceManager {
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) requestOptions.data = resourcePayload
 
-    // Will terminate identical GET request for optimization
+    /*
+      Will terminate identical GET request for optimization
+    */
     if (isResourceMethodGet) {
       const requestHashObject = this.requestHashIds[requestHashId]
       const isRequestHashIdExisting = !isNil(requestHashObject)
       if (isRequestHashIdExisting && requestHashObject.isNew === false) return
     }
 
-    const resourceRequest = await axios(requestOptions)
-    const resourceResults = resourceRequest?.data?.data || resourceFallback
-    const resourceIncludedResults = resourceRequest?.data?.included || []
-    const isResourceResultsObject = isPlainObject(resourceResults)
-    const isResourceResultsArray = isArray(resourceResults)
-    let updatedCollectionRecords = null
+    try {
+      const resourceRequest = await axios(requestOptions)
+      const resourceResults = resourceRequest?.data?.data || resourceFallback
+      const resourceIncludedResults = resourceRequest?.data?.included || []
+      const isResourceResultsObject = isPlainObject(resourceResults)
+      const isResourceResultsArray = isArray(resourceResults)
+      let updatedCollectionRecords = null
 
-    if (isResourceResultsArray)
-      forEach(resourceResults, (resourceResult) =>
-        this._injectReferenceKeys(resourceName, resourceResult)
-      )
+      if (isResourceResultsArray)
+        forEach(resourceResults, (resourceResult) =>
+          this._injectReferenceKeys(resourceName, resourceResult)
+        )
 
-    if (isResourceResultsObject)
-      this._injectReferenceKeys(
+      if (isResourceResultsObject)
+        this._injectReferenceKeys(
+          resourceName,
+          resourceResults,
+          resourcePayloadHashId
+        )
+
+      forEach(resourceIncludedResults, (resourceIncludedResult) => {
+        this._injectReferenceKeys(
+          getProperty(resourceIncludedResult, this.payloadIncludedReference),
+          resourceIncludedResult
+        )
+        this._pushPayloadToCollection(
+          resourceIncludedResult.collectionName,
+          resourceIncludedResult
+        )
+      })
+
+      updatedCollectionRecords = await this._pushPayloadToCollection(
         resourceName,
-        resourceResults,
-        resourcePayloadHashId
+        resourceResults
       )
 
-    forEach(resourceIncludedResults, (resourceIncludedResult) => {
-      this._injectReferenceKeys(
-        getProperty(resourceIncludedResult, this.payloadIncludedReference),
-        resourceIncludedResult
-      )
-      this._pushPayloadToCollection(
-        resourceIncludedResult.collectionName,
-        resourceIncludedResult
-      )
-    })
+      if (resourceConfig.alias)
+        this._addAlias(resourceConfig.alias, updatedCollectionRecords)
 
-    updatedCollectionRecords = await this._pushPayloadToCollection(
-      resourceName,
-      resourceResults
-    )
+      this.requestHashIds[requestHashId] = {
+        isLoading: false,
+        isError: false,
+        isNew: false,
+        data: updatedCollectionRecords,
+      }
+    } catch (error) {
+      console.error(error)
 
-    if (resourceConfig.alias)
-      this._addAlias(resourceConfig.alias, updatedCollectionRecords)
+      this.requestHashIds[requestHashId] = {
+        isLoading: false,
+        isError: true,
+        isNew: false,
+        data: error,
+      }
+    }
 
     // Work on this part!!!
     // return updatedCollectionRecords

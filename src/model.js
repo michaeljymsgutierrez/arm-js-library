@@ -15,9 +15,7 @@ const Model = () => {
   //   // console.log(data)
   // }, [])
 
-  const modelCustomerAddresses = ARM.getAlias('customerAddresses', [])
-
-  const  data = ARM.query(
+  const data = ARM.query(
     'addresses',
     {
       sort: '-id',
@@ -25,8 +23,6 @@ const Model = () => {
     },
     { alias: 'customerAddresses' }
   )
-
-  console.log(data)
 
   // ARM.query(
   //   'addresses',
@@ -67,6 +63,7 @@ const Model = () => {
   //     alias: 'customerAddresses',
   //   }
   // )
+  return data
 }
 
 export default Model
