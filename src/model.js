@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { ARM } from './index.js'
 
 const Model = () => {
