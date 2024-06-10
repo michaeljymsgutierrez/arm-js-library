@@ -548,9 +548,6 @@ export default class ApiResourceManager {
         data: error,
       }
     }
-
-    // Work on this part!!!
-    // return updatedCollectionRecords
   }
 
   /*
