@@ -584,7 +584,7 @@ export default class ApiResourceManager {
   }
 
   queryRecord(resource, params = {}, config = {}) {
-    this._request({
+    const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
       resourceId: null,
@@ -592,11 +592,19 @@ export default class ApiResourceManager {
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: config,
-    })
+    }
+    const responseObject = defaultRequestObjectResponse
+    const requestHashObject = this._pushRequestHash(
+      requestObject,
+      responseObject
+    )
+    this._request(requestObject)
+
+    return requestHashObject
   }
 
   findAll(resource, config = {}) {
-    this._request({
+    const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
       resourceId: null,
@@ -604,11 +612,19 @@ export default class ApiResourceManager {
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: config,
-    })
+    }
+    const responseObject = defaultRequestArrayResponse
+    const requestHashObject = this._pushRequestHash(
+      requestObject,
+      responseObject
+    )
+    this._request(requestObject)
+
+    return requestHashObject
   }
 
   findRecord(resource, id, params = {}, config = {}) {
-    this._request({
+    const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
       resourceId: id,
@@ -616,7 +632,15 @@ export default class ApiResourceManager {
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: config,
-    })
+    }
+    const responseObject = defaultRequestObjectResponse
+    const requestHashObject = this._pushRequestHash(
+      requestObject,
+      responseObject
+    )
+    this._request(requestObject)
+
+    return requestHashObject
   }
 
   /*
