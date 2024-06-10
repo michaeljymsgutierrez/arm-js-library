@@ -660,26 +660,26 @@ export default class ApiResourceManager {
 /*
   Notes:
   TO DO: API ajax functions
-  1. query
+  1. query - Done
     - response payload is a collection of records
     - support query params
     - always request to server
-  2. queryRecord
+  2. queryRecord - Done
     - response payload is a single record
     - support query params
     - always request to server
-  3. findAll
+  3. findAll - Done
     - response payload is a collection of records
     - not support query params
     - always request to server
-  4. findRecord
+  4. findRecord - Done
     - response payload is a single record
     - support query params (by default query by id)
     - always request to server
-  5. peekAll
+  5. peekAll - Done
     - get all records from local cache
     - will not request to server
-  6. peekRecord
+  6. peekRecord - Done
     - get single record from local cache (by default get by id)
     - will not request to server
 
@@ -690,6 +690,6 @@ export default class ApiResourceManager {
   4. reload - get latest record from server by id
 
   TO DO: Alias and Ajax Functions (need to think more)
-  1. Removed async await
-  2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request
+  1. Removed async await - Done
+  2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
 */
