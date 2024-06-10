@@ -543,7 +543,7 @@ export default class ApiResourceManager {
         isNew: false,
         data: updatedCollectionRecords,
         included: [],
-        meta: resourceMetaResults
+        meta: resourceMetaResults,
       }
     } catch (error) {
       console.error(error)
@@ -554,7 +554,7 @@ export default class ApiResourceManager {
         isNew: false,
         data: error,
         included: [],
-        meta: resourceMetaResults
+        meta: {},
       }
     }
   }
