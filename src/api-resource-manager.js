@@ -208,7 +208,7 @@ export default class ApiResourceManager {
     Function for persisting collection record on the server,
     where it is being injected.
   */
-  async _saveRecord(currentRecord) {
+   _saveRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
       {
@@ -221,7 +221,17 @@ export default class ApiResourceManager {
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
-    this._request({
+    // this._request({
+    //   resourceMethod: method,
+    //   resourceName: resource,
+    //   resourceId: id,
+    //   resourceParams: {},
+    //   resourcePayload: payload,
+    //   resourceFallback: {},
+    //   resourceConfig: {},
+    // })
+
+    const requestObject = {
       resourceMethod: method,
       resourceName: resource,
       resourceId: id,
@@ -229,7 +239,17 @@ export default class ApiResourceManager {
       resourcePayload: payload,
       resourceFallback: {},
       resourceConfig: {},
-    })
+    }
+
+    const responseObject = defaultRequestObjectResponse
+    const requestHashObject = this._pushRequestHash(
+      requestObject,
+      responseObject
+    )
+
+    this._request(requestObject)
+
+    return requestHashObject
   }
 
   async _deleteRecord(currentRecord) {
@@ -660,6 +680,7 @@ export default class ApiResourceManager {
 /*
   Notes:
   TO DO: API ajax functions
+  Add properties: isLoading, isError, data, included, meta
   1. query - Done
     - response payload is a collection of records
     - support query params

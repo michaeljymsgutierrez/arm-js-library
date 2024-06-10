@@ -33,7 +33,9 @@ const App = observer(() => {
               <td>{customerAddress.get('attributes.kind')}</td>
               <td>
                 <button onClick={() => customerAddress.save()}>Save</button>
-                <button onClick={() => customerAddress.destroyRecord()}>Delete</button>
+                <button onClick={() => customerAddress.destroyRecord()}>
+                  Delete
+                </button>
                 <button
                   onClick={() => controller.unloadRecord(customerAddress)}
                 >
@@ -78,8 +80,8 @@ const App = observer(() => {
 
       <h3>[RECORD]: Customer Addresses</h3>
       <button onClick={() => controller.createRecord()}>Create</button>
-      <br/>
-      <br/>
+      <br />
+      <br />
     </div>
   )
 })
