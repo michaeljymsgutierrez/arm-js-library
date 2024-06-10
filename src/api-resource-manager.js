@@ -16,6 +16,7 @@ const {
   isPlainObject,
   isNumber,
   isNull,
+  isNil,
   isEmpty,
   isEqual,
   gte,
@@ -28,13 +29,27 @@ const {
   includes,
 } = lodash
 
+const defaultRequestArrayResponse = {
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: [],
+}
+
+const defaultRequestObjectResponse = {
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: {},
+}
+
 export default class ApiResourceManager {
   constructor(collections = []) {
     this.namespace = 'api/v1'
     this.host = window.location.origin
     this.collections = {}
     this.aliases = {}
-    this.requestHashIds = []
+    this.requestHashIds = {}
     this.payloadIncludedReference = 'type'
 
     this._initializeCollections(collections)
@@ -45,6 +60,7 @@ export default class ApiResourceManager {
       aliases: observable,
       requestHashIds: observable,
       _pushPayloadToCollection: action,
+      _pushRequestHash: action,
       _addCollection: action,
       _addAlias: action,
     })
@@ -368,8 +384,25 @@ export default class ApiResourceManager {
     })
   }
 
-  _pushRequestHashId(requestHashId) {
-    this.requestHashIds.push(requestHashId)
+  _pushRequestHash(
+    requestObject = {},
+    responseObject = {
+      isLoading: true,
+      isError: false,
+      isNew: true,
+      data: null,
+    }
+  ) {
+    const requestHashId = this._generateHashId(requestObject)
+    const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
+
+    if (isRequestHashExisting && responseObject.isNew) {
+      setProperty(this.requestHashIds[requestHashId], 'isNew', false)
+    } else {
+      this.requestHashIds[requestHashId] = responseObject
+    }
+
+    return this.requestHashIds[requestHashId]
   }
 
   /*
@@ -440,6 +473,7 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
+    const requestHashId = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
@@ -451,15 +485,11 @@ export default class ApiResourceManager {
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) requestOptions.data = resourcePayload
 
+    // Will terminate identical GET request for optimization
     if (isResourceMethodGet) {
-      const requestHashId = this._generateHashId(requestOptions)
-      const isRequestHashIdExisting = includes(
-        this.requestHashIds,
-        requestHashId
-      )
-
-      if (!isRequestHashIdExisting) this._pushRequestHashId(requestHashId)
-      if (isRequestHashIdExisting) return
+      const requestHashObject = this.requestHashIds[requestHashId]
+      const isRequestHashIdExisting = !isNil(requestHashObject)
+      if (isRequestHashIdExisting && requestHashObject.isNew === false) return
     }
 
     const resourceRequest = await axios(requestOptions)
@@ -508,7 +538,7 @@ export default class ApiResourceManager {
     Functions for retrieving collection of records from server
   */
   query(resource, params = {}, config = {}) {
-    this._request({
+    const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
       resourceId: null,
@@ -516,7 +546,16 @@ export default class ApiResourceManager {
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: config,
-    })
+    }
+    const responseObject = defaultRequestArrayResponse
+    const requestHashObject = this._pushRequestHash(
+      requestObject,
+      responseObject
+    )
+
+    this._request(requestObject)
+
+    return requestHashObject
   }
 
   queryRecord(resource, params = {}, config = {}) {

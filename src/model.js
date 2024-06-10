@@ -1,9 +1,23 @@
+import { useEffect } from 'react'
 import { ARM } from './index.js'
 
 const Model = () => {
+  // useEffect(() => {
+  //   const data = ARM.query(
+  //     'addresses',
+  //     {
+  //       sort: '-id',
+  //       include: 'user',
+  //     },
+  //     { alias: 'customerAddresses' }
+  //   )
+  //   console.log(data)
+  //   // console.log(data)
+  // }, [])
+
   const modelCustomerAddresses = ARM.getAlias('customerAddresses', [])
 
-  ARM.query(
+  const  data = ARM.query(
     'addresses',
     {
       sort: '-id',
@@ -12,12 +26,23 @@ const Model = () => {
     { alias: 'customerAddresses' }
   )
 
-  if (modelCustomerAddresses.length > 1) {
-    const address = modelCustomerAddresses[0]
-    const hasAddressId = address.get('id')
-    console.log("Done fetching", address.get('id'))
-    ARM.findRecord('addresses', address.get('id'), { skip: hasAddressId })
-  }
+  console.log(data)
+
+  // ARM.query(
+  //   'addresses',
+  //   {
+  //     sort: '-id',
+  //     include: 'user',
+  //   },
+  //   { alias: 'customerAddresses' }
+  // )
+  //
+  // if (modelCustomerAddresses.length > 1) {
+  //   const address = modelCustomerAddresses[0]
+  //   const hasAddressId = address.get('id')
+  //   console.log("Done fetching", address.get('id'))
+  //   ARM.findRecord('addresses', address.get('id'), { skip: hasAddressId })
+  // }
 
   // ARM.queryRecord(
   //   'addresses',
