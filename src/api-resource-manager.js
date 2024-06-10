@@ -33,6 +33,8 @@ const defaultRequestArrayResponse = {
   isError: false,
   isNew: true,
   data: [],
+  included: [],
+  meta: {},
 }
 
 const defaultRequestObjectResponse = {
@@ -40,6 +42,8 @@ const defaultRequestObjectResponse = {
   isError: false,
   isNew: true,
   data: {},
+  included: [],
+  meta: {},
 }
 
 export default class ApiResourceManager {
@@ -497,6 +501,7 @@ export default class ApiResourceManager {
       const resourceRequest = await axios(requestOptions)
       const resourceResults = resourceRequest?.data?.data || resourceFallback
       const resourceIncludedResults = resourceRequest?.data?.included || []
+      const resourceMetaResults = resourceRequest?.data?.meta || {}
       const isResourceResultsObject = isPlainObject(resourceResults)
       const isResourceResultsArray = isArray(resourceResults)
       let updatedCollectionRecords = null
@@ -537,6 +542,8 @@ export default class ApiResourceManager {
         isError: false,
         isNew: false,
         data: updatedCollectionRecords,
+        included: [],
+        meta: resourceMetaResults
       }
     } catch (error) {
       console.error(error)
@@ -546,6 +553,8 @@ export default class ApiResourceManager {
         isError: true,
         isNew: false,
         data: error,
+        included: [],
+        meta: resourceMetaResults
       }
     }
   }
