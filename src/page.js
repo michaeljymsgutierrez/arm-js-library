@@ -36,12 +36,14 @@ const App = observer(() => {
               <td>
                 <button
                   onClick={() => {
-                    customerAddress.save()
-                    // .then(results => { console.log(results) })
-                    // .catch(errors => { console.log(errors) })
+                    customerAddress.set('isLoading', true)
+                    customerAddress.save().then((results) => {
+                      customerAddress.set('isLoading', false)
+                    })
                   }}
                 >
-                  {customerAddress.get('isLoading') ? 'Saving' : 'Save'} {JSON.stringify(customerAddress.get('isLoading'))}
+                  {customerAddress.get('isLoading') ? 'Saving' : 'Save'}{' '}
+                  {JSON.stringify(customerAddress.get('isLoading'))}
                 </button>
                 <button onClick={() => customerAddress.destroyRecord()}>
                   Delete

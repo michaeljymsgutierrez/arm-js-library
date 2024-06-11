@@ -509,9 +509,9 @@ export default class ApiResourceManager {
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) {
-      resourcePayload.data.isLoading = true
+      // resourcePayload.data.isLoading = true
       requestOptions.data = resourcePayload
-      console.log("Started:", resourcePayload.data.isLoading)
+      // console.log("Started:", resourcePayload.data.isLoading)
     }
 
     /*
@@ -584,12 +584,12 @@ export default class ApiResourceManager {
       }
     }
 
-    if (hasResourcePayload) {
-      setTimeout(() => {
-        resourcePayload.data.isLoading = false
-        console.log("Finished:", resourcePayload.data.isLoading)
-      }, 3000)
-    }
+    // if (hasResourcePayload) {
+    //   setTimeout(() => {
+    //     resourcePayload.data.isLoading = false
+    //     console.log("Finished:", resourcePayload.data.isLoading)
+    //   }, 3000)
+    // }
     return this.requestHashIds[requestHashId]
   }
 
