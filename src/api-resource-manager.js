@@ -66,8 +66,6 @@ export default class ApiResourceManager {
       _pushRequestHash: action,
       _addCollection: action,
       _addAlias: action,
-      _getProperty: action,
-      _setProperty: action,
     })
   }
 
