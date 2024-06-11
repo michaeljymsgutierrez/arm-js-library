@@ -709,8 +709,10 @@ export default class ApiResourceManager {
   TO DO: Records new properties
   1. isPristine - check if record is not modified
   2. isDirty - check if record is modified
-  3. rollBackAttributes - rollback record to is initial state
-  4. reload - get latest record from server by id
+  3. isLoading - check if record is doing ajax
+  4. isError - check if record encountered an error
+  5. rollBackAttributes - rollback record to is initial state
+  6. reload - get latest record from server by id
 
   address.get('isLoading')
   address.save()
