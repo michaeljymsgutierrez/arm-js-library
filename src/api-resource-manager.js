@@ -208,7 +208,7 @@ export default class ApiResourceManager {
     Function for persisting collection record on the server,
     where it is being injected.
   */
-   _saveRecord(currentRecord) {
+  _saveRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
       {
@@ -246,9 +246,9 @@ export default class ApiResourceManager {
     //   requestObject,
     //   responseObject
     // )
-    collectionRecord.isLoading = true
+    // collectionRecord.isLoading = true
 
-    this._request(requestObject)
+    return this._request(requestObject)
 
     // return requestHashObject
   }
@@ -508,7 +508,11 @@ export default class ApiResourceManager {
 
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
-    if (hasResourcePayload) requestOptions.data = resourcePayload
+    if (hasResourcePayload) {
+      resourcePayload.data.isLoading = true
+      requestOptions.data = resourcePayload
+      console.log("Started:", resourcePayload.data)
+    }
 
     /*
       Will terminate identical GET request for optimization
@@ -579,6 +583,12 @@ export default class ApiResourceManager {
         meta: {},
       }
     }
+
+    if (hasResourcePayload) {
+      resourcePayload.data.isLoading = false
+      console.log("Finished:", resourcePayload.data)
+    }
+    return this.requestHashIds[requestHashId]
   }
 
   /*
