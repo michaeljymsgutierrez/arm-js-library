@@ -509,9 +509,8 @@ export default class ApiResourceManager {
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) {
-      // resourcePayload.data.isLoading = true
+      resourcePayload.data.isLoading = true
       requestOptions.data = resourcePayload
-      // console.log("Started:", resourcePayload.data.isLoading)
     }
 
     /*
@@ -537,7 +536,7 @@ export default class ApiResourceManager {
           this._injectReferenceKeys(resourceName, resourceResult)
         )
 
-      if (isResourceResultsObject)
+      if (isResourceResultsObject && !hasResourcePayload)
         this._injectReferenceKeys(
           resourceName,
           resourceResults,
@@ -584,12 +583,8 @@ export default class ApiResourceManager {
       }
     }
 
-    // if (hasResourcePayload) {
-    //   setTimeout(() => {
-    //     resourcePayload.data.isLoading = false
-    //     console.log("Finished:", resourcePayload.data.isLoading)
-    //   }, 3000)
-    // }
+    if (hasResourcePayload) resourcePayload.data.isLoading = false
+
     return this.requestHashIds[requestHashId]
   }
 
@@ -721,7 +716,7 @@ export default class ApiResourceManager {
   TO DO: Records new properties
   1. isPristine - check if record is not modified
   2. isDirty - check if record is modified
-  3. isLoading - check if record is doing ajax
+  3. isLoading - check if record is doing ajax - Done
   4. isError - check if record encountered an error
   5. rollBackAttributes - rollback record to is initial state
   6. reload - get latest record from server by id
