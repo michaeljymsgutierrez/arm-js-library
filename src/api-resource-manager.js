@@ -66,6 +66,8 @@ export default class ApiResourceManager {
       _pushRequestHash: action,
       _addCollection: action,
       _addAlias: action,
+      _getProperty: action,
+      _setProperty: action,
     })
   }
 
@@ -585,8 +587,10 @@ export default class ApiResourceManager {
     }
 
     if (hasResourcePayload) {
-      resourcePayload.data.isLoading = false
-      console.log("Finished:", resourcePayload.data.isLoading)
+      setTimeout(() => {
+        resourcePayload.data.isLoading = false
+        console.log("Finished:", resourcePayload.data.isLoading)
+      }, 3000)
     }
     return this.requestHashIds[requestHashId]
   }

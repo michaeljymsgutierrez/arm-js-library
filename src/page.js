@@ -16,6 +16,7 @@ const App = observer(() => {
       <table>
         <thead>
           <tr>
+            <th>HASH ID</th>
             <th>ID</th>
             <th>ADDRESS1</th>
             <th>ADDRESS2</th>
@@ -27,6 +28,7 @@ const App = observer(() => {
         <tbody>
           {controller.customerAddresses.map((customerAddress, index) => (
             <tr key={index}>
+              <td>{customerAddress.get('hashId')}</td>
               <td>{customerAddress.get('id')}</td>
               <td>{customerAddress.get('attributes.address1')}</td>
               <td>{customerAddress.get('attributes.address2')}</td>
