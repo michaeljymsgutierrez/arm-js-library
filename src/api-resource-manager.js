@@ -682,7 +682,7 @@ export default class ApiResourceManager {
 /*
   Notes:
   TO DO: API ajax functions
-  Add properties: isLoading, isError, data, included, meta
+  Add properties: isLoading, isError, data, included, meta - Done
   1. query - Done
     - response payload is a collection of records
     - support query params
