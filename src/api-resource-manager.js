@@ -511,7 +511,7 @@ export default class ApiResourceManager {
     if (hasResourcePayload) {
       resourcePayload.data.isLoading = true
       requestOptions.data = resourcePayload
-      console.log("Started:", resourcePayload.data)
+      console.log("Started:", resourcePayload.data.isLoading)
     }
 
     /*
@@ -586,7 +586,7 @@ export default class ApiResourceManager {
 
     if (hasResourcePayload) {
       resourcePayload.data.isLoading = false
-      console.log("Finished:", resourcePayload.data)
+      console.log("Finished:", resourcePayload.data.isLoading)
     }
     return this.requestHashIds[requestHashId]
   }
