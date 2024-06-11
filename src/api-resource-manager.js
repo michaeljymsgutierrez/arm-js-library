@@ -241,15 +241,16 @@ export default class ApiResourceManager {
       resourceConfig: {},
     }
 
-    const responseObject = defaultRequestObjectResponse
-    const requestHashObject = this._pushRequestHash(
-      requestObject,
-      responseObject
-    )
+    // const responseObject = defaultRequestObjectResponse
+    // const requestHashObject = this._pushRequestHash(
+    //   requestObject,
+    //   responseObject
+    // )
+    collectionRecord.isLoading = true
 
     this._request(requestObject)
 
-    return requestHashObject
+    // return requestHashObject
   }
 
   async _deleteRecord(currentRecord) {
@@ -329,6 +330,7 @@ export default class ApiResourceManager {
     collectionRecord,
     collectionRecordHashId = null
   ) {
+    collectionRecord.isLoading = false
     collectionRecord.isPristine = true
     collectionRecord.isDirty = false
     collectionRecord.collectionName = collectionName

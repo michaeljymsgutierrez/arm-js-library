@@ -32,7 +32,7 @@ const App = observer(() => {
               <td>{customerAddress.get('attributes.address2')}</td>
               <td>{customerAddress.get('attributes.kind')}</td>
               <td>
-                <button onClick={() => customerAddress.save()}>Save</button>
+                <button onClick={() => customerAddress.save()}>Save {JSON.stringify(customerAddress.get('isLoading'))}</button>
                 <button onClick={() => customerAddress.destroyRecord()}>
                   Delete
                 </button>
