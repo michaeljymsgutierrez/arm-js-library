@@ -242,44 +242,61 @@ export default class ApiResourceManager {
       }
     )
     const isValidId = isNumber(collectionRecord.id)
-    const resourceId = collectionRecord.id
-    const resourceName = collectionRecord.collectionName
-    const resourceURL = isValidId
-      ? `${resourceName}/${resourceId}`
-      : collectionRecord.collectionName
-    const resourceMethod = 'delete'
-    const deleteRecordResourceRequest = await axios({
-      method: resourceMethod,
-      url: resourceURL,
-    })
-    const deleteRecordResourceResults =
-      deleteRecordResourceRequest?.data?.data || {}
-    const deleteRecordResourceIncludedResults =
-      deleteRecordResourceResults?.data?.included || []
-    let updatedCollectionRecords = {}
+    const id = collectionRecord.id
+    const resource = collectionRecord.collectionName
+    const method = 'delete'
+    const payload = { data: collectionRecord }
 
-    forEach(
-      deleteRecordResourceIncludedResults,
-      (deleteRecordResourceIncludedResult) => {
-        this._injectReferenceKeys(
-          getProperty(
-            deleteRecordResourceIncludedResult,
-            this.payloadIncludedReference
-          ),
-          deleteRecordResourceIncludedResult
-        )
-        this._pushPayloadToCollection(
-          deleteRecordResourceIncludedResult.collectionName,
-          deleteRecordResourceIncludedResult
-        )
-      }
-    )
+    const requestObject = {
+      resourceMethod: method,
+      resourceName: resource,
+      resourceId: id,
+      resourceParams: {},
+      resourcePayload: null,
+      resourceFallback: {},
+      resourceConfig: {},
+    }
 
-    this.unloadRecord(currentRecord)
-
-    updatedCollectionRecords = deleteRecordResourceResults
-
-    return updatedCollectionRecords
+    return this._request(requestObject)
+    // const isValidId = isNumber(collectionRecord.id)
+    // const resourceId = collectionRecord.id
+    // const resourceName = collectionRecord.collectionName
+    // const resourceURL = isValidId
+    //   ? `${resourceName}/${resourceId}`
+    //   : collectionRecord.collectionName
+    // const resourceMethod = 'delete'
+    // const deleteRecordResourceRequest = await axios({
+    //   method: resourceMethod,
+    //   url: resourceURL,
+    // })
+    // const deleteRecordResourceResults =
+    //   deleteRecordResourceRequest?.data?.data || {}
+    // const deleteRecordResourceIncludedResults =
+    //   deleteRecordResourceResults?.data?.included || []
+    // let updatedCollectionRecords = {}
+    //
+    // forEach(
+    //   deleteRecordResourceIncludedResults,
+    //   (deleteRecordResourceIncludedResult) => {
+    //     this._injectReferenceKeys(
+    //       getProperty(
+    //         deleteRecordResourceIncludedResult,
+    //         this.payloadIncludedReference
+    //       ),
+    //       deleteRecordResourceIncludedResult
+    //     )
+    //     this._pushPayloadToCollection(
+    //       deleteRecordResourceIncludedResult.collectionName,
+    //       deleteRecordResourceIncludedResult
+    //     )
+    //   }
+    // )
+    //
+    // this.unloadRecord(currentRecord)
+    //
+    // updatedCollectionRecords = deleteRecordResourceResults
+    //
+    // return updatedCollectionRecords
   }
 
   /*
