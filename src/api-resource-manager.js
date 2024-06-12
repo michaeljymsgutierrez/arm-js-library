@@ -221,16 +221,6 @@ export default class ApiResourceManager {
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
-    // this._request({
-    //   resourceMethod: method,
-    //   resourceName: resource,
-    //   resourceId: id,
-    //   resourceParams: {},
-    //   resourcePayload: payload,
-    //   resourceFallback: {},
-    //   resourceConfig: {},
-    // })
-
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -241,16 +231,7 @@ export default class ApiResourceManager {
       resourceConfig: {},
     }
 
-    // const responseObject = defaultRequestObjectResponse
-    // const requestHashObject = this._pushRequestHash(
-    //   requestObject,
-    //   responseObject
-    // )
-    // collectionRecord.isLoading = true
-
     return this._request(requestObject)
-
-    // return requestHashObject
   }
 
   async _deleteRecord(currentRecord) {
