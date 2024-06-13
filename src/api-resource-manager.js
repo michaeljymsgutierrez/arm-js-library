@@ -467,8 +467,8 @@ export default class ApiResourceManager {
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) {
-      resourcePayload.data.isLoading = true
       requestOptions.data = resourcePayload
+      resourcePayload.data.isLoading = true
     }
 
     /*
@@ -494,6 +494,8 @@ export default class ApiResourceManager {
           this._injectReferenceKeys(resourceName, resourceResult)
         )
 
+      console.log(resourceResults)
+      // if (isResourceResultsObject)
       if (isResourceResultsObject && !hasResourcePayload)
         this._injectReferenceKeys(
           resourceName,
@@ -512,10 +514,14 @@ export default class ApiResourceManager {
         )
       })
 
+      console.log(resourceResults)
       updatedCollectionRecords = await this._pushPayloadToCollection(
         resourceName,
         resourceResults
       )
+
+      // console.log(updatedCollectionRecords.hashId, updatedCollectionRecords)
+      console.log(updatedCollectionRecords)
 
       if (resourceConfig.alias)
         this._addAlias(resourceConfig.alias, updatedCollectionRecords)
