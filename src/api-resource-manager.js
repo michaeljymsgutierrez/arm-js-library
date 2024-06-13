@@ -221,6 +221,9 @@ export default class ApiResourceManager {
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
+    // console.log(collectionRecord.hashId, collectionRecord)
+    collectionRecord.isLoading = true
+
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -468,7 +471,7 @@ export default class ApiResourceManager {
     if (hasResourceParams) requestOptions.params = resourceParams
     if (hasResourcePayload) {
       requestOptions.data = resourcePayload
-      resourcePayload.data.isLoading = true
+      // resourcePayload.data.isLoading = true
     }
 
     /*
@@ -495,7 +498,6 @@ export default class ApiResourceManager {
         )
 
       if (isResourceResultsObject)
-      // if (isResourceResultsObject && !hasResourcePayload)
         this._injectReferenceKeys(
           resourceName,
           resourceResults,
@@ -519,14 +521,11 @@ export default class ApiResourceManager {
       )
 
       // console.log(updatedCollectionRecords.hashId, updatedCollectionRecords)
-      console.log(updatedCollectionRecords)
 
       if (resourceConfig.alias)
         this._addAlias(resourceConfig.alias, updatedCollectionRecords)
 
       if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
-
-      if (hasResourcePayload) resourcePayload.data.isLoading = false
 
       this.requestHashIds[requestHashId] = {
         isLoading: false,
