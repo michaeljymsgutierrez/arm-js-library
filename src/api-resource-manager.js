@@ -258,45 +258,6 @@ export default class ApiResourceManager {
     }
 
     return this._request(requestObject)
-    // const isValidId = isNumber(collectionRecord.id)
-    // const resourceId = collectionRecord.id
-    // const resourceName = collectionRecord.collectionName
-    // const resourceURL = isValidId
-    //   ? `${resourceName}/${resourceId}`
-    //   : collectionRecord.collectionName
-    // const resourceMethod = 'delete'
-    // const deleteRecordResourceRequest = await axios({
-    //   method: resourceMethod,
-    //   url: resourceURL,
-    // })
-    // const deleteRecordResourceResults =
-    //   deleteRecordResourceRequest?.data?.data || {}
-    // const deleteRecordResourceIncludedResults =
-    //   deleteRecordResourceResults?.data?.included || []
-    // let updatedCollectionRecords = {}
-    //
-    // forEach(
-    //   deleteRecordResourceIncludedResults,
-    //   (deleteRecordResourceIncludedResult) => {
-    //     this._injectReferenceKeys(
-    //       getProperty(
-    //         deleteRecordResourceIncludedResult,
-    //         this.payloadIncludedReference
-    //       ),
-    //       deleteRecordResourceIncludedResult
-    //     )
-    //     this._pushPayloadToCollection(
-    //       deleteRecordResourceIncludedResult.collectionName,
-    //       deleteRecordResourceIncludedResult
-    //     )
-    //   }
-    // )
-    //
-    // this.unloadRecord(currentRecord)
-    //
-    // updatedCollectionRecords = deleteRecordResourceResults
-    //
-    // return updatedCollectionRecords
   }
 
   /*
@@ -498,6 +459,7 @@ export default class ApiResourceManager {
     }
     const requestHashId = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
+    const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
@@ -559,6 +521,8 @@ export default class ApiResourceManager {
 
       if (resourceConfig.alias)
         this._addAlias(resourceConfig.alias, updatedCollectionRecords)
+
+      if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
 
       this.requestHashIds[requestHashId] = {
         isLoading: false,
