@@ -39,12 +39,6 @@ const App = observer(() => {
                 <button
                   onClick={() => {
                     customerAddress.save()
-                    // .then((data) => {
-                    //   console.log(data)
-                    // })
-                    // .catch((error) => {
-                    //   console.log(error)
-                    // })
                   }}
                 >
                   {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
@@ -67,10 +61,12 @@ const App = observer(() => {
       <table>
         <thead>
           <tr>
+            <th>HASH ID</th>
             <th>ID</th>
             <th>ADDRESS1</th>
             <th>ADDRESS2</th>
             <th>KIND</th>
+            <th>STRING VALUE</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -78,12 +74,20 @@ const App = observer(() => {
         <tbody>
           {controller.addresses.map((address, index) => (
             <tr key={index}>
+              <td>{address.get('hashId')}</td>
               <td>{address.get('id')}</td>
               <td>{address.get('attributes.address1')}</td>
               <td>{address.get('attributes.address2')}</td>
               <td>{address.get('attributes.kind')}</td>
+              <td>{JSON.stringify(address)}</td>
               <td>
-                <button onClick={() => address.save()}>Save</button>
+                <button
+                  onClick={() => {
+                    address.save()
+                  }}
+                >
+                  {address.get('isLoading') ? 'Saving' : 'Save'}
+                </button>
                 <button onClick={() => address.destroyRecord()}>Delete</button>
                 <button onClick={() => controller.unloadRecord(address)}>
                   Unload
