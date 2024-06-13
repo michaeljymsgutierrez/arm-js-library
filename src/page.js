@@ -36,7 +36,14 @@ const App = observer(() => {
               <td>
                 <button
                   onClick={() => {
-                    customerAddress.save()
+                    customerAddress
+                      .save()
+                      .then((data) => {
+                        console.log(data)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
                   }}
                 >
                   {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
