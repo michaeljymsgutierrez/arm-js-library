@@ -241,11 +241,9 @@ export default class ApiResourceManager {
         hashId: currentRecord.hashId,
       }
     )
-    const isValidId = isNumber(collectionRecord.id)
     const id = collectionRecord.id
     const resource = collectionRecord.collectionName
     const method = 'delete'
-    const payload = { data: collectionRecord }
 
     const requestObject = {
       resourceMethod: method,
