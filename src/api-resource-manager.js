@@ -522,6 +522,8 @@ export default class ApiResourceManager {
 
       if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
 
+      if (hasResourcePayload) resourcePayload.data.isLoading = false
+
       this.requestHashIds[requestHashId] = {
         isLoading: false,
         isError: false,
@@ -530,6 +532,8 @@ export default class ApiResourceManager {
         included: [],
         meta: resourceMetaResults,
       }
+
+      // return Promise.resolve({ data: updatedCollectionRecords })
     } catch (error) {
       console.error(error)
 
@@ -541,9 +545,9 @@ export default class ApiResourceManager {
         included: [],
         meta: {},
       }
-    }
 
-    if (hasResourcePayload) resourcePayload.data.isLoading = false
+      // return Promise.resolve({ data: error })
+    }
 
     return this.requestHashIds[requestHashId]
   }
