@@ -494,9 +494,8 @@ export default class ApiResourceManager {
           this._injectReferenceKeys(resourceName, resourceResult)
         )
 
-      console.log(resourceResults)
-      // if (isResourceResultsObject)
-      if (isResourceResultsObject && !hasResourcePayload)
+      if (isResourceResultsObject)
+      // if (isResourceResultsObject && !hasResourcePayload)
         this._injectReferenceKeys(
           resourceName,
           resourceResults,
@@ -514,7 +513,6 @@ export default class ApiResourceManager {
         )
       })
 
-      console.log(resourceResults)
       updatedCollectionRecords = await this._pushPayloadToCollection(
         resourceName,
         resourceResults
