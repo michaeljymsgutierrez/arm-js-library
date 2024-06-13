@@ -21,6 +21,7 @@ const App = observer(() => {
             <th>ADDRESS1</th>
             <th>ADDRESS2</th>
             <th>KIND</th>
+            <th>STRING VALUE</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -33,17 +34,17 @@ const App = observer(() => {
               <td>{customerAddress.get('attributes.address1')}</td>
               <td>{customerAddress.get('attributes.address2')}</td>
               <td>{customerAddress.get('attributes.kind')}</td>
+              <td>{JSON.stringify(customerAddress)}</td>
               <td>
                 <button
                   onClick={() => {
-                    customerAddress
-                      .save()
-                      .then((data) => {
-                        console.log(data)
-                      })
-                      .catch((error) => {
-                        console.log(error)
-                      })
+                    customerAddress.save()
+                    // .then((data) => {
+                    //   console.log(data)
+                    // })
+                    // .catch((error) => {
+                    //   console.log(error)
+                    // })
                   }}
                 >
                   {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
