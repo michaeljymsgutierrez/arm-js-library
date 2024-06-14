@@ -206,6 +206,16 @@ export default class ApiResourceManager {
         if (gte(aliasRecordIndex, 0))
           this.aliases[aliasKey].splice(aliasRecordIndex, 1)
       }
+
+      if (isAliasRecordsArray) {
+        if (
+          isEqual(
+            getProperty(currentRecord, 'hashId'),
+            getProperty(this.aliases[aliasKey], 'hashId')
+          )
+        )
+          this.aliases[aliasKey] = {}
+      }
     })
   }
 
