@@ -253,11 +253,11 @@ export default class ApiResourceManager {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
       {
-        hashId: currentRecord.hashId,
+        hashId: getProperty(currentRecord, 'hashId'),
       }
     )
-    const id = collectionRecord.id
-    const resource = collectionRecord.collectionName
+    const id = getProperty(currentRecord, 'id')
+    const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
 
     const requestObject = {
