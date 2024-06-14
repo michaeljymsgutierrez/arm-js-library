@@ -227,12 +227,12 @@ export default class ApiResourceManager {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
       {
-        hashId: currentRecord.hashId,
+        hashId: getProperty(currentRecord, 'hashId'),
       }
     )
-    const isValidId = isNumber(collectionRecord.id)
-    const id = isValidId ? collectionRecord.id : null
-    const resource = collectionRecord.collectionName
+    const isValidId = isNumber(getProperty(collectionRecord, 'id'))
+    const id = isValidId ? getProperty(collectionRecord, 'id') : null
+    const resource = getProperty(collectionRecord, 'collectionName')
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
