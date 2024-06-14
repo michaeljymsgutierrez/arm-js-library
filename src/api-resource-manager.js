@@ -746,15 +746,6 @@ export default class ApiResourceManager {
   5. rollBackAttributes - rollback record to is initial state
   6. reload - get latest record from server by id
 
-  address.get('isLoading')
-  address.save()
-    .then(() => {
-      .....
-    })
-    .catch(err => {
-
-    });
-
   TO DO: Alias and Ajax Functions (need to think more)
   1. Removed async await - Done
   2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
