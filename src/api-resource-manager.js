@@ -221,8 +221,7 @@ export default class ApiResourceManager {
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
-    // console.log(collectionRecord.hashId, collectionRecord)
-    collectionRecord.isLoading = true
+    setProperty(collectionRecord, 'isLoading', true)
 
     const requestObject = {
       resourceMethod: method,
