@@ -132,6 +132,7 @@ const App = observer(() => {
                 >
                   {address.get('isLoading') ? 'Saving' : 'Save'}
                 </button>
+                <button onClick={() => address.reload()}>Reload</button>
                 <button onClick={() => address.destroyRecord()}>Delete</button>
                 <button onClick={() => controller.unloadRecord(address)}>
                   Unload

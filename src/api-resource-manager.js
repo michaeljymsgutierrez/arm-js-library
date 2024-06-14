@@ -284,6 +284,8 @@ export default class ApiResourceManager {
       setProperties: this._setProperties,
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
+      reload: () =>
+        this.findRecord(collectionRecord.collectionName, collectionRecord.id),
     }
     const actionKeys = keysIn(actions)
 
