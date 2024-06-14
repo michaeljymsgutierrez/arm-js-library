@@ -469,10 +469,7 @@ export default class ApiResourceManager {
 
     if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
     if (hasResourceParams) requestOptions.params = resourceParams
-    if (hasResourcePayload) {
-      requestOptions.data = resourcePayload
-      // resourcePayload.data.isLoading = true
-    }
+    if (hasResourcePayload) requestOptions.data = resourcePayload
 
     /*
       Will terminate identical GET request for optimization
