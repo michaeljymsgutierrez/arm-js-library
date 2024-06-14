@@ -745,6 +745,7 @@ export default class ApiResourceManager {
   4. isError - check if record encountered an error
   5. rollBackAttributes - rollback record to is initial state
   6. reload - get latest record from server by id
+  7. get by relationship like mapping
 
   TO DO: Alias and Ajax Functions (need to think more)
   1. Removed async await - Done
