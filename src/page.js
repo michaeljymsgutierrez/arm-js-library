@@ -22,6 +22,8 @@ const App = observer(() => {
             <th>ADDRESS2</th>
             <th>KIND</th>
             <th>UPDATED</th>
+            <th>LOADING</th>
+            <th>ERROR</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -42,6 +44,8 @@ const App = observer(() => {
                   return formattedDate
                 })()}
               </td>
+              <td>{String(customerAddress.get('isLoading'))}</td>
+              <td>{String(customerAddress.get('isError'))}</td>
               <td>
                 <button
                   onClick={() => {

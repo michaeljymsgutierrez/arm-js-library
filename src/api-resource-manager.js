@@ -303,6 +303,7 @@ export default class ApiResourceManager {
     collectionRecordHashId = null
   ) {
     collectionRecord.isLoading = false
+    collectionRecord.isError = false
     collectionRecord.isPristine = true
     collectionRecord.isDirty = false
     collectionRecord.collectionName = collectionName
@@ -546,7 +547,7 @@ export default class ApiResourceManager {
       if (isRequestHashIdExisting && requestHashObject.isNew === false) return
     }
 
-    if (isResourceMethodPut || isResourceMethodPost)
+    if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)
 
     try {
@@ -602,7 +603,10 @@ export default class ApiResourceManager {
 
       return Promise.resolve(updatedCollectionRecords)
     } catch (error) {
-      console.error(error)
+      if (hasResourcePayload) {
+        setProperty(resourcePayloadRecord, 'isError', true)
+        setProperty(resourcePayloadRecord, 'isLoading', false)
+      }
 
       this.requestHashIds[requestHashId] = {
         isLoading: false,
