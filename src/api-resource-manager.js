@@ -750,7 +750,7 @@ export default class ApiResourceManager {
   1. isPristine - check if record is not modified
   2. isDirty - check if record is modified
   3. isLoading - check if record is doing ajax - Done
-  4. isError - check if record encountered an error
+  4. isError - check if record encountered an error - Done
   5. rollBackAttributes - rollback record to is initial state
   6. reload - get latest record from server by id
   7. get by relationship like mapping
