@@ -754,7 +754,7 @@ export default class ApiResourceManager {
   3. isLoading - check if record is doing ajax - Done
   4. isError - check if record encountered an error - Done
   5. rollBackAttributes - rollback record to is initial state
-  6. reload - get latest record from server by id
+  6. reload - get latest record from server by id - Done
   7. get by relationship like mapping
 
   TO DO: Alias and Ajax Functions (need to think more)
