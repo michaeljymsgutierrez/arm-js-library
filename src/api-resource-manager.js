@@ -587,8 +587,6 @@ export default class ApiResourceManager {
 
       return Promise.resolve(error)
     }
-
-    return this.requestHashIds[requestHashId]
   }
 
   /*
