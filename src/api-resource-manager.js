@@ -286,8 +286,8 @@ export default class ApiResourceManager {
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () =>
         this.findRecord(
-          collectionRecord.collectionName,
-          collectionRecord.id,
+          getProperty(collectionRecord, 'collectionName'),
+          getProperty(collectionRecord, 'id'),
           null,
           { skip: true }
         ),
