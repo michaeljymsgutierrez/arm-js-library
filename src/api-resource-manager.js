@@ -585,7 +585,7 @@ export default class ApiResourceManager {
         meta: {},
       }
 
-      return Promise.resolve(error)
+      return Promise.reject(error)
     }
   }
 
