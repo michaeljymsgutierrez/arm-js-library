@@ -207,7 +207,7 @@ export default class ApiResourceManager {
           this.aliases[aliasKey].splice(aliasRecordIndex, 1)
       }
 
-      if (isAliasRecordsArray) {
+      if (isAliasRecordsObject) {
         if (
           isEqual(
             getProperty(currentRecord, 'hashId'),
