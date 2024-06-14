@@ -405,9 +405,6 @@ export default class ApiResourceManager {
     }
 
     return updatedCollectionRecords
-    // return new Promise((resolve, reject) => {
-    //   resolve(updatedCollectionRecords)
-    // })
   }
 
   _pushRequestHash(
