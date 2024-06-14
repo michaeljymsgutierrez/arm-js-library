@@ -236,8 +236,6 @@ export default class ApiResourceManager {
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
-    setProperty(collectionRecord, 'isLoading', true)
-
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -526,9 +524,12 @@ export default class ApiResourceManager {
     const requestHashId = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
+    const isResourceMethodPut = isEqual(resourceMethod, 'put')
+    const isResourceMethodPost = isEqual(resourceMethod, 'post')
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
+    const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
     const resourcePayloadHashId =
       getProperty(resourcePayload, 'data.hashId') || null
 
@@ -544,6 +545,9 @@ export default class ApiResourceManager {
       const isRequestHashIdExisting = !isNil(requestHashObject)
       if (isRequestHashIdExisting && requestHashObject.isNew === false) return
     }
+
+    if (isResourceMethodPut || isResourceMethodPost)
+      setProperty(resourcePayloadRecord, 'isLoading', true)
 
     try {
       const resourceRequest = await axios(requestOptions)
