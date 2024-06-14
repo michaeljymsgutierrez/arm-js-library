@@ -184,7 +184,7 @@ export default class ApiResourceManager {
     const collectionRecordIndex = findIndex(
       this.collections[currentRecord.collectionName],
       {
-        hashId: currentRecord.hashId,
+        hashId: getProperty(currentRecord, 'hashId'),
       }
     )
 
@@ -200,7 +200,7 @@ export default class ApiResourceManager {
 
       if (isAliasRecordsArray) {
         const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-          hashId: currentRecord.hashId,
+          hashId: getProperty(currentRecord, 'hashId'),
         })
 
         if (gte(aliasRecordIndex, 0))
