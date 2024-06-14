@@ -370,13 +370,15 @@ export default class ApiResourceManager {
         }
 
         if (isAliasRecordsObject) {
-          // if (
-          //   isEqual(
-          //     getProperty(updatedCollectionRecords, 'hashId'),
-          //     getProperty(this.aliases[aliasKey], 'hashId')
-          //   )
-          // )
-          //   this.aliases[aliasKey] = updatedCollectionRecords
+          forEach(updatedCollectionRecords, (collectionRecord) => {
+            if (
+              isEqual(
+                getProperty(collectionRecord, 'hashId'),
+                getProperty(this.aliases[aliasKey], 'hashId')
+              )
+            )
+              this.aliases[aliasKey] = collectionRecord
+          })
         }
       })
     }
