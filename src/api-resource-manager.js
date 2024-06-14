@@ -195,12 +195,17 @@ export default class ApiResourceManager {
       )
 
     forEach(aliasesKeys, (aliasKey) => {
-      const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-        hashId: currentRecord.hashId,
-      })
+      const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+      const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
 
-      if (gte(aliasRecordIndex, 0))
-        this.aliases[aliasKey].splice(aliasRecordIndex, 1)
+      if (isAliasRecordsArray) {
+        const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+          hashId: currentRecord.hashId,
+        })
+
+        if (gte(aliasRecordIndex, 0))
+          this.aliases[aliasKey].splice(aliasRecordIndex, 1)
+      }
     })
   }
 
