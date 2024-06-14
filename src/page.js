@@ -49,7 +49,14 @@ const App = observer(() => {
                       'attributes.address1',
                       `Test ${new Date().getTime()}`
                     )
-                    customerAddress.save()
+                    customerAddress
+                      .save()
+                      .then((result) => {
+                        console.log(result)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
                   }}
                 >
                   {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
@@ -105,7 +112,14 @@ const App = observer(() => {
                       'attributes.address1',
                       `Test ${new Date().getTime()}`
                     )
-                    address.save()
+                    address
+                      .save()
+                      .then((result) => {
+                        console.log(result)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
                   }}
                 >
                   {address.get('isLoading') ? 'Saving' : 'Save'}

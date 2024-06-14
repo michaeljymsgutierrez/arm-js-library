@@ -323,6 +323,7 @@ export default class ApiResourceManager {
   _pushPayloadToCollection(collectionName, collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    const aliasesKeys = keysIn(this.aliases)
     let updatedCollectionRecords = null
 
     if (isCollectionRecordsArray) {
@@ -376,11 +377,37 @@ export default class ApiResourceManager {
       updatedCollectionRecords = find(this.collections[collectionName], {
         hashId: collectionRecordHashId,
       })
+
+      forEach(aliasesKeys, (aliasKey) => {
+        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+
+        if (isAliasRecordsArray) {
+          forEach([updatedCollectionRecords], (collectionRecord) => {
+            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+              hashId: collectionRecord.hashId,
+            })
+            if (gte(aliasRecordIndex, 0))
+              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+          })
+        }
+
+        if (isAliasRecordsObject) {
+          if (
+            isEqual(
+              getProperty(updatedCollectionRecords, 'hashId'),
+              getProperty(this.aliases[aliasKey], 'hashId')
+            )
+          )
+            this.aliases[aliasKey] = updatedCollectionRecords
+        }
+      })
     }
 
-    return new Promise((resolve, reject) => {
-      resolve(updatedCollectionRecords)
-    })
+    return updatedCollectionRecords
+    // return new Promise((resolve, reject) => {
+    //   resolve(updatedCollectionRecords)
+    // })
   }
 
   _pushRequestHash(
@@ -531,8 +558,6 @@ export default class ApiResourceManager {
         resourceResults
       )
 
-      // console.log(updatedCollectionRecords.hashId, updatedCollectionRecords)
-
       if (resourceConfig.alias)
         this._addAlias(resourceConfig.alias, updatedCollectionRecords)
 
@@ -547,7 +572,7 @@ export default class ApiResourceManager {
         meta: resourceMetaResults,
       }
 
-      // return Promise.resolve({ data: updatedCollectionRecords })
+      return Promise.resolve(updatedCollectionRecords)
     } catch (error) {
       console.error(error)
 
@@ -560,7 +585,7 @@ export default class ApiResourceManager {
         meta: {},
       }
 
-      // return Promise.resolve({ data: error })
+      return Promise.resolve(error)
     }
 
     return this.requestHashIds[requestHashId]
