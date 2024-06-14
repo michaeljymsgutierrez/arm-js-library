@@ -21,7 +21,7 @@ const App = observer(() => {
             <th>ADDRESS1</th>
             <th>ADDRESS2</th>
             <th>KIND</th>
-            <th>STRING VALUE</th>
+            <th>UPDATED</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -34,10 +34,21 @@ const App = observer(() => {
               <td>{customerAddress.get('attributes.address1')}</td>
               <td>{customerAddress.get('attributes.address2')}</td>
               <td>{customerAddress.get('attributes.kind')}</td>
-              <td>{JSON.stringify(customerAddress)}</td>
+              <td>
+                {(() => {
+                  const formattedDate = new Date(
+                    customerAddress.get('attributes.updated-at')
+                  ).toLocaleString()
+                  return formattedDate
+                })()}
+              </td>
               <td>
                 <button
                   onClick={() => {
+                    customerAddress.set(
+                      'attributes.address1',
+                      `Test ${new Date().getTime()}`
+                    )
                     customerAddress.save()
                   }}
                 >
@@ -66,7 +77,7 @@ const App = observer(() => {
             <th>ADDRESS1</th>
             <th>ADDRESS2</th>
             <th>KIND</th>
-            <th>STRING VALUE</th>
+            <th>UPDATED</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -79,10 +90,21 @@ const App = observer(() => {
               <td>{address.get('attributes.address1')}</td>
               <td>{address.get('attributes.address2')}</td>
               <td>{address.get('attributes.kind')}</td>
-              <td>{JSON.stringify(address)}</td>
+              <td>
+                {(() => {
+                  const formattedDate = new Date(
+                    address.get('attributes.updated-at')
+                  ).toLocaleString()
+                  return formattedDate
+                })()}
+              </td>
               <td>
                 <button
                   onClick={() => {
+                    address.set(
+                      'attributes.address1',
+                      `Test ${new Date().getTime()}`
+                    )
                     address.save()
                   }}
                 >
