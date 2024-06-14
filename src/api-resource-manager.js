@@ -354,6 +354,31 @@ export default class ApiResourceManager {
             hashId: collectionRecordHashId,
           })
       )
+
+      forEach(aliasesKeys, (aliasKey) => {
+        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+
+        if (isAliasRecordsArray) {
+          forEach(updatedCollectionRecords, (collectionRecord) => {
+            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+              hashId: collectionRecord.hashId,
+            })
+            if (gte(aliasRecordIndex, 0))
+              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+          })
+        }
+
+        if (isAliasRecordsObject) {
+          // if (
+          //   isEqual(
+          //     getProperty(updatedCollectionRecords, 'hashId'),
+          //     getProperty(this.aliases[aliasKey], 'hashId')
+          //   )
+          // )
+          //   this.aliases[aliasKey] = updatedCollectionRecords
+        }
+      })
     }
 
     if (isCollectionRecordsObject) {
