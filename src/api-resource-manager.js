@@ -285,7 +285,12 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () =>
-        this.findRecord(collectionRecord.collectionName, collectionRecord.id),
+        this.findRecord(
+          collectionRecord.collectionName,
+          collectionRecord.id,
+          null,
+          { skip: true }
+        ),
     }
     const actionKeys = keysIn(actions)
 
@@ -525,6 +530,7 @@ export default class ApiResourceManager {
       url: resourceName,
     }
     const requestHashId = this._generateHashId({ ...arguments[0] })
+    const requestSkip = getProperty(resourceConfig, 'skip') || false
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
@@ -543,7 +549,7 @@ export default class ApiResourceManager {
     /*
       Will terminate identical GET request for optimization
     */
-    if (isResourceMethodGet) {
+    if (isResourceMethodGet && !requestSkip) {
       const requestHashObject = this.requestHashIds[requestHashId]
       const isRequestHashIdExisting = !isNil(requestHashObject)
       if (isRequestHashIdExisting && requestHashObject.isNew === false) return
