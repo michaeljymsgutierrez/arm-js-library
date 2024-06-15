@@ -545,9 +545,10 @@ export default class ApiResourceManager {
     const resourcePayloadHashId =
       getProperty(resourcePayload, 'data.hashId') || null
 
-    if (isResourceIdValid) requestOptions.url = `${resourceName}/${resourceId}`
-    if (hasResourceParams) requestOptions.params = resourceParams
-    if (hasResourcePayload) requestOptions.data = resourcePayload
+    if (isResourceIdValid)
+      setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
+    if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
+    if (hasResourcePayload) setProperty(requestOptions, 'data', resourcePayload)
 
     /*
       Will terminate identical GET request for optimization
