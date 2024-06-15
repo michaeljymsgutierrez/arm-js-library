@@ -508,14 +508,14 @@ export default class ApiResourceManager {
   }
 
   createRecord(collectionName, collectionRecord = {}) {
-    collectionRecord.id = uuidv1()
+    setProperty(collectionRecord, 'id', uuidv1())
 
     this._injectReferenceKeys(collectionName, collectionRecord)
     this._injectActions(collectionRecord)
     this.collections[collectionName].push(collectionRecord)
 
     return find(this.collections[collectionName], {
-      hashId: collectionRecord.hashId,
+      hashId: getProperty(collectionRecord, 'hashId'),
     })
   }
 
