@@ -342,7 +342,7 @@ export default class ApiResourceManager {
         const collectionRecordIndex = findIndex(
           this.collections[collectionName],
           {
-            hashId: collectionRecord.hashId,
+            hashId: getProperty(collectionRecord, 'hashId'),
           }
         )
 
@@ -371,7 +371,7 @@ export default class ApiResourceManager {
         if (isAliasRecordsArray) {
           forEach(updatedCollectionRecords, (collectionRecord) => {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: collectionRecord.hashId,
+              hashId: getProperty(collectionRecord, 'hashId'),
             })
             if (gte(aliasRecordIndex, 0))
               this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
@@ -397,7 +397,7 @@ export default class ApiResourceManager {
       const collectionRecordIndex = findIndex(
         this.collections[collectionName],
         {
-          hashId: collectionRecords.hashId,
+          hashId: getProperty(collectionRecords, 'hashId'),
         }
       )
 
@@ -421,7 +421,7 @@ export default class ApiResourceManager {
         if (isAliasRecordsArray) {
           forEach([updatedCollectionRecords], (collectionRecord) => {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: collectionRecord.hashId,
+              hashId: getProperty(collectionRecord, 'hashId'),
             })
             if (gte(aliasRecordIndex, 0))
               this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
