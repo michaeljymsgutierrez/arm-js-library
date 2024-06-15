@@ -285,12 +285,15 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () =>
-        this.findRecord(
-          getProperty(collectionRecord, 'collectionName'),
-          getProperty(collectionRecord, 'id'),
-          null,
-          { skip: true }
-        ),
+        this._request({
+          resourceMethod: 'get',
+          resourceName: getProperty(collectionRecord, 'collectionName'),
+          resourceId: getProperty(collectionRecord, 'id'),
+          resourceParams: {},
+          resourcePayload: null,
+          resourceFallback: {},
+          resourceConfig: { skip: true },
+        }),
     }
     const actionKeys = keysIn(actions)
 
