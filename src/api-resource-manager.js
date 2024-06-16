@@ -556,7 +556,8 @@ export default class ApiResourceManager {
     if (isResourceMethodGet && !requestSkip) {
       const requestHashObject = this.requestHashIds[requestHashId]
       const isRequestHashIdExisting = !isNil(requestHashObject)
-      if (isRequestHashIdExisting && requestHashObject.isNew === false) return
+      const isRequestNew = getProperty(requestHashObject, 'isNew')
+      if (isRequestHashIdExisting && !isRequestNew) return
     }
 
     if (hasResourcePayload)
@@ -589,7 +590,7 @@ export default class ApiResourceManager {
           resourceIncludedResult
         )
         this._pushPayloadToCollection(
-          resourceIncludedResult.collectionName,
+          getProperty(resourceIncludedResult, 'collectionName'),
           resourceIncludedResult
         )
       })
@@ -600,7 +601,10 @@ export default class ApiResourceManager {
       )
 
       if (resourceConfig.alias)
-        this._addAlias(resourceConfig.alias, updatedCollectionRecords)
+        this._addAlias(
+          getProperty(resourceConfig, 'alias'),
+          updatedCollectionRecords
+        )
 
       if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
 
