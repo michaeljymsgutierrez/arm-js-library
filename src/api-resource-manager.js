@@ -181,12 +181,10 @@ export default class ApiResourceManager {
 
   unloadRecord(currentRecord) {
     const aliasesKeys = keysIn(this.aliases)
-    const collectionRecordIndex = findIndex(
-      this.collections[currentRecord.collectionName],
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
+    const collectionName = getProperty(currentRecord, 'collectionName')
+    const collectionRecordIndex = findIndex(this.collections[collectionName], {
+      hashId: getProperty(currentRecord, 'hashId'),
+    })
 
     if (gte(collectionRecordIndex, 0))
       this.collections[currentRecord.collectionName].splice(
