@@ -52,16 +52,6 @@ const Model = () => {
   //   alias: 'customerAddresses',
   // })
 
-  ARM.findRecord(
-    'addresses',
-    2459146,
-    {
-      include: 'user',
-    },
-    {
-      alias: 'customerAddress',
-    }
-  )
   return data
 }
 
