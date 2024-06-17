@@ -321,6 +321,7 @@ export default class ApiResourceManager {
           collectionName: getProperty(collectionRecord, 'collectionName'),
         })
       : collectionRecordHashId
+    collectionRecord.cloneId = this._generateHashId(collectionRecord)
   }
 
   /*
@@ -452,8 +453,9 @@ export default class ApiResourceManager {
   ) {
     const requestHashId = this._generateHashId(requestObject)
     const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
+    const isResponseNew = getProperty(responseObject, 'isNew')
 
-    if (isRequestHashExisting && responseObject.isNew) {
+    if (isRequestHashExisting && isResponseNew) {
       setProperty(this.requestHashIds[requestHashId], 'isNew', false)
     } else {
       this.requestHashIds[requestHashId] = responseObject
