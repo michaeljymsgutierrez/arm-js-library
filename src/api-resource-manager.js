@@ -535,7 +535,7 @@ export default class ApiResourceManager {
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
-    // const isResourceMethodPost = isEqual(resourceMethod, 'post')
+    const isResourceMethodPost = isEqual(resourceMethod, 'post')
     const isResourceIdValid = isNumber(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
@@ -576,11 +576,7 @@ export default class ApiResourceManager {
         )
 
       if (isResourceResultsObject)
-        this._injectReferenceKeys(
-          resourceName,
-          resourceResults,
-          resourcePayloadHashId
-        )
+        this._injectReferenceKeys(resourceName, resourceResults)
 
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
         this._injectReferenceKeys(
@@ -604,6 +600,7 @@ export default class ApiResourceManager {
           updatedCollectionRecords
         )
 
+      if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord)
       if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
 
       this.requestHashIds[requestHashId] = {
