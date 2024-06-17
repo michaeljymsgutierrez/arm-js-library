@@ -24,6 +24,8 @@ const App = observer(() => {
             <th>UPDATED</th>
             <th>LOADING</th>
             <th>ERROR</th>
+            <th>PRISTINE</th>
+            <th>DIRTY</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -46,6 +48,8 @@ const App = observer(() => {
               </td>
               <td>{String(customerAddress.get('isLoading'))}</td>
               <td>{String(customerAddress.get('isError'))}</td>
+              <td>{String(customerAddress.get('isPristine'))}</td>
+              <td>{String(customerAddress.get('isDirty'))}</td>
               <td>
                 <button
                   onClick={() => {

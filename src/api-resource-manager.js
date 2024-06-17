@@ -158,6 +158,8 @@ export default class ApiResourceManager {
   */
   _setProperty(key, value) {
     setProperty(this, key, value)
+    setProperty(this, 'isDirty', true)
+    setProperty(this, 'isPristine', false)
   }
 
   /*
