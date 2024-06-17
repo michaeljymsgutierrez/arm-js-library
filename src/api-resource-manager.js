@@ -321,7 +321,6 @@ export default class ApiResourceManager {
           collectionName: getProperty(collectionRecord, 'collectionName'),
         })
       : collectionRecordHashId
-    collectionRecord.cloneId = this._generateHashId(collectionRecord)
   }
 
   /*
