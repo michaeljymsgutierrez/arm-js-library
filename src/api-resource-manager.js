@@ -1,3 +1,9 @@
+/*
+ * ARM JavaScript Library v1.0.0
+ *
+ * Date: 2024-05-09 2:19PM GMT+8
+ */
+
 import axios from 'axios'
 import * as lodash from 'lodash'
 import * as mobx from 'mobx'
@@ -71,15 +77,15 @@ export default class ApiResourceManager {
   }
 
   /*
-    Define internal functions here.
-    Internal functions are functions that are being used inside ARM class
-    and not being exposed on new ARM instance.
-    These function will be set to protected later on when tried to use on new ARM instance.
-  */
+   * Define internal functions here.
+   * Internal functions are functions that are being used inside ARM class
+   * and not being exposed on new ARM instance.
+   * These function will be set to protected later on when tried to use on new ARM instance.
+   */
 
   /*
-    Function for initializeing Axios Configurations.
-  */
+   * Function for initializeing Axios Configurations.
+   */
   _initializeAxiosConfig() {
     axios.defaults.baseURL = this._getBaseURL()
     // Decide what are request default configurations
@@ -88,39 +94,39 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for initializing collections from ARM instance.
-  */
+   * Function for initializing collections from ARM instance.
+   */
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
 
   /*
-    Function for getting baseURL from
-    host and namespace defined.
-  */
+   * Function for getting baseURL from
+   * host and namespace defined.
+   */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`
   }
 
   /*
-    Function for getting token,
-    by default it is being fetched on saved local storage
-    key 'token'.
-  */
+   * Function for getting token,
+   * by default it is being fetched on saved local storage
+   * key 'token'.
+   */
   _getAuthorizationToken() {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
   /*
-    Function for adding new collection and collection records.
-  */
+   * Function for adding new collection and collection records.
+   */
   _addCollection(collectionName, collectionRecords) {
     this.collections[collectionName] = collectionRecords
   }
 
   /*
-    Function for aliasing data defined on API methods.
-  */
+   * Function for aliasing data defined on API methods.
+   */
   _addAlias(aliasName, aliasRecords) {
     const isAliasRecordsArray = isArray(aliasRecords)
     const isAliasRecordsObject = isPlainObject(aliasRecords)
@@ -257,6 +263,9 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  /*
+    Function for permanently removing record from the server.
+  */
   async _deleteRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
