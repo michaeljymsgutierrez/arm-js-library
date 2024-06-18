@@ -161,6 +161,7 @@ export default class ApiResourceManager {
     setProperty(this, key, value)
     setProperty(this, 'isDirty', true)
     setProperty(this, 'isPristine', false)
+    console.log(this)
   }
 
   /*
