@@ -185,6 +185,10 @@ export default class ApiResourceManager {
     setProperty(this, 'isPristine', false)
   }
 
+  /*
+    Function for temporary removing record from collection.
+    It will not permanently remove the record from the server.
+  */
   unloadRecord(currentRecord) {
     const aliasesKeys = keysIn(this.aliases)
     const collectionName = getProperty(currentRecord, 'collectionName')
