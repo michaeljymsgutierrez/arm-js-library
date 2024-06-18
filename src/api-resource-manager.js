@@ -314,17 +314,19 @@ export default class ApiResourceManager {
     collectionRecord,
     collectionRecordHashId = null
   ) {
-    collectionRecord.isLoading = false
-    collectionRecord.isError = false
-    collectionRecord.isPristine = true
-    collectionRecord.isDirty = false
-    collectionRecord.collectionName = collectionName
-    collectionRecord.hashId = isNull(collectionRecordHashId)
+    const recordHashId = isNull(collectionRecordHashId)
       ? this._generateHashId({
           id: getProperty(collectionRecord, 'id'),
           collectionName: getProperty(collectionRecord, 'collectionName'),
         })
       : collectionRecordHashId
+
+    setProperty(collectionRecord, 'isLoading', false)
+    setProperty(collectionRecord, 'isError', false)
+    setProperty(collectionRecord, 'isPristine', true)
+    setProperty(collectionRecord, 'isDirty', true)
+    setProperty(collectionRecord, 'collectionName', collectionName)
+    setProperty(collectionRecord, 'hashId', recordHashId)
   }
 
   /*
