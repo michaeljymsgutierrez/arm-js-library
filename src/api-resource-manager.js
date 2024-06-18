@@ -4,7 +4,7 @@ import * as mobx from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import CryptoJS from 'crypto-js'
 
-const { makeObservable, observable, action } = mobx
+const { makeObservable, observable, action, toJS } = mobx
 
 const {
   get: getProperty,
@@ -26,6 +26,7 @@ const {
   entries,
   forEach,
   keysIn,
+  clone,
 } = lodash
 
 const defaultRequestArrayResponse = {
@@ -321,12 +322,14 @@ export default class ApiResourceManager {
         })
       : collectionRecordHashId
 
+    setProperty(collectionRecord, 'collectionName', collectionName)
+    setProperty(collectionRecord, 'hashId', recordHashId)
+    setProperty(collectionRecord, 'originalRecord', clone(collectionRecord))
+
     setProperty(collectionRecord, 'isLoading', false)
     setProperty(collectionRecord, 'isError', false)
     setProperty(collectionRecord, 'isPristine', true)
     setProperty(collectionRecord, 'isDirty', true)
-    setProperty(collectionRecord, 'collectionName', collectionName)
-    setProperty(collectionRecord, 'hashId', recordHashId)
   }
 
   /*
