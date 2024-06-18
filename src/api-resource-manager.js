@@ -33,6 +33,7 @@ const {
   forEach,
   keysIn,
   clone,
+  omit,
 } = lodash
 
 const defaultRequestArrayResponse = {
@@ -52,6 +53,20 @@ const defaultRequestObjectResponse = {
   included: [],
   meta: {},
 }
+
+const keysToBeOmittedOnDeepCheck = [
+  'destroyRecord',
+  'reload',
+  'save',
+  'set',
+  'get',
+  'setProperties',
+  'isDirty',
+  'isError',
+  'isLoading',
+  'isPristine',
+  'originalRecord',
+]
 
 export default class ApiResourceManager {
   constructor(collections = []) {
@@ -165,9 +180,20 @@ export default class ApiResourceManager {
    */
   _setProperty(key, value) {
     setProperty(this, key, value)
-    setProperty(this, 'isDirty', true)
-    setProperty(this, 'isPristine', false)
-    console.log(this)
+
+    const originalRecord = omit(
+      toJS(this.originalRecord),
+      keysToBeOmittedOnDeepCheck
+    )
+    const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+
+    if (isEqual(originalRecord, currentRecord)) {
+      setProperty(this, 'isDirty', false)
+      setProperty(this, 'isPristine', true)
+    } else {
+      setProperty(this, 'isDirty', true)
+      setProperty(this, 'isPristine', false)
+    }
   }
 
   /*
@@ -187,8 +213,20 @@ export default class ApiResourceManager {
     }
     const keysAndValues = objectToArray(objectKeysValues)
     forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
-    setProperty(this, 'isDirty', true)
-    setProperty(this, 'isPristine', false)
+
+    const originalRecord = omit(
+      toJS(this.originalRecord),
+      keysToBeOmittedOnDeepCheck
+    )
+    const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+
+    if (isEqual(originalRecord, currentRecord)) {
+      setProperty(this, 'isDirty', false)
+      setProperty(this, 'isPristine', true)
+    } else {
+      setProperty(this, 'isDirty', true)
+      setProperty(this, 'isPristine', false)
+    }
   }
 
   /*
@@ -343,7 +381,7 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'isLoading', false)
     setProperty(collectionRecord, 'isError', false)
     setProperty(collectionRecord, 'isPristine', true)
-    setProperty(collectionRecord, 'isDirty', true)
+    setProperty(collectionRecord, 'isDirty', false)
   }
 
   /*
