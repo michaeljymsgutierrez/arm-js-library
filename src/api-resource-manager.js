@@ -264,8 +264,8 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for permanently removing record from the server.
-  */
+   * Function for permanently removing record from the server.
+   */
   async _deleteRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
@@ -291,9 +291,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for injecting actions
-    on collection record.
-  */
+   * Function for injecting actions
+   * on collection record.
+   */
   _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
@@ -320,10 +320,10 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for injecting reference keys such as:
-    collectionName - identifier for which collection the collection record belongs to
-    collectionRecordHashId - identifier for which collection record should be updated
-  */
+   * Function for injecting reference keys such as:
+   * collectionName - identifier for which collection the collection record belongs to
+   * collectionRecordHashId - identifier for which collection record should be updated
+   */
   _injectReferenceKeys(
     collectionName,
     collectionRecord,
@@ -347,9 +347,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for pushing collection records obtained from API methods
-    to respective collections.
-  */
+   * Function for pushing collection records obtained from API methods
+   * to respective collections.
+   */
   _pushPayloadToCollection(collectionName, collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
@@ -487,9 +487,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Define internal/external functions here.
-    These functions are functions that are being used inside ARM class and new ARM instance.
-  */
+   * Define internal/external functions here.
+   * These functions are functions that are being used inside ARM class and new ARM instance.
+   */
 
   setHost(host) {
     this.host = host
@@ -657,8 +657,8 @@ export default class ApiResourceManager {
   }
 
   /*
-    Functions for retrieving collection of records from server
-  */
+   * Functions for retrieving collection of records from server
+   */
   query(resource, params = {}, config = {}) {
     const requestObject = {
       resourceMethod: 'get',
@@ -741,8 +741,8 @@ export default class ApiResourceManager {
   }
 
   /*
-    Functions for retrieving collection of records from local cache
-  */
+   * Functions for retrieving collection of records from local cache
+   */
   peekAll(collectionName) {
     return this.collections[collectionName]
   }
@@ -755,42 +755,42 @@ export default class ApiResourceManager {
 }
 
 /*
-  Notes:
-  TO DO: API ajax functions
-  Add properties: isLoading, isError, data, included, meta - Done
-  1. query - Done
-    - response payload is a collection of records
-    - support query params
-    - always request to server
-  2. queryRecord - Done
-    - response payload is a single record
-    - support query params
-    - always request to server
-  3. findAll - Done
-    - response payload is a collection of records
-    - not support query params
-    - always request to server
-  4. findRecord - Done
-    - response payload is a single record
-    - support query params (by default query by id)
-    - always request to server
-  5. peekAll - Done
-    - get all records from local cache
-    - will not request to server
-  6. peekRecord - Done
-    - get single record from local cache (by default get by id)
-    - will not request to server
+ * Notes:
+ * TO DO: API ajax functions
+ * Add properties: isLoading, isError, data, included, meta - Done
+ * 1. query - Done
+ *   - response payload is a collection of records
+ *   - support query params
+ *   - always request to server
+ * 2. queryRecord - Done
+ *   - response payload is a single record
+ *   - support query params
+ *   - always request to server
+ * 3. findAll - Done
+ *   - response payload is a collection of records
+ *   - not support query params
+ *   - always request to server
+ * 4. findRecord - Done
+ *   - response payload is a single record
+ *   - support query params (by default query by id)
+ *   - always request to server
+ * 5. peekAll - Done
+ *   - get all records from local cache
+ *   - will not request to server
+ * 6. peekRecord - Done
+ *   - get single record from local cache (by default get by id)
+ *   - will not request to server
 
-  TO DO: Records new properties
-  1. isPristine - check if record is not modified - Done
-  2. isDirty - check if record is modified - Done
-  3. isLoading - check if record is doing ajax - Done
-  4. isError - check if record encountered an error - Done
-  5. rollBackAttributes - rollback record to is initial state
-  6. reload - get latest record from server by id - Done
-  7. get by relationship like mapping
+ * TO DO: Records new properties
+ * 1. isPristine - check if record is not modified - Done
+ * 2. isDirty - check if record is modified - Done
+ * 3. isLoading - check if record is doing ajax - Done
+ * 4. isError - check if record encountered an error - Done
+ * 5. rollBackAttributes - rollback record to is initial state
+ * 6. reload - get latest record from server by id - Done
+ * 7. get by relationship like mapping
 
-  TO DO: Alias and Ajax Functions (need to think more)
-  1. Removed async await - Done
-  2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
-*/
+ * TO DO: Alias and Ajax Functions (need to think more)
+ * 1. Removed async await - Done
+ * 2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
+ */
