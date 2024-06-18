@@ -137,32 +137,32 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for generating collection data unique id.
-  */
+   * Function for generating collection data unique id.
+   */
   _generateHashId(object = { id: uuidv1() }) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
 
   /*
-    Functions for property management.
-    Property management are set of function for setting and getting
-    values from observable collection.
-    This functions are injectables.
-  */
+   * Functions for property management.
+   * Property management are set of function for setting and getting
+   * values from observable collection.
+   * This functions are injectables.
+   */
 
   /*
-    Function for getting single property of observable collection
-    where it is being injected.
-  */
+   * Function for getting single property of observable collection
+   * where it is being injected.
+   */
   _getProperty(key) {
     return getProperty(this, key)
   }
 
   /*
-    Function for setting single property of observable collection
-    where it is being injected.
-  */
+   * Function for setting single property of observable collection
+   * where it is being injected.
+   */
   _setProperty(key, value) {
     setProperty(this, key, value)
     setProperty(this, 'isDirty', true)
@@ -171,9 +171,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for setting multiple properties of observable collection
-    where it is being injected.
-  */
+   * Function for setting multiple properties of observable collection
+   * where it is being injected.
+   */
   _setProperties(objectKeysValues) {
     function objectToArray(obj, prefix = '') {
       return flatMap(entries(obj), ([key, value]) => {
@@ -192,9 +192,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for temporary removing record from collection.
-    It will not permanently remove the record from the server.
-  */
+   * Function for temporary removing record from collection.
+   * It will not permanently remove the record from the server.
+   */
   unloadRecord(currentRecord) {
     const aliasesKeys = keysIn(this.aliases)
     const collectionName = getProperty(currentRecord, 'collectionName')
@@ -234,9 +234,9 @@ export default class ApiResourceManager {
   }
 
   /*
-    Function for persisting collection record on the server,
-    where it is being injected.
-  */
+   * Function for persisting collection record on the server,
+   * where it is being injected.
+   */
   _saveRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
