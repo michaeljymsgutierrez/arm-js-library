@@ -339,6 +339,7 @@ export default class ApiResourceManager {
       setProperties: this._setProperties,
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
+      // rollBackAttributes: => this.rollBackRecordAttributes
       reload: () =>
         this._request({
           resourceMethod: 'get',
@@ -602,8 +603,8 @@ export default class ApiResourceManager {
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
-    const resourcePayloadHashId =
-      getProperty(resourcePayload, 'data.hashId') || null
+    // const resourcePayloadHashId =
+    //   getProperty(resourcePayload, 'data.hashId') || null
 
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
