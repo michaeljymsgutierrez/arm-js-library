@@ -360,7 +360,14 @@ export default class ApiResourceManager {
       currentCollectionRecord,
       'originalRecord'
     )
+    setProperty(currentCollectionRecord, 'originalRecord', null)
+    setProperty(
+      currentCollectionRecord,
+      'originalRecord',
+      originalCollectionRecord
+    )
     assign(currentCollectionRecord, originalCollectionRecord)
+    // setProperty(currentCollectionRecord, 'originalRecord', clone(currentCollectionRecord))
     console.log(currentCollectionRecord)
     // console.log(originalCollectionRecord)
     // assign(
