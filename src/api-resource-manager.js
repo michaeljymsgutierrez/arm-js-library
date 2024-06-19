@@ -327,15 +327,21 @@ export default class ApiResourceManager {
    * Function for updating record from the server.
    */
   async _reloadRecord(currentRecord) {
-    return this._request({
-      resourceMethod: 'get',
-      resourceName: getProperty(currentRecord, 'collectionName'),
-      resourceId: getProperty(currentRecord, 'id'),
+    const id = getProperty(currentRecord, 'id')
+    const resource = getProperty(currentRecord, 'collectionName')
+    const method = 'get'
+
+    const requestObject = {
+      resourceMethod: method,
+      resourceName: resource,
+      resourceId: id,
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: { skip: true },
-    })
+    }
+
+    return this._request(requestObject)
   }
 
   async _rollBackRecordAttributes(currentRecord) {
