@@ -343,6 +343,10 @@ export default class ApiResourceManager {
     })
   }
 
+  async _rollBackRecordAttributes(currentRecord) {
+    console.log(currentRecord)
+  }
+
   /*
    * Function for injecting actions
    * on collection record.
@@ -355,7 +359,8 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      // rollBackAttributes: => this.rollBackRecordAttributes
+      rollBackAttributes: () =>
+        this._rollBackRecordAttributes(collectionRecord),
     }
     const actionKeys = keysIn(actions)
 
