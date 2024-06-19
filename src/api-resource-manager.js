@@ -273,15 +273,13 @@ export default class ApiResourceManager {
    * where it is being injected.
    */
   _saveRecord(currentRecord) {
-    const collectionRecord = find(
-      this.collections[currentRecord.collectionName],
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
+    const collectionName = getProperty(currentRecord, 'collectionName')
+    const collectionRecord = find(this.collections[collectionName], {
+      hashId: getProperty(currentRecord, 'hashId'),
+    })
     const isValidId = isNumber(getProperty(collectionRecord, 'id'))
     const id = isValidId ? getProperty(collectionRecord, 'id') : null
-    const resource = getProperty(collectionRecord, 'collectionName')
+    const resource = collectionName
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
 
