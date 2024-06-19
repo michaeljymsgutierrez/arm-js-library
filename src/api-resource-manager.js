@@ -329,6 +329,21 @@ export default class ApiResourceManager {
   }
 
   /*
+   * Function for updating record from the server.
+   */
+  async _reloadRecord(currentRecord) {
+    return this._request({
+      resourceMethod: 'get',
+      resourceName: getProperty(currentRecord, 'collectionName'),
+      resourceId: getProperty(currentRecord, 'id'),
+      resourceParams: {},
+      resourcePayload: null,
+      resourceFallback: {},
+      resourceConfig: { skip: true },
+    })
+  }
+
+  /*
    * Function for injecting actions
    * on collection record.
    */
@@ -339,17 +354,8 @@ export default class ApiResourceManager {
       setProperties: this._setProperties,
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
+      reload: () => this._reloadRecord(collectionRecord),
       // rollBackAttributes: => this.rollBackRecordAttributes
-      reload: () =>
-        this._request({
-          resourceMethod: 'get',
-          resourceName: getProperty(collectionRecord, 'collectionName'),
-          resourceId: getProperty(collectionRecord, 'id'),
-          resourceParams: {},
-          resourcePayload: null,
-          resourceFallback: {},
-          resourceConfig: { skip: true },
-        }),
     }
     const actionKeys = keysIn(actions)
 
