@@ -241,10 +241,7 @@ export default class ApiResourceManager {
     })
 
     if (gte(collectionRecordIndex, 0))
-      this.collections[currentRecord.collectionName].splice(
-        collectionRecordIndex,
-        1
-      )
+      this.collections[collectionName].splice(collectionRecordIndex, 1)
 
     forEach(aliasesKeys, (aliasKey) => {
       const isAliasRecordsArray = isArray(this.aliases[aliasKey])
