@@ -32,9 +32,7 @@ const {
   entries,
   forEach,
   keysIn,
-  clone,
   omit,
-  assign,
 } = lodash
 
 const defaultRequestArrayResponse = {
@@ -345,72 +343,6 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  async _rollBackRecordAttributes(currentRecord) {
-    const collectionName = getProperty(currentRecord, 'collectionName')
-    const currentCollectionRecordIndex = findIndex(
-      this.collections[collectionName],
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
-    const currentCollectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const originalCollectionRecord = getProperty(
-      currentCollectionRecord,
-      'originalRecord'
-    )
-    setProperty(currentCollectionRecord, 'originalRecord', null)
-    setProperty(
-      currentCollectionRecord,
-      'originalRecord',
-      originalCollectionRecord
-    )
-    assign(currentCollectionRecord, originalCollectionRecord)
-    // setProperty(currentCollectionRecord, 'originalRecord', clone(currentCollectionRecord))
-    console.log(currentCollectionRecord)
-    // console.log(originalCollectionRecord)
-    // assign(
-    //   this.collections[collectionName][currentCollectionRecordIndex],
-    //   originalCollectionRecord
-    // )
-    // this.collections[collectionName][currentCollectionRecordIndex] =
-    //   originalCollectionRecord
-    //
-    // const aliasesKeys = keysIn(this.aliases)
-    // const collectionName = getProperty(currentRecord, 'collectionName')
-    // const collectionRecordIndex = findIndex(this.collections[collectionName], {
-    //   hashId: getProperty(currentRecord, 'hashId'),
-    // })
-    //
-    // if (gte(collectionRecordIndex, 0))
-    //   this.collections[collectionName][collectionRecordIndex]
-    //
-    // forEach(aliasesKeys, (aliasKey) => {
-    //   const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-    //   const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
-    //
-    //   if (isAliasRecordsArray) {
-    //     const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-    //       hashId: getProperty(currentRecord, 'hashId'),
-    //     })
-    //
-    //     if (gte(aliasRecordIndex, 0))
-    //       this.aliases[aliasKey].splice(aliasRecordIndex, 1)
-    //   }
-    //
-    //   if (isAliasRecordsObject) {
-    //     if (
-    //       isEqual(
-    //         getProperty(currentRecord, 'hashId'),
-    //         getProperty(this.aliases[aliasKey], 'hashId')
-    //       )
-    //     )
-    //       this.aliases[aliasKey] = {}
-    //   }
-    // })
-  }
-
   /*
    * Function for injecting actions
    * on collection record.
@@ -423,8 +355,6 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      rollBackAttributes: () =>
-        this._rollBackRecordAttributes(collectionRecord),
     }
     const actionKeys = keysIn(actions)
 
@@ -452,8 +382,6 @@ export default class ApiResourceManager {
 
     setProperty(collectionRecord, 'collectionName', collectionName)
     setProperty(collectionRecord, 'hashId', recordHashId)
-    setProperty(collectionRecord, 'originalRecord', clone(collectionRecord))
-
     setProperty(collectionRecord, 'isLoading', false)
     setProperty(collectionRecord, 'isError', false)
     setProperty(collectionRecord, 'isPristine', true)
@@ -900,7 +828,7 @@ export default class ApiResourceManager {
  * 2. isDirty - check if record is modified - Done
  * 3. isLoading - check if record is doing ajax - Done
  * 4. isError - check if record encountered an error - Done
- * 5. rollBackAttributes - rollback record to is initial state
+ * 5. rollBackAttributes - rollback record to is initial state - To Implement
  * 6. reload - get latest record from server by id - Done
  * 7. get by relationship like mapping
 
