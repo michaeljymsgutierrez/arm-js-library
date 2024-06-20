@@ -64,7 +64,6 @@ const keysToBeOmittedOnDeepCheck = [
   'isError',
   'isLoading',
   'isPristine',
-  'originalRecord',
 ]
 
 export default class ApiResourceManager {

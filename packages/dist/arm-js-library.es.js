@@ -48,8 +48,7 @@ const { makeObservable: es, observable: L, action: H, toJS: C } = K, {
   "isDirty",
   "isError",
   "isLoading",
-  "isPristine",
-  "originalRecord"
+  "isPristine"
 ];
 class ds {
   constructor(s = []) {
