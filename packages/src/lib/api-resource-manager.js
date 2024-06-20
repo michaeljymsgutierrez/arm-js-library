@@ -66,6 +66,21 @@ const keysToBeOmittedOnDeepCheck = [
   'isPristine',
 ]
 
+const keysToBeOmittedOnRequestPayload = [
+  'destroyRecord',
+  'reload',
+  'save',
+  'set',
+  'get',
+  'setProperties',
+  'isDirty',
+  'isError',
+  'isLoading',
+  'isPristine',
+  'hashId',
+  'collectionName',
+]
+
 export default class ApiResourceManager {
   constructor(collections = []) {
     this.namespace = 'api/v1'
@@ -604,13 +619,16 @@ export default class ApiResourceManager {
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
-    // const resourcePayloadHashId =
-    //   getProperty(resourcePayload, 'data.hashId') || null
 
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
-    if (hasResourcePayload) setProperty(requestOptions, 'data', resourcePayload)
+    if (hasResourcePayload) {
+      const payload = {
+        data: omit(resourcePayloadRecord, keysToBeOmittedOnRequestPayload),
+      }
+      setProperty(requestOptions, 'data', payload)
+    }
 
     /*
       Will terminate identical GET request for optimization
