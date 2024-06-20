@@ -57,23 +57,20 @@ const App = observer(() => {
                       'attributes.address1',
                       `Test ${new Date().getTime()}`
                     )
-                    // customerAddress
-                    //   .save()
-                    //   .then((result) => {
-                    //     console.log(result)
-                    //   })
-                    //   .catch((error) => {
-                    //     console.log(error)
-                    //   })
+                    customerAddress
+                      .save()
+                      .then((result) => {
+                        console.log(result)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
                   }}
                 >
                   {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
                 </button>
                 <button onClick={() => customerAddress.destroyRecord()}>
                   Delete
-                </button>
-                <button onClick={() => customerAddress.rollBackAttributes()}>
-                  Rollback
                 </button>
                 <button
                   onClick={() => controller.unloadRecord(customerAddress)}

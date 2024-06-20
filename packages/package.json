@@ -22,7 +22,7 @@
     "url": "https://github.com/michaeljymsgutierrez/arm-js-library.git"
   },
   "author": "Michael Jyms Gutierrez",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "vite": "^5.3.1"
   },
