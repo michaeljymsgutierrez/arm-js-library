@@ -552,7 +552,6 @@ export default class ApiResourceManager {
 
   setGlobal() {
     if (window) window.ARM = Object.freeze(this)
-    // if (global) global.ARM = Object.freeze(this)
   }
 
   getCollection(collectionName) {

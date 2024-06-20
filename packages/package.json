@@ -13,7 +13,8 @@
     }
   },
   "scripts": {
-    "build": "vite build"
+    "build:production": "vite build",
+    "build:dev": "vite build --watch"
   },
   "keywords": ["arm", "api-resource-manager", "centralized-data-collection"],
   "repository": {
