@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './page'
-import ApiResourceManager from './api-resource-manager'
+import ApiResourceManager from 'arm-js-library'
 
 export const ARM = new ApiResourceManager(['addresses', 'users'])
 
