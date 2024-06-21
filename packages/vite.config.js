@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import eslintPlugin from 'vite-plugin-eslint'
 
 export default defineConfig({
+  plugins: [eslintPlugin()],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.js'),

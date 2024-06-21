@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
@@ -17,7 +19,11 @@
     "build:watch": "vite build --watch",
     "lint": "eslint src/lib"
   },
-  "keywords": ["arm", "api-resource-manager", "centralized-data-collection"],
+  "keywords": [
+    "arm",
+    "api-resource-manager",
+    "centralized-data-collection"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/michaeljymsgutierrez/arm-js-library.git"
@@ -27,7 +33,8 @@
   "devDependencies": {
     "@eslint/js": "^9.5.0",
     "eslint": "^9.5.0",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
     "axios": "^1.7.2",
