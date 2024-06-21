@@ -16,8 +16,7 @@
   },
   "scripts": {
     "build:production": "vite build",
-    "build:watch": "vite build --watch",
-    "lint": "eslint src/lib"
+    "build:watch": "vite build --watch"
   },
   "keywords": [
     "arm",

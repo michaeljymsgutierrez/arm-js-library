@@ -7,5 +7,10 @@ export default [
       'no-unused-vars': 'warn',
       'no-undef': 'warn',
     },
+    files: ['src/lib/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      globals: { window: true },
+    },
   },
 ]
