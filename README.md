@@ -85,9 +85,9 @@ import { ARM } from 'path-to-src/index.js'
 #### API and Local collection fetch functions
 * **query(resource, params, config)**
     * Response payload is an array of records.
-    * Support query params.
-    * Support config.
     * Always request data from the server.
+    * Support query params. `optional`
+    * Support config. `optional`
     ```javascript
     ARM.query(
       'addresses',
@@ -103,9 +103,9 @@ import { ARM } from 'path-to-src/index.js'
 
 * **queryRecord(resource, params, config)**
     * Response payload is an object of record.
-    * Support query params.
-    * Support config.
     * Always request data from the server.
+    * Support query params. `optional`
+    * Support config. `optional`
     ```javascript
     ARM.queryRecord(
       'addresses',
@@ -119,10 +119,23 @@ import { ARM } from 'path-to-src/index.js'
     ```
 * **findAll(resource, config)**
     * Response payload is an array of records.
-    * Support config.
     * Always request data from the server.
+    * Support config. `optional`
     ```javascript
     ARM.findAll('addresses', {
       alias: 'customerAddresses',
     })
     ```
+
+* **findRecord(resource, id, params, config)**
+    * Response payload is an object of record.
+    * Always request data from the server.
+    * Params ID by default. `required`
+    * Support query params. `optional`
+    * Support config. `optional`
+    ```javascript
+    ARM.findRecord('addresses', 123456, {
+      alias: 'customerAddress',
+    })
+    ```
+
