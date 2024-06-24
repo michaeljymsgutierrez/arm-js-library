@@ -146,8 +146,15 @@ import { ARM } from 'path-to-src/index.js'
     ```
 
 * **peekAll(collectionName)**
-    * Get all records from collection
+    * Get all records from collection.
     * Will not request data from the server.
     ```javascript
     ARM.peekAll('addresses')
+    ```
+* **peekRecord(collectionName, collectionRecordId)**
+    * Get specific record from collection.
+    * Params ID by default. - **required**
+    * Will not request data from the server.
+    ```javascript
+    ARM.peekRecord('addresses', 123456)
     ```
