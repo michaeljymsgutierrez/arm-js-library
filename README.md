@@ -24,28 +24,29 @@ export const ARM = new ApiResourceManager(collections)
 
 #### Configuration
 
-* Required configurations to set on ARM instance.
-    ```javascript
-    // Set API endpoint host URL
-    // By default host is set to window.location.origin
-    ARM.setHost('https://www.api.com')
+**Required configurations**
+```javascript
+// Set API endpoint host URL
+// By default host is set to window.location.origin
+ARM.setHost('https://www.api.com')
 
-    // Set common request headers required on calling API endpoints
-    // ie. Authoization, Content-Type, etc.
-    ARM.setHeadersCommon('Authorization', `${token}`)
-    ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
-    ARM.setHeadersCommon('X-Client-Platform', 'Web')
+// Set common request headers required on calling API endpoints
+// ie. Authoization, Content-Type, etc.
+ARM.setHeadersCommon('Authorization', `${token}`)
+ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+ARM.setHeadersCommon('X-Client-Platform', 'Web')
 
-    // Set namespace for API endpoint host URL
-    // By default namespace is set to 'api/v1'
-    ARM.setNamespace('api/v1')
-    ```
+// Set namespace for API endpoint host URL
+// By default namespace is set to 'api/v1'
+ARM.setNamespace('api/v1')
+```
 
-* Optional configurations
-    ```javascript
-    // Set ARM instace to global
-    // This will make ARM instance available on browser window object via window.ARM
-    ARM.setGlobal()
+**Optional configurations**
+```javascript
+// Set ARM instace to global
+// This will make ARM instance available on browser window object via window.ARM
+ARM.setGlobal()
 
-    // Set payload included reference key
-    ARM.setPayloadIncludeReference('type')
+// Set payload included reference key
+//
+ARM.setPayloadIncludeReference('type')
