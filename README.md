@@ -82,7 +82,7 @@ To be able to use ARM features. You have to import the stored ARM instance from 
 import { ARM } from 'path-to-src/index.js'
 ```
 
-#### API and Local collection fetch functions
+#### Fetching Data
 * **query(resource, params, config)**
     * Response payload is an array of records.
     * Always request data from the server.
@@ -145,6 +145,7 @@ import { ARM } from 'path-to-src/index.js'
     )
     ```
 
+#### Checking Loaded Data
 * **peekAll(collectionName)**
     * Get all records from collection.
     * Will not request data from the server.
