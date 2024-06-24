@@ -6,11 +6,13 @@ ARM (API Resource Manager) is a JavaScript library designed to manage API resour
 ```
 npm install arm-js-library --save
 ```
-## Usage
+## Initialization and Configuration 
 
 #### Initialization
 
-Somewhere on your application init, create and store new ARM instance.
+Somewhere on your application init, create and store new ARM instance.<br/>
+Example: If you're using `React` app, store it on `src/index.js`
+
 ```javascript
 // Create a new instance of ARM
 import ApiResourceManager from 'arm-js-library'
@@ -23,6 +25,8 @@ export const ARM = new ApiResourceManager(collections)
 ```
 
 #### Configuration
+
+Configure stored ARM instance to be able to use on your application.
 
 **Required configurations**
 ```javascript
@@ -45,14 +49,25 @@ ARM.setNamespace('api/v1')
 ```javascript
 // Set ARM instace to global
 // This will make ARM instance available on browser window object via window.ARM
+// Example:
+//  console.log(window.ARM)
 ARM.setGlobal()
 
 // Set payload included reference key
 // Payload included reference key serve as mapper to determine what collection
 // the data received belongs to
 // Example:
-// {
-//   data: [...],
-//   included: [ { id: 1, type: 'addresses' } ]
-// }
+//  {
+//    data: [...],
+//    included: [ { id: 1, type: 'addresses' } ]
+//  }
 ARM.setPayloadIncludeReference('type')
+```
+## Utilization
+To be able to use ARM features. You have to import the stored ARM instance from the init file of the application.
+```javascript
+// ARM instance is stored on /src/index.js
+import { ARM } from 'path-to-src/index.js'
+```
+
+#### Fetch functions
