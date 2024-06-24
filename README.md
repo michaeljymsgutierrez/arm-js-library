@@ -117,3 +117,12 @@ import { ARM } from 'path-to-src/index.js'
       { alias: 'customerAddress' }
     )
     ```
+* **findAll(resource, config)**
+    * Response payload is an array of records.
+    * Support config.
+    * Always request data from the server.
+    ```javascript
+    ARM.findAll('addresses', {
+      alias: 'customerAddresses',
+    })
+    ```
