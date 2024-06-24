@@ -82,7 +82,7 @@ To be able to use ARM features. You have to import the stored ARM instance from 
 import { ARM } from 'path-to-src/index.js'
 ```
 
-#### Fetch functions
+#### API and Local collection fetch functions
 * **query(resource, params, config)**
     * Response payload is an array of records.
     * Support query params.
@@ -98,5 +98,22 @@ import { ARM } from 'path-to-src/index.js'
       {
         alias: 'customerAddresses',
       }
+    )
+    ```
+
+* **queryRecord(resource, params, config)**
+    * Response payload is an object of record.
+    * Support query params.
+    * Support config.
+    * Always request data from the server.
+    ```javascript
+    ARM.queryRecord(
+      'addresses',
+      {
+        id: 123456,
+        sort: '-id',
+        include: 'user',
+      },
+      { alias: 'customerAddress' }
     )
     ```
