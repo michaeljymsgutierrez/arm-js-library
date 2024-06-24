@@ -86,8 +86,8 @@ import { ARM } from 'path-to-src/index.js'
 * **query(resource, params, config)**
     * Response payload is an array of records.
     * Always request data from the server.
-    * Support query params. `optional`
-    * Support config. `optional`
+    * Support query params. - **optional**
+    * Support config. - **optional**
     ```javascript
     ARM.query(
       'addresses',
@@ -104,8 +104,8 @@ import { ARM } from 'path-to-src/index.js'
 * **queryRecord(resource, params, config)**
     * Response payload is an object of record.
     * Always request data from the server.
-    * Support query params. `optional`
-    * Support config. `optional`
+    * Support query params. - **optional**
+    * Support config. - **optional**
     ```javascript
     ARM.queryRecord(
       'addresses',
@@ -120,7 +120,7 @@ import { ARM } from 'path-to-src/index.js'
 * **findAll(resource, config)**
     * Response payload is an array of records.
     * Always request data from the server.
-    * Support config. `optional`
+    * Support config. - **optional**
     ```javascript
     ARM.findAll('addresses', {
       alias: 'customerAddresses',
@@ -130,12 +130,11 @@ import { ARM } from 'path-to-src/index.js'
 * **findRecord(resource, id, params, config)**
     * Response payload is an object of record.
     * Always request data from the server.
-    * Params ID by default. `required`
-    * Support query params. `optional`
-    * Support config. `optional`
+    * Params ID by default. - **required**
+    * Support query params. - **optional**
+    * Support config. - **optional**
     ```javascript
     ARM.findRecord('addresses', 123456, {
       alias: 'customerAddress',
     })
     ```
-
