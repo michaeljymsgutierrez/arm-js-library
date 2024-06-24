@@ -29,40 +29,52 @@ export const ARM = new ApiResourceManager(collections)
 Configure stored ARM instance to be able to use on your application.
 
 **Required configurations**
-```javascript
-// Set API endpoint host URL
-// By default host is set to window.location.origin
-ARM.setHost('https://www.api.com')
+* **setHost(value)**
+    ```javascript
+    // Set API endpoint host URL
+    // By default host is set to window.location.origin
+    ARM.setHost('https://www.api.com')
+    ```
 
-// Set common request headers required on calling API endpoints
-// ie. Authoization, Content-Type, etc.
-ARM.setHeadersCommon('Authorization', `${token}`)
-ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
-ARM.setHeadersCommon('X-Client-Platform', 'Web')
+* **setHeadersCommon(key, value)**
+    ```javascript
+    // Set common request headers required on calling API endpoints
+    // ie. Authoization, Content-Type, etc.
+    ARM.setHeadersCommon('Authorization', `${token}`)
+    ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+    ARM.setHeadersCommon('X-Client-Platform', 'Web')
+    ```
 
-// Set namespace for API endpoint host URL
-// By default namespace is set to 'api/v1'
-ARM.setNamespace('api/v1')
-```
+* **setNamespace(value)**
+    ```javascript
+    // Set namespace for API endpoint host URL
+    // By default namespace is set to 'api/v1'
+    ARM.setNamespace('api/v1')
+    ```
 
 **Optional configurations**
-```javascript
-// Set ARM instace to global
-// This will make ARM instance available on browser window object via window.ARM
-// Example:
-//  console.log(window.ARM)
-ARM.setGlobal()
+* **setGlobal(value)**
+    ```javascript
+    // Set ARM instace to global
+    // This will make ARM instance available on browser window object via window.ARM
+    // Example:
+    //  console.log(window.ARM)
+    ARM.setGlobal()
+    ```
 
-// Set payload included reference key
-// Payload included reference key serve as mapper to determine what collection
-// the data received belongs to
-// Example:
-//  {
-//    data: [...],
-//    included: [ { id: 1, type: 'addresses' } ]
-//  }
-ARM.setPayloadIncludeReference('type')
-```
+* **setPayloadIncludeReference(value)**
+    ```javascript
+    // Set payload included reference key
+    // Payload included reference key serve as mapper to determine what collection
+    // the data received belongs to
+    // Example:
+    //  {
+    //    data: [...],
+    //    included: [ { id: 1, type: 'addresses' } ]
+    //  }
+    ARM.setPayloadIncludeReference('type')
+    ```
+
 ## Utilization
 To be able to use ARM features. You have to import the stored ARM instance from the init file of the application.
 ```javascript
