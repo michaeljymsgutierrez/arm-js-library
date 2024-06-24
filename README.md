@@ -117,6 +117,7 @@ import { ARM } from 'path-to-src/index.js'
       { alias: 'customerAddress' }
     )
     ```
+
 * **findAll(resource, config)**
     * Response payload is an array of records.
     * Always request data from the server.
@@ -137,4 +138,11 @@ import { ARM } from 'path-to-src/index.js'
     ARM.findRecord('addresses', 123456, {
       alias: 'customerAddress',
     })
+    ```
+
+* **peekAll(collectionName)**
+    * Get all records from collection
+    * Will not request data from the server.
+    ```javascript
+    ARM.peekAll('addresses')
     ```
