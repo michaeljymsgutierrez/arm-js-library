@@ -48,5 +48,11 @@ ARM.setNamespace('api/v1')
 ARM.setGlobal()
 
 // Set payload included reference key
-//
+// Payload included reference key serve as mapper to determine what collection
+// the data received belongs to
+// Example:
+// {
+//   data: [...],
+//   included: [ { id: 1, type: 'addresses' } ]
+// }
 ARM.setPayloadIncludeReference('type')
