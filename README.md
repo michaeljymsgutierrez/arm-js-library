@@ -83,3 +83,20 @@ import { ARM } from 'path-to-src/index.js'
 ```
 
 #### Fetch functions
+* **query(resource, params, config)**
+    * Response payload is an array of records.
+    * Support query params.
+    * Support config.
+    * Always request data from the server.
+    ```javascript
+    ARM.query(
+      'addresses',
+      {
+        sort: '-id',
+        include: 'user',
+      },
+      {
+        alias: 'customerAddresses',
+      }
+    )
+    ```
