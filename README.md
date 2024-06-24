@@ -6,3 +6,17 @@ ARM (API Resource Manager) is a JavaScript library designed to manage API resour
 ```
 npm install arm-js-library --save
 ```
+## Usage
+
+#### Initialization
+
+Somewhere on your application create and store new ARM instance.
+```javascript
+// Create a new instance of ARM
+import ApiResourceManager from 'arm-js-library'
+
+// Create an array of collections to initialize
+const collections = ['addresses', 'users']
+
+// Export new instance of ARM for later utilization
+export const ARM = new ApiResourceManager(collections)
