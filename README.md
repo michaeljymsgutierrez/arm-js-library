@@ -86,7 +86,7 @@ import { ARM } from 'path-to-src/index.js'
 * **query(resource, params, config)**
     * Response payload is an array of records.
     * Always request data from the server.
-    * Support query params. - **optional**
+    * Support query params. - **required**
     * Support config. - **optional**
     ```javascript
     ARM.query(
@@ -104,7 +104,7 @@ import { ARM } from 'path-to-src/index.js'
 * **queryRecord(resource, params, config)**
     * Response payload is an object of record.
     * Always request data from the server.
-    * Support query params. - **optional**
+    * Support query params. - **required**
     * Support config. - **optional**
     ```javascript
     ARM.queryRecord(
@@ -132,12 +132,17 @@ import { ARM } from 'path-to-src/index.js'
     * Response payload is an object of record.
     * Always request data from the server.
     * Params ID by default. - **required**
-    * Support query params. - **optional**
+    * Support query params. - **required**
     * Support config. - **optional**
     ```javascript
-    ARM.findRecord('addresses', 123456, {
-      alias: 'customerAddress',
-    })
+    ARM.findRecord(
+      'addresses',
+      123456,
+      { include: 'user' },
+      {
+        alias: 'customerAddress',
+      }
+    )
     ```
 
 * **peekAll(collectionName)**
