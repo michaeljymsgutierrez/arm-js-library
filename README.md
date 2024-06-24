@@ -10,7 +10,7 @@ npm install arm-js-library --save
 
 #### Initialization
 
-Somewhere on your application create and store new ARM instance.
+Somewhere on your application init, create and store new ARM instance.
 ```javascript
 // Create a new instance of ARM
 import ApiResourceManager from 'arm-js-library'
@@ -20,3 +20,22 @@ const collections = ['addresses', 'users']
 
 // Export new instance of ARM for later utilization
 export const ARM = new ApiResourceManager(collections)
+```
+
+#### Configuration
+
+Initial configurations to set on ARM instance.
+```javascript
+// Set API endpoint host URL
+// By default host is set to window.location.origin
+ARM.setHost('https://www.api.com')
+
+// Set common request headers required on calling API endpoints
+// ie. Authoization, Content-Type, etc.
+ARM.setHeadersCommon('Authorization', `${token}`)
+ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+ARM.setHeadersCommon('X-Client-Platform', 'Web')
+
+// Set namespace for API endpoint host URL
+// By default namespace is set to 'api/v1'
+ARM.setNamespace('api/v1')
