@@ -33,7 +33,7 @@ Configure stored ARM instance to be able to use on your application.
     ```javascript
     // Set API endpoint host URL
     // By default host is set to window.location.origin
-    ARM.setHost('https://www.api.com')
+    ARM.setHost('https://www.test-demo.com')
     ```
 * **setHeadersCommon(key, value)**
     ```javascript
@@ -136,10 +136,29 @@ import { ARM } from 'path-to-src/index.js'
     ```
 #### Passed Arguments: `Request functions from server`
 ---
-
-* **resource**
-    * Current loading state of the request.
-
+```javascript
+    // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
+    ARM.findRecord('addresses', 123456,
+      { 
+        include: 'user' 
+      },
+      {
+        alias: 'customerAddress',
+      }
+    )
+```
+* **resource - String**
+    * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
+    * Endpoint resource name.
+    * Serve as collection name defined on the collection intialization of ARM instance.
+* **id - Integer**
+    * `https://www.test-demo.com/api/v1/addresses/` **1**`?include=user`
+    * Endpoint id parameter.
+* **params - Object**
+    * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
+    * Endpoint query string parameters.
+* **config - Object**
+    * Contains request config such as `(skip, alias`) which are currently available.
 #### Returned Object: `Request functions from server`
 ---
 
