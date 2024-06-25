@@ -159,6 +159,17 @@ import { ARM } from 'path-to-src/index.js'
     * Endpoint query string parameters.
 * **config - Object**
     * Contains request config such as `(skip, alias`) which are currently available.
+    ```javascript
+      {
+        // Skip serve as request go signal to proceed 
+        // if Request B is dependent on Request A returned results.
+        skip: true,
+
+        // Alias serve as identifier for the records obtain from the server.
+        // Can be used anywhere in your application through ARM.getAlias('customerAddress')
+        alias: 'customerAddress' 
+      }
+    ```
 #### Returned Object: `Request functions from server`
 ---
 
