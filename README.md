@@ -81,8 +81,7 @@ import { ARM } from 'path-to-src/index.js'
 ---
 
 * **query(resource, params, config)**
-    * Response payload is an array of records.
-    * Always request data from the server.
+    * Querying multiple records from the server.
     * Support query params. - **required**
     * Support config. - **optional**
     ```javascript
@@ -98,8 +97,7 @@ import { ARM } from 'path-to-src/index.js'
     )
     ```
 * **queryRecord(resource, params, config)**
-    * Response payload is an object of record.
-    * Always request data from the server.
+    * Querying for a single record from the server.
     * Support query params. - **required**
     * Support config. - **optional**
     ```javascript
@@ -114,8 +112,7 @@ import { ARM } from 'path-to-src/index.js'
     )
     ```
 * **findAll(resource, config)**
-    * Response payload is an array of records.
-    * Always request data from the server.
+    * Retrieving multiple records from the server.
     * Support config. - **optional**
     ```javascript
     ARM.findAll('addresses', {
@@ -123,8 +120,7 @@ import { ARM } from 'path-to-src/index.js'
     })
     ```
 * **findRecord(resource, id, params, config)**
-    * Response payload is an object of record.
-    * Always request data from the server.
+    * Retrieving single record from the server.
     * Params ID by default. - **required**
     * Support query params. - **required**
     * Support config. - **optional**
@@ -138,6 +134,12 @@ import { ARM } from 'path-to-src/index.js'
       }
     )
     ```
+#### Passed Arguments: `Request functions from server`
+---
+
+* **resource**
+    * Current loading state of the request.
+
 #### Returned Object: `Request functions from server`
 ---
 
@@ -181,15 +183,13 @@ import { ARM } from 'path-to-src/index.js'
 ---
 
 * **peekAll(collectionName)**
-    * Get all records from collection.
-    * Will not request data from the server.
+    * Retrieving multiple records from collection.
     ```javascript
     ARM.peekAll('addresses')
     ```
 * **peekRecord(collectionName, collectionRecordId)**
-    * Get specific record from collection.
+    * Retrieving single record from collection.
     * Params ID by default. - **required**
-    * Will not request data from the server.
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
