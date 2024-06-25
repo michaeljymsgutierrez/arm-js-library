@@ -82,7 +82,9 @@ To be able to use ARM features. You have to import the stored ARM instance from 
 import { ARM } from 'path-to-src/index.js'
 ```
 
-#### Fetching Data
+#### Request functions from server
+---
+
 * **query(resource, params, config)**
     * Response payload is an array of records.
     * Always request data from the server.
@@ -145,7 +147,48 @@ import { ARM } from 'path-to-src/index.js'
     )
     ```
 
-#### Checking Loaded Data
+#### Returned Object: `Request functions from server`
+---
+
+* **isLoading - Boolean**
+    * Current loading state of the request.
+    * By default set to **true**
+    * Set to **true** once the request is initiated and set to **false** once request is done.
+* **isError - Boolean**
+    * Current error state of the request.
+    * By default set to **false**
+    * Set to **true** if the request received/encountered an error and set to **false** if not.
+* **isNew - Boolean**
+    * Identifier if the request is newly created.
+    * By default set to **true**
+    * Set to **true** if the request is already initiated once and set to **false** once it is already intiated before. 
+      Request functions are built with optimization, it does not repeatedly executing API request.
+      Since it is optimized, it can be **override** using **skip** from request configuration.
+* **data - Array || Object**
+    * Contains the request returned payload.
+    * By default has value of an empty **array** or **object** depending on the request function used.
+* **included - Array**
+    * Contains the request returned payload property **included**.
+    * Specifically for **JSON API**.
+* **meta - Object**
+    * Contains the request returned payload property **meta**.
+    * Specifically for **JSON API**.
+```javascript
+// Returned object data properties are observable
+// It will automatically update once the request is already done
+{
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: [],
+  included: [],
+  meta: {},
+}
+```
+
+#### Retrieve functions from collections
+---
+
 * **peekAll(collectionName)**
     * Get all records from collection.
     * Will not request data from the server.
