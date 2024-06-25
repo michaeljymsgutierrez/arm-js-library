@@ -35,7 +35,6 @@ Configure stored ARM instance to be able to use on your application.
     // By default host is set to window.location.origin
     ARM.setHost('https://www.api.com')
     ```
-
 * **setHeadersCommon(key, value)**
     ```javascript
     // Set common request headers required on calling API endpoints
@@ -44,14 +43,12 @@ Configure stored ARM instance to be able to use on your application.
     ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
     ARM.setHeadersCommon('X-Client-Platform', 'Web')
     ```
-
 * **setNamespace(value)**
     ```javascript
     // Set namespace for API endpoint host URL
     // By default namespace is set to 'api/v1'
     ARM.setNamespace('api/v1')
     ```
-
 **Optional configurations**
 * **setGlobal(value)**
     ```javascript
@@ -61,7 +58,6 @@ Configure stored ARM instance to be able to use on your application.
     //  console.log(window.ARM)
     ARM.setGlobal()
     ```
-
 * **setPayloadIncludeReference(value)**
     ```javascript
     // Set payload included reference key
@@ -74,7 +70,6 @@ Configure stored ARM instance to be able to use on your application.
     //  }
     ARM.setPayloadIncludeReference('type')
     ```
-
 ## Utilization
 To be able to use ARM features. You have to import the stored ARM instance from the init file of the application.
 ```javascript
@@ -102,7 +97,6 @@ import { ARM } from 'path-to-src/index.js'
       }
     )
     ```
-
 * **queryRecord(resource, params, config)**
     * Response payload is an object of record.
     * Always request data from the server.
@@ -119,7 +113,6 @@ import { ARM } from 'path-to-src/index.js'
       { alias: 'customerAddress' }
     )
     ```
-
 * **findAll(resource, config)**
     * Response payload is an array of records.
     * Always request data from the server.
@@ -129,7 +122,6 @@ import { ARM } from 'path-to-src/index.js'
       alias: 'customerAddresses',
     })
     ```
-
 * **findRecord(resource, id, params, config)**
     * Response payload is an object of record.
     * Always request data from the server.
@@ -146,21 +138,20 @@ import { ARM } from 'path-to-src/index.js'
       }
     )
     ```
-
 #### Returned Object: `Request functions from server`
 ---
 
 * **isLoading - Boolean**
     * Current loading state of the request.
-    * By default set to **true**
+    * By default set to **true**.
     * Set to **true** once the request is initiated and set to **false** once request is done.
 * **isError - Boolean**
     * Current error state of the request.
-    * By default set to **false**
+    * By default set to **false**.
     * Set to **true** if the request received/encountered an error and set to **false** if not.
 * **isNew - Boolean**
     * Identifier if the request is newly created.
-    * By default set to **true**
+    * By default set to **true**.
     * Set to **true** if the request is already initiated once and set to **false** once it is already intiated before. 
       Request functions are built with optimization, it does not repeatedly executing API request.
       Since it is optimized, it can be **override** using **skip** from request configuration.
