@@ -410,11 +410,15 @@ export default class ApiResourceManager {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
+    const requestHashIdsKeys = keysIn(this.requestHashIds)
     let updatedCollectionRecords = null
 
     if (isCollectionRecordsArray) {
       const collectionRecordsHashIds = map(collectionRecords, 'hashId')
 
+      /*
+       * Update collection records with server multiple records.
+       */
       forEach(collectionRecords, (collectionRecord) => {
         const collectionRecordIndex = findIndex(
           this.collections[collectionName],
@@ -441,6 +445,9 @@ export default class ApiResourceManager {
           })
       )
 
+      /*
+       * Update alias records with server multiple records.
+       */
       forEach(aliasesKeys, (aliasKey) => {
         const isAliasRecordsArray = isArray(this.aliases[aliasKey])
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
@@ -513,6 +520,43 @@ export default class ApiResourceManager {
             )
           )
             this.aliases[aliasKey] = updatedCollectionRecords
+        }
+      })
+
+      forEach(requestHashIdsKeys, (requestHashIdKey) => {
+        const requestHashIdData = getProperty(
+          this.requestHashIds[requestHashIdKey],
+          'data'
+        )
+        const isRequestHashIdDataArray = isArray(requestHashIdData)
+        const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+
+        if (isRequestHashIdDataArray) {
+          forEach([updatedCollectionRecords], (collectionRecord) => {
+            const requestHashIdRecordIndex = findIndex(
+              getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+              {
+                hashId: getProperty(collectionRecord, 'hashId'),
+              }
+            )
+            if (gte(requestHashIdRecordIndex, 0))
+              this.requestHashIds[requestHashIdKey][requestHashIdRecordIndex] =
+                collectionRecord
+          })
+        }
+
+        if (isRequestHashIdDataObject) {
+          if (
+            isEqual(
+              getProperty(updatedCollectionRecords, 'hashId'),
+              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+            )
+          )
+            setProperty(
+              this.requestHashIds[requestHashIdKey],
+              'data',
+              updatedCollectionRecords
+            )
         }
       })
     }
