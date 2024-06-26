@@ -12,7 +12,7 @@ import { ARM } from './index.js'
 const App = observer(() => {
   const { isLoading, isError, data: address } = ARM.findRecord(
     'addresses',
-    2461018,
+    123456,
     { include: 'user' },
     { alias: 'customerAddress' }
   )
