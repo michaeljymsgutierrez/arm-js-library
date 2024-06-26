@@ -269,5 +269,14 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
-#### Collection Records: `Properties and Actions`
+#### Collection Records: `Functions and Properties`
 ---
+
+* **isLoading - Boolean**
+    * Description here.
+* **isError - Boolean**
+    * Description here.
+* **isPristine - Boolean**
+    * Description here.
+* **isDirty - Boolean**
+    * Description here.
