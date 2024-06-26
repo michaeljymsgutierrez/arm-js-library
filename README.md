@@ -4,6 +4,8 @@ ARM (API Resource Manager) is a JavaScript library designed to manage API resour
 
 ## Basic Usage
 ```javascript
+// Example usage in ReactJS
+
 import { observer } from 'mobx-react-lite'
 import { ARM } from './index.js'
 
