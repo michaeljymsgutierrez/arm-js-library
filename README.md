@@ -162,7 +162,7 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
       {
         // Skip serve as request go signal to proceed 
-        // if Request B is dependent on Request A returned results.
+        // if Request B has dependency on Request A
         skip: true,
 
         // Alias serve as identifier for the records obtain from the server.
@@ -180,7 +180,7 @@ import { ARM } from 'path-to-src/index.js'
 * **isError - Boolean**
     * Current error state of the request.
     * By default set to **false**.
-    * Set to **true** if the request received/encountered an error and set to **false** if not.
+    * Set to **true** if the request received/encountered an error and set to **false** if none.
 * **isNew - Boolean**
     * Identifier if the request is newly created.
     * By default set to **true**.
