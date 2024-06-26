@@ -416,9 +416,6 @@ export default class ApiResourceManager {
     if (isCollectionRecordsArray) {
       const collectionRecordsHashIds = map(collectionRecords, 'hashId')
 
-      /*
-       * Update collection records with server multiple records.
-       */
       forEach(collectionRecords, (collectionRecord) => {
         const collectionRecordIndex = findIndex(
           this.collections[collectionName],
@@ -445,9 +442,6 @@ export default class ApiResourceManager {
           })
       )
 
-      /*
-       * Update alias records with server multiple records.
-       */
       forEach(aliasesKeys, (aliasKey) => {
         const isAliasRecordsArray = isArray(this.aliases[aliasKey])
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
@@ -857,32 +851,6 @@ export default class ApiResourceManager {
 }
 
 /*
- * Notes:
- * TO DO: API ajax functions
- * Add properties: isLoading, isError, data, included, meta - Done
- * 1. query - Done
- *   - response payload is a collection of records
- *   - support query params
- *   - always request to server
- * 2. queryRecord - Done
- *   - response payload is a single record
- *   - support query params
- *   - always request to server
- * 3. findAll - Done
- *   - response payload is a collection of records
- *   - not support query params
- *   - always request to server
- * 4. findRecord - Done
- *   - response payload is a single record
- *   - support query params (by default query by id)
- *   - always request to server
- * 5. peekAll - Done
- *   - get all records from local cache
- *   - will not request to server
- * 6. peekRecord - Done
- *   - get single record from local cache (by default get by id)
- *   - will not request to server
-
  * TO DO: Records new properties
  * 1. isPristine - check if record is not modified - Done
  * 2. isDirty - check if record is modified - Done
@@ -891,8 +859,4 @@ export default class ApiResourceManager {
  * 5. rollBackAttributes - rollback record to is initial state - To Implement
  * 6. reload - get latest record from server by id - Done
  * 7. get by relationship like mapping
-
- * TO DO: Alias and Ajax Functions (need to think more)
- * 1. Removed async await - Done
- * 2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
  */
