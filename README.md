@@ -197,7 +197,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
     * Endpoint resource name.
     * Serve as collection name defined on the collection intialization of ARM instance.
-* **id - Integer**
+* **id - Number**
     * `https://www.test-demo.com/api/v1/addresses/` **1**`?include=user`
     * Endpoint id parameter.
 * **params - Object**
@@ -269,3 +269,5 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
+#### Collection Records: `Properties and Actions`
+---
