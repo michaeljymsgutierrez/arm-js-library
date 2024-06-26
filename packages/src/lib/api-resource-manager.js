@@ -104,57 +104,26 @@ export default class ApiResourceManager {
     })
   }
 
-  /*
-   * Define internal functions here.
-   * Internal functions are functions that are being used inside ARM class
-   * and not being exposed on new ARM instance.
-   * These function will be set to protected later on when tried to use on new ARM instance.
-   */
-
-  /*
-   * Function for initializeing Axios Configurations.
-   */
   _initializeAxiosConfig() {
     axios.defaults.baseURL = this._getBaseURL()
-    // Decide what are request default configurations
-    // axios.defaults.headers.common['Authorization'] =
-    //   this._getAuthorizationToken()
   }
 
-  /*
-   * Function for initializing collections from ARM instance.
-   */
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
 
-  /*
-   * Function for getting baseURL from
-   * host and namespace defined.
-   */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`
   }
 
-  /*
-   * Function for getting token,
-   * by default it is being fetched on saved local storage
-   * key 'token'.
-   */
   _getAuthorizationToken() {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
-  /*
-   * Function for adding new collection and collection records.
-   */
   _addCollection(collectionName, collectionRecords) {
     this.collections[collectionName] = collectionRecords
   }
 
-  /*
-   * Function for aliasing data defined on API methods.
-   */
   _addAlias(aliasName, aliasRecords) {
     const isAliasRecordsArray = isArray(aliasRecords)
     const isAliasRecordsObject = isPlainObject(aliasRecords)
@@ -164,33 +133,15 @@ export default class ApiResourceManager {
     if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
   }
 
-  /*
-   * Function for generating collection data unique id.
-   */
   _generateHashId(object = { id: uuidv1() }) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
 
-  /*
-   * Functions for property management.
-   * Property management are set of function for setting and getting
-   * values from observable collection.
-   * This functions are injectables.
-   */
-
-  /*
-   * Function for getting single property of observable collection
-   * where it is being injected.
-   */
   _getProperty(key) {
     return getProperty(this, key)
   }
 
-  /*
-   * Function for setting single property of observable collection
-   * where it is being injected.
-   */
   _setProperty(key, value) {
     setProperty(this, key, value)
 
@@ -209,10 +160,6 @@ export default class ApiResourceManager {
     }
   }
 
-  /*
-   * Function for setting multiple properties of observable collection
-   * where it is being injected.
-   */
   _setProperties(objectKeysValues) {
     function objectToArray(obj, prefix = '') {
       return flatMap(entries(obj), ([key, value]) => {
@@ -242,10 +189,6 @@ export default class ApiResourceManager {
     }
   }
 
-  /*
-   * Function for temporary removing record from collection.
-   * It will not permanently remove the record from the server.
-   */
   unloadRecord(currentRecord) {
     const aliasesKeys = keysIn(this.aliases)
     const collectionName = getProperty(currentRecord, 'collectionName')
@@ -281,10 +224,6 @@ export default class ApiResourceManager {
     })
   }
 
-  /*
-   * Function for persisting collection record on the server,
-   * where it is being injected.
-   */
   _saveRecord(currentRecord) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
@@ -309,9 +248,6 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  /*
-   * Function for permanently removing record from the server.
-   */
   async _deleteRecord(currentRecord) {
     const collectionRecord = find(
       this.collections[currentRecord.collectionName],
@@ -336,9 +272,6 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  /*
-   * Function for updating record from the server.
-   */
   async _reloadRecord(currentRecord) {
     const id = getProperty(currentRecord, 'id')
     const resource = getProperty(currentRecord, 'collectionName')
@@ -357,10 +290,6 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  /*
-   * Function for injecting actions
-   * on collection record.
-   */
   _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
@@ -377,11 +306,6 @@ export default class ApiResourceManager {
     })
   }
 
-  /*
-   * Function for injecting reference keys such as:
-   * collectionName - identifier for which collection the collection record belongs to
-   * collectionRecordHashId - identifier for which collection record should be updated
-   */
   _injectReferenceKeys(
     collectionName,
     collectionRecord,
@@ -402,10 +326,6 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'isDirty', false)
   }
 
-  /*
-   * Function for pushing collection records obtained from API methods
-   * to respective collections.
-   */
   _pushPayloadToCollection(collectionName, collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
@@ -580,11 +500,6 @@ export default class ApiResourceManager {
     return this.requestHashIds[requestHashId]
   }
 
-  /*
-   * Define internal/external functions here.
-   * These functions are functions that are being used inside ARM class and new ARM instance.
-   */
-
   setHost(host) {
     this.host = host
     this._initializeAxiosConfig()
@@ -668,9 +583,6 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    /*
-      Will terminate identical GET request for optimization
-    */
     if (isResourceMethodGet && !requestSkip) {
       const requestHashObject = this.requestHashIds[requestHashId]
       const isRequestHashIdExisting = !isNil(requestHashObject)
@@ -752,9 +664,6 @@ export default class ApiResourceManager {
     }
   }
 
-  /*
-   * Functions for retrieving collection of records from server
-   */
   query(resource, params = {}, config = {}) {
     const requestObject = {
       resourceMethod: 'get',
@@ -836,9 +745,6 @@ export default class ApiResourceManager {
     return requestHashObject
   }
 
-  /*
-   * Functions for retrieving collection of records from local cache
-   */
   peekAll(collectionName) {
     return this.collections[collectionName]
   }
