@@ -273,7 +273,9 @@ import { ARM } from 'path-to-src/index.js'
 ---
 
 * **isLoading - Boolean**
-    * Description here.
+    * Current loading state of the record.
+    * By default set to **false**.
+    * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
 * **isError - Boolean**
     * Description here.
 * **isPristine - Boolean**
