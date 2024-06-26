@@ -75,76 +75,32 @@ class us {
       _addAlias: N
     });
   }
-  /*
-   * Define internal functions here.
-   * Internal functions are functions that are being used inside ARM class
-   * and not being exposed on new ARM instance.
-   * These function will be set to protected later on when tried to use on new ARM instance.
-   */
-  /*
-   * Function for initializeing Axios Configurations.
-   */
   _initializeAxiosConfig() {
     M.defaults.baseURL = this._getBaseURL();
   }
-  /*
-   * Function for initializing collections from ARM instance.
-   */
   _initializeCollections(s) {
     f(s, (e) => this._addCollection(e, []));
   }
-  /*
-   * Function for getting baseURL from
-   * host and namespace defined.
-   */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
   }
-  /*
-   * Function for getting token,
-   * by default it is being fetched on saved local storage
-   * key 'token'.
-   */
   _getAuthorizationToken() {
     return `Token ${window.localStorage.getItem("token")}`;
   }
-  /*
-   * Function for adding new collection and collection records.
-   */
   _addCollection(s, e) {
     this.collections[s] = e;
   }
-  /*
-   * Function for aliasing data defined on API methods.
-   */
   _addAlias(s, e) {
     const t = m(e), a = y(e);
     t && (this.aliases[s] = e || []), a && (this.aliases[s] = e || {});
   }
-  /*
-   * Function for generating collection data unique id.
-   */
   _generateHashId(s = { id: z() }) {
     const e = JSON.stringify(s);
     return ss.MD5(e).toString();
   }
-  /*
-   * Functions for property management.
-   * Property management are set of function for setting and getting
-   * values from observable collection.
-   * This functions are injectables.
-   */
-  /*
-   * Function for getting single property of observable collection
-   * where it is being injected.
-   */
   _getProperty(s) {
     return i(this, s);
   }
-  /*
-   * Function for setting single property of observable collection
-   * where it is being injected.
-   */
   _setProperty(s, e) {
     h(this, s, e);
     const t = C(
@@ -153,10 +109,6 @@ class us {
     ), a = C(k(this), E);
     _(t, a) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
-  /*
-   * Function for setting multiple properties of observable collection
-   * where it is being injected.
-   */
   _setProperties(s) {
     function e(d, n = "") {
       return as(rs(d), ([u, o]) => {
@@ -172,10 +124,6 @@ class us {
     ), r = C(k(this), E);
     _(a, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
-  /*
-   * Function for temporary removing record from collection.
-   * It will not permanently remove the record from the server.
-   */
   unloadRecord(s) {
     const e = x(this.aliases), t = i(s, "collectionName"), a = P(this.collections[t], {
       hashId: i(s, "hashId")
@@ -194,10 +142,6 @@ class us {
       ) && (this.aliases[r] = {});
     });
   }
-  /*
-   * Function for persisting collection record on the server,
-   * where it is being injected.
-   */
   _saveRecord(s) {
     const e = i(s, "collectionName"), t = H(this.collections[e], {
       hashId: i(s, "hashId")
@@ -212,9 +156,6 @@ class us {
     };
     return this._request(o);
   }
-  /*
-   * Function for permanently removing record from the server.
-   */
   async _deleteRecord(s) {
     const e = H(
       this.collections[s.collectionName],
@@ -232,9 +173,6 @@ class us {
     };
     return this._request(d);
   }
-  /*
-   * Function for updating record from the server.
-   */
   async _reloadRecord(s) {
     const e = i(s, "id"), r = {
       resourceMethod: "get",
@@ -247,10 +185,6 @@ class us {
     };
     return this._request(r);
   }
-  /*
-   * Function for injecting actions
-   * on collection record.
-   */
   _injectActions(s) {
     const e = {
       get: this._getProperty,
@@ -264,11 +198,6 @@ class us {
       s[a] = e[a];
     });
   }
-  /*
-   * Function for injecting reference keys such as:
-   * collectionName - identifier for which collection the collection record belongs to
-   * collectionRecordHashId - identifier for which collection record should be updated
-   */
   _injectReferenceKeys(s, e, t = null) {
     const a = is(t) ? this._generateHashId({
       id: i(e, "id"),
@@ -276,10 +205,6 @@ class us {
     }) : t;
     h(e, "collectionName", s), h(e, "hashId", a), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
-  /*
-   * Function for pushing collection records obtained from API methods
-   * to respective collections.
-   */
   _pushPayloadToCollection(s, e) {
     const t = m(e), a = y(e), r = x(this.aliases), d = x(this.requestHashIds);
     let n = null;
@@ -367,10 +292,6 @@ class us {
     const t = this._generateHashId(s), a = !B(this.requestHashIds[t]), r = i(e, "isNew");
     return a && r ? h(this.requestHashIds[t], "isNew", !1) : this.requestHashIds[t] = e, this.requestHashIds[t];
   }
-  /*
-   * Define internal/external functions here.
-   * These functions are functions that are being used inside ARM class and new ARM instance.
-   */
   setHost(s) {
     this.host = s, this._initializeAxiosConfig();
   }
@@ -464,9 +385,6 @@ class us {
       }, Promise.reject(l);
     }
   }
-  /*
-   * Functions for retrieving collection of records from server
-   */
   query(s, e = {}, t = {}) {
     const a = {
       resourceMethod: "get",
@@ -527,9 +445,6 @@ class us {
     );
     return this._request(r), n;
   }
-  /*
-   * Functions for retrieving collection of records from local cache
-   */
   peekAll(s) {
     return this.collections[s];
   }
