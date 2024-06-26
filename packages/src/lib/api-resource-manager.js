@@ -410,6 +410,7 @@ export default class ApiResourceManager {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
+    const requestHashIdsKeys = keysIn(this.requestHashIds)
     let updatedCollectionRecords = null
 
     if (isCollectionRecordsArray) {
@@ -513,6 +514,43 @@ export default class ApiResourceManager {
             )
           )
             this.aliases[aliasKey] = updatedCollectionRecords
+        }
+      })
+
+      forEach(requestHashIdsKeys, (requestHashIdKey) => {
+        const requestHashIdData = getProperty(
+          this.requestHashIds[requestHashIdKey],
+          'data'
+        )
+        const isRequestHashIdDataArray = isArray(requestHashIdData)
+        const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+
+        if (isRequestHashIdDataArray) {
+          forEach([updatedCollectionRecords], (collectionRecord) => {
+            const requestHashIdRecordIndex = findIndex(
+              getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+              {
+                hashId: getProperty(collectionRecord, 'hashId'),
+              }
+            )
+            if (gte(requestHashIdRecordIndex, 0))
+              this.requestHashIds[requestHashIdKey][requestHashIdRecordIndex] =
+                collectionRecord
+          })
+        }
+
+        if (isRequestHashIdDataObject) {
+          if (
+            isEqual(
+              getProperty(updatedCollectionRecords, 'hashId'),
+              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+            )
+          )
+            setProperty(
+              this.requestHashIds[requestHashIdKey],
+              'data',
+              updatedCollectionRecords
+            )
         }
       })
     }
@@ -813,32 +851,6 @@ export default class ApiResourceManager {
 }
 
 /*
- * Notes:
- * TO DO: API ajax functions
- * Add properties: isLoading, isError, data, included, meta - Done
- * 1. query - Done
- *   - response payload is a collection of records
- *   - support query params
- *   - always request to server
- * 2. queryRecord - Done
- *   - response payload is a single record
- *   - support query params
- *   - always request to server
- * 3. findAll - Done
- *   - response payload is a collection of records
- *   - not support query params
- *   - always request to server
- * 4. findRecord - Done
- *   - response payload is a single record
- *   - support query params (by default query by id)
- *   - always request to server
- * 5. peekAll - Done
- *   - get all records from local cache
- *   - will not request to server
- * 6. peekRecord - Done
- *   - get single record from local cache (by default get by id)
- *   - will not request to server
-
  * TO DO: Records new properties
  * 1. isPristine - check if record is not modified - Done
  * 2. isDirty - check if record is modified - Done
@@ -847,8 +859,4 @@ export default class ApiResourceManager {
  * 5. rollBackAttributes - rollback record to is initial state - To Implement
  * 6. reload - get latest record from server by id - Done
  * 7. get by relationship like mapping
-
- * TO DO: Alias and Ajax Functions (need to think more)
- * 1. Removed async await - Done
- * 2. Immediately return data (isLoading, isError, data) for aliased/non-aliased request - Done
  */
