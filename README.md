@@ -344,11 +344,31 @@ import { ARM } from 'path-to-src/index.js'
             * **value - Primitive**
         ```javascript
         // Returned value 'office'
-        collectionRecord.get('attributes.label')
+        collectionRecord.get('attributes.kind')
 
-        // Set property 'label' of attributes value from 'office' to 'school'
-        collectionRecord.set('attributes.label', 'school')
+        // Set property label of attributes
+        collectionRecord.set('attributes.kind', 'school')
 
         // Returned value 'office'
-        collectionRecord.get('attributes.school')
+        collectionRecord.get('attributes.kind')
+        ```
+    * **setProperties(value)**
+        * Multiple properties setter function.
+        * Passed arguments:
+            * **value - Object**
+        ```javascript
+        // Returned value 'office'
+        collectionRecord.get('attributes.kind')
+        // Returned value 'Anabu Hills'
+        collectionRecord.get('attributes.label')
+
+        // Set properties label and kind of attributes
+        collectionRecord.setProperties({
+          attributes: { kind: 'school', label: 'My School' }
+        })
+
+        // Returned value 'school'
+        collectionRecord.get('attributes.kind')
+        // Returned value 'My School'
+        collectionRecord.get('attributes.label')
         ```
