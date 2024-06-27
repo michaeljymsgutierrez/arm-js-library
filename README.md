@@ -332,10 +332,10 @@ import { ARM } from 'path-to-src/index.js'
             * **key - String**
         ```javascript
         // Returned value 123456
-        collectionRecord.get('id') 
+        address.get('id') 
 
         // Returned value 'office'
-        collectionRecord.get('attributes.label') 
+        address.get('attributes.label') 
         ```
     * **set(key, value)**
         * Single property setter function.
@@ -344,13 +344,13 @@ import { ARM } from 'path-to-src/index.js'
             * **value - Primitive**
         ```javascript
         // Returned value 'office'
-        collectionRecord.get('attributes.kind')
+        address.get('attributes.kind')
 
         // Set property label of attributes
-        collectionRecord.set('attributes.kind', 'school')
+        address.set('attributes.kind', 'school')
 
         // Returned value 'office'
-        collectionRecord.get('attributes.kind')
+        address.get('attributes.kind')
         ```
     * **setProperties(value)**
         * Multiple properties setter function.
@@ -358,19 +358,19 @@ import { ARM } from 'path-to-src/index.js'
             * **value - Object**
         ```javascript
         // Returned value 'office'
-        collectionRecord.get('attributes.kind')
+        address.get('attributes.kind')
         // Returned value 'Anabu Hills'
-        collectionRecord.get('attributes.label')
+        address.get('attributes.label')
 
         // Set properties label and kind of attributes
-        collectionRecord.setProperties({
+        address.setProperties({
           attributes: { kind: 'school', label: 'My School' }
         })
 
         // Returned value 'school'
-        collectionRecord.get('attributes.kind')
+        address.get('attributes.kind')
         // Returned value 'My School'
-        collectionRecord.get('attributes.label')
+        address.get('attributes.label')
         ```
 * **Request Functions**
     * **save()**
@@ -378,4 +378,15 @@ import { ARM } from 'path-to-src/index.js'
         * Create a new record to server  only if it doesn't already exist in the database.
             * Will call **POST** method: `POST /addresses`
         * Update existing record to server's database.
-            * Will call **PUT** method: `PUT /addresses/1`
+            * Will call **PUT** method: `PUT /addresses/123456`
+        ```javascript
+        // Set properties label and kind of attributes
+        address.setProperties({
+          attributes: { kind: 'school', label: 'My School' }
+        })
+
+        // Returned value 'school'
+        address.get('attributes.kind')
+        // Returned value 'My School'
+        address..get('attributes.label')
+        ```
