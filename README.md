@@ -281,7 +281,7 @@ import { ARM } from 'path-to-src/index.js'
 #### Collection Records: `Properties and Functions`
 ---
 
-* **Properties**
+* **State Properties**
     * **isLoading - Boolean**
         * Current loading state of the record.
         * By default set to **false**.
@@ -310,7 +310,7 @@ import { ARM } from 'path-to-src/index.js'
         ```javascript
         collectionRecord.get('isDirty')
         ```
-* **Functions**
+* **Getter and Setter Functions**
    ```javascript
     // Example response data from API
     {
