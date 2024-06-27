@@ -284,8 +284,16 @@ import { ARM } from 'path-to-src/index.js'
     * Current loading state of the record.
     * By default set to **false**.
     * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+    ```javascript
+    collectionRecord.get('isLoading')
+    ```
 * **isError - Boolean**
-    * Description here.
+    * Current error state of the record.
+    * By default set to **false**.
+    * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
+    ```javascript
+    collectionRecord.get('isError')
+    ```
 * **isPristine - Boolean**
     * Description here.
 * **isDirty - Boolean**
