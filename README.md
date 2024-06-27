@@ -1,5 +1,13 @@
 # Overview
 
+<a href="https://www.npmjs.com/package/arm-js-library">
+  <img alt="npm-version" src="https://img.shields.io/badge/npm_version-1.0.2-blue" />
+</a>
+
+<a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-green" />
+</a>
+
 ARM (API Resource Manager) is a JavaScript library designed to manage API resources efficiently, leveraging axios for HTTP requests, lodash for utility functions, mobx for state management, and uuid and crypto-js for unique identifiers and hashing.
 
 ## Basic Usage
@@ -197,7 +205,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
     * Endpoint resource name.
     * Serve as collection name defined on the collection intialization of ARM instance.
-* **id - Integer**
+* **id - Number**
     * `https://www.test-demo.com/api/v1/addresses/` **1**`?include=user`
     * Endpoint id parameter.
 * **params - Object**
@@ -269,3 +277,16 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
+#### Collection Records: `Functions and Properties`
+---
+
+* **isLoading - Boolean**
+    * Current loading state of the record.
+    * By default set to **false**.
+    * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+* **isError - Boolean**
+    * Description here.
+* **isPristine - Boolean**
+    * Description here.
+* **isDirty - Boolean**
+    * Description here.
