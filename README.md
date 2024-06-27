@@ -295,6 +295,10 @@ import { ARM } from 'path-to-src/index.js'
     collectionRecord.get('isError')
     ```
 * **isPristine - Boolean**
-    * Description here.
+    * Current pristine state of the record.
+    * By default set to **true**.
+    * Set to **false** if the record is modified and set to **true** once reverted.
 * **isDirty - Boolean**
-    * Description here.
+    * Current dirty state of the record.
+    * By default set to **false**.
+    * Set to **true** if the record is modified and set to **false** once reverted.
