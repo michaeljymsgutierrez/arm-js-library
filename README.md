@@ -346,7 +346,7 @@ import { ARM } from 'path-to-src/index.js'
         // Returned value 'office'
         collectionRecord.get('attributes.label')
 
-        // Set label property from attributes value from 'office' to 'school'
+        // Set property 'label' of attributes value from 'office' to 'school'
         collectionRecord.set('attributes.label', 'school')
 
         // Returned value 'office'
