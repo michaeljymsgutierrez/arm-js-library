@@ -197,6 +197,7 @@ import { ARM } from 'path-to-src/index.js'
         include: 'user' 
       },
       {
+        skip: true,
         alias: 'customerAddress',
       }
     )
