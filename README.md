@@ -278,34 +278,77 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
-#### Collection Records: `Functions and Properties`
+#### Collection Records: `Properties and Functions`
 ---
 
-* **isLoading - Boolean**
-    * Current loading state of the record.
-    * By default set to **false**.
-    * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
-    ```javascript
-    collectionRecord.get('isLoading')
+* **Properties**
+    * **isLoading - Boolean**
+        * Current loading state of the record.
+        * By default set to **false**.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+        ```javascript
+        collectionRecord.get('isLoading')
+        ```
+    * **isError - Boolean**
+        * Current error state of the record.
+        * By default set to **false**.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
+        ```javascript
+        collectionRecord.get('isError')
+        ```
+    * **isPristine - Boolean**
+        * Current pristine state of the record.
+        * By default set to **true**.
+        * Set to **false** if the record is modified and set to **true** once reverted.
+        ```javascript
+        collectionRecord.get('isPristine')
+        ```
+    * **isDirty - Boolean**
+        * Current dirty state of the record.
+        * By default set to **false**.
+        * Set to **true** if the record is modified and set to **false** once reverted.
+        ```javascript
+        collectionRecord.get('isDirty')
+        ```
+* **Functions**
+   ```javascript
+    // Example response data from API
+    {
+      "id": 123456,
+      "type": "addresses",
+      "attributes": {
+        "address1": "Test Address 1",
+        "address2": "1718729541222",
+        "kind": "office",
+        "label": "Anabu Hills",
+        "latitude": "14.394261",
+        "longitude": "120.940783"
+      }
+    }
     ```
-* **isError - Boolean**
-    * Current error state of the record.
-    * By default set to **false**.
-    * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
-    ```javascript
-    collectionRecord.get('isError')
-    ```
-* **isPristine - Boolean**
-    * Current pristine state of the record.
-    * By default set to **true**.
-    * Set to **false** if the record is modified and set to **true** once reverted.
-    ```javascript
-    collectionRecord.get('isPristine')
-    ```
-* **isDirty - Boolean**
-    * Current dirty state of the record.
-    * By default set to **false**.
-    * Set to **true** if the record is modified and set to **false** once reverted.
-    ```javascript
-    collectionRecord.get('isDirty')
-    ```
+    * **get(key)**
+        * Single property getter function.
+        * Passed arguments:
+            * **key - String**
+        ```javascript
+        // Returned value 123456
+        collectionRecord.get('id') 
+
+        // Returned value 'office'
+        collectionRecord.get('attributes.label') 
+        ```
+    * **set(key, value)**
+        * Single property setter function.
+        * Passed arguments:
+            * **key - String**
+            * **value - Primitive**
+        ```javascript
+        // Returned value 'office'
+        collectionRecord.get('attributes.label')
+
+        // Set label property from attributes value from 'office' to 'school'
+        collectionRecord.set('attributes.label', 'school')
+
+        // Returned value 'office'
+        collectionRecord.get('attributes.school')
+        ```
