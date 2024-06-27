@@ -298,7 +298,13 @@ import { ARM } from 'path-to-src/index.js'
     * Current pristine state of the record.
     * By default set to **true**.
     * Set to **false** if the record is modified and set to **true** once reverted.
+    ```javascript
+    collectionRecord.get('isPristine')
+    ```
 * **isDirty - Boolean**
     * Current dirty state of the record.
     * By default set to **false**.
     * Set to **true** if the record is modified and set to **false** once reverted.
+    ```javascript
+    collectionRecord.get('isDirty')
+    ```
