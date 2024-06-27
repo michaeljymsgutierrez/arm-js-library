@@ -280,52 +280,52 @@ import { ARM } from 'path-to-src/index.js'
     ```
 #### Collection Records: `Properties and Functions`
 ---
-
+```javascript
+// Example response data from API
+// See available properties, getter and  setter functions and request functions below.
+{
+  "id": 123456,
+  "type": "addresses",
+  "attributes": {
+    "address1": "Test Address 1",
+    "address2": "1718729541222",
+    "kind": "office",
+    "label": "Anabu Hills",
+    "latitude": "14.394261",
+    "longitude": "120.940783"
+  }
+}
+```
 * **State Properties**
     * **isLoading - Boolean**
         * Current loading state of the record.
         * By default set to **false**.
         * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
         ```javascript
-        collectionRecord.get('isLoading')
+        address.get('isLoading')
         ```
     * **isError - Boolean**
         * Current error state of the record.
         * By default set to **false**.
         * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
         ```javascript
-        collectionRecord.get('isError')
+        address.get('isError')
         ```
     * **isPristine - Boolean**
         * Current pristine state of the record.
         * By default set to **true**.
         * Set to **false** if the record is modified and set to **true** once reverted.
         ```javascript
-        collectionRecord.get('isPristine')
+        address.get('isPristine')
         ```
     * **isDirty - Boolean**
         * Current dirty state of the record.
         * By default set to **false**.
         * Set to **true** if the record is modified and set to **false** once reverted.
         ```javascript
-        collectionRecord.get('isDirty')
+        address.get('isDirty')
         ```
 * **Getter and Setter Functions**
-   ```javascript
-    // Example response data from API
-    {
-      "id": 123456,
-      "type": "addresses",
-      "attributes": {
-        "address1": "Test Address 1",
-        "address2": "1718729541222",
-        "kind": "office",
-        "label": "Anabu Hills",
-        "latitude": "14.394261",
-        "longitude": "120.940783"
-      }
-    }
-    ```
     * **get(key)**
         * Single property getter function.
         * Passed arguments:
