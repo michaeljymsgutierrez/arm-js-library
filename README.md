@@ -372,3 +372,10 @@ import { ARM } from 'path-to-src/index.js'
         // Returned value 'My School'
         collectionRecord.get('attributes.label')
         ```
+* **Request Functions**
+    * **save()**
+        * Persist collection record changes to server's database.
+        * Create a new record to server  only if it doesn't already exist in the database.
+            * Will call **POST** method: `POST /addresses`
+        * Update existing record to server's database.
+            * Will call **PUT** method: `PUT /addresses/1`
