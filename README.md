@@ -388,12 +388,12 @@ import { ARM } from 'path-to-src/index.js'
         // Returned value 'school'
         address.get('attributes.kind')
         // Returned value 'My School'
-        address..get('attributes.label')
+        address.get('attributes.label')
         ```
     * **reload()**
         * Refresh collection record changes from server's database.
             * Will call **GET** method: `GET /addresses/123456`
         ```javascript
-        // Return request promise
+        // Returned promise
         address.reload()
         ```
