@@ -397,3 +397,10 @@ import { ARM } from 'path-to-src/index.js'
         // Returned promise
         address.reload()
         ```
+    * **destroyRecord()**
+        * Remove collection record permanently from server's database.
+            * Will call **GET** method: `DELETE /addresses/123456`
+        ```javascript
+        // Returned promise
+        address.destroyRecord()
+        ```
