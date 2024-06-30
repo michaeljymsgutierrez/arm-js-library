@@ -278,6 +278,28 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
+#### Create record function
+---
+* **createRecord(collectionName, collectionRecord)**
+    * Create new collection record.
+    * By default collectionRecord params is set to empty object if omitted - **required**
+    ```javascript
+    // Usage #1
+    // Can ommit collectionRecord on createRecord initialization
+    const newAddress = ARM.createRecord('addresses')
+    newAddress.set('attributes.kind', 'school')
+    newAddress.set('attributes.label', 'My school')
+
+    // Usage #2
+    // Can ommit collectionRecord on createRecord initialization
+    const newAddress = ARM.createRecord('addresses', {
+      attributes: { kind: 'school', label: 'My school' }
+    })
+
+    // Persist collection record to server.
+    // Will call POST /addresses
+    newAddress.save()
+    ```
 #### Collection Records: `Properties and Functions`
 ---
 ```javascript
