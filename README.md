@@ -396,10 +396,10 @@ import { ARM } from 'path-to-src/index.js'
         ```
 * **Request Functions**
     * **save()**
-        * Persist collection record changes to server's database.
+        * Persist collection record changes to server.
         * Create a new record to server  only if it doesn't already exist in the database.
             * Will call **POST** method: `POST /addresses`
-        * Update existing record to server's database.
+        * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/123456`
         ```javascript
         // Set properties label and kind of attributes
@@ -413,14 +413,14 @@ import { ARM } from 'path-to-src/index.js'
         address.get('attributes.label')
         ```
     * **reload()**
-        * Refresh collection record changes from server's database.
+        * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/123456`
         ```javascript
         // Returned promise
         address.reload()
         ```
     * **destroyRecord()**
-        * Remove collection record permanently from server's database.
+        * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
         ```javascript
         // Returned promise
