@@ -197,6 +197,7 @@ import { ARM } from 'path-to-src/index.js'
         include: 'user' 
       },
       {
+        skip: true,
         alias: 'customerAddress',
       }
     )
@@ -277,16 +278,151 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
-#### Collection Records: `Functions and Properties`
+#### Create record function
 ---
+* **createRecord(collectionName, collectionRecord)**
+    * Create new collection record.
+    * By default collectionRecord params is set to empty object if omitted - **required**
+    ```javascript
+    // Usage #1
+    // Can ommit collectionRecord on createRecord initialization
+    const newAddress = ARM.createRecord('addresses')
+    newAddress.set('attributes.kind', 'school')
+    newAddress.set('attributes.label', 'My school')
 
-* **isLoading - Boolean**
-    * Current loading state of the record.
-    * By default set to **false**.
-    * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
-* **isError - Boolean**
-    * Description here.
-* **isPristine - Boolean**
-    * Description here.
-* **isDirty - Boolean**
-    * Description here.
+    // Usage #2
+    // Can ommit collectionRecord on createRecord initialization
+    const newAddress = ARM.createRecord('addresses', {
+      attributes: { kind: 'school', label: 'My school' }
+    })
+
+    // Persist collection record to server.
+    // Will call POST /addresses
+    newAddress.save()
+    ```
+#### Collection Records: `Properties and Functions`
+---
+```javascript
+// Example response data from API
+// See available properties, getter and  setter functions and request functions below.
+{
+  "id": 123456,
+  "type": "addresses",
+  "attributes": {
+    "address1": "Test Address 1",
+    "address2": "1718729541222",
+    "kind": "office",
+    "label": "Anabu Hills",
+    "latitude": "14.394261",
+    "longitude": "120.940783"
+  }
+}
+```
+* **State Properties**
+    * **isLoading - Boolean**
+        * Current loading state of the record.
+        * By default set to **false**.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+        ```javascript
+        address.get('isLoading')
+        ```
+    * **isError - Boolean**
+        * Current error state of the record.
+        * By default set to **false**.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
+        ```javascript
+        address.get('isError')
+        ```
+    * **isPristine - Boolean**
+        * Current pristine state of the record.
+        * By default set to **true**.
+        * Set to **false** if the record is modified and set to **true** once reverted.
+        ```javascript
+        address.get('isPristine')
+        ```
+    * **isDirty - Boolean**
+        * Current dirty state of the record.
+        * By default set to **false**.
+        * Set to **true** if the record is modified and set to **false** once reverted.
+        ```javascript
+        address.get('isDirty')
+        ```
+* **Getter and Setter Functions**
+    * **get(key)**
+        * Single property getter function.
+        * Passed arguments:
+            * **key - String**
+        ```javascript
+        // Returned value 123456
+        address.get('id') 
+
+        // Returned value 'office'
+        address.get('attributes.label') 
+        ```
+    * **set(key, value)**
+        * Single property setter function.
+        * Passed arguments:
+            * **key - String**
+            * **value - Primitive**
+        ```javascript
+        // Returned value 'office'
+        address.get('attributes.kind')
+
+        // Set property label of attributes
+        address.set('attributes.kind', 'school')
+
+        // Returned value 'office'
+        address.get('attributes.kind')
+        ```
+    * **setProperties(value)**
+        * Multiple properties setter function.
+        * Passed arguments:
+            * **value - Object**
+        ```javascript
+        // Returned value 'office'
+        address.get('attributes.kind')
+        // Returned value 'Anabu Hills'
+        address.get('attributes.label')
+
+        // Set properties label and kind of attributes
+        address.setProperties({
+          attributes: { kind: 'school', label: 'My School' }
+        })
+
+        // Returned value 'school'
+        address.get('attributes.kind')
+        // Returned value 'My School'
+        address.get('attributes.label')
+        ```
+* **Request Functions**
+    * **save()**
+        * Persist collection record changes to server.
+        * Create a new record to server  only if it doesn't already exist in the database.
+            * Will call **POST** method: `POST /addresses`
+        * Update existing record to server.
+            * Will call **PUT** method: `PUT /addresses/123456`
+        ```javascript
+        // Set properties label and kind of attributes
+        address.setProperties({
+          attributes: { kind: 'school', label: 'My School' }
+        })
+
+        // Returned value 'school'
+        address.get('attributes.kind')
+        // Returned value 'My School'
+        address.get('attributes.label')
+        ```
+    * **reload()**
+        * Refresh collection record changes from server.
+            * Will call **GET** method: `GET /addresses/123456`
+        ```javascript
+        // Returned promise
+        address.reload()
+        ```
+    * **destroyRecord()**
+        * Remove collection record permanently from server.
+            * Will call **GET** method: `DELETE /addresses/123456`
+        ```javascript
+        // Returned promise
+        address.destroyRecord()
+        ```
