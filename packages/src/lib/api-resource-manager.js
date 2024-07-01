@@ -288,7 +288,7 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  _getCollectionRecord(currentRecord) {
+  _getCollectionRecord(collectionName, collectionReferenceKey, currentRecord) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
       hashId: getProperty(currentRecord, 'hashId'),
@@ -304,7 +304,12 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: () => this._getCollectionRecord(collectionRecord),
+      getCollection: (collectionName, collectionReferenceKey) =>
+        this._getCollectionRecord(
+          collectionName,
+          collectionReferenceKey,
+          collectionRecord
+        ),
     }
     const actionKeys = keysIn(actions)
 
