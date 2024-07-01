@@ -1,5 +1,5 @@
 /*
- * ARM JavaScript Library v1.0.0
+ * ARM JavaScript Library v1.0.4
  *
  * Date: 2024-05-09 2:19PM GMT+8
  */
@@ -755,14 +755,3 @@ export default class ApiResourceManager {
     })
   }
 }
-
-/*
- * TO DO: Records new properties
- * 1. isPristine - check if record is not modified - Done
- * 2. isDirty - check if record is modified - Done
- * 3. isLoading - check if record is doing ajax - Done
- * 4. isError - check if record encountered an error - Done
- * 5. rollBackAttributes - rollback record to is initial state - To Implement
- * 6. reload - get latest record from server by id - Done
- * 7. get by relationship like mapping
- */

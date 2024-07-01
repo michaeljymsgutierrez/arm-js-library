@@ -2,6 +2,10 @@ import { observer } from 'mobx-react-lite'
 import { ARM } from './index.js'
 
 const App = observer(() => {
+  // const addresses = ARM.getAlias('customerAddresses', [])
+  //
+  // ARM.findAll('addresses', { alias: 'customerAddresses' })
+
   const { isLoading, data: address } = ARM.findRecord(
     'addresses',
     2461018,
@@ -11,6 +15,11 @@ const App = observer(() => {
 
   return (
     <div className="App">
+      {/* <ul> */}
+      {/*   {addresses.map((address, index) => ( */}
+      {/*     <li key={index}>{address.get('id')}</li> */}
+      {/*   ))} */}
+      {/* </ul> */}
       {isLoading && <span>Loading...</span>}
       {!isLoading && (
         <div className="form">
