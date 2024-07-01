@@ -278,6 +278,24 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
+* **getCollection(collectionName)**
+    * Retrieving all records from collection.
+    ```javascript
+    ARM.getCollection('addresses')
+    ```
+* **getAlias(collectionName, collectionFallbackRecord)**
+    * Retrieving records from aliased request results.
+    ```javascript
+    const addresses = ARM.getAlias('customerAddresses', [])
+
+    ARM.findAll('addresses', { alias: 'customerAddresses' })
+
+    <ul>
+      {addresses.map((address, index) => (
+        <li key={index}>{address.get('id')}</li>
+      ))}
+    </ul>
+    ```
 #### Create record function
 ---
 * **createRecord(collectionName, collectionRecord)**
