@@ -249,12 +249,10 @@ export default class ApiResourceManager {
   }
 
   async _deleteRecord(currentRecord) {
-    const collectionRecord = find(
-      this.collections[currentRecord.collectionName],
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
+    const collectionName = getProperty(currentRecord, 'collectionName')
+    const collectionRecord = find(this.collections[collectionName], {
+      hashId: getProperty(currentRecord, 'hashId'),
+    })
     const id = getProperty(currentRecord, 'id')
     const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
@@ -290,6 +288,14 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  _getCollectionRecord(currentRecord) {
+    const collectionName = getProperty(currentRecord, 'collectionName')
+    const collectionRecord = find(this.collections[collectionName], {
+      hashId: getProperty(currentRecord, 'hashId'),
+    })
+    console.log(collectionRecord)
+  }
+
   _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
@@ -298,6 +304,7 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
+      getCollection: () => this._getCollectionRecord(collectionRecord),
     }
     const actionKeys = keysIn(actions)
 

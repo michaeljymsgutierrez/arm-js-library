@@ -41,6 +41,7 @@ const App = observer(() => {
           >
             {address.get('isLoading') ? 'Saving' : 'Save'}
           </button>
+          <button onClick={() => address.getCollection()}>getCollection</button>
         </div>
       )}
     </div>
