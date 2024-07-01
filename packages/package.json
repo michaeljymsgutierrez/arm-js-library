@@ -1,6 +1,6 @@
 {
   "name": "arm-js-library",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "API Resource Manager",
   "type": "module",
   "files": [
@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build:production": "vite build",
-    "build:watch": "vite build --watch"
+    "build:watch": "vite build --watch",
+    "publish": "cp ../README.md README.md && npm publish"
   },
   "keywords": [
     "arm",
