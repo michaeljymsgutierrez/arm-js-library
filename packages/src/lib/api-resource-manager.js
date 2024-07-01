@@ -762,3 +762,7 @@ export default class ApiResourceManager {
     })
   }
 }
+
+/*
+ * Note: REST API support will be included on future release.
+ */
