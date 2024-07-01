@@ -285,6 +285,7 @@ import { ARM } from 'path-to-src/index.js'
     ```
 * **getAlias(collectionName, collectionFallbackRecord)**
     * Retrieving records from aliased request results.
+    * Support collectionFallbackRecord. - **optional**
     ```javascript
     const addresses = ARM.getAlias('customerAddresses', [])
 
