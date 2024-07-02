@@ -288,12 +288,34 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
-  _getCollectionRecord(collectionName, collectionReferenceKey, currentRecord) {
-    const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
+  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
+    const currentRecordCollectionName = getProperty(
+      currentRecord,
+      'collectionName'
+    )
+    const collectionReferenceKey =
+      getProperty(collectionConfig, 'referenceKey') || ''
+    const collectionAsync = getProperty(collectionConfig, 'async') || true
+    const recordsFromCurrentRecord =
+      getProperty(currentRecord, collectionReferenceKey) || []
+    const collectionRecords = []
+
+    forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
+      const recordFromCurrentRecordHashId = this._generateHashId({
+        id: getProperty(recordFromCurrentRecord, 'id'),
+        collectionName: collectionName,
+      })
+      console.log({
+        id: getProperty(recordFromCurrentRecord, 'id'),
+        collectionName: collectionName,
+      })
+
+      // const collectionRecord = find(this.collections[collectionName], {
+      //   hashId: recordFromCurrentRecordHashId,
+      // })
+      //
+      // console.log(recordFromCurrentRecordHashId, collectionRecord)
     })
-    console.log(collectionRecord)
   }
 
   _injectActions(collectionRecord) {
@@ -304,10 +326,10 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (collectionName, collectionReferenceKey) =>
+      getCollection: (collectionName, collectionConfig) =>
         this._getCollectionRecord(
           collectionName,
-          collectionReferenceKey,
+          collectionConfig,
           collectionRecord
         ),
     }
@@ -326,7 +348,7 @@ export default class ApiResourceManager {
     const recordHashId = isNull(collectionRecordHashId)
       ? this._generateHashId({
           id: getProperty(collectionRecord, 'id'),
-          collectionName: getProperty(collectionRecord, 'collectionName'),
+          collectionName: collectionName,
         })
       : collectionRecordHashId
 
@@ -769,5 +791,7 @@ export default class ApiResourceManager {
 }
 
 /*
- * Note: REST API support will be included on future release.
+ * Notes:
+ *  1. REST API support will be included on future release.
+ *  2. Deprecate 'setPayloadIncludeReference'.
  */
