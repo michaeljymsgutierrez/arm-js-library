@@ -314,7 +314,7 @@ export default class ApiResourceManager {
     const recordHashId = isNull(collectionRecordHashId)
       ? this._generateHashId({
           id: getProperty(collectionRecord, 'id'),
-          collectionName: getProperty(collectionRecord, 'collectionName'),
+          collectionName: collectionName,
         })
       : collectionRecordHashId
 

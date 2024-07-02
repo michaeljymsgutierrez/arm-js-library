@@ -3,7 +3,7 @@ import Z from "lodash";
 import * as K from "mobx";
 import { v1 as z } from "uuid";
 import ss from "crypto-js";
-const { makeObservable: es, observable: F, action: N, toJS: k } = K, {
+const { makeObservable: es, observable: F, action: k, toJS: N } = K, {
   get: i,
   set: h,
   find: H,
@@ -69,10 +69,10 @@ class us {
       collections: F,
       aliases: F,
       requestHashIds: F,
-      _pushPayloadToCollection: N,
-      _pushRequestHash: N,
-      _addCollection: N,
-      _addAlias: N
+      _pushPayloadToCollection: k,
+      _pushRequestHash: k,
+      _addCollection: k,
+      _addAlias: k
     });
   }
   _initializeAxiosConfig() {
@@ -104,9 +104,9 @@ class us {
   _setProperty(s, e) {
     h(this, s, e);
     const t = C(
-      k(this.originalRecord),
+      N(this.originalRecord),
       E
-    ), a = C(k(this), E);
+    ), a = C(N(this), E);
     _(t, a) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
@@ -119,9 +119,9 @@ class us {
     const t = e(s);
     f(t, ({ key: d, value: n }) => h(this, d, n));
     const a = C(
-      k(this.originalRecord),
+      N(this.originalRecord),
       E
-    ), r = C(k(this), E);
+    ), r = C(N(this), E);
     _(a, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   unloadRecord(s) {
@@ -201,7 +201,7 @@ class us {
   _injectReferenceKeys(s, e, t = null) {
     const a = is(t) ? this._generateHashId({
       id: i(e, "id"),
-      collectionName: i(e, "collectionName")
+      collectionName: s
     }) : t;
     h(e, "collectionName", s), h(e, "hashId", a), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
