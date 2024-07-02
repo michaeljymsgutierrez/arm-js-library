@@ -1,5 +1,5 @@
 /*
- * ARM JavaScript Library v1.0.5
+ * ARM JavaScript Library v1.0.6
  *
  * Date: 2024-05-09 2:19PM GMT+8
  */
