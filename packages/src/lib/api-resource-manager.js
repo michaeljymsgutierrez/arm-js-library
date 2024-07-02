@@ -249,12 +249,10 @@ export default class ApiResourceManager {
   }
 
   async _deleteRecord(currentRecord) {
-    const collectionRecord = find(
-      this.collections[currentRecord.collectionName],
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
+    const collectionName = getProperty(currentRecord, 'collectionName')
+    const collectionRecord = find(this.collections[collectionName], {
+      hashId: getProperty(currentRecord, 'hashId'),
+    })
     const id = getProperty(currentRecord, 'id')
     const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
@@ -290,6 +288,36 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
+    const currentRecordCollectionName = getProperty(
+      currentRecord,
+      'collectionName'
+    )
+    const collectionReferenceKey =
+      getProperty(collectionConfig, 'referenceKey') || ''
+    const collectionAsync = getProperty(collectionConfig, 'async') || true
+    const recordsFromCurrentRecord =
+      getProperty(currentRecord, collectionReferenceKey) || []
+    const collectionRecords = []
+
+    forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
+      const recordFromCurrentRecordHashId = this._generateHashId({
+        id: getProperty(recordFromCurrentRecord, 'id'),
+        collectionName: collectionName,
+      })
+      console.log({
+        id: getProperty(recordFromCurrentRecord, 'id'),
+        collectionName: collectionName,
+      })
+
+      // const collectionRecord = find(this.collections[collectionName], {
+      //   hashId: recordFromCurrentRecordHashId,
+      // })
+      //
+      // console.log(recordFromCurrentRecordHashId, collectionRecord)
+    })
+  }
+
   _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
@@ -298,6 +326,13 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
+      // WIP: Will continue once desync is fixed.
+      // getCollection: (collectionName, collectionConfig) =>
+      //   this._getCollectionRecord(
+      //     collectionName,
+      //     collectionConfig,
+      //     collectionRecord
+      //   ),
     }
     const actionKeys = keysIn(actions)
 
@@ -454,8 +489,9 @@ export default class ApiResourceManager {
               }
             )
             if (gte(requestHashIdRecordIndex, 0))
-              this.requestHashIds[requestHashIdKey][requestHashIdRecordIndex] =
-                collectionRecord
+              this.requestHashIds[requestHashIdKey]['data'][
+                requestHashIdRecordIndex
+              ] = collectionRecord
           })
         }
 
@@ -755,3 +791,9 @@ export default class ApiResourceManager {
     })
   }
 }
+
+/*
+ * Notes:
+ *  1. REST API support will be included on future release.
+ *  2. Deprecate 'setPayloadIncludeReference'.
+ */

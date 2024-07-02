@@ -10,7 +10,7 @@ export default [
     files: ['src/lib/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: { window: true },
+      globals: { window: true, console: true },
     },
   },
 ]
