@@ -289,13 +289,13 @@ export default class ApiResourceManager {
   }
 
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
-    const currentRecordCollectionName = getProperty(
-      currentRecord,
-      'collectionName'
-    )
+    // const currentRecordCollectionName = getProperty(
+    //   currentRecord,
+    //   'collectionName'
+    // )
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
-    const collectionAsync = getProperty(collectionConfig, 'async') || true
+    // const collectionAsync = getProperty(collectionConfig, 'async') || true
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
     const collectionRecords = []
@@ -305,17 +305,15 @@ export default class ApiResourceManager {
         id: getProperty(recordFromCurrentRecord, 'id'),
         collectionName: collectionName,
       })
-      console.log({
-        id: getProperty(recordFromCurrentRecord, 'id'),
-        collectionName: collectionName,
+
+      const collectionRecord = find(this.collections[collectionName], {
+        hashId: recordFromCurrentRecordHashId,
       })
 
-      // const collectionRecord = find(this.collections[collectionName], {
-      //   hashId: recordFromCurrentRecordHashId,
-      // })
-      //
-      // console.log(recordFromCurrentRecordHashId, collectionRecord)
+      if (!isEmpty(collectionRecord)) collectionRecords.push(collectionRecord)
     })
+
+    return collectionRecords
   }
 
   _injectActions(collectionRecord) {
@@ -326,13 +324,12 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      // WIP: Will continue once desync is fixed.
-      // getCollection: (collectionName, collectionConfig) =>
-      //   this._getCollectionRecord(
-      //     collectionName,
-      //     collectionConfig,
-      //     collectionRecord
-      //   ),
+      getCollection: (collectionName, collectionConfig) =>
+        this._getCollectionRecord(
+          collectionName,
+          collectionConfig,
+          collectionRecord
+        ),
     }
     const actionKeys = keysIn(actions)
 
