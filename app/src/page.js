@@ -46,7 +46,6 @@ const App = observer(() => {
         </thead>
 
         <tbody>
-
           <tr>
             <td colSpan="100%">FROM COLLECTION</td>
           </tr>
@@ -210,11 +209,13 @@ const App = observer(() => {
       {/*     referenceKey: 'relationships.addresses.data', */}
       {/*     async: true, */}
       {/*   })} */}
+
       {/* <ul> */}
       {/*   {addresses.map((address, index) => ( */}
       {/*     <li key={index}>{address.get('id')}</li> */}
       {/*   ))} */}
       {/* </ul> */}
+
       {/* {isLoading && <span>Loading...</span>} */}
       {/* {!isLoading && ( */}
       {/*   <div className="form"> */}

@@ -207,12 +207,14 @@ class us {
       setProperties: this._setProperties,
       save: () => this._saveRecord(s),
       destroyRecord: () => this._deleteRecord(s),
-      reload: () => this._reloadRecord(s),
-      getCollection: (a, o) => this._getCollectionRecord(
-        a,
-        o,
-        s
-      )
+      reload: () => this._reloadRecord(s)
+      // WIP: Will continue once desync is fixed.
+      // getCollection: (collectionName, collectionConfig) =>
+      //   this._getCollectionRecord(
+      //     collectionName,
+      //     collectionConfig,
+      //     collectionRecord
+      //   ),
     }, i = x(e);
     f(i, (a) => {
       s[a] = e[a];
@@ -290,7 +292,7 @@ class us {
               hashId: t(q, "hashId")
             }
           );
-          P(w, 0) && (this.requestHashIds[h][w] = q);
+          P(w, 0) && (this.requestHashIds[h].data[w] = q);
         }), p && _(
           t(n, "hashId"),
           t(this.requestHashIds[h], "data.hashId")

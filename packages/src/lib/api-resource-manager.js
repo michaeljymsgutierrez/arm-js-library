@@ -326,12 +326,13 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (collectionName, collectionConfig) =>
-        this._getCollectionRecord(
-          collectionName,
-          collectionConfig,
-          collectionRecord
-        ),
+      // WIP: Will continue once desync is fixed.
+      // getCollection: (collectionName, collectionConfig) =>
+      //   this._getCollectionRecord(
+      //     collectionName,
+      //     collectionConfig,
+      //     collectionRecord
+      //   ),
     }
     const actionKeys = keysIn(actions)
 
@@ -488,8 +489,9 @@ export default class ApiResourceManager {
               }
             )
             if (gte(requestHashIdRecordIndex, 0))
-              this.requestHashIds[requestHashIdKey][requestHashIdRecordIndex] =
-                collectionRecord
+              this.requestHashIds[requestHashIdKey]['data'][
+                requestHashIdRecordIndex
+              ] = collectionRecord
           })
         }
 
