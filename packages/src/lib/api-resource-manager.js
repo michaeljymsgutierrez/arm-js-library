@@ -805,6 +805,9 @@ export default class ApiResourceManager {
 
 /*
  * Notes:
- *  1. REST API support will be included on future release.
- *  2. Deprecate 'setPayloadIncludeReference'.
+ *  1. Implement ajax exposed ajax function.
+ *  2. Prevent accessing internal functions from ARM instance.
+ *  3. Prevent accessing records property using dot annotations.
+ *  4. REST API support will be included on future release.
+ *  5. Deprecate 'setPayloadIncludeReference'.
  */
