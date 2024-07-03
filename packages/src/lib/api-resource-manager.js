@@ -55,6 +55,7 @@ const defaultRequestObjectResponse = {
 
 const keysToBeOmittedOnDeepCheck = [
   'destroyRecord',
+  'getCollection',
   'reload',
   'save',
   'set',
@@ -68,6 +69,7 @@ const keysToBeOmittedOnDeepCheck = [
 
 const keysToBeOmittedOnRequestPayload = [
   'destroyRecord',
+  'getCollection',
   'reload',
   'save',
   'set',
@@ -289,16 +291,12 @@ export default class ApiResourceManager {
   }
 
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
-    // const currentRecordCollectionName = getProperty(
-    //   currentRecord,
-    //   'collectionName'
-    // )
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
     // const collectionAsync = getProperty(collectionConfig, 'async') || true
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
-    const collectionRecords = []
+    const collectionRecords = observable([])
 
     forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
       const recordFromCurrentRecordHashId = this._generateHashId({
@@ -310,7 +308,11 @@ export default class ApiResourceManager {
         hashId: recordFromCurrentRecordHashId,
       })
 
-      if (!isEmpty(collectionRecord)) collectionRecords.push(collectionRecord)
+      if (!isEmpty(collectionRecord)) {
+        collectionRecords.push(collectionRecord)
+      } else {
+        // Logic goes here
+      }
     })
 
     return collectionRecords

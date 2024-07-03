@@ -22,7 +22,8 @@ const App = observer(() => {
   const { isLoading, data: user } = ARM.findRecord(
     'users',
     12980860,
-    { include: 'addresses' },
+    {},
+    // { include: 'addresses' },
     { alias: 'currentUser' }
   )
 
