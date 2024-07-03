@@ -297,7 +297,7 @@ import { ARM } from 'path-to-src/index.js'
       ))}
     </ul>
     ```
-#### Create record function
+#### Create collection record function
 ---
 * **createRecord(collectionName, collectionRecord)**
     * Create new collection record.
@@ -318,6 +318,23 @@ import { ARM } from 'path-to-src/index.js'
     // Persist collection record to server.
     // Will call POST /addresses
     newAddress.save()
+    ```
+#### Remove collection record functions
+---
+* **unloadRecord(collectionRecord)**
+    * Remove record from collection only.
+    ```javascript
+    // Collection record to be remove collection.
+    const address = ARM.peekRecord('addresses', 123456)
+
+    // This will remove the record from collection and will not
+    // remove permanently from the server.
+    ARM.unloadRecord(address)
+    ```
+* **clearCollection(collectionName)**
+    * Remove all records from collection only.
+    ```javascript
+    ARM.clearCollection('addresses')
     ```
 #### Collection Records: `Properties and Functions`
 ---
