@@ -284,7 +284,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skip: true },
+      resourceConfig: { skip: false },
     }
 
     return this._request(requestObject)
@@ -598,7 +598,8 @@ export default class ApiResourceManager {
       url: resourceName,
     }
     const requestHashId = this._generateHashId({ ...arguments[0] })
-    const requestSkip = getProperty(resourceConfig, 'skip') || false
+    const requestSkip = getProperty(resourceConfig, 'skip')
+    const hasResourceConfigRequestSkip = !isNil(requestSkip)
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
@@ -618,12 +619,15 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    if (isResourceMethodGet && !requestSkip) {
+    if (isResourceMethodGet && !hasResourceConfigRequestSkip) {
+      // if (isResourceMethodGet && !requestSkip) {
       const requestHashObject = this.requestHashIds[requestHashId]
       const isRequestHashIdExisting = !isNil(requestHashObject)
       const isRequestNew = getProperty(requestHashObject, 'isNew')
       if (isRequestHashIdExisting && !isRequestNew) return
     }
+
+    if (hasResourceConfigRequestSkip && requestSkip) return
 
     if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)
