@@ -462,3 +462,34 @@ import { ARM } from 'path-to-src/index.js'
         // Returned promise
         address.destroyRecord()
         ```
+    * **getCollection(collectionName, collectionConfig)**
+        * Retrieve records from server automatically if **async** option value is set to true **true** on **collectionConfig**.
+        * Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
+        * Passed arguments:
+            * **collectionName - String**
+            * **collectionConfig - Object**
+                * **referenceKey - String**
+                    * Collection record property mapping.
+                * **async - Boolean**
+                    * Flag for invoking request function on resolving not yet loaded records on collection.
+        ```javascript
+        const { isLoading, data: user } = ARM.findRecord(
+          'users',
+          12980860,
+          {},
+          { alias: 'currentUser' }
+        )
+
+        {!isLoading && (
+          <ul>
+            {user
+              .getCollection('addresses', {
+                referenceKey: 'relationships.addresses.data',
+                async: true,
+              })
+              .map((address, index) => (
+                <li key={index}>{address.get('id')}</li>
+              ))}
+          </ul>
+        )}
+        ```
