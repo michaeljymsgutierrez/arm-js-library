@@ -293,7 +293,7 @@ export default class ApiResourceManager {
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
-    // const collectionAsync = getProperty(collectionConfig, 'async') || true
+    const collectionAsync = getProperty(collectionConfig, 'async') || false
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
     const collectionRecords = observable([])
@@ -311,7 +311,16 @@ export default class ApiResourceManager {
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        // Logic goes here
+        if (collectionAsync)
+          this._request({
+            resourceMethod: 'get',
+            resourceName: collectionName,
+            resourceId: getProperty(recordFromCurrentRecord, 'id'),
+            resourceParams: {},
+            resourcePayload: null,
+            resourceFallback: {},
+            resourceConfig: { skip: true },
+          })
       }
     })
 
@@ -598,8 +607,6 @@ export default class ApiResourceManager {
       url: resourceName,
     }
     const requestHashId = this._generateHashId({ ...arguments[0] })
-    const requestSkip = getProperty(resourceConfig, 'skip')
-    const hasResourceConfigRequestSkip = !isNil(requestSkip)
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
@@ -619,15 +626,16 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    if (isResourceMethodGet && !hasResourceConfigRequestSkip) {
-      // if (isResourceMethodGet && !requestSkip) {
-      const requestHashObject = this.requestHashIds[requestHashId]
-      const isRequestHashIdExisting = !isNil(requestHashObject)
-      const isRequestNew = getProperty(requestHashObject, 'isNew')
-      if (isRequestHashIdExisting && !isRequestNew) return
-    }
+    const skipRequest = isNil(getProperty(resourceConfig, 'skip'))
+      ? true
+      : getProperty(resourceConfig, 'skip')
+    const requestHashObject = this.requestHashIds[requestHashId]
+    const isRequestHashIdExisting = !isNil(requestHashObject)
+    const isRequestNew = getProperty(requestHashObject, 'isNew')
 
-    if (hasResourceConfigRequestSkip && requestSkip) return
+    if (isResourceMethodGet) {
+      if (isRequestHashIdExisting && !isRequestNew && skipRequest) return
+    }
 
     if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)

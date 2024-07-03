@@ -204,7 +204,12 @@ const App = observer(() => {
       {/*   </tbody> */}
       {/* </table> */}
 
-      {!isLoading && <h3>Current User: {user.get('id')}</h3>}
+      {!isLoading && (
+        <h4>
+          Current User: {user.get('id')}
+          <button onClick={() => user.reload()}>Reload</button>
+        </h4>
+      )}
       <table>
         <thead>
           <tr>
