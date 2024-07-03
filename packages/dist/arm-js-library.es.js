@@ -1,45 +1,46 @@
-import M from "axios";
-import Z from "lodash";
-import * as K from "mobx";
-import { v1 as z } from "uuid";
-import ss from "crypto-js";
-const { makeObservable: es, observable: F, action: N, toJS: k } = K, {
+import L from "axios";
+import es from "lodash";
+import * as ts from "mobx";
+import { v1 as S } from "uuid";
+import is from "crypto-js";
+const { makeObservable: os, observable: w, action: N, toJS: x } = ts, {
   get: t,
-  set: c,
-  find: H,
-  findIndex: R,
-  isObject: ts,
+  set: h,
+  find: R,
+  findIndex: b,
+  isObject: rs,
   isArray: m,
   isPlainObject: y,
-  isNumber: S,
-  isNull: is,
-  isNil: B,
-  isEmpty: J,
+  isNumber: B,
+  isNull: as,
+  isNil: M,
+  isEmpty: F,
   isEqual: _,
   gte: P,
-  lt: U,
-  flatMap: as,
-  map: V,
-  entries: os,
-  forEach: f,
-  keysIn: x,
-  omit: C
-} = Z, G = {
+  lt: J,
+  flatMap: ns,
+  map: U,
+  entries: cs,
+  forEach: u,
+  keysIn: E,
+  omit: k
+} = es, V = {
   isLoading: !0,
   isError: !1,
   isNew: !0,
   data: [],
   included: [],
   meta: {}
-}, Q = {
+}, G = {
   isLoading: !0,
   isError: !1,
   isNew: !0,
   data: {},
   included: [],
   meta: {}
-}, E = [
+}, D = [
   "destroyRecord",
+  "getCollection",
   "reload",
   "save",
   "set",
@@ -49,8 +50,9 @@ const { makeObservable: es, observable: F, action: N, toJS: k } = K, {
   "isError",
   "isLoading",
   "isPristine"
-], rs = [
+], hs = [
   "destroyRecord",
+  "getCollection",
   "reload",
   "save",
   "set",
@@ -63,12 +65,12 @@ const { makeObservable: es, observable: F, action: N, toJS: k } = K, {
   "hashId",
   "collectionName"
 ];
-class us {
+class ps {
   constructor(s = []) {
-    this.namespace = "api/v1", this.host = window.location.origin, this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), es(this, {
-      collections: F,
-      aliases: F,
-      requestHashIds: F,
+    this.namespace = "api/v1", this.host = window.location.origin, this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), os(this, {
+      collections: w,
+      aliases: w,
+      requestHashIds: w,
       _pushPayloadToCollection: N,
       _pushRequestHash: N,
       _addCollection: N,
@@ -76,10 +78,10 @@ class us {
     });
   }
   _initializeAxiosConfig() {
-    M.defaults.baseURL = this._getBaseURL();
+    L.defaults.baseURL = this._getBaseURL();
   }
   _initializeCollections(s) {
-    f(s, (e) => this._addCollection(e, []));
+    u(s, (e) => this._addCollection(e, []));
   }
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
@@ -91,114 +93,116 @@ class us {
     this.collections[s] = e;
   }
   _addAlias(s, e) {
-    const i = m(e), a = y(e);
-    i && (this.aliases[s] = e || []), a && (this.aliases[s] = e || {});
+    const i = m(e), o = y(e);
+    i && (this.aliases[s] = e || []), o && (this.aliases[s] = e || {});
   }
-  _generateHashId(s = { id: z() }) {
+  _generateHashId(s = { id: S() }) {
     const e = JSON.stringify(s);
-    return ss.MD5(e).toString();
+    return is.MD5(e).toString();
   }
   _getProperty(s) {
     return t(this, s);
   }
   _setProperty(s, e) {
-    c(this, s, e);
-    const i = C(
-      k(this.originalRecord),
-      E
-    ), a = C(k(this), E);
-    _(i, a) ? (c(this, "isDirty", !1), c(this, "isPristine", !0)) : (c(this, "isDirty", !0), c(this, "isPristine", !1));
+    h(this, s, e);
+    const i = k(
+      x(this.originalRecord),
+      D
+    ), o = k(x(this), D);
+    _(i, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
-    function e(d, n = "") {
-      return as(os(d), ([u, r]) => {
-        const h = n ? `${n}.${u}` : u;
-        return ts(r) && !m(r) && r !== null ? e(r, h) : { key: h, value: r };
+    function e(d, a = "") {
+      return ns(cs(d), ([l, n]) => {
+        const c = a ? `${a}.${l}` : l;
+        return rs(n) && !m(n) && n !== null ? e(n, c) : { key: c, value: n };
       });
     }
     const i = e(s);
-    f(i, ({ key: d, value: n }) => c(this, d, n));
-    const a = C(
-      k(this.originalRecord),
-      E
-    ), o = C(k(this), E);
-    _(a, o) ? (c(this, "isDirty", !1), c(this, "isPristine", !0)) : (c(this, "isDirty", !0), c(this, "isPristine", !1));
+    u(i, ({ key: d, value: a }) => h(this, d, a));
+    const o = k(
+      x(this.originalRecord),
+      D
+    ), r = k(x(this), D);
+    _(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   unloadRecord(s) {
-    const e = x(this.aliases), i = t(s, "collectionName"), a = R(this.collections[i], {
+    const e = E(this.aliases), i = t(s, "collectionName"), o = b(this.collections[i], {
       hashId: t(s, "hashId")
     });
-    P(a, 0) && this.collections[i].splice(a, 1), f(e, (o) => {
-      const d = m(this.aliases[o]), n = y(this.aliases[o]);
+    P(o, 0) && this.collections[i].splice(o, 1), u(e, (r) => {
+      const d = m(this.aliases[r]), a = y(this.aliases[r]);
       if (d) {
-        const u = R(this.aliases[o], {
+        const l = b(this.aliases[r], {
           hashId: t(s, "hashId")
         });
-        P(u, 0) && this.aliases[o].splice(u, 1);
+        P(l, 0) && this.aliases[r].splice(l, 1);
       }
-      n && _(
+      a && _(
         t(s, "hashId"),
-        t(this.aliases[o], "hashId")
-      ) && (this.aliases[o] = {});
+        t(this.aliases[r], "hashId")
+      ) && (this.aliases[r] = {});
     });
   }
   _saveRecord(s) {
-    const e = t(s, "collectionName"), i = H(this.collections[e], {
+    const e = t(s, "collectionName"), i = R(this.collections[e], {
       hashId: t(s, "hashId")
-    }), a = S(t(i, "id")), o = a ? t(i, "id") : null, r = {
-      resourceMethod: a ? "put" : "post",
+    }), o = B(t(i, "id")), r = o ? t(i, "id") : null, n = {
+      resourceMethod: o ? "put" : "post",
       resourceName: e,
-      resourceId: o,
+      resourceId: r,
       resourceParams: {},
       resourcePayload: { data: i },
       resourceFallback: {},
       resourceConfig: {}
     };
-    return this._request(r);
+    return this._request(n);
   }
   async _deleteRecord(s) {
-    const e = t(s, "collectionName"), i = H(this.collections[e], {
+    const e = t(s, "collectionName"), i = R(this.collections[e], {
       hashId: t(s, "hashId")
-    }), a = t(s, "id"), n = {
+    }), o = t(s, "id"), a = {
       resourceMethod: "delete",
       resourceName: t(i, "collectionName"),
-      resourceId: a,
+      resourceId: o,
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: {}
     };
-    return this._request(n);
+    return this._request(a);
   }
   async _reloadRecord(s) {
-    const e = t(s, "id"), o = {
+    const e = t(s, "id"), r = {
       resourceMethod: "get",
       resourceName: t(s, "collectionName"),
       resourceId: e,
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skip: !0 }
+      resourceConfig: { skip: !1 }
     };
-    return this._request(o);
+    return this._request(r);
   }
   _getCollectionRecord(s, e = {}, i) {
-    t(
-      i,
-      "collectionName"
-    );
-    const a = t(e, "referenceKey") || "";
-    t(e, "async");
-    const o = t(i, a) || [];
-    f(o, (d) => {
-      this._generateHashId({
-        id: t(d, "id"),
+    const o = t(e, "referenceKey") || "", r = t(e, "async") || !1, d = t(i, o) || [], a = w([]);
+    return u(d, (l) => {
+      const n = this._generateHashId({
+        id: t(l, "id"),
         collectionName: s
-      }), console.log({
-        id: t(d, "id"),
-        collectionName: s
+      }), c = R(this.collections[s], {
+        hashId: n
       });
-    });
+      F(c) ? r && this._request({
+        resourceMethod: "get",
+        resourceName: s,
+        resourceId: t(l, "id"),
+        resourceParams: {},
+        resourcePayload: null,
+        resourceFallback: {},
+        resourceConfig: { skip: !0 }
+      }) : a.push(c);
+    }), a;
   }
   _injectActions(s) {
     const e = {
@@ -207,103 +211,101 @@ class us {
       setProperties: this._setProperties,
       save: () => this._saveRecord(s),
       destroyRecord: () => this._deleteRecord(s),
-      reload: () => this._reloadRecord(s)
-      // WIP: Will continue once desync is fixed.
-      // getCollection: (collectionName, collectionConfig) =>
-      //   this._getCollectionRecord(
-      //     collectionName,
-      //     collectionConfig,
-      //     collectionRecord
-      //   ),
-    }, i = x(e);
-    f(i, (a) => {
-      s[a] = e[a];
+      reload: () => this._reloadRecord(s),
+      getCollection: (o, r) => this._getCollectionRecord(
+        o,
+        r,
+        s
+      )
+    }, i = E(e);
+    u(i, (o) => {
+      s[o] = e[o];
     });
   }
   _injectReferenceKeys(s, e, i = null) {
-    const a = is(i) ? this._generateHashId({
+    const o = as(i) ? this._generateHashId({
       id: t(e, "id"),
       collectionName: s
     }) : i;
-    c(e, "collectionName", s), c(e, "hashId", a), c(e, "isLoading", !1), c(e, "isError", !1), c(e, "isPristine", !0), c(e, "isDirty", !1);
+    h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
   _pushPayloadToCollection(s, e) {
-    const i = m(e), a = y(e), o = x(this.aliases), d = x(this.requestHashIds);
-    let n = null;
+    const i = m(e), o = y(e), r = E(this.aliases), d = E(this.requestHashIds);
+    let a = null;
     if (i) {
-      const u = V(e, "hashId");
-      f(e, (r) => {
-        const h = R(
+      const l = U(e, "hashId");
+      u(e, (n) => {
+        const c = b(
           this.collections[s],
           {
-            hashId: t(r, "hashId")
+            hashId: t(n, "hashId")
           }
         );
-        this._injectActions(r), U(h, 0) && this.collections[s].push(r), P(h, 0) && (this.collections[s][h] = r);
-      }), n = V(
-        u,
-        (r) => H(this.collections[s], {
-          hashId: r
+        this._injectActions(n), J(c, 0) && this.collections[s].push(n), P(c, 0) && (this.collections[s][c] = n);
+      }), a = U(
+        l,
+        (n) => R(this.collections[s], {
+          hashId: n
         })
-      ), f(o, (r) => {
-        const h = m(this.aliases[r]), g = y(this.aliases[r]);
-        h && f(n, (I) => {
-          const p = R(this.aliases[r], {
+      ), u(r, (n) => {
+        const c = m(this.aliases[n]), g = y(this.aliases[n]);
+        c && u(a, (I) => {
+          const p = b(this.aliases[n], {
             hashId: t(I, "hashId")
           });
-          P(p, 0) && (this.aliases[r][p] = I);
-        }), g && f(n, (I) => {
+          P(p, 0) && (this.aliases[n][p] = I);
+        }), g && u(a, (I) => {
           _(
             t(I, "hashId"),
-            t(this.aliases[r], "hashId")
-          ) && (this.aliases[r] = I);
+            t(this.aliases[n], "hashId")
+          ) && (this.aliases[n] = I);
         });
       });
     }
-    if (a) {
-      const u = e.hashId, r = R(
+    if (o) {
+      const l = e.hashId, n = b(
         this.collections[s],
         {
           hashId: t(e, "hashId")
         }
       );
-      this._injectActions(e), U(r, 0) && this.collections[s].push(e), P(r, 0) && (this.collections[s][r] = e), n = H(this.collections[s], {
-        hashId: u
-      }), f(o, (h) => {
-        const g = m(this.aliases[h]), I = y(this.aliases[h]);
-        g && f([n], (p) => {
-          const q = R(this.aliases[h], {
+      this._injectActions(e), J(n, 0) && this.collections[s].push(e), P(n, 0) && (this.collections[s][n] = e), a = R(this.collections[s], {
+        hashId: l
+      }), u(r, (c) => {
+        const g = m(this.aliases[c]), I = y(this.aliases[c]);
+        g && u([a], (p) => {
+          const q = b(this.aliases[c], {
             hashId: t(p, "hashId")
           });
-          P(q, 0) && (this.aliases[h][q] = p);
+          P(q, 0) && (this.aliases[c][q] = p);
         }), I && _(
-          t(n, "hashId"),
-          t(this.aliases[h], "hashId")
-        ) && (this.aliases[h] = n);
-      }), f(d, (h) => {
+          t(a, "hashId"),
+          t(this.aliases[c], "hashId")
+        ) && (this.aliases[c] = a);
+      }), u(d, (c) => {
         const g = t(
-          this.requestHashIds[h],
+          this.requestHashIds[c],
           "data"
         ), I = m(g), p = y(g);
-        I && f([n], (q) => {
-          const w = R(
-            t(this.requestHashIds[h], "data"),
+        I && u([a], (q) => {
+          const j = b(
+            t(this.requestHashIds[c], "data"),
             {
               hashId: t(q, "hashId")
             }
           );
-          P(w, 0) && (this.requestHashIds[h].data[w] = q);
+          P(j, 0) && (this.requestHashIds[c].data[j] = q);
         }), p && _(
-          t(n, "hashId"),
-          t(this.requestHashIds[h], "data.hashId")
-        ) && c(
-          this.requestHashIds[h],
+          t(a, "hashId"),
+          t(this.requestHashIds[c], "data.hashId")
+        ) && h(
+          this.requestHashIds[c],
           "data",
-          n
+          a
         );
       });
     }
-    return n;
+    return a;
   }
   _pushRequestHash(s = {}, e = {
     isLoading: !0,
@@ -311,8 +313,8 @@ class us {
     isNew: !0,
     data: null
   }) {
-    const i = this._generateHashId(s), a = !B(this.requestHashIds[i]), o = t(e, "isNew");
-    return a && o ? c(this.requestHashIds[i], "isNew", !1) : this.requestHashIds[i] = e, this.requestHashIds[i];
+    const i = this._generateHashId(s), o = !M(this.requestHashIds[i]), r = t(e, "isNew");
+    return o && r ? h(this.requestHashIds[i], "isNew", !1) : this.requestHashIds[i] = e, this.requestHashIds[i];
   }
   setHost(s) {
     this.host = s, this._initializeAxiosConfig();
@@ -321,7 +323,7 @@ class us {
     this.namespace = s;
   }
   setHeadersCommon(s, e) {
-    M.defaults.headers.common[`${s}`] = e;
+    L.defaults.headers.common[`${s}`] = e;
   }
   setPayloadIncludeReference(s) {
     this.payloadIncludedReference = s;
@@ -339,7 +341,7 @@ class us {
     return y(e) && this._injectActions(e), this.aliases[s] || e;
   }
   createRecord(s, e = {}) {
-    return c(e, "id", z()), this._injectReferenceKeys(s, e), this._injectActions(e), this.collections[s].push(e), H(this.collections[s], {
+    return h(e, "id", S()), this._injectReferenceKeys(s, e), this._injectActions(e), this.collections[s].push(e), R(this.collections[s], {
       hashId: t(e, "hashId")
     });
   }
@@ -347,68 +349,67 @@ class us {
     resourceMethod: s,
     resourceName: e,
     resourceId: i,
-    resourceParams: a,
-    resourcePayload: o,
+    resourceParams: o,
+    resourcePayload: r,
     resourceFallback: d,
-    resourceConfig: n
+    resourceConfig: a
   }) {
-    var T, $, v;
-    const u = {
+    var $, v, z;
+    const l = {
       method: s,
       url: e
-    }, r = this._generateHashId({ ...arguments[0] }), h = t(n, "skip") || !1, g = _(s, "get"), I = _(s, "delete"), p = _(s, "post"), q = S(i), w = !J(a), D = !J(o), A = t(o, "data") || null;
-    if (q && c(u, "url", `${e}/${i}`), w && c(u, "params", a), D) {
-      const l = {
-        data: C(A, rs)
+    }, n = this._generateHashId({ ...arguments[0] }), c = _(s, "get"), g = _(s, "delete"), I = _(s, "post"), p = B(i), q = !F(o), j = !F(r), A = t(r, "data") || null;
+    if (p && h(l, "url", `${e}/${i}`), q && h(l, "params", o), j) {
+      const f = {
+        data: k(A, hs)
       };
-      c(u, "data", l);
+      h(l, "data", f);
     }
-    if (g && !h) {
-      const l = this.requestHashIds[r], b = !B(l), L = t(l, "isNew");
-      if (b && !L) return;
-    }
-    D && c(A, "isLoading", !0);
-    try {
-      const l = await M(u), b = ((T = l == null ? void 0 : l.data) == null ? void 0 : T.data) || d, L = (($ = l == null ? void 0 : l.data) == null ? void 0 : $.included) || [], W = ((v = l == null ? void 0 : l.data) == null ? void 0 : v.meta) || {}, X = y(b), Y = m(b);
-      let O = null;
-      return Y && f(
-        b,
-        (j) => this._injectReferenceKeys(e, j)
-      ), X && this._injectReferenceKeys(e, b), f(L, (j) => {
-        this._injectReferenceKeys(
-          t(j, this.payloadIncludedReference),
-          j
-        ), this._pushPayloadToCollection(
-          t(j, "collectionName"),
-          j
-        );
-      }), O = await this._pushPayloadToCollection(
-        e,
-        b
-      ), n.alias && this._addAlias(
-        t(n, "alias"),
-        O
-      ), p && this.unloadRecord(A), I && this.unloadRecord(O), this.requestHashIds[r] = {
-        isLoading: !1,
-        isError: !1,
-        isNew: !1,
-        data: O,
-        included: [],
-        meta: W
-      }, Promise.resolve(O);
-    } catch (l) {
-      return D && (c(A, "isError", !0), c(A, "isLoading", !1)), this.requestHashIds[r] = {
-        isLoading: !1,
-        isError: !0,
-        isNew: !1,
-        data: l,
-        included: [],
-        meta: {}
-      }, Promise.reject(l);
+    const Q = M(t(a, "skip")) ? !0 : t(a, "skip"), T = this.requestHashIds[n], W = !M(T), X = t(T, "isNew");
+    if (!(c && W && !X && Q)) {
+      j && h(A, "isLoading", !0);
+      try {
+        const f = await L(l), O = (($ = f == null ? void 0 : f.data) == null ? void 0 : $.data) || d, Y = ((v = f == null ? void 0 : f.data) == null ? void 0 : v.included) || [], Z = ((z = f == null ? void 0 : f.data) == null ? void 0 : z.meta) || {}, K = y(O), ss = m(O);
+        let C = null;
+        return ss && u(
+          O,
+          (H) => this._injectReferenceKeys(e, H)
+        ), K && this._injectReferenceKeys(e, O), u(Y, (H) => {
+          this._injectReferenceKeys(
+            t(H, this.payloadIncludedReference),
+            H
+          ), this._pushPayloadToCollection(
+            t(H, "collectionName"),
+            H
+          );
+        }), C = await this._pushPayloadToCollection(
+          e,
+          O
+        ), a.alias && this._addAlias(
+          t(a, "alias"),
+          C
+        ), I && this.unloadRecord(A), g && this.unloadRecord(C), this.requestHashIds[n] = {
+          isLoading: !1,
+          isError: !1,
+          isNew: !1,
+          data: C,
+          included: [],
+          meta: Z
+        }, Promise.resolve(C);
+      } catch (f) {
+        return j && (h(A, "isError", !0), h(A, "isLoading", !1)), this.requestHashIds[n] = {
+          isLoading: !1,
+          isError: !0,
+          isNew: !1,
+          data: f,
+          included: [],
+          meta: {}
+        }, Promise.reject(f);
+      }
     }
   }
   query(s, e = {}, i = {}) {
-    const a = {
+    const o = {
       resourceMethod: "get",
       resourceName: s,
       resourceId: null,
@@ -416,14 +417,14 @@ class us {
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: i
-    }, o = G, d = this._pushRequestHash(
-      a,
-      o
+    }, r = V, d = this._pushRequestHash(
+      o,
+      r
     );
-    return this._request(a), d;
+    return this._request(o), d;
   }
   queryRecord(s, e = {}, i = {}) {
-    const a = {
+    const o = {
       resourceMethod: "get",
       resourceName: s,
       resourceId: null,
@@ -431,11 +432,11 @@ class us {
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: i
-    }, o = Q, d = this._pushRequestHash(
-      a,
-      o
+    }, r = G, d = this._pushRequestHash(
+      o,
+      r
     );
-    return this._request(a), d;
+    return this._request(o), d;
   }
   findAll(s, e = {}) {
     const i = {
@@ -446,36 +447,36 @@ class us {
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: e
-    }, a = G, o = this._pushRequestHash(
+    }, o = V, r = this._pushRequestHash(
       i,
-      a
+      o
     );
-    return this._request(i), o;
+    return this._request(i), r;
   }
-  findRecord(s, e, i = {}, a = {}) {
-    const o = {
+  findRecord(s, e, i = {}, o = {}) {
+    const r = {
       resourceMethod: "get",
       resourceName: s,
       resourceId: e,
       resourceParams: i,
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: a
-    }, d = Q, n = this._pushRequestHash(
-      o,
+      resourceConfig: o
+    }, d = G, a = this._pushRequestHash(
+      r,
       d
     );
-    return this._request(o), n;
+    return this._request(r), a;
   }
   peekAll(s) {
     return this.collections[s];
   }
   peekRecord(s, e) {
-    return H(this.collections[s], {
+    return R(this.collections[s], {
       id: e
     });
   }
 }
 export {
-  us as default
+  ps as default
 };

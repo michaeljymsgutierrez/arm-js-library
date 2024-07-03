@@ -55,6 +55,7 @@ const defaultRequestObjectResponse = {
 
 const keysToBeOmittedOnDeepCheck = [
   'destroyRecord',
+  'getCollection',
   'reload',
   'save',
   'set',
@@ -68,6 +69,7 @@ const keysToBeOmittedOnDeepCheck = [
 
 const keysToBeOmittedOnRequestPayload = [
   'destroyRecord',
+  'getCollection',
   'reload',
   'save',
   'set',
@@ -282,40 +284,47 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skip: true },
+      resourceConfig: { skip: false },
     }
 
     return this._request(requestObject)
   }
 
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
-    const currentRecordCollectionName = getProperty(
-      currentRecord,
-      'collectionName'
-    )
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
-    const collectionAsync = getProperty(collectionConfig, 'async') || true
+    const collectionAsync = getProperty(collectionConfig, 'async') || false
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
-    const collectionRecords = []
+    const collectionRecords = observable([])
 
     forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
       const recordFromCurrentRecordHashId = this._generateHashId({
         id: getProperty(recordFromCurrentRecord, 'id'),
         collectionName: collectionName,
       })
-      console.log({
-        id: getProperty(recordFromCurrentRecord, 'id'),
-        collectionName: collectionName,
+
+      const collectionRecord = find(this.collections[collectionName], {
+        hashId: recordFromCurrentRecordHashId,
       })
 
-      // const collectionRecord = find(this.collections[collectionName], {
-      //   hashId: recordFromCurrentRecordHashId,
-      // })
-      //
-      // console.log(recordFromCurrentRecordHashId, collectionRecord)
+      if (!isEmpty(collectionRecord)) {
+        collectionRecords.push(collectionRecord)
+      } else {
+        if (collectionAsync)
+          this._request({
+            resourceMethod: 'get',
+            resourceName: collectionName,
+            resourceId: getProperty(recordFromCurrentRecord, 'id'),
+            resourceParams: {},
+            resourcePayload: null,
+            resourceFallback: {},
+            resourceConfig: { skip: true },
+          })
+      }
     })
+
+    return collectionRecords
   }
 
   _injectActions(collectionRecord) {
@@ -326,13 +335,12 @@ export default class ApiResourceManager {
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: () => this._deleteRecord(collectionRecord),
       reload: () => this._reloadRecord(collectionRecord),
-      // WIP: Will continue once desync is fixed.
-      // getCollection: (collectionName, collectionConfig) =>
-      //   this._getCollectionRecord(
-      //     collectionName,
-      //     collectionConfig,
-      //     collectionRecord
-      //   ),
+      getCollection: (collectionName, collectionConfig) =>
+        this._getCollectionRecord(
+          collectionName,
+          collectionConfig,
+          collectionRecord
+        ),
     }
     const actionKeys = keysIn(actions)
 
@@ -599,7 +607,6 @@ export default class ApiResourceManager {
       url: resourceName,
     }
     const requestHashId = this._generateHashId({ ...arguments[0] })
-    const requestSkip = getProperty(resourceConfig, 'skip') || false
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
@@ -619,11 +626,15 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    if (isResourceMethodGet && !requestSkip) {
-      const requestHashObject = this.requestHashIds[requestHashId]
-      const isRequestHashIdExisting = !isNil(requestHashObject)
-      const isRequestNew = getProperty(requestHashObject, 'isNew')
-      if (isRequestHashIdExisting && !isRequestNew) return
+    const skipRequest = isNil(getProperty(resourceConfig, 'skip'))
+      ? true
+      : getProperty(resourceConfig, 'skip')
+    const requestHashObject = this.requestHashIds[requestHashId]
+    const isRequestHashIdExisting = !isNil(requestHashObject)
+    const isRequestNew = getProperty(requestHashObject, 'isNew')
+
+    if (isResourceMethodGet) {
+      if (isRequestHashIdExisting && !isRequestNew && skipRequest) return
     }
 
     if (hasResourcePayload)
@@ -794,6 +805,9 @@ export default class ApiResourceManager {
 
 /*
  * Notes:
- *  1. REST API support will be included on future release.
- *  2. Deprecate 'setPayloadIncludeReference'.
+ *  1. Implement ajax exposed ajax function.
+ *  2. Prevent accessing internal functions from ARM instance.
+ *  3. Prevent accessing records property using dot annotations.
+ *  4. REST API support will be included on future release.
+ *  5. Deprecate 'setPayloadIncludeReference'.
  */

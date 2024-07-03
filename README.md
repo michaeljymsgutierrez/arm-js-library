@@ -297,7 +297,7 @@ import { ARM } from 'path-to-src/index.js'
       ))}
     </ul>
     ```
-#### Create record function
+#### Create collection record function
 ---
 * **createRecord(collectionName, collectionRecord)**
     * Create new collection record.
@@ -318,6 +318,23 @@ import { ARM } from 'path-to-src/index.js'
     // Persist collection record to server.
     // Will call POST /addresses
     newAddress.save()
+    ```
+#### Remove collection record functions
+---
+* **unloadRecord(collectionRecord)**
+    * Remove record from collection only.
+    ```javascript
+    // Collection record to be remove collection.
+    const address = ARM.peekRecord('addresses', 123456)
+
+    // This will remove the record from collection and will not
+    // remove permanently from the server.
+    ARM.unloadRecord(address)
+    ```
+* **clearCollection(collectionName)**
+    * Remove all records from collection only.
+    ```javascript
+    ARM.clearCollection('addresses')
     ```
 #### Collection Records: `Properties and Functions`
 ---
@@ -444,4 +461,40 @@ import { ARM } from 'path-to-src/index.js'
         ```javascript
         // Returned promise
         address.destroyRecord()
+        ```
+    * **getCollection(collectionName, collectionConfig)**
+        * Retrieve records from server automatically if **async** option value is set to true **true** on **collectionConfig**.
+        * Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
+        * Passed arguments:
+            * **collectionName - String**
+            * **collectionConfig - Object**
+                * **referenceKey - String**
+                    * Collection record property mapping.
+                * **async - Boolean**
+                    * Flag for invoking request function on resolving not yet loaded records on collection.
+        ```javascript
+        // Get user record from the server but don't preload addresses records.
+        const { isLoading, data: user } = ARM.findRecord(
+          'users',
+          123456,
+          {
+            // include: 'user'
+          },
+          { alias: 'currentUser' }
+        )
+
+        // The getCollection function will populate records from collection
+        // and server depending on passed collectionConfig.
+        {!isLoading && (
+          <ul>
+            {user
+              .getCollection('addresses', {
+                referenceKey: 'relationships.addresses.data',
+                async: true,
+              })
+              .map((address, index) => (
+                <li key={index}>{address.get('id')}</li>
+              ))}
+          </ul>
+        )}
         ```
