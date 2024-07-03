@@ -473,13 +473,18 @@ import { ARM } from 'path-to-src/index.js'
                 * **async - Boolean**
                     * Flag for invoking request function on resolving not yet loaded records on collection.
         ```javascript
+        // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
           'users',
-          12980860,
-          {},
+          123456,
+          {
+            // include: 'user'
+          },
           { alias: 'currentUser' }
         )
 
+        // The getCollection function will populate records from collection
+        // and server depending on passed collectionConfig.
         {!isLoading && (
           <ul>
             {user
