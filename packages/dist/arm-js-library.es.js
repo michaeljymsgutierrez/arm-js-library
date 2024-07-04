@@ -3,14 +3,14 @@ import es from "lodash";
 import * as ts from "mobx";
 import { v1 as S } from "uuid";
 import is from "crypto-js";
-const { makeObservable: os, observable: w, action: N, toJS: x } = ts, {
+const { makeObservable: os, observable: k, action: N, toJS: x } = ts, {
   get: t,
   set: h,
   find: R,
   findIndex: b,
   isObject: rs,
-  isArray: m,
-  isPlainObject: y,
+  isArray: y,
+  isPlainObject: m,
   isNumber: B,
   isNull: as,
   isNil: M,
@@ -23,7 +23,7 @@ const { makeObservable: os, observable: w, action: N, toJS: x } = ts, {
   entries: cs,
   forEach: u,
   keysIn: E,
-  omit: k
+  omit: w
 } = es, V = {
   isLoading: !0,
   isError: !1,
@@ -67,10 +67,10 @@ const { makeObservable: os, observable: w, action: N, toJS: x } = ts, {
 ];
 class ps {
   constructor(s = []) {
-    this.namespace = "api/v1", this.host = window.location.origin, this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), os(this, {
-      collections: w,
-      aliases: w,
-      requestHashIds: w,
+    this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), os(this, {
+      collections: k,
+      aliases: k,
+      requestHashIds: k,
       _pushPayloadToCollection: N,
       _pushRequestHash: N,
       _addCollection: N,
@@ -93,7 +93,7 @@ class ps {
     this.collections[s] = e;
   }
   _addAlias(s, e) {
-    const i = m(e), o = y(e);
+    const i = y(e), o = m(e);
     i && (this.aliases[s] = e || []), o && (this.aliases[s] = e || {});
   }
   _generateHashId(s = { id: S() }) {
@@ -105,25 +105,25 @@ class ps {
   }
   _setProperty(s, e) {
     h(this, s, e);
-    const i = k(
+    const i = w(
       x(this.originalRecord),
       D
-    ), o = k(x(this), D);
+    ), o = w(x(this), D);
     _(i, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
     function e(d, a = "") {
       return ns(cs(d), ([l, n]) => {
         const c = a ? `${a}.${l}` : l;
-        return rs(n) && !m(n) && n !== null ? e(n, c) : { key: c, value: n };
+        return rs(n) && !y(n) && n !== null ? e(n, c) : { key: c, value: n };
       });
     }
     const i = e(s);
     u(i, ({ key: d, value: a }) => h(this, d, a));
-    const o = k(
+    const o = w(
       x(this.originalRecord),
       D
-    ), r = k(x(this), D);
+    ), r = w(x(this), D);
     _(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   unloadRecord(s) {
@@ -131,7 +131,7 @@ class ps {
       hashId: t(s, "hashId")
     });
     P(o, 0) && this.collections[i].splice(o, 1), u(e, (r) => {
-      const d = m(this.aliases[r]), a = y(this.aliases[r]);
+      const d = y(this.aliases[r]), a = m(this.aliases[r]);
       if (d) {
         const l = b(this.aliases[r], {
           hashId: t(s, "hashId")
@@ -185,7 +185,7 @@ class ps {
     return this._request(r);
   }
   _getCollectionRecord(s, e = {}, i) {
-    const o = t(e, "referenceKey") || "", r = t(e, "async") || !1, d = t(i, o) || [], a = w([]);
+    const o = t(e, "referenceKey") || "", r = t(e, "async") || !1, d = t(i, o) || [], a = k([]);
     return u(d, (l) => {
       const n = this._generateHashId({
         id: t(l, "id"),
@@ -230,7 +230,7 @@ class ps {
     h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
   _pushPayloadToCollection(s, e) {
-    const i = m(e), o = y(e), r = E(this.aliases), d = E(this.requestHashIds);
+    const i = y(e), o = m(e), r = E(this.aliases), d = E(this.requestHashIds);
     let a = null;
     if (i) {
       const l = U(e, "hashId");
@@ -248,7 +248,7 @@ class ps {
           hashId: n
         })
       ), u(r, (n) => {
-        const c = m(this.aliases[n]), g = y(this.aliases[n]);
+        const c = y(this.aliases[n]), g = m(this.aliases[n]);
         c && u(a, (I) => {
           const p = b(this.aliases[n], {
             hashId: t(I, "hashId")
@@ -272,7 +272,7 @@ class ps {
       this._injectActions(e), J(n, 0) && this.collections[s].push(e), P(n, 0) && (this.collections[s][n] = e), a = R(this.collections[s], {
         hashId: l
       }), u(r, (c) => {
-        const g = m(this.aliases[c]), I = y(this.aliases[c]);
+        const g = y(this.aliases[c]), I = m(this.aliases[c]);
         g && u([a], (p) => {
           const q = b(this.aliases[c], {
             hashId: t(p, "hashId")
@@ -286,7 +286,7 @@ class ps {
         const g = t(
           this.requestHashIds[c],
           "data"
-        ), I = m(g), p = y(g);
+        ), I = y(g), p = m(g);
         I && u([a], (q) => {
           const j = b(
             t(this.requestHashIds[c], "data"),
@@ -329,7 +329,7 @@ class ps {
     this.payloadIncludedReference = s;
   }
   setGlobal() {
-    window && (window.ARM = Object.freeze(this));
+    typeof window < "u" && (window.ARM = Object.freeze(this));
   }
   getCollection(s) {
     return this.collections[s] || [];
@@ -338,7 +338,7 @@ class ps {
     this.collections[s] = [];
   }
   getAlias(s, e) {
-    return y(e) && this._injectActions(e), this.aliases[s] || e;
+    return m(e) && this._injectActions(e), this.aliases[s] || e;
   }
   createRecord(s, e = {}) {
     return h(e, "id", S()), this._injectReferenceKeys(s, e), this._injectActions(e), this.collections[s].push(e), R(this.collections[s], {
@@ -361,7 +361,7 @@ class ps {
     }, n = this._generateHashId({ ...arguments[0] }), c = _(s, "get"), g = _(s, "delete"), I = _(s, "post"), p = B(i), q = !F(o), j = !F(r), A = t(r, "data") || null;
     if (p && h(l, "url", `${e}/${i}`), q && h(l, "params", o), j) {
       const f = {
-        data: k(A, hs)
+        data: w(A, hs)
       };
       h(l, "data", f);
     }
@@ -369,7 +369,7 @@ class ps {
     if (!(c && W && !X && Q)) {
       j && h(A, "isLoading", !0);
       try {
-        const f = await L(l), O = (($ = f == null ? void 0 : f.data) == null ? void 0 : $.data) || d, Y = ((v = f == null ? void 0 : f.data) == null ? void 0 : v.included) || [], Z = ((z = f == null ? void 0 : f.data) == null ? void 0 : z.meta) || {}, K = y(O), ss = m(O);
+        const f = await L(l), O = (($ = f == null ? void 0 : f.data) == null ? void 0 : $.data) || d, Y = ((v = f == null ? void 0 : f.data) == null ? void 0 : v.included) || [], Z = ((z = f == null ? void 0 : f.data) == null ? void 0 : z.meta) || {}, K = m(O), ss = y(O);
         let C = null;
         return ss && u(
           O,
