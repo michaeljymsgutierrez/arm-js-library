@@ -13,8 +13,8 @@ ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
 ARM.setHeadersCommon('X-Client-Platform', 'Web')
 ARM.setGlobal()
 
-const ConfigWrapper = ({ children }) => {
+const ARMConfigWrapper = ({ children }) => {
   return <>{children}</>
 }
 
-export default ConfigWrapper
+export default ARMConfigWrapper
