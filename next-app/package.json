@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
+    "arm-js-library": "../packages",
+    "mobx-react-lite": "^4.0.7",
     "next": "14.2.4",
-    "arm-js-library": "../packages"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "eslint": "^8",

@@ -1,0 +1,38 @@
+.table {
+  border: solid 0.5px #ddeeee;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font: normal 13px Arial, sans-serif;
+}
+
+.tableHeadRow {
+  background-color: #ddefef;
+  border: solid 0.5px #ddeeee;
+  color: #336b6b;
+  padding: 10px;
+  text-align: left;
+  text-shadow: 1px 1px 1px #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tableBodyRow {
+  border: solid 0.5px #ddeeee;
+  color: #333;
+  padding: 10px;
+  text-shadow: 1px 1px 1px #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tableHeadRow div,
+.tableBodyRow div {
+  width: 100%;
+}
+
+.button {
+  margin-left: 2px;
+  margin-right: 2px;
+}
