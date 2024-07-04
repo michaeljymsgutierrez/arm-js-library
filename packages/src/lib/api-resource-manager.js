@@ -86,7 +86,7 @@ const keysToBeOmittedOnRequestPayload = [
 export default class ApiResourceManager {
   constructor(collections = []) {
     this.namespace = 'api/v1'
-    this.host = window.location.origin
+    this.host = typeof window !== 'undefined' ? window.location.origin : ''
     this.collections = {}
     this.aliases = {}
     this.requestHashIds = {}
@@ -562,7 +562,7 @@ export default class ApiResourceManager {
   }
 
   setGlobal() {
-    if (window) window.ARM = Object.freeze(this)
+    if (typeof window !== 'undefined') window.ARM = Object.freeze(this)
   }
 
   getCollection(collectionName) {
