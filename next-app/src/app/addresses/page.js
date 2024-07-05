@@ -24,6 +24,12 @@ const AddressesListPage = observer(() => {
           <div>POST CODE</div>
         </div>
 
+        {model.isLoading && (
+          <div className={styles.tableBodyRow}>
+            <div>Loading...</div>
+          </div>
+        )}
+
         {controller.addresses.map((address, index) => (
           <div key={index} className={styles.tableBodyRow}>
             <div>{address.get('id')} </div>
