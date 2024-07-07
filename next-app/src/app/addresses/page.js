@@ -46,7 +46,9 @@ const AddressesListPage = observer(() => {
               <td>{address.get('attributes.latitude')}</td>
               <td>{address.get('attributes.longitude')}</td>
               <td>{address.get('attributes.post-code')}</td>
-              <td>EDIT</td>
+              <td>
+                <Link href={`/addresses/${address.get('id')}/edit`}>EDIT</Link>
+              </td>
             </tr>
           ))}
         </tbody>
