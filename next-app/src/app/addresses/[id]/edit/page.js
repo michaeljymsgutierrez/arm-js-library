@@ -93,7 +93,18 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <button type="button" onClick={() => model.data.save()}>
+            <button
+              type="button"
+              className={styles.button}
+              onClick={controller.onClickCancel}
+            >
+              CANCEL
+            </button>
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() => model.data.save()}
+            >
               {model.data.get('isLoading') ? 'SAVING...' : 'SAVE'}
             </button>
           </div>

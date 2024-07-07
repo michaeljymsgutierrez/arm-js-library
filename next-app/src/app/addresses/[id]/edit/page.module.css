@@ -14,3 +14,8 @@
   border: 1px solid #ccc;
   border-radius: 3px;
 }
+
+.button {
+  padding: 8px;
+  margin-right: 2px;
+}
