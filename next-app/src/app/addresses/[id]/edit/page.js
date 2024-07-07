@@ -63,6 +63,16 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
+            <label>LANDMARK:</label>
+            <input
+              type="text"
+              defaultValue={model.data.get('attributes.landmark')}
+              onChange={(event) =>
+                model.data.set('attributes.landmark', event.target.value)
+              }
+            />
+          </div>
+          <div className={styles.inputGroup}>
             <label>LATITUDE:</label>
             <input
               type="text"
