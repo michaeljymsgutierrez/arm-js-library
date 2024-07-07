@@ -1,5 +1,10 @@
 import { Inter } from 'next/font/google'
-import ARMConfigWrapper from '../components/arm-config-wrapper'
+import dynamic from 'next/dynamic'
+
+const ARMConfigWrapper = dynamic(
+  () => import('../components/arm-config-wrapper'),
+  { ssr: false }
+)
 
 const inter = Inter({ subsets: ['latin'] })
 
