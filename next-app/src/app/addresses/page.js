@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import styles from './page.module.css'
 import { observer } from 'mobx-react-lite'
 import Model from './model'
@@ -11,39 +12,45 @@ const AddressesListPage = observer(() => {
 
   return (
     <div className="addreses-list-page">
-      <div className={styles.table}>
-        <div className={styles.tableHeadRow}>
-          <div>ID</div>
-          <div>LABEL</div>
-          <div>KIND</div>
-          <div>ADDRESS 1</div>
-          <div>ADDRESS 2</div>
-          <div>LANDMARK</div>
-          <div>LATITUDE</div>
-          <div>LONGITUDE</div>
-          <div>POST CODE</div>
-        </div>
+      <table className={styles.table}>
+        <thead className={styles.tableHead}>
+          <tr>
+            <th>ID</th>
+            <th>LABEL</th>
+            <th>KIND</th>
+            <th>ADDRESS 1</th>
+            <th>ADDRESS 2</th>
+            <th>LANDMARK</th>
+            <th>LATITUDE</th>
+            <th>LONGITUDE</th>
+            <th>POST CODE</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
 
-        {model.isLoading && (
-          <div className={styles.tableBodyRow}>
-            <div>Loading...</div>
-          </div>
-        )}
+        <tbody className={styles.tableBody}>
+          {model.isLoading && (
+            <tr className={styles.tableBodyRow}>
+              <td colSpan="10">Loading...</td>
+            </tr>
+          )}
 
-        {controller.addresses.map((address, index) => (
-          <div key={index} className={styles.tableBodyRow}>
-            <div>{address.get('id')} </div>
-            <div>{address.get('attributes.label')} </div>
-            <div>{address.get('attributes.kind')} </div>
-            <div>{address.get('attributes.address1')} </div>
-            <div>{address.get('attributes.address2')} </div>
-            <div>{address.get('attributes.landmark')} </div>
-            <div>{address.get('attributes.latitude')} </div>
-            <div>{address.get('attributes.longitude')} </div>
-            <div>{address.get('attributes.post-code')} </div>
-          </div>
-        ))}
-      </div>
+          {model.data.map((address, index) => (
+            <tr key={index} className={styles.tableBodyRow}>
+              <td>{address.get('id')}</td>
+              <td>{address.get('attributes.label')}</td>
+              <td>{address.get('attributes.kind')}</td>
+              <td>{address.get('attributes.address1')}</td>
+              <td>{address.get('attributes.address2')}</td>
+              <td>{address.get('attributes.landmark')}</td>
+              <td>{address.get('attributes.latitude')}</td>
+              <td>{address.get('attributes.longitude')}</td>
+              <td>{address.get('attributes.post-code')}</td>
+              <td>EDIT</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 })
