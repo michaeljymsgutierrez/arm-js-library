@@ -1,0 +1,16 @@
+.inputGroup {
+  margin-bottom: 15px;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.inputGroup input {
+  display: block;
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
