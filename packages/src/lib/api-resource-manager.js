@@ -240,7 +240,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: {},
       resourcePayload: payload,
       resourceFallback: {},
@@ -262,7 +262,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -280,7 +280,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -776,7 +776,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: params,
       resourcePayload: null,
       resourceFallback: {},
