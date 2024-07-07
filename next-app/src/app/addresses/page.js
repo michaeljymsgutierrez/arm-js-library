@@ -54,7 +54,6 @@ const AddressesListPage = observer(() => {
                 >
                   EDIT
                 </button>
-                {/* <Link href={`/addresses/${address.get('id')}/edit`}>EDIT</Link> */}
               </td>
             </tr>
           ))}
