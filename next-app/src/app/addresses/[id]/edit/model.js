@@ -5,11 +5,11 @@ import { ARM } from '@arm-config-wrapper'
 
 const Model = () => {
   const params = useParams()
-  const data = ARM.findRecord('addresses', params.id, null, {
+  const address = ARM.findRecord('addresses', params.id, null, {
     alias: 'editAddress',
   })
 
-  return data
+  return address
 }
 
 export default Model
