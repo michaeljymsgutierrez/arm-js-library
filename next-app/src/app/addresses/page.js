@@ -47,7 +47,14 @@ const AddressesListPage = observer(() => {
               <td>{address.get('attributes.longitude')}</td>
               <td>{address.get('attributes.post-code')}</td>
               <td>
-                <Link href={`/addresses/${address.get('id')}/edit`}>EDIT</Link>
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => controller.onClickEdit(address.get('id'))}
+                >
+                  EDIT
+                </button>
+                {/* <Link href={`/addresses/${address.get('id')}/edit`}>EDIT</Link> */}
               </td>
             </tr>
           ))}

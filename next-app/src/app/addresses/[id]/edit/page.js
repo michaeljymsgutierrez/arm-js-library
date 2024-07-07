@@ -15,7 +15,7 @@ const AddressEditPage = observer(() => {
       {!model.isLoading && (
         <>
           <div className={styles.inputGroup}>
-            <label for="name">ID:</label>
+            <label>ID:</label>
             <input
               type="text"
               disabled={true}
@@ -23,7 +23,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">LABEL:</label>
+            <label>LABEL:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.label')}
@@ -33,7 +33,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">KIND:</label>
+            <label>KIND:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.kind')}
@@ -43,7 +43,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">ADDRESS 1:</label>
+            <label>ADDRESS 1:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.address1')}
@@ -53,7 +53,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">ADDRESS 2:</label>
+            <label>ADDRESS 2:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.address2')}
@@ -63,7 +63,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">LATITUDE:</label>
+            <label>LATITUDE:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.latitude')}
@@ -73,7 +73,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">LONGITUDE:</label>
+            <label>LONGITUDE:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.longitude')}
@@ -83,7 +83,7 @@ const AddressEditPage = observer(() => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label for="name">POST CODE:</label>
+            <label>POST CODE:</label>
             <input
               type="text"
               defaultValue={model.data.get('attributes.post-code')}
