@@ -634,6 +634,7 @@ export default class ApiResourceManager {
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
+      if (skipRequest) return
       if (isRequestHashIdExisting && !isRequestNew && skipRequest) return
     }
 
