@@ -50,6 +50,13 @@ const AddressesListPage = observer(() => {
                 <button
                   type="button"
                   className={styles.button}
+                  onClick={() => address.reload()}
+                >
+                  RELOAD
+                </button>
+                <button
+                  type="button"
+                  className={styles.button}
                   onClick={() => controller.onClickEdit(address.get('id'))}
                 >
                   EDIT
