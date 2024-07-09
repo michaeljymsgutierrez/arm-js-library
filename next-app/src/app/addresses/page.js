@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import styles from './page.module.css'
 import { observer } from 'mobx-react-lite'
 import Model from './model'
@@ -25,7 +24,9 @@ const AddressesListPage = observer(() => {
             <th>LONGITUDE</th>
             <th>POST CODE</th>
             <th>USER ID</th>
-            <th>&nbsp;</th>
+            <th>
+              <button onClick={controller.onClickNew}>NEW</button>
+            </th>
           </tr>
         </thead>
 
@@ -67,7 +68,6 @@ const AddressesListPage = observer(() => {
                 {/* </button> */}
                 <button
                   type="button"
-                  className={styles.button}
                   onClick={() => controller.onClickEdit(address.get('id'))}
                 >
                   EDIT
