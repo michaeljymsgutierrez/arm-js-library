@@ -9,12 +9,12 @@ const Model = () => {
     'addresses',
     {
       sort: '-id',
-      // include: 'user',
+      include: 'user',
     },
     {
       alias: 'customerAddresses',
       // skip: user.isLoading,
-      skip: false,
+      // skip: false,
     }
   )
 

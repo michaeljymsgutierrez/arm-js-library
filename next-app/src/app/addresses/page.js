@@ -48,19 +48,23 @@ const AddressesListPage = observer(() => {
               <td>{address.get('attributes.longitude')}</td>
               <td>{address.get('attributes.post-code')}</td>
               <td>
-                {address.getCollection('users', {
-                  referenceKey: 'relationships.user.data',
-                  async: true,
-                })}
+                {address
+                  .getCollection('users', {
+                    referenceKey: 'relationships.user.data',
+                    async: true,
+                  })
+                  .map((user, index) => (
+                    <span key={index}>{user.get('id')}</span>
+                  ))}
               </td>
               <td>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => address.reload()}
-                >
-                  RELOAD
-                </button>
+                {/* <button */}
+                {/*   type="button" */}
+                {/*   className={styles.button} */}
+                {/*   onClick={() => address.reload()} */}
+                {/* > */}
+                {/*   RELOAD */}
+                {/* </button> */}
                 <button
                   type="button"
                   className={styles.button}

@@ -296,16 +296,22 @@ export default class ApiResourceManager {
     const collectionAsync = getProperty(collectionConfig, 'async') || false
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
+    const isRecordsFromCurrentRecordObject = isPlainObject(
+      recordsFromCurrentRecord
+    )
+    const relatedRecords = isRecordsFromCurrentRecordObject
+      ? [recordsFromCurrentRecord]
+      : recordsFromCurrentRecord
     const collectionRecords = observable([])
 
-    forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
-      const recordFromCurrentRecordHashId = this._generateHashId({
-        id: getProperty(recordFromCurrentRecord, 'id'),
+    forEach(relatedRecords, (relatedRecord) => {
+      const relatedRecordHashId = this._generateHashId({
+        id: getProperty(relatedRecord, 'id'),
         collectionName: collectionName,
       })
 
       const collectionRecord = find(this.collections[collectionName], {
-        hashId: recordFromCurrentRecordHashId,
+        hashId: relatedRecordHashId,
       })
 
       if (!isEmpty(collectionRecord)) {
@@ -315,7 +321,7 @@ export default class ApiResourceManager {
           const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
-            resourceId: getProperty(recordFromCurrentRecord, 'id'),
+            resourceId: getProperty(relatedRecord, 'id'),
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
