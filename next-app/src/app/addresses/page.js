@@ -24,6 +24,7 @@ const AddressesListPage = observer(() => {
             <th>LATITUDE</th>
             <th>LONGITUDE</th>
             <th>POST CODE</th>
+            <th>USER ID</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -46,6 +47,12 @@ const AddressesListPage = observer(() => {
               <td>{address.get('attributes.latitude')}</td>
               <td>{address.get('attributes.longitude')}</td>
               <td>{address.get('attributes.post-code')}</td>
+              <td>
+                {address.getCollection('users', {
+                  referenceKey: 'relationships.user.data',
+                  async: true,
+                })}
+              </td>
               <td>
                 <button
                   type="button"

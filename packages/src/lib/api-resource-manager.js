@@ -284,7 +284,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skip: false },
+      resourceConfig: { skipTimestamp: uuidv1() },
     }
 
     return this._request(requestObject)
@@ -311,16 +311,23 @@ export default class ApiResourceManager {
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        if (collectionAsync)
-          this._request({
+        if (collectionAsync) {
+          const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
             resourceId: getProperty(recordFromCurrentRecord, 'id'),
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: { skip: true },
-          })
+            resourceConfig: {},
+          }
+          const responseObject = defaultRequestObjectResponse
+          const requestHashObject = this._pushRequestHash(
+            requestObject,
+            responseObject
+          )
+          this._request(requestObject)
+        }
       }
     })
 
@@ -626,15 +633,26 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    const skipRequest = isNil(getProperty(resourceConfig, 'skip'))
-      ? true
-      : getProperty(resourceConfig, 'skip')
+    const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
+    const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
     const requestHashObject = this.requestHashIds[requestHashId]
     const isRequestHashIdExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
+    const isRequestLoading = isEqual(
+      getProperty(requestHashObject, 'isLoading'),
+      true
+    )
 
     if (isResourceMethodGet) {
-      if (isRequestHashIdExisting && !isRequestNew && skipRequest) return
+      if (hasSkipRequest && skipRequest) return
+      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) return
+      if (
+        hasSkipRequest &&
+        !skipRequest &&
+        isRequestHashIdExisting &&
+        !isRequestNew
+      )
+        return
     }
 
     if (hasResourcePayload)
