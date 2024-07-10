@@ -344,9 +344,10 @@ import { ARM } from 'path-to-src/index.js'
     ```
 #### Create collection record function
 ---
-* **createRecord(collectionName, collectionRecord)**
+* **createRecord(collectionName, collectionRecord, collectionRecordRandomId)**
     * Create new collection record.
     * By default collectionRecord params is set to empty object if omitted - **required**
+    * By default collectionRecordRandomId params is set to true - **optional**
     ```javascript
     // Usage #1
     // Can ommit collectionRecord on createRecord initialization
