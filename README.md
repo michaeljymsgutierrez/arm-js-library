@@ -71,7 +71,7 @@ npm install mobx-react-lite --save
 Somewhere on your application init, create and store new ARM instance.<br/>
 
 #### Initialization on create-react-app
-* Store it on `src/index.js` [Example here.](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/app/src/index.js)
+* Store it on `src/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/app/src/index.js)
     ```javascript
     // Create a new instance of ARM
     import ApiResourceManager from 'arm-js-library'
@@ -83,7 +83,7 @@ Somewhere on your application init, create and store new ARM instance.<br/>
     export const ARM = new ApiResourceManager(collections)
     ```
 #### Initialization on create-next-app
-* Store it on component wrapper `src/components/arm-config-wrapper/index.js` [Example here.](ihttps://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/components/arm-config-wrapper/index.js)
+* Store it on component wrapper `src/components/arm-config-wrapper/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/components/arm-config-wrapper/index.js)
     ```javascript
     // Tag component wrapper as client
     'use client'
@@ -103,6 +103,25 @@ Somewhere on your application init, create and store new ARM instance.<br/>
     }
 
     export default ARMConfigWrapper
+    ```
+* Wrap root layout children `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/app/layout.js)
+    ```javascript
+    import dynamic from 'next/dynamic'
+
+    const ARMConfigWrapper = dynamic(
+      () => import('../components/arm-config-wrapper'),
+      { ssr: false }
+    )
+
+    export default function RootLayout({ children }) {
+      return (
+        <html lang="en">
+          <body>
+            <ARMConfigWrapper>{children}</ARMConfigWrapper>
+          </body>
+        </html>
+      )
+    }
     ```
 #### Configuration
 
