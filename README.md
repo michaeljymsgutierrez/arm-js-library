@@ -65,7 +65,7 @@ npm install arm-js-library --save
 #### Initialization
 
 Somewhere on your application init, create and store new ARM instance.<br/>
-Example: If you're using `React` app, store it on `src/index.js`
+For reactjs `create-react-app`, store it on `src/index.js`
 
 ```javascript
 // Create a new instance of ARM
@@ -77,6 +77,7 @@ const collections = ['addresses', 'users']
 // Export new instance of ARM for later utilization
 export const ARM = new ApiResourceManager(collections)
 ```
+For reactjs `create-next-app`, store it on `src/index.js`
 
 #### Configuration
 
