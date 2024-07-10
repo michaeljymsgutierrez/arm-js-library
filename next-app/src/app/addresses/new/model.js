@@ -4,10 +4,9 @@ import { ARM } from '@arm-config-wrapper'
 import { useEffect } from 'react'
 
 const Model = () => {
-  let address
-
-  useEffect(() => {
-    address = ARM.createRecord('addresses', {
+  const address = ARM.createRecord(
+    'addresses',
+    {
       attributes: {
         address1: null,
         address2: null,
@@ -29,8 +28,9 @@ const Model = () => {
           },
         },
       },
-    })
-  }, [])
+    },
+    false
+  )
 
   return address
 }
