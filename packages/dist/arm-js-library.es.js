@@ -207,10 +207,7 @@ class _s {
           resourceFallback: {},
           resourceConfig: {}
         }, g = z;
-        this._pushRequestHash(
-          p,
-          g
-        ), this._request(p);
+        this._pushRequestHash(p, g), this._request(p);
       }
     }), a;
   }

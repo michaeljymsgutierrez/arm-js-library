@@ -328,10 +328,7 @@ export default class ApiResourceManager {
             resourceConfig: {},
           }
           const responseObject = defaultRequestObjectResponse
-          const requestHashObject = this._pushRequestHash(
-            requestObject,
-            responseObject
-          )
+          this._pushRequestHash(requestObject, responseObject)
           this._request(requestObject)
         }
       }
