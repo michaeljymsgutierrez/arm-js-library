@@ -1,7 +1,7 @@
 # Overview
 
 <a href="https://www.npmjs.com/package/arm-js-library">
-  <img alt="npm-version" src="https://img.shields.io/badge/npm_version-1.1.1-blue" />
+  <img alt="npm-version" src="https://img.shields.io/badge/npm_version-1.2.1-blue" />
 </a>
 
 <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
