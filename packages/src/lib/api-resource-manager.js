@@ -284,7 +284,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skipTimestamp: uuidv1() },
+      resourceConfig: { skipId: uuidv1() },
     }
 
     return this._request(requestObject)
@@ -656,10 +656,6 @@ export default class ApiResourceManager {
     const requestHashObject = this.requestHashIds[requestHashId]
     const isRequestHashIdExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
-    // const isRequestLoading = isEqual(
-    //   getProperty(requestHashObject, 'isLoading'),
-    //   true
-    // )
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) return

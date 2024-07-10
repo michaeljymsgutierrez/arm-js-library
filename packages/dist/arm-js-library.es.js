@@ -180,7 +180,7 @@ class gs {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skipTimestamp: T() }
+      resourceConfig: { skipId: T() }
     };
     return this._request(r);
   }
