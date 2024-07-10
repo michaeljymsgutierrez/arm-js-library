@@ -7,7 +7,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import * as mobx from 'mobx'
-import { v1 as uuidv1 } from 'uuid'
+import { v1 as uuidv1, NIL as NIL_UUID } from 'uuid'
 import CryptoJS from 'crypto-js'
 
 const { makeObservable, observable, action, toJS } = mobx
@@ -262,7 +262,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -280,11 +280,11 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skip: false },
+      resourceConfig: { skipId: uuidv1() },
     }
 
     return this._request(requestObject)
@@ -296,31 +296,43 @@ export default class ApiResourceManager {
     const collectionAsync = getProperty(collectionConfig, 'async') || false
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
+    const isRecordsFromCurrentRecordObject = isPlainObject(
+      recordsFromCurrentRecord
+    )
+    const relatedRecords = isRecordsFromCurrentRecordObject
+      ? [recordsFromCurrentRecord]
+      : recordsFromCurrentRecord
     const collectionRecords = observable([])
 
-    forEach(recordsFromCurrentRecord, (recordFromCurrentRecord) => {
-      const recordFromCurrentRecordHashId = this._generateHashId({
-        id: getProperty(recordFromCurrentRecord, 'id'),
+    forEach(relatedRecords, (relatedRecord) => {
+      const relatedRecordHashId = this._generateHashId({
+        id: getProperty(relatedRecord, 'id'),
         collectionName: collectionName,
       })
 
       const collectionRecord = find(this.collections[collectionName], {
-        hashId: recordFromCurrentRecordHashId,
+        hashId: relatedRecordHashId,
       })
 
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        if (collectionAsync)
-          this._request({
+        if (collectionAsync) {
+          const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
-            resourceId: getProperty(recordFromCurrentRecord, 'id'),
+            resourceId: getProperty(relatedRecord, 'id'),
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: { skip: true },
-          })
+            resourceConfig: {},
+          }
+          const responseObject = defaultRequestObjectResponse
+
+          this._pushRequestHash(requestObject, responseObject)
+
+          this._request(requestObject)
+        }
       }
     })
 
@@ -581,15 +593,28 @@ export default class ApiResourceManager {
     return this.aliases[aliasName] || fallbackRecords
   }
 
-  createRecord(collectionName, collectionRecord = {}) {
-    setProperty(collectionRecord, 'id', uuidv1())
+  createRecord(
+    collectionName,
+    collectionRecord = {},
+    collectionRecordRandomId = true
+  ) {
+    const collectionRecordId = collectionRecordRandomId ? uuidv1() : NIL_UUID
+    const isCollectionRecordNotExisting = isNil(
+      find(this.collections[collectionName], {
+        id: collectionRecordId,
+      })
+    )
+
+    setProperty(collectionRecord, 'id', collectionRecordId)
 
     this._injectReferenceKeys(collectionName, collectionRecord)
     this._injectActions(collectionRecord)
-    this.collections[collectionName].push(collectionRecord)
+
+    if (isCollectionRecordNotExisting)
+      this.collections[collectionName].push(collectionRecord)
 
     return find(this.collections[collectionName], {
-      hashId: getProperty(collectionRecord, 'hashId'),
+      id: collectionRecordId,
     })
   }
 
@@ -626,15 +651,22 @@ export default class ApiResourceManager {
       setProperty(requestOptions, 'data', payload)
     }
 
-    const skipRequest = isNil(getProperty(resourceConfig, 'skip'))
-      ? true
-      : getProperty(resourceConfig, 'skip')
+    const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
+    const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
     const requestHashObject = this.requestHashIds[requestHashId]
     const isRequestHashIdExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
-      if (isRequestHashIdExisting && !isRequestNew && skipRequest) return
+      if (hasSkipRequest && skipRequest) return
+      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) return
+      if (
+        hasSkipRequest &&
+        !skipRequest &&
+        isRequestHashIdExisting &&
+        !isRequestNew
+      )
+        return
     }
 
     if (hasResourcePayload)
@@ -776,7 +808,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
-      resourceId: id,
+      resourceId: Number(id),
       resourceParams: params,
       resourcePayload: null,
       resourceFallback: {},
