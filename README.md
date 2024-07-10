@@ -60,6 +60,10 @@ export default App
 ```
 npm install arm-js-library --save
 ```
+## Dependency Packages
+```
+npm install mobx-react-lite --save
+```
 ## Initialization and Configuration 
 
 #### Initialization

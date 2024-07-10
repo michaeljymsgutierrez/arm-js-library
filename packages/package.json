@@ -24,7 +24,8 @@
     "lodash",
     "crypto-js",
     "centralized-data",
-    "javascript"
+    "javascript",
+    "reactjs"
   ],
   "repository": {
     "type": "git",
