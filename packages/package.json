@@ -3,9 +3,7 @@
   "version": "1.2.1",
   "description": "API Resource Manager",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
@@ -19,9 +17,15 @@
     "build:watch": "vite build --watch"
   },
   "keywords": [
-    "arm",
-    "api-resource-manager",
-    "centralized-data-collection"
+    "uuid",
+    "state-management",
+    "mobx",
+    "json-api",
+    "lodash",
+    "crypto-js",
+    "centralized-data",
+    "javascript",
+    "reactjs"
   ],
   "repository": {
     "type": "git",

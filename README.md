@@ -60,27 +60,72 @@ export default App
 ```
 npm install arm-js-library --save
 ```
+## Dependency Packages
+```
+npm install mobx-react-lite --save
+```
 ## Initialization and Configuration 
 
 #### Initialization
 
 Somewhere on your application init, create and store new ARM instance.<br/>
-Example: If you're using `React` app, store it on `src/index.js`
 
-```javascript
-// Create a new instance of ARM
-import ApiResourceManager from 'arm-js-library'
+#### Initialization on create-react-app
+* Store it on `src/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/app/src/index.js)
+    ```javascript
+    // Create a new instance of ARM
+    import ApiResourceManager from 'arm-js-library'
 
-// Create an array of collections to initialize
-const collections = ['addresses', 'users']
+    // Create an array of collections to initialize
+    const collections = ['addresses', 'users']
 
-// Export new instance of ARM for later utilization
-export const ARM = new ApiResourceManager(collections)
-```
+    // Export new instance of ARM for later utilization
+    export const ARM = new ApiResourceManager(collections)
+    ```
+#### Initialization on create-next-app
+* Store it on component wrapper `src/components/arm-config-wrapper/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/components/arm-config-wrapper/index.js)
+    ```javascript
+    // Tag component wrapper as client
+    'use client'
 
+    // Create a new instance of ARM
+    import ApiResourceManager from 'arm-js-library'
+
+    // Create an array of collections to initialize
+    const collections = ['addresses', 'users']
+
+    // Export new instance of ARM for later utilization
+    export const ARM = new ApiResourceManager(collections)
+
+    //
+    const ARMConfigWrapper = ({ children }) => {
+      return <>{children}</>
+    }
+
+    export default ARMConfigWrapper
+    ```
+* Wrap root layout children `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/app/layout.js)
+    ```javascript
+    import dynamic from 'next/dynamic'
+
+    const ARMConfigWrapper = dynamic(
+      () => import('../components/arm-config-wrapper'),
+      { ssr: false }
+    )
+
+    export default function RootLayout({ children }) {
+      return (
+        <html lang="en">
+          <body>
+            <ARMConfigWrapper>{children}</ARMConfigWrapper>
+          </body>
+        </html>
+      )
+    }
+    ```
 #### Configuration
 
-Configure stored ARM instance to be able to use on your application.
+Configure stored ARM instance from where you stored it, to be able to use it on your application.
 
 **Required configurations**
 * **setHost(value)**
@@ -299,9 +344,10 @@ import { ARM } from 'path-to-src/index.js'
     ```
 #### Create collection record function
 ---
-* **createRecord(collectionName, collectionRecord)**
+* **createRecord(collectionName, collectionRecord, collectionRecordRandomId)**
     * Create new collection record.
     * By default collectionRecord params is set to empty object if omitted - **required**
+    * By default collectionRecordRandomId params is set to true - **optional**
     ```javascript
     // Usage #1
     // Can ommit collectionRecord on createRecord initialization
