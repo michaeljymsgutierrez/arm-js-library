@@ -99,7 +99,7 @@ export default class ApiResourceManager {
       collections: observable,
       aliases: observable,
       requestHashIds: observable,
-      _pushPayloadToCollection: action,
+      _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
       _addAlias: action,
@@ -381,7 +381,35 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'isDirty', false)
   }
 
-  _pushPayloadToCollection(collectionName, collectionRecords) {
+  _pushToCollection(collectionName, collectionRecords) {
+    const collectionRecordsHashIds = map(collectionRecords, 'hashId')
+
+    forEach(collectionRecords, (collectionRecord) => {
+      const collectionRecordIndex = findIndex(
+        this.collections[collectionName],
+        {
+          hashId: getProperty(collectionRecord, 'hashId'),
+        }
+      )
+
+      this._injectActions(collectionRecord)
+
+      if (lt(collectionRecordIndex, 0))
+        this.collections[collectionName].push(collectionRecord)
+
+      if (gte(collectionRecordIndex, 0))
+        this.collections[collectionName][collectionRecordIndex] =
+          collectionRecord
+    })
+
+    return map(collectionRecordsHashIds, (collectionRecordHashId) =>
+      find(this.collections[collectionName], {
+        hashId: collectionRecordHashId,
+      })
+    )
+  }
+
+  _pushPayload(collectionName, collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
@@ -389,32 +417,9 @@ export default class ApiResourceManager {
     let updatedCollectionRecords = null
 
     if (isCollectionRecordsArray) {
-      const collectionRecordsHashIds = map(collectionRecords, 'hashId')
-
-      forEach(collectionRecords, (collectionRecord) => {
-        const collectionRecordIndex = findIndex(
-          this.collections[collectionName],
-          {
-            hashId: getProperty(collectionRecord, 'hashId'),
-          }
-        )
-
-        this._injectActions(collectionRecord)
-
-        if (lt(collectionRecordIndex, 0))
-          this.collections[collectionName].push(collectionRecord)
-
-        if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] =
-            collectionRecord
-      })
-
-      updatedCollectionRecords = map(
-        collectionRecordsHashIds,
-        (collectionRecordHashId) =>
-          find(this.collections[collectionName], {
-            hashId: collectionRecordHashId,
-          })
+      updatedCollectionRecords = this._pushToCollection(
+        collectionName,
+        collectionRecords
       )
 
       forEach(aliasesKeys, (aliasKey) => {
@@ -694,13 +699,13 @@ export default class ApiResourceManager {
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
-        this._pushPayloadToCollection(
+        this._pushPayload(
           getProperty(resourceIncludedResult, 'collectionName'),
           resourceIncludedResult
         )
       })
 
-      updatedCollectionRecords = await this._pushPayloadToCollection(
+      updatedCollectionRecords = await this._pushPayload(
         resourceName,
         resourceResults
       )
