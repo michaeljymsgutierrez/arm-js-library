@@ -382,31 +382,59 @@ export default class ApiResourceManager {
   }
 
   _pushToCollection(collectionName, collectionRecords) {
-    const collectionRecordsHashIds = map(collectionRecords, 'hashId')
+    const isCollectionRecordsArray = isArray(collectionRecords)
+    const isCollectionRecordsObject = isPlainObject(collectionRecords)
 
-    forEach(collectionRecords, (collectionRecord) => {
+    if (isCollectionRecordsArray) {
+      const collectionRecordsHashIds = map(collectionRecords, 'hashId')
+
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordIndex = findIndex(
+          this.collections[collectionName],
+          {
+            hashId: getProperty(collectionRecord, 'hashId'),
+          }
+        )
+
+        this._injectActions(collectionRecord)
+
+        if (lt(collectionRecordIndex, 0))
+          this.collections[collectionName].push(collectionRecord)
+
+        if (gte(collectionRecordIndex, 0))
+          this.collections[collectionName][collectionRecordIndex] =
+            collectionRecord
+      })
+
+      return map(collectionRecordsHashIds, (collectionRecordHashId) =>
+        find(this.collections[collectionName], {
+          hashId: collectionRecordHashId,
+        })
+      )
+    }
+
+    if (isCollectionRecordsObject) {
+      const collectionRecordHashId = collectionRecords.hashId
       const collectionRecordIndex = findIndex(
         this.collections[collectionName],
         {
-          hashId: getProperty(collectionRecord, 'hashId'),
+          hashId: getProperty(collectionRecords, 'hashId'),
         }
       )
 
-      this._injectActions(collectionRecord)
+      this._injectActions(collectionRecords)
 
       if (lt(collectionRecordIndex, 0))
-        this.collections[collectionName].push(collectionRecord)
+        this.collections[collectionName].push(collectionRecords)
 
       if (gte(collectionRecordIndex, 0))
         this.collections[collectionName][collectionRecordIndex] =
-          collectionRecord
-    })
+          collectionRecords
 
-    return map(collectionRecordsHashIds, (collectionRecordHashId) =>
-      find(this.collections[collectionName], {
+      return find(this.collections[collectionName], {
         hashId: collectionRecordHashId,
       })
-    )
+    }
   }
 
   _pushPayload(collectionName, collectionRecords) {
@@ -414,14 +442,12 @@ export default class ApiResourceManager {
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
     const requestHashIdsKeys = keysIn(this.requestHashIds)
-    let updatedCollectionRecords = null
+    let updatedCollectionRecords = this._pushToCollection(
+      collectionName,
+      collectionRecords
+    )
 
     if (isCollectionRecordsArray) {
-      updatedCollectionRecords = this._pushToCollection(
-        collectionName,
-        collectionRecords
-      )
-
       forEach(aliasesKeys, (aliasKey) => {
         const isAliasRecordsArray = isArray(this.aliases[aliasKey])
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
@@ -451,27 +477,6 @@ export default class ApiResourceManager {
     }
 
     if (isCollectionRecordsObject) {
-      const collectionRecordHashId = collectionRecords.hashId
-      const collectionRecordIndex = findIndex(
-        this.collections[collectionName],
-        {
-          hashId: getProperty(collectionRecords, 'hashId'),
-        }
-      )
-
-      this._injectActions(collectionRecords)
-
-      if (lt(collectionRecordIndex, 0))
-        this.collections[collectionName].push(collectionRecords)
-
-      if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] =
-          collectionRecords
-
-      updatedCollectionRecords = find(this.collections[collectionName], {
-        hashId: collectionRecordHashId,
-      })
-
       forEach(aliasesKeys, (aliasKey) => {
         const isAliasRecordsArray = isArray(this.aliases[aliasKey])
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
