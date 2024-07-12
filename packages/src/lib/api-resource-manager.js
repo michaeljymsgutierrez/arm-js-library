@@ -437,15 +437,10 @@ export default class ApiResourceManager {
     }
   }
 
-  _pushPayload(collectionName, collectionRecords) {
+  _pushToAliases(collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
-    let updatedCollectionRecords = this._pushToCollection(
-      collectionName,
-      collectionRecords
-    )
 
     if (isCollectionRecordsArray) {
       forEach(aliasesKeys, (aliasKey) => {
@@ -453,7 +448,7 @@ export default class ApiResourceManager {
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
 
         if (isAliasRecordsArray) {
-          forEach(updatedCollectionRecords, (collectionRecord) => {
+          forEach(collectionRecords, (collectionRecord) => {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
               hashId: getProperty(collectionRecord, 'hashId'),
             })
@@ -463,7 +458,7 @@ export default class ApiResourceManager {
         }
 
         if (isAliasRecordsObject) {
-          forEach(updatedCollectionRecords, (collectionRecord) => {
+          forEach(collectionRecords, (collectionRecord) => {
             if (
               isEqual(
                 getProperty(collectionRecord, 'hashId'),
@@ -482,7 +477,7 @@ export default class ApiResourceManager {
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
 
         if (isAliasRecordsArray) {
-          forEach([updatedCollectionRecords], (collectionRecord) => {
+          forEach([collectionRecords], (collectionRecord) => {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
               hashId: getProperty(collectionRecord, 'hashId'),
             })
@@ -494,52 +489,66 @@ export default class ApiResourceManager {
         if (isAliasRecordsObject) {
           if (
             isEqual(
-              getProperty(updatedCollectionRecords, 'hashId'),
+              getProperty(collectionRecords, 'hashId'),
               getProperty(this.aliases[aliasKey], 'hashId')
             )
           )
-            this.aliases[aliasKey] = updatedCollectionRecords
-        }
-      })
-
-      forEach(requestHashIdsKeys, (requestHashIdKey) => {
-        const requestHashIdData = getProperty(
-          this.requestHashIds[requestHashIdKey],
-          'data'
-        )
-        const isRequestHashIdDataArray = isArray(requestHashIdData)
-        const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
-
-        if (isRequestHashIdDataArray) {
-          forEach([updatedCollectionRecords], (collectionRecord) => {
-            const requestHashIdRecordIndex = findIndex(
-              getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-              {
-                hashId: getProperty(collectionRecord, 'hashId'),
-              }
-            )
-            if (gte(requestHashIdRecordIndex, 0))
-              this.requestHashIds[requestHashIdKey]['data'][
-                requestHashIdRecordIndex
-              ] = collectionRecord
-          })
-        }
-
-        if (isRequestHashIdDataObject) {
-          if (
-            isEqual(
-              getProperty(updatedCollectionRecords, 'hashId'),
-              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
-            )
-          )
-            setProperty(
-              this.requestHashIds[requestHashIdKey],
-              'data',
-              updatedCollectionRecords
-            )
+            this.aliases[aliasKey] = collectionRecords
         }
       })
     }
+  }
+
+  _pushPayload(collectionName, collectionRecords) {
+    const isCollectionRecordsArray = isArray(collectionRecords)
+    const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    const requestHashIdsKeys = keysIn(this.requestHashIds)
+    const updatedCollectionRecords = this._pushToCollection(
+      collectionName,
+      collectionRecords
+    )
+
+    this._pushToAliases(updatedCollectionRecords)
+
+    // if (isCollectionRecordsObject) {
+    //   forEach(requestHashIdsKeys, (requestHashIdKey) => {
+    //     const requestHashIdData = getProperty(
+    //       this.requestHashIds[requestHashIdKey],
+    //       'data'
+    //     )
+    //     const isRequestHashIdDataArray = isArray(requestHashIdData)
+    //     const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+    //
+    //     if (isRequestHashIdDataArray) {
+    //       forEach([updatedCollectionRecords], (collectionRecord) => {
+    //         const requestHashIdRecordIndex = findIndex(
+    //           getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+    //           {
+    //             hashId: getProperty(collectionRecord, 'hashId'),
+    //           }
+    //         )
+    //         if (gte(requestHashIdRecordIndex, 0))
+    //           this.requestHashIds[requestHashIdKey]['data'][
+    //             requestHashIdRecordIndex
+    //           ] = collectionRecord
+    //       })
+    //     }
+    //
+    //     if (isRequestHashIdDataObject) {
+    //       if (
+    //         isEqual(
+    //           getProperty(updatedCollectionRecords, 'hashId'),
+    //           getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+    //         )
+    //       )
+    //         setProperty(
+    //           this.requestHashIds[requestHashIdKey],
+    //           'data',
+    //           updatedCollectionRecords
+    //         )
+    //     }
+    //   })
+    // }
 
     return updatedCollectionRecords
   }
