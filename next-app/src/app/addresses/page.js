@@ -15,17 +15,17 @@ const AddressesListPage = observer(() => {
         <thead className={styles.tableHead}>
           <tr>
             <th>ID</th>
-            <th>LABEL</th>
-            <th>KIND</th>
-            <th>ADDRESS 1</th>
-            <th>ADDRESS 2</th>
-            <th>LANDMARK</th>
-            <th>LATITUDE</th>
-            <th>LONGITUDE</th>
-            <th>POST CODE</th>
-            <th>USER ID</th>
+            <th>Label</th>
+            <th>Kind</th>
+            <th>Address 1</th>
+            <th>Address 2</th>
+            <th>Landmark</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Post Code</th>
+            <th>User ID</th>
             <th>
-              <button onClick={controller.onClickNew}>NEW</button>
+              <button onClick={controller.onClickNew}>New</button>
             </th>
           </tr>
         </thead>
@@ -59,18 +59,11 @@ const AddressesListPage = observer(() => {
                   ))}
               </td>
               <td>
-                {/* <button */}
-                {/*   type="button" */}
-                {/*   className={styles.button} */}
-                {/*   onClick={() => address.reload()} */}
-                {/* > */}
-                {/*   RELOAD */}
-                {/* </button> */}
                 <button
                   type="button"
                   onClick={() => controller.onClickEdit(address.get('id'))}
                 >
-                  EDIT
+                  Edit
                 </button>
               </td>
             </tr>
