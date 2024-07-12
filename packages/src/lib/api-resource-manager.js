@@ -503,6 +503,10 @@ export default class ApiResourceManager {
     const requestHashIdsKeys = keysIn(this.requestHashIds)
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    let newCollectionRecords = null
+
+    if (isCollectionRecordsArray) newCollectionRecords = collectionRecords
+    if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords]
 
     forEach(requestHashIdsKeys, (requestHashIdKey) => {
       const requestHashIdData = getProperty(
@@ -512,74 +516,45 @@ export default class ApiResourceManager {
       const isRequestHashIdDataArray = isArray(requestHashIdData)
       const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
 
-      if (isRequestHashIdDataArray) {
-        if (isCollectionRecordsArray)
-          forEach(collectionRecords, (collectionRecord) => {
-            const requestHashIdRecordIndex = findIndex(
-              getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-              {
-                hashId: getProperty(collectionRecord, 'hashId'),
-              }
-            )
-            if (gte(requestHashIdRecordIndex, 0))
-              this.requestHashIds[requestHashIdKey]['data'][
-                requestHashIdRecordIndex
-              ] = collectionRecord
-          })
-      }
-    })
-  }
-
-  _pushPayload(collectionName, collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
-    const updatedCollectionRecords = this._pushToCollection(
-      collectionName,
-      collectionRecords
-    )
-
-    this._pushToAliases(updatedCollectionRecords)
-
-    if (isCollectionRecordsObject) {
-      forEach(requestHashIdsKeys, (requestHashIdKey) => {
-        const requestHashIdData = getProperty(
-          this.requestHashIds[requestHashIdKey],
-          'data'
-        )
-        const isRequestHashIdDataArray = isArray(requestHashIdData)
-        const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
-
+      forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
-          forEach([updatedCollectionRecords], (collectionRecord) => {
-            const requestHashIdRecordIndex = findIndex(
-              getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-              {
-                hashId: getProperty(collectionRecord, 'hashId'),
-              }
-            )
-            if (gte(requestHashIdRecordIndex, 0))
-              this.requestHashIds[requestHashIdKey]['data'][
-                requestHashIdRecordIndex
-              ] = collectionRecord
-          })
+          const requestHashIdRecordIndex = findIndex(
+            getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+            {
+              hashId: getProperty(collectionRecord, 'hashId'),
+            }
+          )
+          if (gte(requestHashIdRecordIndex, 0))
+            this.requestHashIds[requestHashIdKey]['data'][
+              requestHashIdRecordIndex
+            ] = collectionRecord
         }
 
         if (isRequestHashIdDataObject) {
           if (
             isEqual(
-              getProperty(updatedCollectionRecords, 'hashId'),
+              getProperty(collectionRecord, 'hashId'),
               getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
             )
           )
             setProperty(
               this.requestHashIds[requestHashIdKey],
               'data',
-              updatedCollectionRecords
+              collectionRecord
             )
         }
       })
-    }
+    })
+  }
+
+  _pushPayload(collectionName, collectionRecords) {
+    const updatedCollectionRecords = this._pushToCollection(
+      collectionName,
+      collectionRecords
+    )
+
+    this._pushToAliases(updatedCollectionRecords)
+    this._pushToRequestHashes(updatedCollectionRecords)
 
     return updatedCollectionRecords
   }
