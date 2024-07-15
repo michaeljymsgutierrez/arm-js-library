@@ -191,39 +191,51 @@ export default class ApiResourceManager {
     }
   }
 
-  unloadRecord(currentRecord) {
-    const aliasesKeys = keysIn(this.aliases)
-    const collectionName = getProperty(currentRecord, 'collectionName')
+  _unloadFromCollection(collectionRecord) {
+    const collectionName = getProperty(collectionRecord, 'collectionName')
     const collectionRecordIndex = findIndex(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
+      hashId: getProperty(collectionRecord, 'hashId'),
     })
 
     if (gte(collectionRecordIndex, 0))
       this.collections[collectionName].splice(collectionRecordIndex, 1)
+  }
 
-    forEach(aliasesKeys, (aliasKey) => {
-      const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-      const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+  _unloadFromRequestHashes(collectionRecord) {}
 
-      if (isAliasRecordsArray) {
-        const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-          hashId: getProperty(currentRecord, 'hashId'),
-        })
-
-        if (gte(aliasRecordIndex, 0))
-          this.aliases[aliasKey].splice(aliasRecordIndex, 1)
-      }
-
-      if (isAliasRecordsObject) {
-        if (
-          isEqual(
-            getProperty(currentRecord, 'hashId'),
-            getProperty(this.aliases[aliasKey], 'hashId')
-          )
-        )
-          this.aliases[aliasKey] = {}
-      }
-    })
+  unloadRecord(currentRecord) {
+    this._unloadFromCollection(currentRecord)
+    // const aliasesKeys = keysIn(this.aliases)
+    // const collectionName = getProperty(currentRecord, 'collectionName')
+    // const collectionRecordIndex = findIndex(this.collections[collectionName], {
+    //   hashId: getProperty(currentRecord, 'hashId'),
+    // })
+    //
+    // if (gte(collectionRecordIndex, 0))
+    //   this.collections[collectionName].splice(collectionRecordIndex, 1)
+    // forEach(aliasesKeys, (aliasKey) => {
+    //   const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+    //   const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+    //
+    //   if (isAliasRecordsArray) {
+    //     const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+    //       hashId: getProperty(currentRecord, 'hashId'),
+    //     })
+    //
+    //     if (gte(aliasRecordIndex, 0))
+    //       this.aliases[aliasKey].splice(aliasRecordIndex, 1)
+    //   }
+    //
+    //   if (isAliasRecordsObject) {
+    //     if (
+    //       isEqual(
+    //         getProperty(currentRecord, 'hashId'),
+    //         getProperty(this.aliases[aliasKey], 'hashId')
+    //       )
+    //     )
+    //       this.aliases[aliasKey] = {}
+    //   }
+    // })
   }
 
   _saveRecord(currentRecord) {
