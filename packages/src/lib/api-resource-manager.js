@@ -201,10 +201,46 @@ export default class ApiResourceManager {
       this.collections[collectionName].splice(collectionRecordIndex, 1)
   }
 
-  _unloadFromRequestHashes(collectionRecord) {}
+  _unloadFromRequestHashes(collectionRecord) {
+    const requestHashIdsKeys = keysIn(this.requestHashIds)
+
+    forEach(requestHashIdsKeys, (requestHashIdKey) => {
+      const requestHashIdData = getProperty(
+        this.requestHashIds[requestHashIdKey],
+        'data'
+      )
+      const isRequestHashIdDataArray = isArray(requestHashIdData)
+      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+
+      if (isRequestHashIdDataArray) {
+        const requestHashIdRecordIndex = findIndex(
+          getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+          {
+            hashId: getProperty(collectionRecord, 'hashId'),
+          }
+        )
+        if (gte(requestHashIdRecordIndex, 0))
+          this.requestHashIds[requestHashIdKey]['data'].splice(
+            requestHashIdRecordIndex,
+            1
+          )
+      }
+
+      if (isRequestHashIdDataObject) {
+        if (
+          isEqual(
+            getProperty(collectionRecord, 'hashId'),
+            getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+          )
+        )
+          setProperty(this.requestHashIds[requestHashIdKey], 'data', {})
+      }
+    })
+  }
 
   unloadRecord(currentRecord) {
     this._unloadFromCollection(currentRecord)
+    this._unloadFromRequestHashes(currentRecord)
     // const aliasesKeys = keysIn(this.aliases)
     // const collectionName = getProperty(currentRecord, 'collectionName')
     // const collectionRecordIndex = findIndex(this.collections[collectionName], {
