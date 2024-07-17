@@ -1,12 +1,27 @@
-# Overview
+## Table of Contents
 
-<a href="https://www.npmjs.com/package/arm-js-library">
-  <img alt="npm-version" src="https://img.shields.io/badge/npm_version-1.2.6-blue" />
-</a>
+* [Overview](#overview)
+* [Basic Usage](#basic-usage)
+* [Installation](#installation)
+* [Dependency Packages](#dependency-packages)
+    * [Initialization and Configuration](#initialization-and-configuration)
+        * [Initialization](#initialization)
+            * [Initialization on create-react-app](#initialization-on-create-react-app)
+            * [Initialization on create-next-app](#initialization-on-create-next-app)
+        * [Configuration](#configuration)
+* [Utilization](#utilization)
+    * [Request functions from server](#request-functions-from-server)
+        * [Passed Arguments: `Request functions from server`](#passed-arguments%3A-request-functions-from-server)
+        * [Returned Object: `Request functions from server`](#returned-object%3A-request-functions-from-server)
+    * [Retrieve functions from collections](#retrieve-functions-from-collections)
+    * [Create collection record function](#create-collection-record-function)
+    * [Remove collection record functions](#remove-collection-record-functions)
+* [Collection Records: `Properties and Functions`](#collection-records%3A-properties-and-functions)
 
-<a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
-  <img alt="license" src="https://img.shields.io/badge/license-MIT-green" />
-</a>
+## Overview
+
+[![npm-version](https://img.shields.io/badge/npm_version-1.2.6-blue)](https://www.npmjs.com/package/arm-js-library)
+[![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ARM (API Resource Manager) is a JavaScript library designed to manage API resources efficiently, leveraging axios for HTTP requests, lodash for utility functions, mobx for state management, and uuid and crypto-js for unique identifiers and hashing.
 
