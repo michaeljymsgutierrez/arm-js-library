@@ -122,6 +122,11 @@ export default class ApiResourceManager {
     return `Token ${window.localStorage.getItem('token')}`
   }
 
+  _isCollectionExisting(collectionName) {
+    if (isNil(getProperty(this.collections, collectionName)))
+      throw `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
+  }
+
   _addCollection(collectionName, collectionRecords) {
     this.collections[collectionName] = collectionRecords
   }
@@ -594,6 +599,8 @@ export default class ApiResourceManager {
   }
 
   _pushPayload(collectionName, collectionRecords) {
+    this._isCollectionExisting(collectionName)
+
     const updatedCollectionRecords = this._pushToCollection(
       collectionName,
       collectionRecords
