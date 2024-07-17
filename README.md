@@ -1,3 +1,8 @@
+# ARM JavaScript Library
+
+[![npm-version](https://img.shields.io/badge/npm_version-1.2.6-blue)](https://www.npmjs.com/package/arm-js-library)
+[![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
+
 ## Table of Contents
 
 * [Overview](#overview)
@@ -20,8 +25,6 @@
 
 ## Overview
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.2.6-blue)](https://www.npmjs.com/package/arm-js-library)
-[![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ARM (API Resource Manager) is a JavaScript library designed to manage API resources efficiently, leveraging axios for HTTP requests, lodash for utility functions, mobx for state management, and uuid and crypto-js for unique identifiers and hashing.
 
