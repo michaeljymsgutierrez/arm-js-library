@@ -26,6 +26,8 @@ const {
   isEmpty,
   isEqual,
   gte,
+  gt,
+  lte,
   lt,
   flatMap,
   map,
@@ -912,8 +914,55 @@ export default class ApiResourceManager {
     })
   }
 
-  findBy(records, properties = {}) {
-    return find(records, properties)
+  /*
+   * Exposed abstract utility functions from Lodash
+   */
+  findBy(objects, properties = {}) {
+    return find(objects, properties)
+  }
+
+  findIndexBy(objects, properties = {}) {
+    return findIndex(objects, properties)
+  }
+
+  isEmpty(value) {
+    return isEmpty(value)
+  }
+
+  isPresent(value) {
+    return !isEmpty(value)
+  }
+
+  isEqual(value, other) {
+    return isEqual(value, other)
+  }
+
+  isNumber(value) {
+    return isNumber(value)
+  }
+
+  isNil(value) {
+    return isNil(value)
+  }
+
+  isNull(value) {
+    return isNull(value)
+  }
+
+  isGte(value, other) {
+    return gte(value, other)
+  }
+
+  isGt(value, other) {
+    return gt(value, other)
+  }
+
+  isLte(value, other) {
+    return lte(value, other)
+  }
+
+  isLt(value, other) {
+    return lt(value, other)
   }
 }
 
@@ -923,5 +972,4 @@ export default class ApiResourceManager {
  *  2. Prevent accessing internal functions from ARM instance.
  *  3. Prevent accessing records property using dot annotations.
  *  4. REST API support will be included on future release.
- *  5. Deprecate 'setPayloadIncludeReference'.
  */
