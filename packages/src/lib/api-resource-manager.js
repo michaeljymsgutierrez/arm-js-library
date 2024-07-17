@@ -123,11 +123,8 @@ export default class ApiResourceManager {
   }
 
   _isCollectionExisting(collectionName) {
-    if (isNil(getProperty(this.collections, collectionName))) {
-      console.error(
-        `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
-      )
-    }
+    if (isNil(getProperty(this.collections, collectionName)))
+      throw `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
   }
 
   _addCollection(collectionName, collectionRecords) {

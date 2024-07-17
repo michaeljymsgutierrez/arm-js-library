@@ -90,10 +90,9 @@ class gs {
     return `Token ${window.localStorage.getItem("token")}`;
   }
   _isCollectionExisting(s) {
-    A(o(this.collections, s)) && console.error(
-      `Collection ${s} does not exist.
-Fix: Try adding ${s} on your ARM config initialization.`
-    );
+    if (A(o(this.collections, s)))
+      throw `Collection ${s} does not exist.
+Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _addCollection(s, e) {
     this.collections[s] = e;
