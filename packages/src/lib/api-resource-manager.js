@@ -911,6 +911,10 @@ export default class ApiResourceManager {
       id: collectionRecordId,
     })
   }
+
+  findBy(records, properties = {}) {
+    return find(records, properties)
+  }
 }
 
 /*

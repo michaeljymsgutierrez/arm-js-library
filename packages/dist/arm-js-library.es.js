@@ -543,6 +543,9 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       id: e
     });
   }
+  findBy(s, e = {}) {
+    return g(s, e);
+  }
 }
 export {
   gs as default
