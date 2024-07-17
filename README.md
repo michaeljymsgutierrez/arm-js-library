@@ -11,12 +11,12 @@
         * [Configuration](#configuration)
 * [Utilization](#utilization)
     * [Request functions from server](#request-functions-from-server)
-        * [Passed Arguments: `Request functions from server`](#passed-arguments%3A-request-functions-from-server)
-        * [Returned Object: `Request functions from server`](#returned-object%3A-request-functions-from-server)
+        * [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
+        * [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
     * [Retrieve functions from collections](#retrieve-functions-from-collections)
     * [Create collection record function](#create-collection-record-function)
     * [Remove collection record functions](#remove-collection-record-functions)
-* [Collection Records: `Properties and Functions`](#collection-records%3A-properties-and-functions)
+* [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 
 ## Overview
 
