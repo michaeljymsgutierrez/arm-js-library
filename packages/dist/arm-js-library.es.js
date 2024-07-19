@@ -3,7 +3,7 @@ import is from "lodash";
 import * as rs from "mobx";
 import { v1 as $, NIL as os } from "uuid";
 import as from "crypto-js";
-const { makeObservable: ns, observable: k, action: x, toJS: F } = rs, {
+const { makeObservable: ns, observable: x, action: N, toJS: F } = rs, {
   get: o,
   set: h,
   find: g,
@@ -70,13 +70,13 @@ const { makeObservable: ns, observable: k, action: x, toJS: F } = rs, {
 class ms {
   constructor(s = []) {
     this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), ns(this, {
-      collections: k,
-      aliases: k,
-      requestHashIds: k,
-      _pushPayload: x,
-      _pushRequestHash: x,
-      _addCollection: x,
-      _addAlias: x
+      collections: x,
+      aliases: x,
+      requestHashIds: x,
+      _pushPayload: N,
+      _pushRequestHash: N,
+      _addCollection: N,
+      _addAlias: N
     });
   }
   _initializeAxiosConfig() {
@@ -226,7 +226,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   _getCollectionRecord(s, e = {}, t) {
     const r = o(e, "referenceKey") || "", i = o(e, "async") || !1, a = o(t, r) || [], d = I(
       a
-    ) ? [a] : a, c = k([]);
+    ) ? [a] : a, c = x([]);
     return u(d, (f) => {
       const y = this._generateHashId({
         id: o(f, "id"),
@@ -237,7 +237,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       if (!A(w))
         c.push(w);
       else if (i) {
-        const N = {
+        const k = {
           resourceMethod: "get",
           resourceName: s,
           resourceId: o(f, "id"),
@@ -246,7 +246,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
           resourceFallback: {},
           resourceConfig: {}
         }, D = B;
-        this._pushRequestHash(N, D), this._request(N);
+        this._pushRequestHash(k, D), this._request(k);
       }
     }), c;
   }
@@ -427,8 +427,8 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const d = {
       method: s,
       url: e
-    }, c = this._generateHashId({ ...arguments[0] }), f = p(s, "get"), y = p(s, "delete"), w = p(s, "post"), N = z(t), D = !A(r), L = !A(i), H = o(i, "data") || null;
-    if (N && h(d, "url", `${e}/${t}`), D && h(d, "params", r), L) {
+    }, c = this._generateHashId({ ...arguments[0] }), f = p(s, "get"), y = p(s, "delete"), w = p(s, "post"), k = z(t), D = !A(r), L = !A(i), H = o(i, "data") || null;
+    if (k && h(d, "url", `${e}/${t}`), D && h(d, "params", r), L) {
       const l = {
         data: C(H, fs)
       };
@@ -526,7 +526,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const i = {
       resourceMethod: "get",
       resourceName: s,
-      resourceId: Number(e),
+      resourceId: e,
       resourceParams: t,
       resourcePayload: null,
       resourceFallback: {},

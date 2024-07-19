@@ -888,7 +888,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
-      resourceId: Number(id),
+      resourceId: id,
       resourceParams: params,
       resourcePayload: null,
       resourceFallback: {},
