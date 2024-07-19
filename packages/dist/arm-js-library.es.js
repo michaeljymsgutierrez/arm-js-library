@@ -12,17 +12,18 @@ const { makeObservable: ns, observable: x, action: N, toJS: F } = rs, {
   isArray: _,
   isPlainObject: I,
   isNumber: z,
+  isString: cs,
   isNull: X,
   isNil: b,
   isEmpty: A,
   isEqual: p,
   gte: m,
-  gt: cs,
-  lte: ds,
+  gt: ds,
+  lte: us,
   lt: v,
-  flatMap: us,
+  flatMap: ls,
   map: Y,
-  entries: ls,
+  entries: fs,
   forEach: u,
   keysIn: O,
   omit: C
@@ -33,7 +34,7 @@ const { makeObservable: ns, observable: x, action: N, toJS: F } = rs, {
   data: [],
   included: [],
   meta: {}
-}, B = {
+}, S = {
   isLoading: !0,
   isError: !1,
   isNew: !0,
@@ -52,7 +53,7 @@ const { makeObservable: ns, observable: x, action: N, toJS: F } = rs, {
   "isError",
   "isLoading",
   "isPristine"
-], fs = [
+], Is = [
   "destroyRecord",
   "getCollection",
   "reload",
@@ -67,7 +68,7 @@ const { makeObservable: ns, observable: x, action: N, toJS: F } = rs, {
   "hashId",
   "collectionName"
 ];
-class ms {
+class ys {
   constructor(s = []) {
     this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), ns(this, {
       collections: x,
@@ -120,7 +121,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _setProperties(s) {
     function e(a, n = "") {
-      return us(ls(a), ([d, c]) => {
+      return ls(fs(a), ([d, c]) => {
         const f = n ? `${n}.${d}` : d;
         return hs(c) && !_(c) && c !== null ? e(c, f) : { key: f, value: c };
       });
@@ -245,7 +246,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
           resourcePayload: null,
           resourceFallback: {},
           resourceConfig: {}
-        }, D = B;
+        }, D = S;
         this._pushRequestHash(k, D), this._request(k);
       }
     }), c;
@@ -427,15 +428,15 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const d = {
       method: s,
       url: e
-    }, c = this._generateHashId({ ...arguments[0] }), f = p(s, "get"), y = p(s, "delete"), w = p(s, "post"), k = z(t), D = !A(r), L = !A(i), H = o(i, "data") || null;
+    }, c = this._generateHashId({ ...arguments[0] }), f = p(s, "get"), y = p(s, "delete"), w = p(s, "post"), k = z(t) || cs(t), D = !A(r), L = !A(i), H = o(i, "data") || null;
     if (k && h(d, "url", `${e}/${t}`), D && h(d, "params", r), L) {
       const l = {
-        data: C(H, fs)
+        data: C(H, Is)
       };
       h(d, "data", l);
     }
-    const M = !b(o(n, "skip")), S = p(o(n, "skip"), !0), G = this.requestHashIds[c], J = !b(G), U = o(G, "isNew");
-    if (!(f && (M && S || !M && J && !U || M && !S && J && !U))) {
+    const M = !b(o(n, "skip")), B = p(o(n, "skip"), !0), G = this.requestHashIds[c], J = !b(G), U = o(G, "isNew");
+    if (!(f && (M && B || !M && J && !U || M && !B && J && !U))) {
       L && h(H, "isLoading", !0);
       try {
         const l = await T(d), j = ((V = l == null ? void 0 : l.data) == null ? void 0 : V.data) || a, K = ((Q = l == null ? void 0 : l.data) == null ? void 0 : Q.included) || [], ss = ((W = l == null ? void 0 : l.data) == null ? void 0 : W.meta) || {}, es = I(j), ts = _(j);
@@ -501,7 +502,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: t
-    }, i = B, a = this._pushRequestHash(
+    }, i = S, a = this._pushRequestHash(
       r,
       i
     );
@@ -531,7 +532,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: r
-    }, a = B, n = this._pushRequestHash(
+    }, a = S, n = this._pushRequestHash(
       i,
       a
     );
@@ -576,15 +577,15 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return m(s, e);
   }
   isGt(s, e) {
-    return cs(s, e);
+    return ds(s, e);
   }
   isLte(s, e) {
-    return ds(s, e);
+    return us(s, e);
   }
   isLt(s, e) {
     return v(s, e);
   }
 }
 export {
-  ms as default
+  ys as default
 };
