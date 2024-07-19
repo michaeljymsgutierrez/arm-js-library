@@ -1,6 +1,6 @@
 {
   "name": "arm-js-library",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "API Resource Manager",
   "type": "module",
   "files": ["dist"],
