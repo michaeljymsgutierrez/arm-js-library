@@ -21,6 +21,7 @@ const {
   isArray,
   isPlainObject,
   isNumber,
+  isString,
   isNull,
   isNil,
   isEmpty,
@@ -716,7 +717,7 @@ export default class ApiResourceManager {
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     // const isResourceMethodPut = isEqual(resourceMethod, 'put')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
-    const isResourceIdValid = isNumber(resourceId)
+    const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
