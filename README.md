@@ -276,7 +276,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias`) which are currently available.
+    * Contains request config such as `(skip, alias, override`) which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -285,7 +285,14 @@ import { ARM } from 'path-to-src/index.js'
 
         // Alias serve as identifier for the records obtain from the server.
         // Can be used anywhere in your application through ARM.getAlias('customerAddress')
-        alias: 'customerAddress' 
+        alias: 'customerAddress' ,
+
+        // Override serve as request override for the default configuration of axios current request.
+        // Currently support host and namespace for the meantime.
+        override: {
+          host: 'https://ww7.test-demo.com',
+          namespace: 'v2'
+        }
       }
     ```
 #### Returned Object: `Request functions from server`
