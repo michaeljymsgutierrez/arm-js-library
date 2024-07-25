@@ -36,6 +36,7 @@ const {
   forEach,
   keysIn,
   omit,
+  first,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -390,7 +391,9 @@ export default class ApiResourceManager {
       }
     })
 
-    return collectionRecords
+    return isRecordsFromCurrentRecordObject
+      ? first(collectionRecords)
+      : collectionRecords
   }
 
   _injectActions(collectionRecord) {
