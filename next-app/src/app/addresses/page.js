@@ -37,37 +37,35 @@ const AddressesListPage = observer(() => {
             </tr>
           )}
 
-          {model.data.map((address, index) => (
-            <tr key={index} className={styles.tableBodyRow}>
-              <td>{address.get('id')}</td>
-              <td>{address.get('attributes.label')}</td>
-              <td>{address.get('attributes.kind')}</td>
-              <td>{address.get('attributes.address1')}</td>
-              <td>{address.get('attributes.address2')}</td>
-              <td>{address.get('attributes.landmark')}</td>
-              <td>{address.get('attributes.latitude')}</td>
-              <td>{address.get('attributes.longitude')}</td>
-              <td>{address.get('attributes.post-code')}</td>
-              <td>
-                {address
-                  .getCollection('users', {
-                    referenceKey: 'relationships.user.data',
-                    async: true,
-                  })
-                  .map((user, index) => (
-                    <span key={index}>{user.get('id')}</span>
-                  ))}
-              </td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => controller.onClickEdit(address.get('id'))}
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
+          {model.data.map((address, index) => {
+            const user = address.getCollection('users', {
+              referenceKey: 'relationships.user.data',
+              async: true,
+            })
+
+            return (
+              <tr key={index} className={styles.tableBodyRow}>
+                <td>{address.get('id')}</td>
+                <td>{address.get('attributes.label')}</td>
+                <td>{address.get('attributes.kind')}</td>
+                <td>{address.get('attributes.address1')}</td>
+                <td>{address.get('attributes.address2')}</td>
+                <td>{address.get('attributes.landmark')}</td>
+                <td>{address.get('attributes.latitude')}</td>
+                <td>{address.get('attributes.longitude')}</td>
+                <td>{address.get('attributes.post-code')}</td>
+                <td>{ARM.isPresent(user) ? user.get('id') : ''}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => controller.onClickEdit(address.get('id'))}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

@@ -1,5 +1,5 @@
 /*
- * ARM JavaScript Library v1.2.6
+ * ARM JavaScript Library v1.3.1
  *
  * Date: 2024-05-09 2:19PM GMT+8
  */
@@ -21,6 +21,7 @@ const {
   isArray,
   isPlainObject,
   isNumber,
+  isString,
   isNull,
   isNil,
   isEmpty,
@@ -35,6 +36,7 @@ const {
   forEach,
   keysIn,
   omit,
+  first,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -389,7 +391,9 @@ export default class ApiResourceManager {
       }
     })
 
-    return collectionRecords
+    return isRecordsFromCurrentRecordObject
+      ? first(collectionRecords)
+      : collectionRecords
   }
 
   _injectActions(collectionRecord) {
@@ -714,15 +718,31 @@ export default class ApiResourceManager {
     const requestHashId = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
-    // const isResourceMethodPut = isEqual(resourceMethod, 'put')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
-    const isResourceIdValid = isNumber(resourceId)
+    const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
+    const hasResourceConfigOverride = !isNil(
+      getProperty(resourceConfig, 'override')
+    )
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
+
+    if (hasResourceConfigOverride) {
+      const override = getProperty(resourceConfig, 'override') || {}
+      let overrideHost = !isNil(getProperty(override, 'host'))
+        ? getProperty(override, 'host')
+        : this.host
+      let overrideNamespace = !isNil(getProperty(override, 'namespace'))
+        ? getProperty(override, 'namespace')
+        : this.namespace
+      let overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+
+      setProperty(requestOptions, 'baseURL', overrideBaseURL)
+    }
 
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
+
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
     if (hasResourcePayload) {
       const payload = {
@@ -888,7 +908,7 @@ export default class ApiResourceManager {
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
-      resourceId: Number(id),
+      resourceId: id,
       resourceParams: params,
       resourcePayload: null,
       resourceFallback: {},
@@ -968,8 +988,9 @@ export default class ApiResourceManager {
 
 /*
  * Notes:
- *  1. Implement ajax exposed ajax function.
- *  2. Prevent accessing internal functions from ARM instance.
- *  3. Prevent accessing records property using dot annotations.
- *  4. REST API support will be included on future release.
+ *  - Implement ajax exposed ajax function.
+ *  - Prevent accessing internal functions from ARM instance.
+ *  - Prevent accessing records property using dot annotations.
+ *  - Support isLoading on destroyRecord, reload, getCollection
+ *  - REST API support will be included on future release.
  */
