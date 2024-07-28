@@ -945,6 +945,10 @@ export default class ApiResourceManager {
     return findIndex(objects, properties)
   }
 
+  filterBy(objects, properties = {}) {
+    return filter(objects, properties)
+  }
+
   isEmpty(value) {
     return isEmpty(value)
   }
@@ -985,12 +989,3 @@ export default class ApiResourceManager {
     return lt(value, other)
   }
 }
-
-/*
- * Notes:
- *  - Implement ajax exposed ajax function.
- *  - Prevent accessing internal functions from ARM instance.
- *  - Prevent accessing records property using dot annotations.
- *  - Support isLoading on destroyRecord, reload, getCollection
- *  - REST API support will be included on future release.
- */

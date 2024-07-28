@@ -563,6 +563,9 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   findIndexBy(s, e = {}) {
     return m(s, e);
   }
+  filterBy(s, e = {}) {
+    return filter(s, e);
+  }
   isEmpty(s) {
     return A(s);
   }
