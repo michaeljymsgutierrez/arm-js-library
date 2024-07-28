@@ -937,17 +937,19 @@ export default class ApiResourceManager {
   /*
    * Exposed abstract utility functions from Lodash
    */
-  findBy(objects, properties = {}) {
-    return find(objects, properties)
+  findBy(objects, findProperties = {}) {
+    return find(objects, findProperties)
   }
 
-  findIndexBy(objects, properties = {}) {
-    return findIndex(objects, properties)
+  findIndexBy(objects, findIndexProperties = {}) {
+    return findIndex(objects, findIndexProperties)
   }
 
-  filterBy(objects, properties = {}) {
-    return filter(objects, properties)
+  filterBy(objects, filterProperties = {}) {
+    return filter(objects, filterProperties)
   }
+
+  sortBy(objects, sortProperties) {}
 
   isEmpty(value) {
     return isEmpty(value)
