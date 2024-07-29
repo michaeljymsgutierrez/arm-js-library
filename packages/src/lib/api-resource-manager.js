@@ -1,5 +1,5 @@
 /*
- * ARM JavaScript Library v1.3.1
+ * ARM JavaScript Library v1.3.2
  *
  * Date: 2024-05-09 2:19PM GMT+8
  */
@@ -34,9 +34,12 @@ const {
   map,
   entries,
   forEach,
+  filter,
   keysIn,
   omit,
   first,
+  last,
+  orderBy,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -122,10 +125,6 @@ export default class ApiResourceManager {
     return `${this.host}/${this.namespace}`
   }
 
-  _getAuthorizationToken() {
-    return `Token ${window.localStorage.getItem('token')}`
-  }
-
   _isCollectionExisting(collectionName) {
     if (isNil(getProperty(this.collections, collectionName)))
       throw `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
@@ -198,6 +197,16 @@ export default class ApiResourceManager {
       setProperty(this, 'isDirty', true)
       setProperty(this, 'isPristine', false)
     }
+  }
+
+  _sortRecordsBy(currentRecords, sortProperties = []) {
+    const properties = map(sortProperties, (sortProperty) =>
+      first(sortProperty.split(':'))
+    )
+    const sorts = map(sortProperties, (sortProperty) =>
+      last(sortProperty.split(':'))
+    )
+    return orderBy(currentRecords, properties, sorts)
   }
 
   _unloadFromCollection(collectionRecord) {
@@ -349,6 +358,8 @@ export default class ApiResourceManager {
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
     const collectionAsync = getProperty(collectionConfig, 'async') || false
+    const collectionFilterBy = getProperty(collectionConfig, 'filterBy') || {}
+    const collectionSortBy = getProperty(collectionConfig, 'sortBy') || []
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
     const isRecordsFromCurrentRecordObject = isPlainObject(
@@ -393,7 +404,10 @@ export default class ApiResourceManager {
 
     return isRecordsFromCurrentRecordObject
       ? first(collectionRecords)
-      : collectionRecords
+      : this._sortRecordsBy(
+          filter(collectionRecords, collectionFilterBy),
+          collectionSortBy
+        )
   }
 
   _injectActions(collectionRecord) {
@@ -937,12 +951,20 @@ export default class ApiResourceManager {
   /*
    * Exposed abstract utility functions from Lodash
    */
-  findBy(objects, properties = {}) {
-    return find(objects, properties)
+  findBy(objects, findProperties = {}) {
+    return find(objects, findProperties)
   }
 
-  findIndexBy(objects, properties = {}) {
-    return findIndex(objects, properties)
+  findIndexBy(objects, findIndexProperties = {}) {
+    return findIndex(objects, findIndexProperties)
+  }
+
+  filterBy(objects, filterProperties = {}) {
+    return filter(objects, filterProperties)
+  }
+
+  sortBy(objects, sortProperties) {
+    return this._sortRecordsBy(objects, sortProperties)
   }
 
   isEmpty(value) {
@@ -985,12 +1007,3 @@ export default class ApiResourceManager {
     return lt(value, other)
   }
 }
-
-/*
- * Notes:
- *  - Implement ajax exposed ajax function.
- *  - Prevent accessing internal functions from ARM instance.
- *  - Prevent accessing records property using dot annotations.
- *  - Support isLoading on destroyRecord, reload, getCollection
- *  - REST API support will be included on future release.
- */

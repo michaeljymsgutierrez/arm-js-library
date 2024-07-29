@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.3.1-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.3.2-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
@@ -22,6 +22,7 @@
     * [Create collection record function](#create-collection-record-function)
     * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
+* [Utility Functions](#utility-functions)
 
 ## Overview
 
@@ -543,6 +544,10 @@ import { ARM } from 'path-to-src/index.js'
                     * Collection record property mapping.
                 * **async - Boolean**
                     * Flag for invoking request function on resolving not yet loaded records on collection.
+                * **filterBy - Object**
+                    * Filter return collection records based on passed filter properties.
+                * **sortBy - Array**
+                    * Sort returned collection records based on passed array of sort criteria.
         ```javascript
         // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
@@ -562,6 +567,12 @@ import { ARM } from 'path-to-src/index.js'
               .getCollection('addresses', {
                 referenceKey: 'relationships.addresses.data',
                 async: true,
+                sortBy: ['id:desc'],
+                filterBy: {
+                  attributes: {
+                    'label': 'Test'
+                  }
+                }
               })
               .map((address, index) => (
                 <li key={index}>{address.get('id')}</li>
@@ -569,3 +580,128 @@ import { ARM } from 'path-to-src/index.js'
           </ul>
         )}
         ```
+## Utility Functions
+Collection of utility functions that leverage Lodash for common data manipulation tasks.
+These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.
+
+#### Data Retrieval and Manipulation
+---
+```javascript
+// Example response data from API
+const addresses = [
+   {
+     "id": 1,
+     "attributes": {
+       "kind": "office",
+       "label": "My Office",
+     }
+   },
+   {
+     "id": 2,
+     "attributes": {
+       "kind": "school",
+       "label": "My School",
+     }
+   },
+   {
+     "id": 3,
+     "attributes": {
+       "kind": "school",
+       "label": "My Brother's School",
+     }
+   }
+ ]
+```
+* **findBy(objects, findProperties)**
+    * Finds the first element in the given array of objects that satisfies the provided find properties.
+    ```javascript
+    // Returns record with id 1
+    ARM.findBy(addresses, { id: 1 })
+    ```
+* **findIndexBy(objects, findIndexProperties)**
+    * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
+    ```javascript
+    // Returns record with id 1
+    ARM.findIndexBy(addresses, {
+      attributes: { kind: 'office' }
+    })
+    ```
+* **filterBy(objects, filterProperties)**
+    * Creates a new array with all elements from the given array of objects that pass the filter test implemented by the provided filter properties. 
+    ```javascript
+    // Returns records with ids 2 and 3
+    ARM.filterBy(addresses, {
+      attributes: { kind: 'school' }
+    })
+    ```
+* **sortBy(objects, sortProperties)**
+    * Sorts the given array of objects by the specified sort properties. 
+    ```javascript
+    // Returns records order by ids 1,2,3
+    ARM.sortBy(addresses, ['id:asc'])
+
+    // Returns records order by ids 3,2,1
+    ARM.sortBy(addresses, ['id:desc'])
+    ```
+#### Data Validation and Comparison
+
+* **isEmpty(value)**
+    * Checks if a value is considered empty (null, undefined, empty string, empty array, or empty object). 
+    ```javascript
+    // Returns boolean value
+    ARM.isEmpty(value)
+    ```
+* **isPresent(value)**
+    * Returns the opposite of isEmpty. 
+    ```javascript
+    // Returns boolean value
+    ARM.isPresent(value)
+    ```
+* **isEqual(value, other)**
+    * Performs a deep comparison between two values to determine if they are equal. 
+    ```javascript
+    // Returns boolean value
+    ARM.isEqual(value, other)
+    ```
+* **isNumber(value)**
+    * Checks if a value is a **number**. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNumber(value)
+    ```
+* **isNil(value)**
+    * Checks if a value is **null** or **undefined**. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNil(value)
+    ```
+* **isNull(value)**
+    * Checks if a value is **null**. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNull(value)
+    ```
+* **isGte(value, other)**
+    * Checks if the first value is **greater than or equal** to the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isGte(value)
+    ```
+* **isGt(value, other)**
+    * Checks if the first value is **greater than** the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isGt(value)
+    ```
+* **isLte(value, other)**
+    * Checks if the first value is **less than or equal** to the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isLte(value)
+    ```
+* **isLt(value, other)**
+    * Checks if the first value is **less than** the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isLt(value)
+    ```
