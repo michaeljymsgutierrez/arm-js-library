@@ -543,6 +543,10 @@ import { ARM } from 'path-to-src/index.js'
                     * Collection record property mapping.
                 * **async - Boolean**
                     * Flag for invoking request function on resolving not yet loaded records on collection.
+                * **filterBy - Object**
+                    * Filter return collection records based on passed filter properties.
+                * **sortBy - Array**
+                    * Sort returned collection records based on passed array of sort criteria.
         ```javascript
         // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
@@ -562,6 +566,12 @@ import { ARM } from 'path-to-src/index.js'
               .getCollection('addresses', {
                 referenceKey: 'relationships.addresses.data',
                 async: true,
+                sortBy: ['id:desc'],
+                filterBy: {
+                  attributes: {
+                    'label': 'Test'
+                  }
+                }
               })
               .map((address, index) => (
                 <li key={index}>{address.get('id')}</li>
