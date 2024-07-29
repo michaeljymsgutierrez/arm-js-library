@@ -948,6 +948,10 @@ export default class ApiResourceManager {
     })
   }
 
+  ajax(config = {}) {
+    return axios.request(config)
+  }
+
   /*
    * Exposed abstract utility functions from Lodash
    */

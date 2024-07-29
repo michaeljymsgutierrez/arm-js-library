@@ -23,6 +23,8 @@
     * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
+    * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
+    * [Data Validation and Comparison](#data-validation-and-comparison)
 
 ## Overview
 
@@ -621,7 +623,7 @@ const addresses = [
 * **findIndexBy(objects, findIndexProperties)**
     * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id 1
+    // Returns index number of record with id 1
     ARM.findIndexBy(addresses, {
       attributes: { kind: 'office' }
     })
@@ -643,10 +645,23 @@ const addresses = [
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
     ```
+* **ajax(config)**
+    * Axios instance under the hood with default ARM config.
+    * Config accepts all properties that can be passed on **axios.request** config.
+    ```javascript
+    // Returns promise
+    ARM.ajax({
+      method: 'get',
+      baseURL: 'https://other-api.test-demo.com',
+      url: '/api/v1/addresses'
+    })
+    .then(results => console.log(results))
+    .catch(errors => console.log(errors))
+    ```
 #### Data Validation and Comparison
 
 * **isEmpty(value)**
-    * Checks if a value is considered empty (null, undefined, empty string, empty array, or empty object). 
+    * Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**. 
     ```javascript
     // Returns boolean value
     ARM.isEmpty(value)
