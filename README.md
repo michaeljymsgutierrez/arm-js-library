@@ -664,14 +664,44 @@ const addresses = [
     ARM.isEqual(value, other)
     ```
 * **isNumber(value)**
-    * Checks if a value is a number. 
+    * Checks if a value is a **number**. 
     ```javascript
     // Returns boolean value
     ARM.isNumber(value)
     ```
 * **isNil(value)**
-    * Checks if a value is null or undefined. 
+    * Checks if a value is **null** or **undefined**. 
     ```javascript
     // Returns boolean value
     ARM.isNil(value)
+    ```
+* **isNull(value)**
+    * Checks if a value is **null**. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNull(value)
+    ```
+* **isGte(value, other)**
+    * Checks if the first value is **greater than or equal** to the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isGte(value)
+    ```
+* **isGt(value, other)**
+    * Checks if the first value is **greater than** the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isGt(value)
+    ```
+* **isLte(value, other)**
+    * Checks if the first value is **less than or equal** to the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isLte(value)
+    ```
+* **isLt(value, other)**
+    * Checks if the first value is **less than** the second value. 
+    ```javascript
+    // Returns boolean value
+    ARM.isLt(value)
     ```
