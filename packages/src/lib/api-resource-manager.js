@@ -125,10 +125,6 @@ export default class ApiResourceManager {
     return `${this.host}/${this.namespace}`
   }
 
-  _getAuthorizationToken() {
-    return `Token ${window.localStorage.getItem('token')}`
-  }
-
   _isCollectionExisting(collectionName) {
     if (isNil(getProperty(this.collections, collectionName)))
       throw `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
@@ -201,6 +197,16 @@ export default class ApiResourceManager {
       setProperty(this, 'isDirty', true)
       setProperty(this, 'isPristine', false)
     }
+  }
+
+  _sortRecordsBy(currentRecords, sortProperties = []) {
+    const properties = map(sortProperties, (sortProperty) =>
+      first(sortProperty.split(':'))
+    )
+    const sorts = map(sortProperties, (sortProperty) =>
+      last(sortProperty.split(':'))
+    )
+    return orderBy(currentRecords, properties, sorts)
   }
 
   _unloadFromCollection(collectionRecord) {
@@ -352,6 +358,8 @@ export default class ApiResourceManager {
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
     const collectionAsync = getProperty(collectionConfig, 'async') || false
+    const collectionFilterBy = getProperty(collectionConfig, 'filterBy') || {}
+    const collectionSortBy = getProperty(collectionConfig, 'sortBy') || []
     const recordsFromCurrentRecord =
       getProperty(currentRecord, collectionReferenceKey) || []
     const isRecordsFromCurrentRecordObject = isPlainObject(
@@ -396,7 +404,10 @@ export default class ApiResourceManager {
 
     return isRecordsFromCurrentRecordObject
       ? first(collectionRecords)
-      : collectionRecords
+      : this._sortRecordsBy(
+          filter(collectionRecords, collectionFilterBy),
+          collectionSortBy
+        )
   }
 
   _injectActions(collectionRecord) {
@@ -952,14 +963,8 @@ export default class ApiResourceManager {
     return filter(objects, filterProperties)
   }
 
-  sortBy(objects, sortProperties = []) {
-    const properties = map(sortProperties, (sortProperty) =>
-      first(sortProperty.split(':'))
-    )
-    const sorts = map(sortProperties, (sortProperty) =>
-      last(sortProperty.split(':'))
-    )
-    return orderBy(objects, properties, sorts)
+  sortBy(objects, sortProperties) {
+    return this._sortRecordsBy(objects, sortProperties)
   }
 
   isEmpty(value) {
