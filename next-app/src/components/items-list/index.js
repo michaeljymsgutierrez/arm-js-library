@@ -10,15 +10,13 @@ const ItemsList = observer(() => {
     <ul>
       {items.map((item, index) => (
         <li key={index}>
-          {item.get('id')} -{' '}
+          {item.get('id')} - &nbsp;
           {item
             .getCollection('products', {
               referenceKey: 'relationships.product.data',
               async: true,
             })
-            .map((product, index) => (
-              <span key={index}>{product.get('attributes.name')}</span>
-            ))}
+            .get('attributes.name')}
           ({item.get('attributes.count')})
         </li>
       ))}

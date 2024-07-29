@@ -10,6 +10,10 @@ const ItemsListPage = observer(() => {
   const model = Model()
   const controller = Controller(model)
 
+  if (model.isLoading) {
+    return <></>
+  }
+
   return (
     <div className="items-list-page">
       <table className={styles.table}>
@@ -23,12 +27,6 @@ const ItemsListPage = observer(() => {
         </thead>
 
         <tbody className={styles.tableBody}>
-          {model.isLoading && (
-            <tr className={styles.tableBodyRow}>
-              <td colSpan="3">Loading...</td>
-            </tr>
-          )}
-
           {model.data.map((item, index) => (
             <tr key={index} className={styles.tableBodyRow}>
               <td>{item.get('id')}</td>
@@ -38,9 +36,7 @@ const ItemsListPage = observer(() => {
                     referenceKey: 'relationships.product.data',
                     async: true,
                   })
-                  .map((product, index) => (
-                    <span key={index}>{product.get('attributes.name')}</span>
-                  ))}
+                  .get('attributes.name')}
               </td>
               <td>{item.get('attributes.count')}</td>
               <td>

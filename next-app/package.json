@@ -14,7 +14,7 @@
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
-    "use-debounce": "^10.0.1"
+    "use-debounce": "^10.0.2"
   },
   "devDependencies": {
     "eslint": "^8",
