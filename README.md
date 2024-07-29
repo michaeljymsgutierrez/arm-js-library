@@ -643,3 +643,35 @@ const addresses = [
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
     ```
+#### Data Validation and Comparison
+
+* **isEmpty(value)**
+    * Checks if a value is considered empty (null, undefined, empty string, empty array, or empty object). 
+    ```javascript
+    // Returns boolean value
+    ARM.isEmpty(value)
+    ```
+* **isPresent(value)**
+    * Returns the opposite of isEmpty. 
+    ```javascript
+    // Returns boolean value
+    ARM.isPresent(value)
+    ```
+* **isEqual(value, other)**
+    * Performs a deep comparison between two values to determine if they are equal. 
+    ```javascript
+    // Returns boolean value
+    ARM.isEqual(value, other)
+    ```
+* **isNumber(value)**
+    * Checks if a value is a number. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNumber(value)
+    ```
+* **isNil(value)**
+    * Checks if a value is null or undefined. 
+    ```javascript
+    // Returns boolean value
+    ARM.isNil(value)
+    ```
