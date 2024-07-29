@@ -623,7 +623,7 @@ const addresses = [
 * **findIndexBy(objects, findIndexProperties)**
     * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id 1
+    // Returns index number of record with id 1
     ARM.findIndexBy(addresses, {
       attributes: { kind: 'office' }
     })
@@ -646,15 +646,22 @@ const addresses = [
     ARM.sortBy(addresses, ['id:desc'])
     ```
 * **ajax(config)**
-    * Sorts the given array of objects by the specified sort properties. 
+    * Axios instance under the hood with default ARM config.
+    * Config accepts all properties that can be passed on **axios.request** config.
     ```javascript
-    // Returns records order by ids 1,2,3
-    ARM.ajax(addresses, ['id:asc'])
+    // Returns promise
+    ARM.ajax({
+      method: 'get',
+      baseURL: 'https://other-api.test-demo.com',
+      url: '/api/v1/addresses'
+    })
+    .then(results => console.log(results))
+    .catch(errors => console.log(errors))
     ```
 #### Data Validation and Comparison
 
 * **isEmpty(value)**
-    * Checks if a value is considered empty (null, undefined, empty string, empty array, or empty object). 
+    * Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**. 
     ```javascript
     // Returns boolean value
     ARM.isEmpty(value)
