@@ -645,6 +645,12 @@ const addresses = [
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
     ```
+* **ajax(config)**
+    * Sorts the given array of objects by the specified sort properties. 
+    ```javascript
+    // Returns records order by ids 1,2,3
+    ARM.ajax(addresses, ['id:asc'])
+    ```
 #### Data Validation and Comparison
 
 * **isEmpty(value)**
