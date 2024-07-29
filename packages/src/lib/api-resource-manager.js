@@ -34,9 +34,12 @@ const {
   map,
   entries,
   forEach,
+  filter,
   keysIn,
   omit,
   first,
+  last,
+  orderBy,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -949,7 +952,15 @@ export default class ApiResourceManager {
     return filter(objects, filterProperties)
   }
 
-  sortBy(objects, sortProperties) {}
+  sortBy(objects, sortProperties = []) {
+    const properties = map(sortProperties, (sortProperty) =>
+      first(sortProperty.split(':'))
+    )
+    const sorts = map(sortProperties, (sortProperty) =>
+      last(sortProperty.split(':'))
+    )
+    return orderBy(objects, properties, sorts)
+  }
 
   isEmpty(value) {
     return isEmpty(value)
