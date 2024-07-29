@@ -591,34 +591,55 @@ These functions primarily focus on searching, filtering, sorting, and validating
 const addresses = [
    {
      "id": 1,
-     "type": "addresses",
      "attributes": {
        "kind": "office",
        "label": "My Office",
      }
    },
    {
-     "id": 12,
-     "type": "addresses",
+     "id": 2,
      "attributes": {
        "kind": "school",
        "label": "My School",
      }
+   },
+   {
+     "id": 3,
+     "attributes": {
+       "kind": "school",
+       "label": "My Brother's School",
+     }
    }
  ]
 ```
-
 * **findBy(objects, findProperties)**
-    * Finds the first element in the given array of objects that satisfies the provided find properties. Essentially a wrapper around Lodash's `find` function.
+    * Finds the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id: 1
+    // Returns record with id 1
     ARM.findBy(addresses, { id: 1 })
     ```
 * **findIndexBy(objects, findIndexProperties)**
-    * Returns the index of the first element in the given array of objects that satisfies the provided find properties. A wrapper around Lodash's `findIndex` function.
+    * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id: 1
-    ARM.findIndex(addresses, {
+    // Returns record with id 1
+    ARM.findIndexBy(addresses, {
       attributes: { kind: 'office' }
     })
+    ```
+* **filterBy(objects, filterProperties)**
+    * Creates a new array with all elements from the given array of objects that pass the filter test implemented by the provided filter properties. 
+    ```javascript
+    // Returns records with ids 2 and 3
+    ARM.filterBy(addresses, {
+      attributes: { kind: 'school' }
+    })
+    ```
+* **sortBy(objects, sortProperties)**
+    * Sorts the given array of objects by the specified sort properties. 
+    ```javascript
+    // Returns records order by ids 1,2,3
+    ARM.sortBy(addresses, ['id:asc'])
+
+    // Returns records order by ids 3,2,1
+    ARM.sortBy(addresses, ['id:desc'])
     ```
