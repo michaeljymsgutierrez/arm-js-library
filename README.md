@@ -23,6 +23,8 @@
     * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
+    * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
+    * [Data Validation and Comparison](#data-validation-and-comparison)
 
 ## Overview
 
