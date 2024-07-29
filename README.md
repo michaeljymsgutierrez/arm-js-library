@@ -6,30 +6,57 @@
 ## Table of Contents
 
 * [Overview](#overview)
+  * [Core Functionalities](#core-functionalities)
+  * [Key Features](#key-features)
+  * [Benefits](#benefits)
 * [Basic Usage](#basic-usage)
 * [Installation](#installation)
 * [Dependency Packages](#dependency-packages)
-    * [Initialization and Configuration](#initialization-and-configuration)
-        * [Initialization](#initialization)
-            * [Initialization on create-react-app](#initialization-on-create-react-app)
-            * [Initialization on create-next-app](#initialization-on-create-next-app)
-        * [Configuration](#configuration)
+  * [Initialization and Configuration](#initialization-and-configuration)
+    * [Initialization](#initialization)
+      * [Initialization on create-react-app](#initialization-on-create-react-app)
+      * [Initialization on create-next-app](#initialization-on-create-next-app)
+    * [Configuration](#configuration)
 * [Utilization](#utilization)
-    * [Request functions from server](#request-functions-from-server)
-        * [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
-        * [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
-    * [Retrieve functions from collections](#retrieve-functions-from-collections)
-    * [Create collection record function](#create-collection-record-function)
-    * [Remove collection record functions](#remove-collection-record-functions)
+  * [Request functions from server](#request-functions-from-server)
+    * [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
+    * [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
+  * [Retrieve functions from collections](#retrieve-functions-from-collections)
+  * [Create collection record function](#create-collection-record-function)
+  * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
-    * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
-    * [Data Validation and Comparison](#data-validation-and-comparison)
+  * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
+  * [Data Validation and Comparison](#data-validation-and-comparison)
 
 ## Overview
 
+**ARM (API Resource Manager)** is a JavaScript library designed to centralize data management and simplify interactions with APIs. By providing a structured approach to handling and storing fetched data, ARM promotes efficient and flexible data usage throughout your application.
 
-ARM (API Resource Manager) is a JavaScript library designed to manage API resources efficiently, leveraging axios for HTTP requests, lodash for utility functions, mobx for state management, and uuid and crypto-js for unique identifiers and hashing.
+### Core Functionalities
+* **Centralized Data Storage:** Organizes fetched data into easily accessible collections, acting as a single source of truth for your application's data.
+* **API Interactions:** Manages API requests and responses, providing methods for common HTTP operations (GET, POST, PUT, DELETE).
+* **Caching:** Optimizes performance by caching frequently accessed data, reducing API calls and improving response times.
+* **Request Management:** Tracks ongoing requests to prevent redundancy and manages their state.
+* **Utility Functions:** Offers helper functions for data manipulation, filtering, sorting, and other common operations.
+
+### Key Features
+* **Collections:** Stores fetched data in collections for efficient retrieval and management.
+* **Record Management:** Provides methods to create, update, delete, and retrieve individual records within collections.
+* **Reactive Data:** Employs observable patterns (likely through a library like Mobx) to enable real-time updates and dependency tracking.
+* **Asynchronous Operations:** Handles API interactions asynchronously using Promises for non-blocking operations.
+* **Error Handling:** Manages errors gracefully and provides informative feedback.
+* **Configurability:** Allows customization of API endpoints, headers, and request behavior.
+* **Extensibility:** Can be integrated with other libraries and frameworks to fit various application architectures.
+
+### Benefits
+* **Centralized Data Access:** Provides a single source of truth for application data, ensuring consistency and reducing data duplication.
+* **Improved Performance:** Caching and optimized request management enhance application speed.
+* **Enhanced Developer Experience:** Simplifies data management and reduces boilerplate code.
+* **Flexibility:** Can be used across different components and parts of an application.
+* **Maintainability:** Promotes code organization and reduces potential inconsistencies.
+
+By centralizing data management and offering flexible access to it, ARM empowers developers to build more efficient, scalable, and maintainable applications.
 
 ## Basic Usage
 ```javascript
