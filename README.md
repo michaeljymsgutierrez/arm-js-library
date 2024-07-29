@@ -583,3 +583,42 @@ import { ARM } from 'path-to-src/index.js'
 ## Utility Functions
 Collection of utility functions that leverage Lodash for common data manipulation tasks.
 These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.
+
+#### Data Retrieval and Manipulation
+---
+```javascript
+// Example response data from API
+const addresses = [
+   {
+     "id": 1,
+     "type": "addresses",
+     "attributes": {
+       "kind": "office",
+       "label": "My Office",
+     }
+   },
+   {
+     "id": 12,
+     "type": "addresses",
+     "attributes": {
+       "kind": "school",
+       "label": "My School",
+     }
+   }
+ ]
+```
+
+* **findBy(objects, findProperties)**
+    * Finds the first element in the given array of objects that satisfies the provided find properties. Essentially a wrapper around Lodash's `find` function.
+    ```javascript
+    // Returns record with id: 1
+    ARM.findBy(addresses, { id: 1 })
+    ```
+* **findIndexBy(objects, findIndexProperties)**
+    * Returns the index of the first element in the given array of objects that satisfies the provided find properties. A wrapper around Lodash's `findIndex` function.
+    ```javascript
+    // Returns record with id: 1
+    ARM.findIndex(addresses, {
+      attributes: { kind: 'office' }
+    })
+    ```
