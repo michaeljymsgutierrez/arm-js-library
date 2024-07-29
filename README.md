@@ -22,6 +22,7 @@
     * [Create collection record function](#create-collection-record-function)
     * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
+* [Utility Functions](#utility-functions)
 
 ## Overview
 
@@ -579,3 +580,6 @@ import { ARM } from 'path-to-src/index.js'
           </ul>
         )}
         ```
+## Utility Functions
+Collection of utility functions that leverage Lodash for common data manipulation tasks.
+These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.
