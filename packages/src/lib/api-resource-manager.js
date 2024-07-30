@@ -379,7 +379,7 @@ export default class ApiResourceManager {
     //     hashId: currentRecordHashId,
     //   }
     // )
-    // const collectionRecords = observable([])
+    const collectionRecords = observable([])
     // const collectionRecordsRequests = observable([])
     //
     // setProperty(currentCollectionRecord, 'isResolving', true)
