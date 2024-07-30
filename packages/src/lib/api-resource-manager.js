@@ -368,7 +368,21 @@ export default class ApiResourceManager {
     const relatedRecords = isRecordsFromCurrentRecordObject
       ? [recordsFromCurrentRecord]
       : recordsFromCurrentRecord
-    const collectionRecords = observable([])
+    // const currentRecordCollectionName = getProperty(
+    //   currentRecord,
+    //   'collectionName'
+    // )
+    // const currentRecordHashId = getProperty(currentRecord, 'hashId')
+    // const currentCollectionRecord = find(
+    //   this.collections[currentRecordCollectionName],
+    //   {
+    //     hashId: currentRecordHashId,
+    //   }
+    // )
+    // const collectionRecords = observable([])
+    // const collectionRecordsRequests = observable([])
+    //
+    // setProperty(currentCollectionRecord, 'isResolving', true)
 
     forEach(relatedRecords, (relatedRecord) => {
       const relatedRecordHashId = this._generateHashId({
@@ -398,9 +412,12 @@ export default class ApiResourceManager {
           this._pushRequestHash(requestObject, responseObject)
 
           this._request(requestObject)
+          // collectionRecordsRequests.push(this._request(requestObject))
         }
       }
     })
+
+    // Promise.allSettled(collectionRecordsRequests).finally(() => {})
 
     return isRecordsFromCurrentRecordObject
       ? first(collectionRecords)
@@ -447,6 +464,7 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'collectionName', collectionName)
     setProperty(collectionRecord, 'hashId', recordHashId)
     setProperty(collectionRecord, 'isLoading', false)
+    setProperty(collectionRecord, 'isResolving', false)
     setProperty(collectionRecord, 'isError', false)
     setProperty(collectionRecord, 'isPristine', true)
     setProperty(collectionRecord, 'isDirty', false)

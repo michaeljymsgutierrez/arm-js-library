@@ -1,51 +1,51 @@
-import F from "axios";
+import E from "axios";
 import ns from "lodash";
 import * as hs from "mobx";
-import { v1 as U, NIL as cs } from "uuid";
+import { v1 as z, NIL as cs } from "uuid";
 import ds from "crypto-js";
-const { makeObservable: us, observable: L, action: k, toJS: B } = hs, {
+const { makeObservable: ls, observable: S, action: F, toJS: L } = hs, {
   get: i,
   set: h,
   find: y,
   findIndex: q,
-  isObject: ls,
-  isArray: _,
+  isObject: us,
+  isArray: p,
   isPlainObject: f,
-  isNumber: G,
+  isNumber: U,
   isString: fs,
-  isNull: es,
-  isNil: m,
+  isNull: ss,
+  isNil: R,
   isEmpty: C,
   isEqual: I,
   gte: g,
   gt: Is,
   lte: ps,
-  lt: J,
+  lt: G,
   flatMap: _s,
-  map: D,
+  map: k,
   entries: ys,
-  forEach: l,
-  filter: ts,
+  forEach: u,
+  filter: es,
   keysIn: w,
   omit: x,
-  first: is,
+  first: ts,
   last: qs,
-  orderBy: ms
-} = ns, rs = {
+  orderBy: Rs
+} = ns, is = {
   isLoading: !0,
   isError: !1,
   isNew: !0,
   data: [],
   included: [],
   meta: {}
-}, V = {
+}, J = {
   isLoading: !0,
   isError: !1,
   isNew: !0,
   data: {},
   included: [],
   meta: {}
-}, v = [
+}, B = [
   "destroyRecord",
   "getCollection",
   "reload",
@@ -74,27 +74,27 @@ const { makeObservable: us, observable: L, action: k, toJS: B } = hs, {
 ];
 class As {
   constructor(s = []) {
-    this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), us(this, {
-      collections: L,
-      aliases: L,
-      requestHashIds: L,
-      _pushPayload: k,
-      _pushRequestHash: k,
-      _addCollection: k,
-      _addAlias: k
+    this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), ls(this, {
+      collections: S,
+      aliases: S,
+      requestHashIds: S,
+      _pushPayload: F,
+      _pushRequestHash: F,
+      _addCollection: F,
+      _addAlias: F
     });
   }
   _initializeAxiosConfig() {
-    F.defaults.baseURL = this._getBaseURL();
+    E.defaults.baseURL = this._getBaseURL();
   }
   _initializeCollections(s) {
-    l(s, (e) => this._addCollection(e, []));
+    u(s, (e) => this._addCollection(e, []));
   }
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
   }
   _isCollectionExisting(s) {
-    if (m(i(this.collections, s)))
+    if (R(i(this.collections, s)))
       throw `Collection ${s} does not exist.
 Fix: Try adding ${s} on your ARM config initialization.`;
   }
@@ -102,10 +102,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     this.collections[s] = e;
   }
   _addAlias(s, e) {
-    const t = _(e), o = f(e);
+    const t = p(e), o = f(e);
     t && (this.aliases[s] = e || []), o && (this.aliases[s] = e || {});
   }
-  _generateHashId(s = { id: U() }) {
+  _generateHashId(s = { id: z() }) {
     const e = JSON.stringify(s);
     return ds.MD5(e).toString();
   }
@@ -115,35 +115,35 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   _setProperty(s, e) {
     h(this, s, e);
     const t = x(
-      B(this.originalRecord),
-      v
-    ), o = x(B(this), v);
+      L(this.originalRecord),
+      B
+    ), o = x(L(this), B);
     I(t, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
     function e(a, n = "") {
       return _s(ys(a), ([c, d]) => {
-        const p = n ? `${n}.${c}` : c;
-        return ls(d) && !_(d) && d !== null ? e(d, p) : { key: p, value: d };
+        const _ = n ? `${n}.${c}` : c;
+        return us(d) && !p(d) && d !== null ? e(d, _) : { key: _, value: d };
       });
     }
     const t = e(s);
-    l(t, ({ key: a, value: n }) => h(this, a, n));
+    u(t, ({ key: a, value: n }) => h(this, a, n));
     const o = x(
-      B(this.originalRecord),
-      v
-    ), r = x(B(this), v);
+      L(this.originalRecord),
+      B
+    ), r = x(L(this), B);
     I(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _sortRecordsBy(s, e = []) {
-    const t = D(
+    const t = k(
       e,
-      (r) => is(r.split(":"))
-    ), o = D(
+      (r) => ts(r.split(":"))
+    ), o = k(
       e,
       (r) => qs(r.split(":"))
     );
-    return ms(s, t, o);
+    return Rs(s, t, o);
   }
   _unloadFromCollection(s) {
     const e = i(s, "collectionName"), t = q(this.collections[e], {
@@ -153,11 +153,11 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _unloadFromRequestHashes(s) {
     const e = w(this.requestHashIds);
-    l(e, (t) => {
+    u(e, (t) => {
       const o = i(
         this.requestHashIds[t],
         "data"
-      ), r = _(o), a = f(o);
+      ), r = p(o), a = f(o);
       if (r) {
         const n = q(
           i(this.requestHashIds[t], "data"),
@@ -178,8 +178,8 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _unloadFromAliases(s) {
     const e = w(this.aliases);
-    l(e, (t) => {
-      const o = _(this.aliases[t]), r = f(this.aliases[t]);
+    u(e, (t) => {
+      const o = p(this.aliases[t]), r = f(this.aliases[t]);
       if (o) {
         const a = q(this.aliases[t], {
           hashId: i(s, "hashId")
@@ -198,7 +198,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   _saveRecord(s) {
     const e = i(s, "collectionName"), t = y(this.collections[e], {
       hashId: i(s, "hashId")
-    }), o = G(i(t, "id")), r = o ? i(t, "id") : null, d = {
+    }), o = U(i(t, "id")), r = o ? i(t, "id") : null, d = {
       resourceMethod: o ? "put" : "post",
       resourceName: e,
       resourceId: r,
@@ -231,37 +231,37 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skipId: U() }
+      resourceConfig: { skipId: z() }
     };
     return this._request(r);
   }
   _getCollectionRecord(s, e = {}, t) {
     const o = i(e, "referenceKey") || "", r = i(e, "async") || !1, a = i(e, "filterBy") || {}, n = i(e, "sortBy") || [], c = i(t, o) || [], d = f(
       c
-    ), p = d ? [c] : c, R = L([]);
-    return l(p, (N) => {
-      const H = this._generateHashId({
-        id: i(N, "id"),
+    );
+    return u(d ? [c] : c, (m) => {
+      const D = this._generateHashId({
+        id: i(m, "id"),
         collectionName: s
-      }), E = y(this.collections[s], {
-        hashId: H
+      }), b = y(this.collections[s], {
+        hashId: D
       });
-      if (!C(E))
-        R.push(E);
+      if (!C(b))
+        collectionRecords.push(b);
       else if (r) {
-        const j = {
+        const N = {
           resourceMethod: "get",
           resourceName: s,
-          resourceId: i(N, "id"),
+          resourceId: i(m, "id"),
           resourceParams: {},
           resourcePayload: null,
           resourceFallback: {},
           resourceConfig: {}
-        }, M = V;
-        this._pushRequestHash(j, M), this._request(j);
+        }, P = J;
+        this._pushRequestHash(N, P), this._request(N);
       }
-    }), d ? is(R) : this._sortRecordsBy(
-      ts(R, a),
+    }), d ? ts(collectionRecords) : this._sortRecordsBy(
+      es(collectionRecords, a),
       n
     );
   }
@@ -279,30 +279,30 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         s
       )
     }, t = w(e);
-    l(t, (o) => {
+    u(t, (o) => {
       s[o] = e[o];
     });
   }
   _injectReferenceKeys(s, e, t = null) {
-    const o = es(t) ? this._generateHashId({
+    const o = ss(t) ? this._generateHashId({
       id: i(e, "id"),
       collectionName: s
     }) : t;
-    h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
+    h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isResolving", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
   _pushToCollection(s, e) {
-    const t = _(e), o = f(e);
+    const t = p(e), o = f(e);
     if (t) {
-      const r = D(e, "hashId");
-      return l(e, (a) => {
+      const r = k(e, "hashId");
+      return u(e, (a) => {
         const n = q(
           this.collections[s],
           {
             hashId: i(a, "hashId")
           }
         );
-        this._injectActions(a), J(n, 0) && this.collections[s].push(a), g(n, 0) && (this.collections[s][n] = a);
-      }), D(
+        this._injectActions(a), G(n, 0) && this.collections[s].push(a), g(n, 0) && (this.collections[s][n] = a);
+      }), k(
         r,
         (a) => y(this.collections[s], {
           hashId: a
@@ -316,29 +316,29 @@ Fix: Try adding ${s} on your ARM config initialization.`;
           hashId: i(e, "hashId")
         }
       );
-      return this._injectActions(e), J(a, 0) && this.collections[s].push(e), g(a, 0) && (this.collections[s][a] = e), y(this.collections[s], {
+      return this._injectActions(e), G(a, 0) && this.collections[s].push(e), g(a, 0) && (this.collections[s][a] = e), y(this.collections[s], {
         hashId: r
       });
     }
   }
   _pushToAliases(s) {
-    const e = _(s), t = f(s), o = w(this.aliases);
-    e && l(o, (r) => {
-      const a = _(this.aliases[r]), n = f(this.aliases[r]);
-      a && l(s, (c) => {
+    const e = p(s), t = f(s), o = w(this.aliases);
+    e && u(o, (r) => {
+      const a = p(this.aliases[r]), n = f(this.aliases[r]);
+      a && u(s, (c) => {
         const d = q(this.aliases[r], {
           hashId: i(c, "hashId")
         });
         g(d, 0) && (this.aliases[r][d] = c);
-      }), n && l(s, (c) => {
+      }), n && u(s, (c) => {
         I(
           i(c, "hashId"),
           i(this.aliases[r], "hashId")
         ) && (this.aliases[r] = c);
       });
-    }), t && l(o, (r) => {
-      const a = _(this.aliases[r]), n = f(this.aliases[r]);
-      a && l([s], (c) => {
+    }), t && u(o, (r) => {
+      const a = p(this.aliases[r]), n = f(this.aliases[r]);
+      a && u([s], (c) => {
         const d = q(this.aliases[r], {
           hashId: i(c, "hashId")
         });
@@ -350,30 +350,30 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     });
   }
   _pushToRequestHashes(s) {
-    const e = w(this.requestHashIds), t = _(s), o = f(s);
+    const e = w(this.requestHashIds), t = p(s), o = f(s);
     let r = null;
-    t && (r = s), o && (r = [s]), l(e, (a) => {
+    t && (r = s), o && (r = [s]), u(e, (a) => {
       const n = i(
         this.requestHashIds[a],
         "data"
-      ), c = _(n), d = f(n);
-      l(r, (p) => {
+      ), c = p(n), d = f(n);
+      u(r, (_) => {
         if (c) {
-          const R = q(
+          const m = q(
             i(this.requestHashIds[a], "data"),
             {
-              hashId: i(p, "hashId")
+              hashId: i(_, "hashId")
             }
           );
-          g(R, 0) && (this.requestHashIds[a].data[R] = p);
+          g(m, 0) && (this.requestHashIds[a].data[m] = _);
         }
         d && I(
-          i(p, "hashId"),
+          i(_, "hashId"),
           i(this.requestHashIds[a], "data.hashId")
         ) && h(
           this.requestHashIds[a],
           "data",
-          p
+          _
         );
       });
     });
@@ -392,7 +392,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     isNew: !0,
     data: null
   }) {
-    const t = this._generateHashId(s), o = !m(this.requestHashIds[t]), r = i(e, "isNew");
+    const t = this._generateHashId(s), o = !R(this.requestHashIds[t]), r = i(e, "isNew");
     return o && r ? h(this.requestHashIds[t], "isNew", !1) : this.requestHashIds[t] = e, this.requestHashIds[t];
   }
   setHost(s) {
@@ -402,7 +402,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     this.namespace = s;
   }
   setHeadersCommon(s, e) {
-    F.defaults.headers.common[`${s}`] = e;
+    E.defaults.headers.common[`${s}`] = e;
   }
   setPayloadIncludeReference(s) {
     this.payloadIncludedReference = s;
@@ -420,7 +420,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return f(e) && this._injectActions(e), this.aliases[s] || e;
   }
   createRecord(s, e = {}, t = !0) {
-    const o = t ? U() : cs, r = m(
+    const o = t ? z() : cs, r = R(
       y(this.collections[s], {
         id: o
       })
@@ -438,66 +438,66 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     resourceFallback: a,
     resourceConfig: n
   }) {
-    var Z, K, ss;
+    var Y, Z, K;
     const c = {
       method: s,
       url: e
-    }, d = this._generateHashId({ ...arguments[0] }), p = I(s, "get"), R = I(s, "delete"), N = I(s, "post"), H = G(t) || fs(t), E = !C(o), j = !C(r), M = !m(
+    }, d = this._generateHashId({ ...arguments[0] }), _ = I(s, "get"), m = I(s, "delete"), D = I(s, "post"), b = U(t) || fs(t), N = !C(o), P = !C(r), rs = !R(
       i(n, "override")
-    ), A = i(r, "data") || null, $ = H ? y(this.collections[e], {
+    ), A = i(r, "data") || null, v = b ? y(this.collections[e], {
       id: t
     }) : null;
-    if (M) {
-      const u = i(n, "override") || {};
-      let b = m(i(u, "host")) ? this.host : i(u, "host"), z = m(i(u, "namespace")) ? this.namespace : i(u, "namespace"), S = `${b}/${z}`;
-      h(c, "baseURL", S);
+    if (rs) {
+      const l = i(n, "override") || {};
+      let H = R(i(l, "host")) ? this.host : i(l, "host"), $ = R(i(l, "namespace")) ? this.namespace : i(l, "namespace"), T = `${H}/${$}`;
+      h(c, "baseURL", T);
     }
-    if (H && h(c, "url", `${e}/${t}`), E && h(c, "params", o), j) {
-      const u = {
+    if (b && h(c, "url", `${e}/${t}`), N && h(c, "params", o), P) {
+      const l = {
         data: x(A, gs)
       };
-      h(c, "data", u);
+      h(c, "data", l);
     }
-    const T = !m(i(n, "skip")), Q = I(i(n, "skip"), !0), W = this.requestHashIds[d], X = !m(W), Y = i(W, "isNew");
-    if (!(p && (T && Q || !T && X && !Y || T && !Q && X && !Y))) {
-      j && h(A, "isLoading", !0), H && h($, "isLoading", !0);
+    const M = !R(i(n, "skip")), V = I(i(n, "skip"), !0), Q = this.requestHashIds[d], W = !R(Q), X = i(Q, "isNew");
+    if (!(_ && (M && V || !M && W && !X || M && !V && W && !X))) {
+      P && h(A, "isLoading", !0), b && h(v, "isLoading", !0);
       try {
-        const u = await F(c), b = ((Z = u == null ? void 0 : u.data) == null ? void 0 : Z.data) || a, z = ((K = u == null ? void 0 : u.data) == null ? void 0 : K.included) || [], S = ((ss = u == null ? void 0 : u.data) == null ? void 0 : ss.meta) || {}, os = f(b), as = _(b);
+        const l = await E(c), H = ((Y = l == null ? void 0 : l.data) == null ? void 0 : Y.data) || a, $ = ((Z = l == null ? void 0 : l.data) == null ? void 0 : Z.included) || [], T = ((K = l == null ? void 0 : l.data) == null ? void 0 : K.meta) || {}, os = f(H), as = p(H);
         let O = null;
-        return as && l(
-          b,
-          (P) => this._injectReferenceKeys(e, P)
-        ), os && this._injectReferenceKeys(e, b), l(z, (P) => {
+        return as && u(
+          H,
+          (j) => this._injectReferenceKeys(e, j)
+        ), os && this._injectReferenceKeys(e, H), u($, (j) => {
           this._injectReferenceKeys(
-            i(P, this.payloadIncludedReference),
-            P
+            i(j, this.payloadIncludedReference),
+            j
           ), this._pushPayload(
-            i(P, "collectionName"),
-            P
+            i(j, "collectionName"),
+            j
           );
         }), O = await this._pushPayload(
           e,
-          b
+          H
         ), n.alias && this._addAlias(
           i(n, "alias"),
           O
-        ), N && this.unloadRecord(A), R && this.unloadRecord(O), this.requestHashIds[d] = {
+        ), D && this.unloadRecord(A), m && this.unloadRecord(O), this.requestHashIds[d] = {
           isLoading: !1,
           isError: !1,
           isNew: !1,
           data: O,
           included: [],
-          meta: S
+          meta: T
         }, Promise.resolve(O);
-      } catch (u) {
-        return j && (h(A, "isError", !0), h(A, "isLoading", !1)), H && (h($, "isError", !0), h($, "isLoading", !1)), this.requestHashIds[d] = {
+      } catch (l) {
+        return P && (h(A, "isError", !0), h(A, "isLoading", !1)), b && (h(v, "isError", !0), h(v, "isLoading", !1)), this.requestHashIds[d] = {
           isLoading: !1,
           isError: !0,
           isNew: !1,
-          data: u,
+          data: l,
           included: [],
           meta: {}
-        }, Promise.reject(u);
+        }, Promise.reject(l);
       }
     }
   }
@@ -510,7 +510,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: t
-    }, r = rs, a = this._pushRequestHash(
+    }, r = is, a = this._pushRequestHash(
       o,
       r
     );
@@ -525,7 +525,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: t
-    }, r = V, a = this._pushRequestHash(
+    }, r = J, a = this._pushRequestHash(
       o,
       r
     );
@@ -540,7 +540,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: [],
       resourceConfig: e
-    }, o = rs, r = this._pushRequestHash(
+    }, o = is, r = this._pushRequestHash(
       t,
       o
     );
@@ -555,7 +555,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: o
-    }, a = V, n = this._pushRequestHash(
+    }, a = J, n = this._pushRequestHash(
       r,
       a
     );
@@ -570,7 +570,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     });
   }
   ajax(s = {}) {
-    return F.request(s);
+    return E.request(s);
   }
   /*
    * Exposed abstract utility functions from Lodash
@@ -582,7 +582,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return q(s, e);
   }
   filterBy(s, e = {}) {
-    return ts(s, e);
+    return es(s, e);
   }
   sortBy(s, e) {
     return this._sortRecordsBy(s, e);
@@ -597,13 +597,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return I(s, e);
   }
   isNumber(s) {
-    return G(s);
+    return U(s);
   }
   isNil(s) {
-    return m(s);
+    return R(s);
   }
   isNull(s) {
-    return es(s);
+    return ss(s);
   }
   isGte(s, e) {
     return g(s, e);
@@ -615,7 +615,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return ps(s, e);
   }
   isLt(s, e) {
-    return J(s, e);
+    return G(s, e);
   }
 }
 export {
