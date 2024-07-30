@@ -740,6 +740,11 @@ export default class ApiResourceManager {
       getProperty(resourceConfig, 'override')
     )
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
+    const collectionRecordById = isResourceIdValid
+      ? find(this.collections[resourceName], {
+          id: resourceId,
+        })
+      : null
 
     if (hasResourceConfigOverride) {
       const override = getProperty(resourceConfig, 'override') || {}
@@ -785,6 +790,8 @@ export default class ApiResourceManager {
 
     if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)
+
+    if (isResourceIdValid) setProperty(collectionRecordById, 'isLoading', true)
 
     try {
       const resourceRequest = await axios(requestOptions)
@@ -842,6 +849,11 @@ export default class ApiResourceManager {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
         setProperty(resourcePayloadRecord, 'isLoading', false)
+      }
+
+      if (isResourceIdValid) {
+        setProperty(collectionRecordById, 'isError', true)
+        setProperty(collectionRecordById, 'isLoading', false)
       }
 
       this.requestHashIds[requestHashId] = {
