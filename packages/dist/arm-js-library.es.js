@@ -14,10 +14,10 @@ const { makeObservable: us, observable: L, action: k, toJS: B } = hs, {
   isNumber: G,
   isString: fs,
   isNull: es,
-  isNil: g,
+  isNil: m,
   isEmpty: C,
   isEqual: I,
-  gte: m,
+  gte: g,
   gt: Is,
   lte: ps,
   lt: J,
@@ -30,7 +30,7 @@ const { makeObservable: us, observable: L, action: k, toJS: B } = hs, {
   omit: x,
   first: is,
   last: qs,
-  orderBy: gs
+  orderBy: ms
 } = ns, rs = {
   isLoading: !0,
   isError: !1,
@@ -57,7 +57,7 @@ const { makeObservable: us, observable: L, action: k, toJS: B } = hs, {
   "isError",
   "isLoading",
   "isPristine"
-], ms = [
+], gs = [
   "destroyRecord",
   "getCollection",
   "reload",
@@ -94,7 +94,7 @@ class As {
     return `${this.host}/${this.namespace}`;
   }
   _isCollectionExisting(s) {
-    if (g(i(this.collections, s)))
+    if (m(i(this.collections, s)))
       throw `Collection ${s} does not exist.
 Fix: Try adding ${s} on your ARM config initialization.`;
   }
@@ -143,13 +143,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       e,
       (r) => qs(r.split(":"))
     );
-    return gs(s, t, o);
+    return ms(s, t, o);
   }
   _unloadFromCollection(s) {
     const e = i(s, "collectionName"), t = q(this.collections[e], {
       hashId: i(s, "hashId")
     });
-    m(t, 0) && this.collections[e].splice(t, 1);
+    g(t, 0) && this.collections[e].splice(t, 1);
   }
   _unloadFromRequestHashes(s) {
     const e = w(this.requestHashIds);
@@ -165,7 +165,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
             hashId: i(s, "hashId")
           }
         );
-        m(n, 0) && this.requestHashIds[t].data.splice(
+        g(n, 0) && this.requestHashIds[t].data.splice(
           n,
           1
         );
@@ -184,7 +184,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         const a = q(this.aliases[t], {
           hashId: i(s, "hashId")
         });
-        m(a, 0) && this.aliases[t].splice(a, 1);
+        g(a, 0) && this.aliases[t].splice(a, 1);
       }
       r && I(
         i(s, "hashId"),
@@ -288,7 +288,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       id: i(e, "id"),
       collectionName: s
     }) : t;
-    h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isResolving", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
+    h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
   _pushToCollection(s, e) {
     const t = _(e), o = f(e);
@@ -301,7 +301,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
             hashId: i(a, "hashId")
           }
         );
-        this._injectActions(a), J(n, 0) && this.collections[s].push(a), m(n, 0) && (this.collections[s][n] = a);
+        this._injectActions(a), J(n, 0) && this.collections[s].push(a), g(n, 0) && (this.collections[s][n] = a);
       }), D(
         r,
         (a) => y(this.collections[s], {
@@ -316,7 +316,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
           hashId: i(e, "hashId")
         }
       );
-      return this._injectActions(e), J(a, 0) && this.collections[s].push(e), m(a, 0) && (this.collections[s][a] = e), y(this.collections[s], {
+      return this._injectActions(e), J(a, 0) && this.collections[s].push(e), g(a, 0) && (this.collections[s][a] = e), y(this.collections[s], {
         hashId: r
       });
     }
@@ -329,7 +329,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         const d = q(this.aliases[r], {
           hashId: i(c, "hashId")
         });
-        m(d, 0) && (this.aliases[r][d] = c);
+        g(d, 0) && (this.aliases[r][d] = c);
       }), n && l(s, (c) => {
         I(
           i(c, "hashId"),
@@ -342,7 +342,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         const d = q(this.aliases[r], {
           hashId: i(c, "hashId")
         });
-        m(d, 0) && (this.aliases[r][d] = c);
+        g(d, 0) && (this.aliases[r][d] = c);
       }), n && I(
         i(s, "hashId"),
         i(this.aliases[r], "hashId")
@@ -365,7 +365,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
               hashId: i(p, "hashId")
             }
           );
-          m(R, 0) && (this.requestHashIds[a].data[R] = p);
+          g(R, 0) && (this.requestHashIds[a].data[R] = p);
         }
         d && I(
           i(p, "hashId"),
@@ -392,7 +392,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     isNew: !0,
     data: null
   }) {
-    const t = this._generateHashId(s), o = !g(this.requestHashIds[t]), r = i(e, "isNew");
+    const t = this._generateHashId(s), o = !m(this.requestHashIds[t]), r = i(e, "isNew");
     return o && r ? h(this.requestHashIds[t], "isNew", !1) : this.requestHashIds[t] = e, this.requestHashIds[t];
   }
   setHost(s) {
@@ -420,7 +420,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return f(e) && this._injectActions(e), this.aliases[s] || e;
   }
   createRecord(s, e = {}, t = !0) {
-    const o = t ? U() : cs, r = g(
+    const o = t ? U() : cs, r = m(
       y(this.collections[s], {
         id: o
       })
@@ -442,23 +442,23 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const c = {
       method: s,
       url: e
-    }, d = this._generateHashId({ ...arguments[0] }), p = I(s, "get"), R = I(s, "delete"), N = I(s, "post"), H = G(t) || fs(t), E = !C(o), j = !C(r), M = !g(
+    }, d = this._generateHashId({ ...arguments[0] }), p = I(s, "get"), R = I(s, "delete"), N = I(s, "post"), H = G(t) || fs(t), E = !C(o), j = !C(r), M = !m(
       i(n, "override")
     ), A = i(r, "data") || null, $ = H ? y(this.collections[e], {
       id: t
     }) : null;
     if (M) {
       const u = i(n, "override") || {};
-      let b = g(i(u, "host")) ? this.host : i(u, "host"), z = g(i(u, "namespace")) ? this.namespace : i(u, "namespace"), S = `${b}/${z}`;
+      let b = m(i(u, "host")) ? this.host : i(u, "host"), z = m(i(u, "namespace")) ? this.namespace : i(u, "namespace"), S = `${b}/${z}`;
       h(c, "baseURL", S);
     }
     if (H && h(c, "url", `${e}/${t}`), E && h(c, "params", o), j) {
       const u = {
-        data: x(A, ms)
+        data: x(A, gs)
       };
       h(c, "data", u);
     }
-    const T = !g(i(n, "skip")), Q = I(i(n, "skip"), !0), W = this.requestHashIds[d], X = !g(W), Y = i(W, "isNew");
+    const T = !m(i(n, "skip")), Q = I(i(n, "skip"), !0), W = this.requestHashIds[d], X = !m(W), Y = i(W, "isNew");
     if (!(p && (T && Q || !T && X && !Y || T && !Q && X && !Y))) {
       j && h(A, "isLoading", !0), H && h($, "isLoading", !0);
       try {
@@ -600,13 +600,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return G(s);
   }
   isNil(s) {
-    return g(s);
+    return m(s);
   }
   isNull(s) {
     return es(s);
   }
   isGte(s, e) {
-    return m(s, e);
+    return g(s, e);
   }
   isGt(s, e) {
     return Is(s, e);

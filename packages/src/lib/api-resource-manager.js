@@ -447,7 +447,6 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'collectionName', collectionName)
     setProperty(collectionRecord, 'hashId', recordHashId)
     setProperty(collectionRecord, 'isLoading', false)
-    setProperty(collectionRecord, 'isResolving', false)
     setProperty(collectionRecord, 'isError', false)
     setProperty(collectionRecord, 'isPristine', true)
     setProperty(collectionRecord, 'isDirty', false)
