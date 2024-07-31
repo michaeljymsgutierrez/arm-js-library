@@ -43,6 +43,7 @@ const {
   first,
   last,
   orderBy,
+  uniqBy,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -980,6 +981,10 @@ export default class ApiResourceManager {
 
   filterBy(objects, filterProperties = {}) {
     return filter(objects, filterProperties)
+  }
+
+  uniqBy(objects, uniqProperty) {
+    return uniqBy(objects, uniqProperty)
   }
 
   firstObject(objects = []) {
