@@ -663,6 +663,18 @@ const addresses = [
       attributes: { kind: 'school' }
     })
     ```
+* **firstObject(objects)**
+    * Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**. 
+    ```javascript
+    // Returns record with id 1
+    ARM.firstObject(addresses)
+    ```
+* **lastObject(objects)**
+    * Returns the **last element** from the given array of objects. If the array is empty, it returns **undefined**. 
+    ```javascript
+    // Returns record with id 3
+    ARM.lastObject(addresses)
+    ```
 * **sortBy(objects, sortProperties)**
     * Sorts the given array of objects by the specified sort properties. 
     ```javascript

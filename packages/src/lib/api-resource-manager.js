@@ -979,6 +979,14 @@ export default class ApiResourceManager {
     return filter(objects, filterProperties)
   }
 
+  firstObject(objects = []) {
+    return first(objects)
+  }
+
+  lastObject(objects = []) {
+    return last(objects)
+  }
+
   sortBy(objects, sortProperties) {
     return this._sortRecordsBy(objects, sortProperties)
   }
