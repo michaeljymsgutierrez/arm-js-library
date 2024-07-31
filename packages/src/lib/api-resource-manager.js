@@ -36,6 +36,8 @@ const {
   forEach,
   filter,
   keysIn,
+  concat,
+  uniqWith,
   omit,
   first,
   last,
@@ -985,6 +987,10 @@ export default class ApiResourceManager {
 
   lastObject(objects = []) {
     return last(objects)
+  }
+
+  mergeObjects(objects = [], otherObjects = []) {
+    return uniqWith(concat(objects, otherObjects), isEqual)
   }
 
   sortBy(objects, sortProperties) {
