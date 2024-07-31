@@ -36,10 +36,14 @@ const {
   forEach,
   filter,
   keysIn,
+  concat,
+  chunk,
+  uniqWith,
   omit,
   first,
   last,
   orderBy,
+  uniqBy,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -979,12 +983,24 @@ export default class ApiResourceManager {
     return filter(objects, filterProperties)
   }
 
+  uniqBy(objects, uniqProperty) {
+    return uniqBy(objects, uniqProperty)
+  }
+
   firstObject(objects = []) {
     return first(objects)
   }
 
   lastObject(objects = []) {
     return last(objects)
+  }
+
+  mergeObjects(objects = [], otherObjects = []) {
+    return uniqWith(concat(objects, otherObjects), isEqual)
+  }
+
+  chunkObjects(objects = [], chunkSize = 1) {
+    return chunk(objects, chunkSize)
   }
 
   sortBy(objects, sortProperties) {

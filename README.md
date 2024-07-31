@@ -644,13 +644,13 @@ const addresses = [
 * **findBy(objects, findProperties)**
     * Finds the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id 1
+    // Return record with id 1
     ARM.findBy(addresses, { id: 1 })
     ```
 * **findIndexBy(objects, findIndexProperties)**
     * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns index number of record with id 1
+    // Return index number of record with id 1
     ARM.findIndexBy(addresses, {
       attributes: { kind: 'office' }
     })
@@ -663,17 +663,33 @@ const addresses = [
       attributes: { kind: 'school' }
     })
     ```
+* **uniqBy(objects, uniqProperty)**
+    * Removes **duplicate** objects from an array based on a unique property. 
+    ```javascript
+    // Returns records with ids 1 and 2
+    ARM.uniqBy(addresses, 'attributes.kind')
+    ```
 * **firstObject(objects)**
     * Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**. 
     ```javascript
-    // Returns record with id 1
+    // Return record with id 1
     ARM.firstObject(addresses)
     ```
 * **lastObject(objects)**
     * Returns the **last element** from the given array of objects. If the array is empty, it returns **undefined**. 
     ```javascript
-    // Returns record with id 3
+    // Return record with id 3
     ARM.lastObject(addresses)
+    ```
+* **mergeObjects(objects, otherObjects)**
+    * Combines two arrays of objects into one, removing duplicates. 
+    ```javascript
+    ARM.mergeObjects(addresses, otherAddresses)
+    ```
+* **chunkObjects(objects, chunkSize)**
+    * Splits an array of objects into smaller arrays of a given **size**. 
+    ```javascript
+    ARM.chunkObjects(addresses, 2)
     ```
 * **sortBy(objects, sortProperties)**
     * Sorts the given array of objects by the specified sort properties. 
@@ -688,7 +704,7 @@ const addresses = [
     * Axios instance under the hood with default ARM config.
     * Config accepts all properties that can be passed on **axios.request** config.
     ```javascript
-    // Returns promise
+    // Return promise
     ARM.ajax({
       method: 'get',
       baseURL: 'https://other-api.test-demo.com',
@@ -702,60 +718,60 @@ const addresses = [
 * **isEmpty(value)**
     * Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isEmpty(value)
     ```
 * **isPresent(value)**
     * Returns the opposite of isEmpty. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isPresent(value)
     ```
 * **isEqual(value, other)**
     * Performs a deep comparison between two values to determine if they are equal. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isEqual(value, other)
     ```
 * **isNumber(value)**
     * Checks if a value is a **number**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNumber(value)
     ```
 * **isNil(value)**
     * Checks if a value is **null** or **undefined**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNil(value)
     ```
 * **isNull(value)**
     * Checks if a value is **null**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNull(value)
     ```
 * **isGte(value, other)**
     * Checks if the first value is **greater than or equal** to the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isGte(value)
     ```
 * **isGt(value, other)**
     * Checks if the first value is **greater than** the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isGt(value)
     ```
 * **isLte(value, other)**
     * Checks if the first value is **less than or equal** to the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isLte(value)
     ```
 * **isLt(value, other)**
     * Checks if the first value is **less than** the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isLt(value)
     ```
