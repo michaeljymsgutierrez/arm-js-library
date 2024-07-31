@@ -37,6 +37,7 @@ const {
   filter,
   keysIn,
   concat,
+  chunk,
   uniqWith,
   omit,
   first,
@@ -991,6 +992,10 @@ export default class ApiResourceManager {
 
   mergeObjects(objects = [], otherObjects = []) {
     return uniqWith(concat(objects, otherObjects), isEqual)
+  }
+
+  chunkObjects(objects = [], chunkSize = 1) {
+    return chunk(objects, chunkSize)
   }
 
   sortBy(objects, sortProperties) {
