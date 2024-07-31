@@ -1,4 +1,4 @@
-import B from "axios";
+import C from "axios";
 import hs from "lodash";
 import * as cs from "mobx";
 import { v1 as U, NIL as ds } from "uuid";
@@ -15,7 +15,7 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   isString: Is,
   isNull: ts,
   isNil: m,
-  isEmpty: C,
+  isEmpty: w,
   isEqual: f,
   gte: g,
   gt: ps,
@@ -26,11 +26,11 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   entries: qs,
   forEach: l,
   filter: is,
-  keysIn: w,
+  keysIn: x,
   concat: ms,
   chunk: gs,
   uniqWith: Rs,
-  omit: x,
+  omit: N,
   first: V,
   last: rs,
   orderBy: bs,
@@ -89,7 +89,7 @@ class xs {
     });
   }
   _initializeAxiosConfig() {
-    B.defaults.baseURL = this._getBaseURL();
+    C.defaults.baseURL = this._getBaseURL();
   }
   _initializeCollections(s) {
     l(s, (e) => this._addCollection(e, []));
@@ -118,10 +118,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _setProperty(s, e) {
     h(this, s, e);
-    const t = x(
+    const t = N(
       L(this.originalRecord),
       v
-    ), o = x(L(this), v);
+    ), o = N(L(this), v);
     f(t, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
@@ -133,10 +133,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     }
     const t = e(s);
     l(t, ({ key: a, value: n }) => h(this, a, n));
-    const o = x(
+    const o = N(
       L(this.originalRecord),
       v
-    ), r = x(L(this), v);
+    ), r = N(L(this), v);
     f(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _sortRecordsBy(s, e = []) {
@@ -156,7 +156,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     g(t, 0) && this.collections[e].splice(t, 1);
   }
   _unloadFromRequestHashes(s) {
-    const e = w(this.requestHashIds);
+    const e = x(this.requestHashIds);
     l(e, (t) => {
       const o = i(
         this.requestHashIds[t],
@@ -181,7 +181,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     });
   }
   _unloadFromAliases(s) {
-    const e = w(this.aliases);
+    const e = x(this.aliases);
     l(e, (t) => {
       const o = _(this.aliases[t]), r = I(this.aliases[t]);
       if (o) {
@@ -243,20 +243,20 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const o = i(e, "referenceKey") || "", r = i(e, "async") || !1, a = i(e, "filterBy") || {}, n = i(e, "sortBy") || [], c = i(t, o) || [], d = I(
       c
     ), p = d ? [c] : c, R = E([]);
-    return l(p, (N) => {
+    return l(p, (k) => {
       const H = this._generateHashId({
-        id: i(N, "id"),
+        id: i(k, "id"),
         collectionName: s
-      }), k = y(this.collections[s], {
+      }), B = y(this.collections[s], {
         hashId: H
       });
-      if (!C(k))
-        R.push(k);
+      if (!w(B))
+        R.push(B);
       else if (r) {
         const j = {
           resourceMethod: "get",
           resourceName: s,
-          resourceId: i(N, "id"),
+          resourceId: i(k, "id"),
           resourceParams: {},
           resourcePayload: null,
           resourceFallback: {},
@@ -282,7 +282,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         r,
         s
       )
-    }, t = w(e);
+    }, t = x(e);
     l(t, (o) => {
       s[o] = e[o];
     });
@@ -326,7 +326,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     }
   }
   _pushToAliases(s) {
-    const e = _(s), t = I(s), o = w(this.aliases);
+    const e = _(s), t = I(s), o = x(this.aliases);
     e && l(o, (r) => {
       const a = _(this.aliases[r]), n = I(this.aliases[r]);
       a && l(s, (c) => {
@@ -354,7 +354,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     });
   }
   _pushToRequestHashes(s) {
-    const e = w(this.requestHashIds), t = _(s), o = I(s);
+    const e = x(this.requestHashIds), t = _(s), o = I(s);
     let r = null;
     t && (r = s), o && (r = [s]), l(e, (a) => {
       const n = i(
@@ -406,7 +406,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     this.namespace = s;
   }
   setHeadersCommon(s, e) {
-    B.defaults.headers.common[`${s}`] = e;
+    C.defaults.headers.common[`${s}`] = e;
   }
   setPayloadIncludeReference(s) {
     this.payloadIncludedReference = s;
@@ -446,19 +446,21 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const c = {
       method: s,
       url: e
-    }, d = this._generateHashId({ ...arguments[0] }), p = f(s, "get"), R = f(s, "delete"), N = f(s, "post"), H = G(t) || Is(t), k = !C(o), j = !C(r), M = !m(
+    }, d = this._generateHashId({ ...arguments[0] }), p = f(s, "get"), R = f(s, "delete"), k = f(s, "post"), H = G(t) || Is(t), B = !w(o), j = !w(r), M = !m(
       i(n, "override")
     ), P = i(r, "data") || null, $ = H ? y(this.collections[e], {
       id: t
     }) : null;
     if (M) {
       const u = i(n, "override") || {};
-      let b = m(i(u, "host")) ? this.host : i(u, "host"), z = m(i(u, "namespace")) ? this.namespace : i(u, "namespace"), S = `${b}/${z}`;
+      let b = m(i(u, "host")) ? this.host : i(u, "host"), z = m(i(u, "namespace")) ? this.namespace : i(u, "namespace");
+      C.defaults.headers.common;
+      let S = `${b}/${z}`;
       h(c, "baseURL", S);
     }
-    if (H && h(c, "url", `${e}/${t}`), k && h(c, "params", o), j) {
+    if (H && h(c, "url", `${e}/${t}`), B && h(c, "params", o), j) {
       const u = {
-        data: x(P, js)
+        data: N(P, js)
       };
       h(c, "data", u);
     }
@@ -466,7 +468,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     if (!(p && (T && Q || !T && Y && !Z || T && !Q && Y && !Z))) {
       j && h(P, "isLoading", !0), H && h($, "isLoading", !0);
       try {
-        const u = await B(c), b = ((K = u == null ? void 0 : u.data) == null ? void 0 : K.data) || a, z = ((ss = u == null ? void 0 : u.data) == null ? void 0 : ss.included) || [], S = ((es = u == null ? void 0 : u.data) == null ? void 0 : es.meta) || {}, as = I(b), ns = _(b);
+        const u = await C(c), b = ((K = u == null ? void 0 : u.data) == null ? void 0 : K.data) || a, z = ((ss = u == null ? void 0 : u.data) == null ? void 0 : ss.included) || [], S = ((es = u == null ? void 0 : u.data) == null ? void 0 : es.meta) || {}, as = I(b), ns = _(b);
         let A = null;
         return ns && l(
           b,
@@ -485,7 +487,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         ), n.alias && this._addAlias(
           i(n, "alias"),
           A
-        ), N && this.unloadRecord(P), R && this.unloadRecord(A), this.requestHashIds[d] = {
+        ), k && this.unloadRecord(P), R && this.unloadRecord(A), this.requestHashIds[d] = {
           isLoading: !1,
           isError: !1,
           isNew: !1,
@@ -574,7 +576,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     });
   }
   ajax(s = {}) {
-    return B.request(s);
+    return C.request(s);
   }
   /*
    * Exposed abstract utility functions from Lodash
@@ -607,10 +609,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     return this._sortRecordsBy(s, e);
   }
   isEmpty(s) {
-    return C(s);
+    return w(s);
   }
   isPresent(s) {
-    return !C(s);
+    return !w(s);
   }
   isEqual(s, e) {
     return f(s, e);

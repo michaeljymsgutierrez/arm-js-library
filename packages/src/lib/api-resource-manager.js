@@ -758,6 +758,7 @@ export default class ApiResourceManager {
       let overrideNamespace = !isNil(getProperty(override, 'namespace'))
         ? getProperty(override, 'namespace')
         : this.namespace
+      let overrideHeaders = axios.defaults.headers.common
       let overrideBaseURL = `${overrideHost}/${overrideNamespace}`
 
       setProperty(requestOptions, 'baseURL', overrideBaseURL)
