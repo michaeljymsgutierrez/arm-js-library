@@ -989,7 +989,7 @@ export default class ApiResourceManager {
   }
 
   groupBy(objects, groupByProperty) {
-    return uniqBy(objects, groupByProperty)
+    return groupBy(objects, groupByProperty)
   }
 
   firstObject(objects = []) {
