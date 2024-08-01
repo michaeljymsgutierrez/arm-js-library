@@ -1,5 +1,5 @@
 /*
- * ARM JavaScript Library v1.4.0
+ * ARM JavaScript Library v1.4.2
  *
  * Date: 2024-05-09 2:19PM GMT+8
  */
@@ -44,6 +44,7 @@ const {
   last,
   orderBy,
   uniqBy,
+  groupBy,
 } = _
 
 const defaultRequestArrayResponse = {
@@ -984,8 +985,12 @@ export default class ApiResourceManager {
     return filter(objects, filterProperties)
   }
 
-  uniqBy(objects, uniqProperty) {
-    return uniqBy(objects, uniqProperty)
+  uniqBy(objects, uniqByProperty) {
+    return uniqBy(objects, uniqByProperty)
+  }
+
+  groupBy(objects, groupByProperty) {
+    return groupBy(objects, groupByProperty)
   }
 
   firstObject(objects = []) {

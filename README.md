@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.4.0-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.4.2-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
@@ -663,11 +663,17 @@ const addresses = [
       attributes: { kind: 'school' }
     })
     ```
-* **uniqBy(objects, uniqProperty)**
+* **uniqBy(objects, uniqByProperty)**
     * Removes **duplicate** objects from an array based on a unique property. 
     ```javascript
     // Returns records with ids 1 and 2
     ARM.uniqBy(addresses, 'attributes.kind')
+    ```
+* **groupBy(objects, groupByProperty)**
+    * **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property. 
+    ```javascript
+    // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]} 
+    ARM.groupBy(addresses, 'attributes.kind')
     ```
 * **firstObject(objects)**
     * Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**. 

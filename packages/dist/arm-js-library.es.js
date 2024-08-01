@@ -30,11 +30,12 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   concat: ms,
   chunk: gs,
   uniqWith: Rs,
-  omit: N,
+  omit: B,
   first: V,
   last: rs,
   orderBy: bs,
-  uniqBy: Hs
+  uniqBy: Hs,
+  groupBy: js
 } = hs, os = {
   isLoading: !0,
   isError: !1,
@@ -61,7 +62,7 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   "isError",
   "isLoading",
   "isPristine"
-], js = [
+], Os = [
   "destroyRecord",
   "getCollection",
   "reload",
@@ -76,7 +77,7 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   "hashId",
   "collectionName"
 ];
-class xs {
+class Bs {
   constructor(s = []) {
     this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), ls(this, {
       collections: E,
@@ -118,10 +119,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
   _setProperty(s, e) {
     h(this, s, e);
-    const t = N(
+    const t = B(
       L(this.originalRecord),
       v
-    ), o = N(L(this), v);
+    ), o = B(L(this), v);
     f(t, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _setProperties(s) {
@@ -133,10 +134,10 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     }
     const t = e(s);
     l(t, ({ key: a, value: n }) => h(this, a, n));
-    const o = N(
+    const o = B(
       L(this.originalRecord),
       v
-    ), r = N(L(this), v);
+    ), r = B(L(this), v);
     f(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
   _sortRecordsBy(s, e = []) {
@@ -243,20 +244,20 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const o = i(e, "referenceKey") || "", r = i(e, "async") || !1, a = i(e, "filterBy") || {}, n = i(e, "sortBy") || [], c = i(t, o) || [], d = I(
       c
     ), p = d ? [c] : c, R = E([]);
-    return l(p, (k) => {
+    return l(p, (N) => {
       const H = this._generateHashId({
-        id: i(k, "id"),
+        id: i(N, "id"),
         collectionName: s
-      }), B = y(this.collections[s], {
+      }), k = y(this.collections[s], {
         hashId: H
       });
-      if (!w(B))
-        R.push(B);
+      if (!w(k))
+        R.push(k);
       else if (r) {
         const j = {
           resourceMethod: "get",
           resourceName: s,
-          resourceId: i(k, "id"),
+          resourceId: i(N, "id"),
           resourceParams: {},
           resourcePayload: null,
           resourceFallback: {},
@@ -446,7 +447,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const c = {
       method: s,
       url: e
-    }, d = this._generateHashId({ ...arguments[0] }), p = f(s, "get"), R = f(s, "delete"), k = f(s, "post"), H = G(t) || Is(t), B = !w(o), j = !w(r), M = !m(
+    }, d = this._generateHashId({ ...arguments[0] }), p = f(s, "get"), R = f(s, "delete"), N = f(s, "post"), H = G(t) || Is(t), k = !w(o), j = !w(r), M = !m(
       i(n, "override")
     ), P = i(r, "data") || null, $ = H ? y(this.collections[e], {
       id: t
@@ -458,9 +459,9 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       let S = `${b}/${z}`;
       h(c, "baseURL", S);
     }
-    if (H && h(c, "url", `${e}/${t}`), B && h(c, "params", o), j) {
+    if (H && h(c, "url", `${e}/${t}`), k && h(c, "params", o), j) {
       const u = {
-        data: N(P, js)
+        data: B(P, Os)
       };
       h(c, "data", u);
     }
@@ -487,7 +488,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
         ), n.alias && this._addAlias(
           i(n, "alias"),
           A
-        ), k && this.unloadRecord(P), R && this.unloadRecord(A), this.requestHashIds[d] = {
+        ), N && this.unloadRecord(P), R && this.unloadRecord(A), this.requestHashIds[d] = {
           isLoading: !1,
           isError: !1,
           isNew: !1,
@@ -593,6 +594,9 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   uniqBy(s, e) {
     return Hs(s, e);
   }
+  groupBy(s, e) {
+    return js(s, e);
+  }
   firstObject(s = []) {
     return V(s);
   }
@@ -640,5 +644,5 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   }
 }
 export {
-  xs as default
+  Bs as default
 };
