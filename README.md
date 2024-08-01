@@ -306,7 +306,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override`) which are currently available.
+    * Contains request config such as `(skip, alias, override, headers)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -321,7 +321,10 @@ import { ARM } from 'path-to-src/index.js'
         // Currently support host and namespace for the meantime.
         override: {
           host: 'https://ww7.test-demo.com',
-          namespace: 'v2'
+          namespace: 'api/v2'
+          headers: {
+            'X-Client-Platform': 'Symbian',
+          }
         }
       }
     ```
