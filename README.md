@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.4.1-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.4.2-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
