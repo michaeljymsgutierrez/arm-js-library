@@ -30,6 +30,7 @@ const {
   gt,
   lte,
   lt,
+  assign,
   flatMap,
   map,
   entries,
@@ -753,15 +754,22 @@ export default class ApiResourceManager {
 
     if (hasResourceConfigOverride) {
       const override = getProperty(resourceConfig, 'override') || {}
-      let overrideHost = !isNil(getProperty(override, 'host'))
+      const overrideHost = !isNil(getProperty(override, 'host'))
         ? getProperty(override, 'host')
         : this.host
-      let overrideNamespace = !isNil(getProperty(override, 'namespace'))
+      const overrideNamespace = !isNil(getProperty(override, 'namespace'))
         ? getProperty(override, 'namespace')
         : this.namespace
-      let overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+      const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+
+      const overrideHeaders = !isNil(getProperty(override, 'headers'))
+        ? getProperty(override, 'headers')
+        : {}
+      const commonHeaders = axios.defaults.headers.common
+      const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
 
       setProperty(requestOptions, 'baseURL', overrideBaseURL)
+      setProperty(requestOptions, 'headers', overrideCommonHeaders)
     }
 
     if (isResourceIdValid)
