@@ -679,6 +679,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   getAlias(s, e) {
     return I(e) && this._injectActions(e), this.aliases[s] || e;
   }
+  /**
+   * Creates a new record in a specified collection.
+   *
+   * @param {string} collectionName - The name of the collection.
+   * @param {Object} collectionRecord - Optional initial data for the record.
+   * @param {boolean} collectionRecordRandomId - Whether to generate a random ID for the record. Defaults to true.
+   * @returns {Object} The created record.
+   */
   createRecord(s, e = {}, t = !0) {
     const o = t ? J() : ds, r = m(
       y(this.collections[s], {
@@ -689,6 +697,26 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       id: o
     });
   }
+  /**
+   * Makes an API request based on the provided configuration.
+   *
+   * This method is private and should not be called directly.
+   *
+   * @param {Object} requestConfig - Configuration object for the request.
+   * @param {string} requestConfig.resourceMethod - HTTP method for the request (e.g. 'get', 'post', 'delete').
+   * @param {string} requestConfig.resourceName - API endpoint name.
+   * @param {string} [requestConfig.resourceId] - Optional resource ID for GET/DELETE requests.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
+   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST requests.
+   * @param {*} [requestConfig.resourceFallback] - Optional value to return if the request fails and no fallback data is provided.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request.
+   * @param {boolean} [requestConfig.resourceConfig.override] - Whether to override default client configuration.
+   * @param {string} [requestConfig.resourceConfig.host] - Optional override for the base URL host.
+   * @param {string} [requestConfig.resourceConfig.namespace] - Optional override for the API namespace.
+   * @param {Object} [requestConfig.resourceConfig.headers] - Optional override for request headers.
+   * @param {boolean} [requestConfig.resourceConfig.skip] - Whether to skip making the request (useful for data pre-population).
+   * @returns {Promise<*>} Promise resolving to the API response data or rejecting with the error.
+   */
   async _request({
     resourceMethod: s,
     resourceName: e,
