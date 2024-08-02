@@ -138,14 +138,35 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   _addCollection(s, e) {
     this.collections[s] = e;
   }
+  /**
+   * Adds an alias to the aliases object.
+   *
+   * @private
+   * @param {string} aliasName - The name of the alias.
+   * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
+   */
   _addAlias(s, e) {
     const t = _(e), o = I(e);
     t && (this.aliases[s] = e || []), o && (this.aliases[s] = e || {});
   }
+  /**
+   * Generates a hash ID based on the provided object.
+   *
+   * @private
+   * @param {Object} object - The object to generate the hash ID from. Defaults to an object with an `id` property generated using `uuidv1()`.
+   * @returns {string} The generated hash ID.
+   */
   _generateHashId(s = { id: J() }) {
     const e = JSON.stringify(s);
     return us.MD5(e).toString();
   }
+  /**
+   * Gets a property from the current object.
+   *
+   * @private
+   * @param {string} key - The key of the property to retrieve.
+   * @returns {*} The value of the property, or undefined if not found.
+   */
   _getProperty(s) {
     return i(this, s);
   }

@@ -107,6 +107,7 @@ const keysToBeOmittedOnDeepCheck = [
   'isLoading',
   'isPristine',
 ]
+
 /**
  * An array of keys to be omitted when constructing a request payload.
  * These keys typically represent internal object properties or methods.
@@ -161,6 +162,7 @@ export default class ApiResourceManager {
   _initializeAxiosConfig() {
     axios.defaults.baseURL = this._getBaseURL()
   }
+
   /**
    * Initializes a collection of collections with optional default values.
    *
@@ -170,6 +172,7 @@ export default class ApiResourceManager {
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
+
   /**
    * Gets the base URL for API requests.
    *
@@ -203,6 +206,13 @@ export default class ApiResourceManager {
     this.collections[collectionName] = collectionRecords
   }
 
+  /**
+   * Adds an alias to the aliases object.
+   *
+   * @private
+   * @param {string} aliasName - The name of the alias.
+   * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
+   */
   _addAlias(aliasName, aliasRecords) {
     const isAliasRecordsArray = isArray(aliasRecords)
     const isAliasRecordsObject = isPlainObject(aliasRecords)
@@ -212,11 +222,25 @@ export default class ApiResourceManager {
     if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
   }
 
+  /**
+   * Generates a hash ID based on the provided object.
+   *
+   * @private
+   * @param {Object} object - The object to generate the hash ID from. Defaults to an object with an `id` property generated using `uuidv1()`.
+   * @returns {string} The generated hash ID.
+   */
   _generateHashId(object = { id: uuidv1() }) {
     const stringifyObject = JSON.stringify(object)
     return CryptoJS.MD5(stringifyObject).toString()
   }
 
+  /**
+   * Gets a property from the current object.
+   *
+   * @private
+   * @param {string} key - The key of the property to retrieve.
+   * @returns {*} The value of the property, or undefined if not found.
+   */
   _getProperty(key) {
     return getProperty(this, key)
   }
