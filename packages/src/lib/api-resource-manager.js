@@ -48,6 +48,17 @@ const {
   groupBy,
 } = _
 
+/**
+ * Default response object for array-based requests.
+ *
+ * @typedef {Object} DefaultRequestArrayResponse
+ * @property {boolean} isLoading - Indicates if the request is loading.
+ * @property {boolean} isError - Indicates if an error occurred during the request.
+ * @property {boolean} isNew - Indicates if the response is new.
+ * @property {Array} data - The main data array returned by the request.
+ * @property {Array} included - Additional included data related to the response.
+ * @property {Object} meta - Metadata about the response.
+ */
 const defaultRequestArrayResponse = {
   isLoading: true,
   isError: false,
@@ -57,6 +68,17 @@ const defaultRequestArrayResponse = {
   meta: {},
 }
 
+/**
+ * Default response object for object-based requests.
+ *
+ * @typedef {Object} DefaultRequestObjectResponse
+ * @property {boolean} isLoading - Indicates if the request is loading.
+ * @property {boolean} isError - Indicates if an error occurred during the request.
+ * @property {boolean} isNew - Indicates if the response is new.
+ * @property {Object} data - The main data object returned by the request.
+ * @property {Array} included - Additional included data related to the response.
+ * @property {Object} meta - Metadata about the response.
+ */
 const defaultRequestObjectResponse = {
   isLoading: true,
   isError: false,
@@ -66,6 +88,12 @@ const defaultRequestObjectResponse = {
   meta: {},
 }
 
+/**
+ * An array of keys to be omitted during a deep check operation.
+ *
+ * @type {string[]}
+ * @constant
+ */
 const keysToBeOmittedOnDeepCheck = [
   'destroyRecord',
   'getCollection',
