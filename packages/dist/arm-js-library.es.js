@@ -3,6 +3,30 @@ import hs from "lodash";
 import * as cs from "mobx";
 import { v1 as J, NIL as ds } from "uuid";
 import us from "crypto-js";
+/**
+ * ARM JavaScript Library
+ *
+ * Version: 1.4.3
+ * Date: 2024-05-09 2:19PM GMT+8
+ *
+ * @author Michael Jyms Gutierrez
+ * @license MIT
+ *
+ * Axios library for making HTTP requests.
+ * @see https://axios-http.com/docs/
+ *
+ * Lodash utility library.
+ * @see https://lodash.com/docs/4.17.21
+ *
+ * MobX state management library.
+ * @see https://mobx.js.org/
+ *
+ * UUID generation library.
+ * @see https://www.npmjs.com/package/uuid
+ *
+ * CryptoJS library for cryptographic functions.
+ * @see https://crypto-js.org/
+ */
 const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   get: i,
   set: h,
