@@ -469,6 +469,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     }) : t;
     h(e, "collectionName", s), h(e, "hashId", o), h(e, "isLoading", !1), h(e, "isError", !1), h(e, "isPristine", !0), h(e, "isDirty", !1);
   }
+  /**
+   * Pushes records to a specified collection.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to push records to.
+   * @param {Array|Object} collectionRecords - The records to be pushed. Can be an array or an object.
+   * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
+   */
   _pushToCollection(s, e) {
     const t = _(e), o = I(e);
     if (t) {
@@ -500,6 +508,12 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       });
     }
   }
+  /**
+   * Pushes records to specified aliases.
+   *
+   * @private
+   * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
+   */
   _pushToAliases(s) {
     const e = _(s), t = I(s), o = x(this.aliases);
     e && l(o, (r) => {
@@ -528,6 +542,12 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       ) && (this.aliases[r] = s);
     });
   }
+  /**
+   * Pushes records to specified request hashes.
+   *
+   * @private
+   * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
+   */
   _pushToRequestHashes(s) {
     const e = x(this.requestHashIds), t = _(s), o = I(s);
     let r = null;
@@ -557,6 +577,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       });
     });
   }
+  /**
+   * Pushes records to a collection, aliases, and request hashes.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The updated collection records.
+   */
   _pushPayload(s, e) {
     this._isCollectionExisting(s);
     const t = this._pushToCollection(
@@ -565,6 +593,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return this._pushToAliases(t), this._pushToRequestHashes(t), t;
   }
+  /**
+   * Pushes a request and its corresponding response to the request hash store.
+   *
+   * @private
+   * @param {Object} requestObject - The request object.
+   * @param {Object} responseObject - The initial response object.
+   * @returns {Object} The updated or created request hash object.
+   */
   _pushRequestHash(s = {}, e = {
     isLoading: !0,
     isError: !1,

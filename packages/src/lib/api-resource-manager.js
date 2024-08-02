@@ -709,6 +709,14 @@ export default class ApiResourceManager {
     setProperty(collectionRecord, 'isDirty', false)
   }
 
+  /**
+   * Pushes records to a specified collection.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to push records to.
+   * @param {Array|Object} collectionRecords - The records to be pushed. Can be an array or an object.
+   * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
+   */
   _pushToCollection(collectionName, collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
@@ -765,6 +773,12 @@ export default class ApiResourceManager {
     }
   }
 
+  /**
+   * Pushes records to specified aliases.
+   *
+   * @private
+   * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
+   */
   _pushToAliases(collectionRecords) {
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
@@ -827,6 +841,12 @@ export default class ApiResourceManager {
     }
   }
 
+  /**
+   * Pushes records to specified request hashes.
+   *
+   * @private
+   * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
+   */
   _pushToRequestHashes(collectionRecords) {
     const requestHashIdsKeys = keysIn(this.requestHashIds)
     const isCollectionRecordsArray = isArray(collectionRecords)
@@ -875,6 +895,14 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Pushes records to a collection, aliases, and request hashes.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The updated collection records.
+   */
   _pushPayload(collectionName, collectionRecords) {
     this._isCollectionExisting(collectionName)
 
@@ -889,6 +917,14 @@ export default class ApiResourceManager {
     return updatedCollectionRecords
   }
 
+  /**
+   * Pushes a request and its corresponding response to the request hash store.
+   *
+   * @private
+   * @param {Object} requestObject - The request object.
+   * @param {Object} responseObject - The initial response object.
+   * @returns {Object} The updated or created request hash object.
+   */
   _pushRequestHash(
     requestObject = {},
     responseObject = {
