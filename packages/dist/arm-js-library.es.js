@@ -116,11 +116,25 @@ class Ns {
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
   }
+  /**
+   * Checks if a collection exists in the current instance.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to check.
+   * @throws {Error} If the collection does not exist.
+   */
   _isCollectionExisting(s) {
     if (m(i(this.collections, s)))
       throw `Collection ${s} does not exist.
 Fix: Try adding ${s} on your ARM config initialization.`;
   }
+  /**
+   * Adds a collection to the current instance.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to add.
+   * @param {Array} collectionRecords - The records for the collection.
+   */
   _addCollection(s, e) {
     this.collections[s] = e;
   }

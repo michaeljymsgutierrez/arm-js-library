@@ -180,11 +180,25 @@ export default class ApiResourceManager {
     return `${this.host}/${this.namespace}`
   }
 
+  /**
+   * Checks if a collection exists in the current instance.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to check.
+   * @throws {Error} If the collection does not exist.
+   */
   _isCollectionExisting(collectionName) {
     if (isNil(getProperty(this.collections, collectionName)))
       throw `Collection ${collectionName} does not exist.\nFix: Try adding ${collectionName} on your ARM config initialization.`
   }
 
+  /**
+   * Adds a collection to the current instance.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to add.
+   * @param {Array} collectionRecords - The records for the collection.
+   */
   _addCollection(collectionName, collectionRecords) {
     this.collections[collectionName] = collectionRecords
   }
