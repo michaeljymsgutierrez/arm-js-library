@@ -1242,6 +1242,14 @@ export default class ApiResourceManager {
     }
   }
 
+  /**
+   * Queries a resource with specified parameters and configuration.
+   *
+   * @param {string} resource - The resource to query.
+   * @param {Object} params - Optional query parameters.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object.
+   */
   query(resource, params = {}, config = {}) {
     const requestObject = {
       resourceMethod: 'get',

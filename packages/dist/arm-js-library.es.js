@@ -788,6 +788,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       }
     }
   }
+  /**
+   * Queries a resource with specified parameters and configuration.
+   *
+   * @param {string} resource - The resource to query.
+   * @param {Object} params - Optional query parameters.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object.
+   */
   query(s, e = {}, t = {}) {
     const o = {
       resourceMethod: "get",
