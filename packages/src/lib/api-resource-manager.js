@@ -107,7 +107,13 @@ const keysToBeOmittedOnDeepCheck = [
   'isLoading',
   'isPristine',
 ]
-
+/**
+ * An array of keys to be omitted when constructing a request payload.
+ * These keys typically represent internal object properties or methods.
+ *
+ * @type {string[]}
+ * @constant
+ */
 const keysToBeOmittedOnRequestPayload = [
   'destroyRecord',
   'getCollection',
@@ -147,14 +153,29 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Initializes the Axios configuration with the base URL.
+   *
+   * @private
+   */
   _initializeAxiosConfig() {
     axios.defaults.baseURL = this._getBaseURL()
   }
-
+  /**
+   * Initializes a collection of collections with optional default values.
+   *
+   * @private
+   * @param {string[]} collections - An array of collection names to initialize.
+   */
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
-
+  /**
+   * Gets the base URL for API requests.
+   *
+   * @private
+   * @returns {string} The base URL constructed from `host` and `namespace` properties.
+   */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`
   }

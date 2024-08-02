@@ -90,12 +90,29 @@ class Ns {
       _addAlias: F
     });
   }
+  /**
+   * Initializes the Axios configuration with the base URL.
+   *
+   * @private
+   */
   _initializeAxiosConfig() {
     C.defaults.baseURL = this._getBaseURL();
   }
+  /**
+   * Initializes a collection of collections with optional default values.
+   *
+   * @private
+   * @param {string[]} collections - An array of collection names to initialize.
+   */
   _initializeCollections(s) {
     l(s, (e) => this._addCollection(e, []));
   }
+  /**
+   * Gets the base URL for API requests.
+   *
+   * @private
+   * @returns {string} The base URL constructed from `host` and `namespace` properties.
+   */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
   }
