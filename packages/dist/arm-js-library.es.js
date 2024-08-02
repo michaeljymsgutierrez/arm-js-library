@@ -214,6 +214,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     ), o = B(L(this), D);
     f(t, o) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
+  /**
+   * Sets multiple properties on the current object based on the provided object.
+   * Recursively handles nested objects and updates `isDirty` and `isPristine` flags accordingly.
+   *
+   * @private
+   * @param {Object} objectKeysValues - An object containing key-value pairs to be set.
+   */
   _setProperties(s) {
     function e(a, n = "") {
       return ms(qs(a), ([c, d]) => {
@@ -229,6 +236,15 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     ), r = B(L(this), D);
     f(o, r) ? (h(this, "isDirty", !1), h(this, "isPristine", !0)) : (h(this, "isDirty", !0), h(this, "isPristine", !1));
   }
+  /**
+   * Sorts an array of records based on specified properties and sort orders.
+   *
+   * @private
+   * @param {Array} currentRecords - The array of records to sort.
+   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
+   *  Valid orders are 'asc' (ascending) and 'desc' (descending).
+   * @returns {Array} The sorted array of records.
+   */
   _sortRecordsBy(s, e = []) {
     const t = v(
       e,
@@ -239,12 +255,24 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return Hs(s, t, o);
   }
+  /**
+   * Removes a record from a specified collection based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from the collection.
+   */
   _unloadFromCollection(s) {
     const e = i(s, "collectionName"), t = q(this.collections[e], {
       hashId: i(s, "hashId")
     });
     g(t, 0) && this.collections[e].splice(t, 1);
   }
+  /**
+   * Removes a record from all request hashes based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from request hashes.
+   */
   _unloadFromRequestHashes(s) {
     const e = x(this.requestHashIds);
     l(e, (t) => {
@@ -270,6 +298,12 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       ) && h(this.requestHashIds[t], "data", {});
     });
   }
+  /**
+   * Removes a record from all aliases based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from aliases.
+   */
   _unloadFromAliases(s) {
     const e = x(this.aliases);
     l(e, (t) => {
@@ -286,9 +320,21 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       ) && (this.aliases[t] = {});
     });
   }
+  /**
+   * Unloads a record from the collection, request hashes, and aliases.
+   *
+   * @param {Object} currentRecord - The record to be unloaded.
+   */
   unloadRecord(s) {
     this._unloadFromCollection(s), this._unloadFromRequestHashes(s), this._unloadFromAliases(s);
   }
+  /**
+   * Saves a record to the server.
+   *
+   * @private
+   * @param {Object} currentRecord - The record to be saved.
+   * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+   */
   _saveRecord(s) {
     const e = i(s, "collectionName"), t = y(this.collections[e], {
       hashId: i(s, "hashId")

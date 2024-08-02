@@ -342,6 +342,13 @@ export default class ApiResourceManager {
     }
   }
 
+  /**
+   * Sets multiple properties on the current object based on the provided object.
+   * Recursively handles nested objects and updates `isDirty` and `isPristine` flags accordingly.
+   *
+   * @private
+   * @param {Object} objectKeysValues - An object containing key-value pairs to be set.
+   */
   _setProperties(objectKeysValues) {
     function objectToArray(obj, prefix = '') {
       return flatMap(entries(obj), ([key, value]) => {
@@ -371,6 +378,15 @@ export default class ApiResourceManager {
     }
   }
 
+  /**
+   * Sorts an array of records based on specified properties and sort orders.
+   *
+   * @private
+   * @param {Array} currentRecords - The array of records to sort.
+   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
+   *  Valid orders are 'asc' (ascending) and 'desc' (descending).
+   * @returns {Array} The sorted array of records.
+   */
   _sortRecordsBy(currentRecords, sortProperties = []) {
     const properties = map(sortProperties, (sortProperty) =>
       first(sortProperty.split(':'))
@@ -381,6 +397,12 @@ export default class ApiResourceManager {
     return orderBy(currentRecords, properties, sorts)
   }
 
+  /**
+   * Removes a record from a specified collection based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from the collection.
+   */
   _unloadFromCollection(collectionRecord) {
     const collectionName = getProperty(collectionRecord, 'collectionName')
     const collectionRecordIndex = findIndex(this.collections[collectionName], {
@@ -391,6 +413,12 @@ export default class ApiResourceManager {
       this.collections[collectionName].splice(collectionRecordIndex, 1)
   }
 
+  /**
+   * Removes a record from all request hashes based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from request hashes.
+   */
   _unloadFromRequestHashes(collectionRecord) {
     const requestHashIdsKeys = keysIn(this.requestHashIds)
 
@@ -428,6 +456,12 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Removes a record from all aliases based on its hash ID.
+   *
+   * @private
+   * @param {Object} collectionRecord - The record to be removed from aliases.
+   */
   _unloadFromAliases(collectionRecord) {
     const aliasesKeys = keysIn(this.aliases)
 
@@ -456,12 +490,24 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Unloads a record from the collection, request hashes, and aliases.
+   *
+   * @param {Object} currentRecord - The record to be unloaded.
+   */
   unloadRecord(currentRecord) {
     this._unloadFromCollection(currentRecord)
     this._unloadFromRequestHashes(currentRecord)
     this._unloadFromAliases(currentRecord)
   }
 
+  /**
+   * Saves a record to the server.
+   *
+   * @private
+   * @param {Object} currentRecord - The record to be saved.
+   * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+   */
   _saveRecord(currentRecord) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
