@@ -162,12 +162,34 @@ export default class ApiResourceManager {
      * @type {Object}
      */
     this.aliases = {}
+
+    /**
+     * A dictionary to store request hash IDs.
+     * @type {Object}
+     */
     this.requestHashIds = {}
+
+    /**
+     * The reference key used for included data in request payloads. Defaults to 'type'.
+     * @type {string}
+     */
     this.payloadIncludedReference = 'type'
 
+    /**
+     * Initializes collections in the instance.
+     * @private
+     */
     this._initializeCollections(collections)
+
+    /**
+     * Initializes Axios configuration with the base URL.
+     * @private
+     */
     this._initializeAxiosConfig()
 
+    /**
+     * Makes specific properties observable using a library like MobX.
+     */
     makeObservable(this, {
       collections: observable,
       aliases: observable,
