@@ -811,6 +811,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return this._request(o), a;
   }
+  /**
+   * Queries a single record from a specified resource.
+   * @param {string} resource - The name of the resource to query.
+   * @param {Object} params - Optional query parameters for the request.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object containing the query status and results.
+   */
   queryRecord(s, e = {}, t = {}) {
     const o = {
       resourceMethod: "get",

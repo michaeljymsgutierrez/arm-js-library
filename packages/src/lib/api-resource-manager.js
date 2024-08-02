@@ -1271,6 +1271,13 @@ export default class ApiResourceManager {
     return requestHashObject
   }
 
+  /**
+   * Queries a single record from a specified resource.
+   * @param {string} resource - The name of the resource to query.
+   * @param {Object} params - Optional query parameters for the request.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object containing the query status and results.
+   */
   queryRecord(resource, params = {}, config = {}) {
     const requestObject = {
       resourceMethod: 'get',
