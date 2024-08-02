@@ -349,6 +349,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     };
     return this._request(d);
   }
+  /**
+   * Deletes a record from the server.
+   *
+   * @private
+   * @async
+   * @param {Object} currentRecord - The record to be deleted.
+   * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+   */
   async _deleteRecord(s) {
     const e = i(s, "collectionName"), t = y(this.collections[e], {
       hashId: i(s, "hashId")
@@ -363,6 +371,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     };
     return this._request(n);
   }
+  /**
+   * Reloads a record from the server.
+   *
+   * @private
+   * @async
+   * @param {Object} currentRecord - The record to be reloaded.
+   * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
+   */
   async _reloadRecord(s) {
     const e = i(s, "id"), r = {
       resourceMethod: "get",
@@ -375,6 +391,15 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     };
     return this._request(r);
   }
+  /**
+   * Retrieves records from a specified collection based on given criteria.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to retrieve records from.
+   * @param {Object} collectionConfig - Optional configuration for the collection, including referenceKey, async, filterBy, and sortBy properties.
+   * @param {Object|Array} currentRecord - The current record containing potential related records.
+   * @returns {Object|Array} The retrieved records, either a single object or an array depending on the input.
+   */
   _getCollectionRecord(s, e = {}, t) {
     const o = i(e, "referenceKey") || "", r = i(e, "async") || !1, a = i(e, "filterBy") || {}, n = i(e, "sortBy") || [], c = i(t, o) || [], d = I(
       c
@@ -405,6 +430,12 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       n
     );
   }
+  /**
+   * Injects action methods into a collection record.
+   *
+   * @private
+   * @param {Object} collectionRecord - The collection record to inject actions into.
+   */
   _injectActions(s) {
     const e = {
       get: this._getProperty,
@@ -423,6 +454,14 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       s[o] = e[o];
     });
   }
+  /**
+   * Injects reference keys into a collection record.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Object} collectionRecord - The collection record to inject keys into.
+   * @param {string} collectionRecordHashId - Optional hash ID for the record.
+   */
   _injectReferenceKeys(s, e, t = null) {
     const o = rs(t) ? this._generateHashId({
       id: i(e, "id"),

@@ -532,6 +532,14 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  /**
+   * Deletes a record from the server.
+   *
+   * @private
+   * @async
+   * @param {Object} currentRecord - The record to be deleted.
+   * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+   */
   async _deleteRecord(currentRecord) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
@@ -554,6 +562,14 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  /**
+   * Reloads a record from the server.
+   *
+   * @private
+   * @async
+   * @param {Object} currentRecord - The record to be reloaded.
+   * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
+   */
   async _reloadRecord(currentRecord) {
     const id = getProperty(currentRecord, 'id')
     const resource = getProperty(currentRecord, 'collectionName')
@@ -572,6 +588,15 @@ export default class ApiResourceManager {
     return this._request(requestObject)
   }
 
+  /**
+   * Retrieves records from a specified collection based on given criteria.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to retrieve records from.
+   * @param {Object} collectionConfig - Optional configuration for the collection, including referenceKey, async, filterBy, and sortBy properties.
+   * @param {Object|Array} currentRecord - The current record containing potential related records.
+   * @returns {Object|Array} The retrieved records, either a single object or an array depending on the input.
+   */
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
@@ -628,6 +653,12 @@ export default class ApiResourceManager {
         )
   }
 
+  /**
+   * Injects action methods into a collection record.
+   *
+   * @private
+   * @param {Object} collectionRecord - The collection record to inject actions into.
+   */
   _injectActions(collectionRecord) {
     const actions = {
       get: this._getProperty,
@@ -650,6 +681,14 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Injects reference keys into a collection record.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Object} collectionRecord - The collection record to inject keys into.
+   * @param {string} collectionRecordHashId - Optional hash ID for the record.
+   */
   _injectReferenceKeys(
     collectionName,
     collectionRecord,
