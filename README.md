@@ -321,7 +321,7 @@ import { ARM } from 'path-to-src/index.js'
         // Currently support host and namespace for the meantime.
         override: {
           host: 'https://ww7.test-demo.com',
-          namespace: 'api/v2'
+          namespace: 'api/v2',
           headers: {
             'X-Client-Platform': 'Symbian',
           }
