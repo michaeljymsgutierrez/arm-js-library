@@ -610,27 +610,72 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     const t = this._generateHashId(s), o = !m(this.requestHashIds[t]), r = i(e, "isNew");
     return o && r ? h(this.requestHashIds[t], "isNew", !1) : this.requestHashIds[t] = e, this.requestHashIds[t];
   }
+  /**
+   * Sets the host URL for the client and initializes the Axios configuration.
+   *
+   * @param {string} host - The base URL of the API server.
+   */
   setHost(s) {
     this.host = s, this._initializeAxiosConfig();
   }
+  /**
+   * Sets the namespace for the client.
+   *
+   * @param {string} namespace - The namespace for API requests.
+   */
   setNamespace(s) {
     this.namespace = s;
   }
+  /**
+   * Sets a common header for all Axios requests.
+   *
+   * @param {string} key - The header key.
+   * @param {string|number|boolean} value - The header value.
+   */
   setHeadersCommon(s, e) {
     C.defaults.headers.common[`${s}`] = e;
   }
+  /**
+   * Sets the reference key used for included data in request payloads.
+   *
+   * @param {string} key - The new reference key.
+   */
   setPayloadIncludeReference(s) {
     this.payloadIncludedReference = s;
   }
+  /**
+   * Makes the instance accessible globally in a browser environment.
+   *
+   * Attaches the instance to the `window` object as `window.ARM`.
+   * **Caution:** This method should be used with care as it modifies the global scope.
+   */
   setGlobal() {
     typeof window < "u" && (window.ARM = Object.freeze(this));
   }
+  /**
+   * Retrieves a collection by its name.
+   *
+   * @param {string} collectionName - The name of the collection to retrieve.
+   * @returns {Array} The collection data, or an empty array if not found.
+   */
   getCollection(s) {
     return this.collections[s] || [];
   }
+  /**
+   * Clears the contents of a specified collection.
+   *
+   * @param {string} collectionName - The name of the collection to clear.
+   */
   clearCollection(s) {
     this.collections[s] = [];
   }
+  /**
+   * Retrieves an alias by its name, with optional fallback records.
+   *
+   * @param {string} aliasName - The name of the alias to retrieve.
+   * @param {Object} fallbackRecords - Optional fallback records to return if the alias is not found.
+   * @returns {Array|Object} The alias data or the fallback records.
+   */
   getAlias(s, e) {
     return I(e) && this._injectActions(e), this.aliases[s] || e;
   }

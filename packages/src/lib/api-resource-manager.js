@@ -947,35 +947,80 @@ export default class ApiResourceManager {
     return this.requestHashIds[requestHashId]
   }
 
+  /**
+   * Sets the host URL for the client and initializes the Axios configuration.
+   *
+   * @param {string} host - The base URL of the API server.
+   */
   setHost(host) {
     this.host = host
     this._initializeAxiosConfig()
   }
 
+  /**
+   * Sets the namespace for the client.
+   *
+   * @param {string} namespace - The namespace for API requests.
+   */
   setNamespace(namespace) {
     this.namespace = namespace
   }
 
+  /**
+   * Sets a common header for all Axios requests.
+   *
+   * @param {string} key - The header key.
+   * @param {string|number|boolean} value - The header value.
+   */
   setHeadersCommon(key, value) {
     axios.defaults.headers.common[`${key}`] = value
   }
 
+  /**
+   * Sets the reference key used for included data in request payloads.
+   *
+   * @param {string} key - The new reference key.
+   */
   setPayloadIncludeReference(key) {
     this.payloadIncludedReference = key
   }
 
+  /**
+   * Makes the instance accessible globally in a browser environment.
+   *
+   * Attaches the instance to the `window` object as `window.ARM`.
+   * **Caution:** This method should be used with care as it modifies the global scope.
+   */
   setGlobal() {
     if (typeof window !== 'undefined') window.ARM = Object.freeze(this)
   }
 
+  /**
+   * Retrieves a collection by its name.
+   *
+   * @param {string} collectionName - The name of the collection to retrieve.
+   * @returns {Array} The collection data, or an empty array if not found.
+   */
   getCollection(collectionName) {
     return this.collections[collectionName] || []
   }
 
+  /**
+   * Clears the contents of a specified collection.
+   *
+   * @param {string} collectionName - The name of the collection to clear.
+   */
   clearCollection(collectionName) {
     this.collections[collectionName] = []
   }
 
+  /**
+   * Retrieves an alias by its name, with optional fallback records.
+   *
+   * @param {string} aliasName - The name of the alias to retrieve.
+   * @param {Object} fallbackRecords - Optional fallback records to return if the alias is not found.
+   * @returns {Array|Object} The alias data or the fallback records.
+   */
   getAlias(aliasName, fallbackRecords) {
     const isFallbacRecordsObject = isPlainObject(fallbackRecords)
 
