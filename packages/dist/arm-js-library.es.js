@@ -833,6 +833,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return this._request(o), a;
   }
+  /**
+   * Fetches a collection of records from a specified resource.
+   *
+   * @param {string} resource - The name of the resource to query.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object containing the query status and results.
+   */
   findAll(s, e = {}) {
     const t = {
       resourceMethod: "get",
@@ -848,6 +855,15 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return this._request(t), r;
   }
+  /**
+   * Finds a specific record by ID from a given resource.
+   *
+   * @param {string} resource - The name of the resource to query.
+   * @param {number|string} id - The ID of the record to find.
+   * @param {Object} params - Optional query parameters for the request.
+   * @param {Object} config - Optional configuration for the request.
+   * @returns {Object} The request hash object containing the query status and results.
+   */
   findRecord(s, e, t = {}, o = {}) {
     const r = {
       resourceMethod: "get",
@@ -863,77 +879,226 @@ Fix: Try adding ${s} on your ARM config initialization.`;
     );
     return this._request(r), n;
   }
+  /**
+   * Peeks at all records in a specified collection without triggering a request.
+   *
+   * @param {string} collectionName - The name of the collection to peek at.
+   * @returns {Array} The collection records, or an empty array if the collection is not found.
+   */
   peekAll(s) {
     return this.collections[s];
   }
+  /**
+   * Peeks at a specific record in a collection without triggering a request.
+   *
+   * @param {string} collectionName - The name of the collection to peek at.
+   * @param {number|string} collectionRecordId - The ID of the record to find.
+   * @returns {Object|undefined} The found record, or undefined if not found.
+   */
   peekRecord(s, e) {
     return y(this.collections[s], {
       id: e
     });
   }
+  /**
+   * Makes an AJAX request using the axios library.
+   *
+   * @param {Object} config - Configuration object for the axios request.
+   * @returns {Promise} A Promise that resolves with the Axios response or rejects with an error.
+   */
   ajax(s = {}) {
     return C.request(s);
   }
-  /*
-   * Exposed abstract utility functions from Lodash
+  /**
+   * Finds the first object in an array that matches the specified properties.
+   *
+   * @param {Array<Object>} objects - The array of objects to search.
+   * @param {Object} findProperties - The properties to match.
+   * @returns {Object|undefined} The found object, or undefined if not found.
    */
   findBy(s, e = {}) {
     return y(s, e);
   }
+  /**
+   * Finds the index of the first object in an array that matches the specified properties.
+   *
+   * @param {Array<Object>} objects - The array of objects to search.
+   * @param {Object} findIndexProperties - The properties to match.
+   * @returns {number} The index of the found object, or -1 if not found.
+   */
   findIndexBy(s, e = {}) {
     return q(s, e);
   }
+  /**
+   * Filters an array of objects based on the specified properties.
+   *
+   * @param {Array<Object>} objects - The array of objects to filter.
+   * @param {Object} filterProperties - The filter criteria.
+   * @returns {Array<Object>} The filtered array of objects.
+   */
   filterBy(s, e = {}) {
     return os(s, e);
   }
+  /**
+   * Creates a new array of unique objects based on a specified property.
+   *
+   * @param {Array<Object>} objects - The array of objects to process.
+   * @param {string} uniqByProperty - The property to use for uniqueness comparison.
+   * @returns {Array<Object>} The array of unique objects.
+   */
   uniqBy(s, e) {
     return js(s, e);
   }
+  /**
+   * Groups objects into arrays based on a specified property.
+   *
+   * @param {Array<Object>} objects - The array of objects to group.
+   * @param {string} groupByProperty - The property to group by.
+   * @returns {Object} An object where keys are group values and values are arrays of objects.
+   */
   groupBy(s, e) {
     return Os(s, e);
   }
+  /**
+   * Returns the first object in an array.
+   *
+   * @param {Array<Object>} objects - The array of objects.
+   * @returns {Object|undefined} The first object, or undefined if the array is empty.
+   */
   firstObject(s = []) {
     return Q(s);
   }
+  /**
+   * Returns the last object in an array.
+   *
+   * @param {Array<Object>} objects - The array of objects.
+   * @returns {Object|undefined} The last object, or undefined if the array is empty.
+   */
   lastObject(s = []) {
     return as(s);
   }
+  /**
+   * Merges two arrays of objects into a single array, removing duplicates.
+   *
+   * @param {Array<Object>} objects - The first array of objects.
+   * @param {Array<Object>} otherObjects - The second array of objects.
+   * @returns {Array<Object>} The merged array of objects without duplicates.
+   */
   mergeObjects(s = [], e = []) {
     return bs(gs(s, e), f);
   }
+  /**
+   * Splits an array of objects into chunks of a specified size.
+   *
+   * @param {Array<Object>} objects - The array of objects to chunk.
+   * @param {number} chunkSize - The size of each chunk.
+   * @returns {Array<Array<Object>>} An array of chunks.
+   */
   chunkObjects(s = [], e = 1) {
     return Rs(s, e);
   }
+  /**
+   * Sorts an array of objects based on specified properties and sort orders.
+   *
+   * @param {Array<Object>} objects - The array of objects to sort.
+   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
+   * @returns {Array<Object>} The sorted array of objects.
+   */
   sortBy(s, e) {
     return this._sortRecordsBy(s, e);
   }
+  /**
+   * Checks if a value is empty.
+   *
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is empty, false otherwise.
+   */
   isEmpty(s) {
     return w(s);
   }
+  /**
+   * Checks if a value is present (not empty).
+   *
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is present, false otherwise.
+   */
   isPresent(s) {
     return !w(s);
   }
+  /**
+   * Checks if two values are equal.
+   *
+   * @param {*} value - The first value.
+   * @param {*} other - The second value.
+   * @returns {boolean} True if the values are equal, false otherwise.
+   */
   isEqual(s, e) {
     return f(s, e);
   }
+  /**
+   * Checks if a value is a number.
+   *
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is a number, false otherwise.
+   */
   isNumber(s) {
     return V(s);
   }
+  /**
+   * Checks if a value is null or undefined.
+   *
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is null or undefined, false otherwise.
+   */
   isNil(s) {
     return m(s);
   }
+  /**
+   * Checks if a value is null.
+   *
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is null, false otherwise.
+   */
   isNull(s) {
     return rs(s);
   }
+  /**
+   * Checks if a value is greater than or equal to another value.
+   *
+   * @param {number} value - The first value.
+   * @param {number} other - The second value.
+   * @returns {boolean} True if the first value is greater than or equal to the second value, false otherwise.
+   */
   isGte(s, e) {
     return g(s, e);
   }
+  /**
+   * Checks if a value is greater than another value.
+   *
+   * @param {number} value - The first value.
+   * @param {number} other - The second value.
+   * @returns {boolean} True if the first value is greater than the second value, false otherwise.
+   */
   isGt(s, e) {
     return ps(s, e);
   }
+  /**
+   * Checks if a value is less than or equal to another value.
+   *
+   * @param {number} value - The first value.
+   * @param {number} other - The second value.
+   * @returns {boolean} True if the first value is less than or equal to the second value, false otherwise.
+   */
   isLte(s, e) {
     return _s(s, e);
   }
+  /**
+   * Checks if a value is less than another value.
+   *
+   * @param {number} value - The first value.
+   * @param {number} other - The second value.
+   * @returns {boolean} True if the first value is less than the second value, false otherwise.
+   */
   isLt(s, e) {
     return W(s, e);
   }
