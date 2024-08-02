@@ -79,6 +79,11 @@ const { makeObservable: ls, observable: E, action: F, toJS: L } = cs, {
   "collectionName"
 ];
 class Ns {
+  /**
+   * Creates a new instance of the class.
+   *
+   * @param {Object[]} collections - An optional array of collections to initialize. Defaults to an empty array.
+   */
   constructor(s = []) {
     this.namespace = "api/v1", this.host = typeof window < "u" ? window.location.origin : "", this.collections = {}, this.aliases = {}, this.requestHashIds = {}, this.payloadIncludedReference = "type", this._initializeCollections(s), this._initializeAxiosConfig(), ls(this, {
       collections: E,
@@ -170,6 +175,13 @@ Fix: Try adding ${s} on your ARM config initialization.`;
   _getProperty(s) {
     return i(this, s);
   }
+  /**
+   * Sets a property on the current object and updates `isDirty` and `isPristine` flags accordingly.
+   *
+   * @private
+   * @param {string} key - The key of the property to set.
+   * @param {*} value - The value to assign to the property.
+   */
   _setProperty(s, e) {
     h(this, s, e);
     const t = B(

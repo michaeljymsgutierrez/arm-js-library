@@ -132,10 +132,35 @@ const keysToBeOmittedOnRequestPayload = [
 ]
 
 export default class ApiResourceManager {
+  /**
+   * Creates a new instance of the class.
+   *
+   * @param {Object[]} collections - An optional array of collections to initialize. Defaults to an empty array.
+   */
   constructor(collections = []) {
+    /**
+     * The namespace for API requests. Defaults to 'api/v1'.
+     * @type {string}
+     */
+
     this.namespace = 'api/v1'
+    /**
+     * The base URL for API requests.
+     * Defaults to the current origin if running in a browser, otherwise an empty string.
+     * @type {string}
+     */
     this.host = typeof window !== 'undefined' ? window.location.origin : ''
+
+    /**
+     * A dictionary to store collections of data.
+     * @type {Object}
+     */
     this.collections = {}
+
+    /**
+     * A dictionary to store aliases for collections.
+     * @type {Object}
+     */
     this.aliases = {}
     this.requestHashIds = {}
     this.payloadIncludedReference = 'type'
@@ -245,6 +270,13 @@ export default class ApiResourceManager {
     return getProperty(this, key)
   }
 
+  /**
+   * Sets a property on the current object and updates `isDirty` and `isPristine` flags accordingly.
+   *
+   * @private
+   * @param {string} key - The key of the property to set.
+   * @param {*} value - The value to assign to the property.
+   */
   _setProperty(key, value) {
     setProperty(this, key, value)
 
