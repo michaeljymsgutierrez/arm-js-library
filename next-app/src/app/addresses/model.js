@@ -16,6 +16,11 @@ const Model = () => {
     {
       alias: 'customerAddresses',
       skipId: searchParams.get('skipId'),
+      override: {
+        headers: {
+          'X-Client-Platform': 'Android',
+        },
+      },
       // skip: user.isLoading,
       // skip: false,
     }

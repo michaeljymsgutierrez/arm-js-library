@@ -1,33 +1,62 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.3.2-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.4.3-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
 
 * [Overview](#overview)
+  * [Core Functionalities](#core-functionalities)
+  * [Key Features](#key-features)
+  * [Benefits](#benefits)
 * [Basic Usage](#basic-usage)
 * [Installation](#installation)
 * [Dependency Packages](#dependency-packages)
-    * [Initialization and Configuration](#initialization-and-configuration)
-        * [Initialization](#initialization)
-            * [Initialization on create-react-app](#initialization-on-create-react-app)
-            * [Initialization on create-next-app](#initialization-on-create-next-app)
-        * [Configuration](#configuration)
+  * [Initialization and Configuration](#initialization-and-configuration)
+    * [Initialization](#initialization)
+      * [Initialization on create-react-app](#initialization-on-create-react-app)
+      * [Initialization on create-next-app](#initialization-on-create-next-app)
+    * [Configuration](#configuration)
 * [Utilization](#utilization)
-    * [Request functions from server](#request-functions-from-server)
-        * [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
-        * [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
-    * [Retrieve functions from collections](#retrieve-functions-from-collections)
-    * [Create collection record function](#create-collection-record-function)
-    * [Remove collection record functions](#remove-collection-record-functions)
+  * [Request functions from server](#request-functions-from-server)
+    * [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
+    * [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
+  * [Retrieve functions from collections](#retrieve-functions-from-collections)
+  * [Create collection record function](#create-collection-record-function)
+  * [Remove collection record functions](#remove-collection-record-functions)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
+  * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
+  * [Data Validation and Comparison](#data-validation-and-comparison)
 
 ## Overview
 
+**ARM (API Resource Manager)** is a JavaScript library designed to centralize data management and simplify interactions with APIs. By providing a structured approach to handling and storing fetched data, ARM promotes efficient and flexible data usage throughout your application.
 
-ARM (API Resource Manager) is a JavaScript library designed to manage API resources efficiently, leveraging axios for HTTP requests, lodash for utility functions, mobx for state management, and uuid and crypto-js for unique identifiers and hashing.
+### Core Functionalities
+* **Centralized Data Storage:** Organizes fetched data into easily accessible collections, acting as a single source of truth for your application's data.
+* **API Interactions:** Manages API requests and responses, providing methods for common HTTP operations (GET, POST, PUT, DELETE).
+* **Caching:** Optimizes performance by caching frequently accessed data, reducing API calls and improving response times.
+* **Request Management:** Tracks ongoing requests to prevent redundancy and manages their state.
+* **Utility Functions:** Offers helper functions for data manipulation, filtering, sorting, and other common operations.
+
+### Key Features
+* **Collections:** Stores fetched data in collections for efficient retrieval and management.
+* **Record Management:** Provides methods to create, update, delete, and retrieve individual records within collections.
+* **Reactive Data:** Employs observable patterns (likely through a library like Mobx) to enable real-time updates and dependency tracking.
+* **Asynchronous Operations:** Handles API interactions asynchronously using Promises for non-blocking operations.
+* **Error Handling:** Manages errors gracefully and provides informative feedback.
+* **Configurability:** Allows customization of API endpoints, headers, and request behavior.
+* **Extensibility:** Can be integrated with other libraries and frameworks to fit various application architectures.
+
+### Benefits
+* **Centralized Data Access:** Provides a single source of truth for application data, ensuring consistency and reducing data duplication.
+* **Improved Performance:** Caching and optimized request management enhance application speed.
+* **Enhanced Developer Experience:** Simplifies data management and reduces boilerplate code.
+* **Flexibility:** Can be used across different components and parts of an application.
+* **Maintainability:** Promotes code organization and reduces potential inconsistencies.
+
+By centralizing data management and offering flexible access to it, ARM empowers developers to build more efficient, scalable, and maintainable applications.
 
 ## Basic Usage
 ```javascript
@@ -277,7 +306,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override`) which are currently available.
+    * Contains request config such as `(skip, alias, override, headers)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -292,7 +321,10 @@ import { ARM } from 'path-to-src/index.js'
         // Currently support host and namespace for the meantime.
         override: {
           host: 'https://ww7.test-demo.com',
-          namespace: 'v2'
+          namespace: 'api/v2',
+          headers: {
+            'X-Client-Platform': 'Symbian',
+          }
         }
       }
     ```
@@ -615,13 +647,13 @@ const addresses = [
 * **findBy(objects, findProperties)**
     * Finds the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id 1
+    // Return record with id 1
     ARM.findBy(addresses, { id: 1 })
     ```
 * **findIndexBy(objects, findIndexProperties)**
     * Returns the index of the first element in the given array of objects that satisfies the provided find properties.
     ```javascript
-    // Returns record with id 1
+    // Return index number of record with id 1
     ARM.findIndexBy(addresses, {
       attributes: { kind: 'office' }
     })
@@ -634,6 +666,40 @@ const addresses = [
       attributes: { kind: 'school' }
     })
     ```
+* **uniqBy(objects, uniqByProperty)**
+    * Removes **duplicate** objects from an array based on a unique property. 
+    ```javascript
+    // Returns records with ids 1 and 2
+    ARM.uniqBy(addresses, 'attributes.kind')
+    ```
+* **groupBy(objects, groupByProperty)**
+    * **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property. 
+    ```javascript
+    // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]} 
+    ARM.groupBy(addresses, 'attributes.kind')
+    ```
+* **firstObject(objects)**
+    * Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**. 
+    ```javascript
+    // Return record with id 1
+    ARM.firstObject(addresses)
+    ```
+* **lastObject(objects)**
+    * Returns the **last element** from the given array of objects. If the array is empty, it returns **undefined**. 
+    ```javascript
+    // Return record with id 3
+    ARM.lastObject(addresses)
+    ```
+* **mergeObjects(objects, otherObjects)**
+    * Combines two arrays of objects into one, removing duplicates. 
+    ```javascript
+    ARM.mergeObjects(addresses, otherAddresses)
+    ```
+* **chunkObjects(objects, chunkSize)**
+    * Splits an array of objects into smaller arrays of a given **size**. 
+    ```javascript
+    ARM.chunkObjects(addresses, 2)
+    ```
 * **sortBy(objects, sortProperties)**
     * Sorts the given array of objects by the specified sort properties. 
     ```javascript
@@ -643,65 +709,78 @@ const addresses = [
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
     ```
+* **ajax(config)**
+    * Axios instance under the hood with default ARM config.
+    * Config accepts all properties that can be passed on **axios.request** config.
+    ```javascript
+    // Return promise
+    ARM.ajax({
+      method: 'get',
+      baseURL: 'https://other-api.test-demo.com',
+      url: '/api/v1/addresses'
+    })
+    .then(results => console.log(results))
+    .catch(errors => console.log(errors))
+    ```
 #### Data Validation and Comparison
 
 * **isEmpty(value)**
-    * Checks if a value is considered empty (null, undefined, empty string, empty array, or empty object). 
+    * Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isEmpty(value)
     ```
 * **isPresent(value)**
     * Returns the opposite of isEmpty. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isPresent(value)
     ```
 * **isEqual(value, other)**
     * Performs a deep comparison between two values to determine if they are equal. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isEqual(value, other)
     ```
 * **isNumber(value)**
     * Checks if a value is a **number**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNumber(value)
     ```
 * **isNil(value)**
     * Checks if a value is **null** or **undefined**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNil(value)
     ```
 * **isNull(value)**
     * Checks if a value is **null**. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isNull(value)
     ```
 * **isGte(value, other)**
     * Checks if the first value is **greater than or equal** to the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isGte(value)
     ```
 * **isGt(value, other)**
     * Checks if the first value is **greater than** the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isGt(value)
     ```
 * **isLte(value, other)**
     * Checks if the first value is **less than or equal** to the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isLte(value)
     ```
 * **isLt(value, other)**
     * Checks if the first value is **less than** the second value. 
     ```javascript
-    // Returns boolean value
+    // Return boolean value
     ARM.isLt(value)
     ```
