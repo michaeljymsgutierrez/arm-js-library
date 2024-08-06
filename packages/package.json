@@ -3,7 +3,9 @@
   "version": "1.5.0",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
@@ -29,7 +31,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/michaeljymsgutierrez/arm-js-library.git"
+    "url": "git+https://github.com/michaeljymsgutierrez/arm-js-library.git"
   },
   "author": "Michael Jyms Gutierrez",
   "license": "MIT",
