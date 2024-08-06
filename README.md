@@ -306,7 +306,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override` which are currently available.
+    * Contains request config such as `(skip, alias, override)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -567,7 +567,7 @@ import { ARM } from 'path-to-src/index.js'
         * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
         * Support collectionConfig. - **optional**
-        * [See available config here.](#passed-arguments-request-functions-from-server)
+            * Available collectionConfig `(skip, alias, override)` 
         ```javascript
         // Returned promise
         // Without collectionConfig
@@ -577,7 +577,8 @@ import { ARM } from 'path-to-src/index.js'
         address.destroyRecord({
           override: {
             host: 'https://ww7.test-demo.com',
-            namespace: 'api/v2'
+            namespace: 'api/v2',
+            path: `destroy-addresses/${address.get('id')}`,
           }
         })
         ```
