@@ -355,21 +355,22 @@ Fix: Try adding ${s} on your ARM config initialization.`;
    * @private
    * @async
    * @param {Object} currentRecord - The record to be deleted.
+   * @param {Object} [collectionConfig] - Optional configuration for the deletion request.
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
-  async _deleteRecord(s) {
-    const e = i(s, "collectionName"), t = y(this.collections[e], {
+  async _deleteRecord(s, e = {}) {
+    const t = i(s, "collectionName"), o = y(this.collections[t], {
       hashId: i(s, "hashId")
-    }), o = i(s, "id"), n = {
+    }), r = i(s, "id"), c = {
       resourceMethod: "delete",
-      resourceName: i(t, "collectionName"),
-      resourceId: Number(o),
+      resourceName: i(o, "collectionName"),
+      resourceId: Number(r),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: {}
+      resourceConfig: e
     };
-    return this._request(n);
+    return this._request(c);
   }
   /**
    * Reloads a record from the server.
@@ -442,7 +443,7 @@ Fix: Try adding ${s} on your ARM config initialization.`;
       set: this._setProperty,
       setProperties: this._setProperties,
       save: () => this._saveRecord(s),
-      destroyRecord: () => this._deleteRecord(s),
+      destroyRecord: (o) => this._deleteRecord(s, o),
       reload: () => this._reloadRecord(s),
       getCollection: (o, r) => this._getCollectionRecord(
         o,
