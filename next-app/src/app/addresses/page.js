@@ -63,6 +63,7 @@ const AddressesListPage = observer(() => {
                   {/*       override: { */}
                   {/*         host: 'https://ww7.test-demo.com', */}
                   {/*         namespace: 'api/v2', */}
+                  {/*         path: `delete/${user.get('id')}`, */}
                   {/*       }, */}
                   {/*     }) */}
                   {/*   } */}
