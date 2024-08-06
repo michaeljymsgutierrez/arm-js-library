@@ -559,12 +559,22 @@ import { ARM } from 'path-to-src/index.js'
         // Returned promise
         address.reload()
         ```
-    * **destroyRecord()**
+    * **destroyRecord(collectionConfig)**
         * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
+        * Support collectionConfig. - **optional**
         ```javascript
         // Returned promise
+        // Without collectionConfig
         address.destroyRecord()
+
+        // With collectionConfig
+        address.destroyRecord({
+          override: {
+            host: 'https://ww7.test-demo.com',
+            namespace: 'api/v2'
+          }
+        })
         ```
     * **getCollection(collectionName, collectionConfig)**
         * Retrieve records from server automatically if **async** option value is set to true **true** on **collectionConfig**.
