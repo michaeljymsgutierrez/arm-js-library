@@ -1126,6 +1126,9 @@ export default class ApiResourceManager {
         })
       : null
 
+    if (isResourceIdValid)
+      setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
+
     if (hasResourceConfigOverride) {
       const override = getProperty(resourceConfig, 'override') || {}
       const overrideHost = !isNil(getProperty(override, 'host'))
@@ -1136,6 +1139,10 @@ export default class ApiResourceManager {
         : this.namespace
       const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
 
+      const overrideURL = !isNil(getProperty(override, 'path'))
+        ? getProperty(override, 'path')
+        : getProperty(requestOptions, 'url')
+
       const overrideHeaders = !isNil(getProperty(override, 'headers'))
         ? getProperty(override, 'headers')
         : {}
@@ -1143,11 +1150,9 @@ export default class ApiResourceManager {
       const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
 
       setProperty(requestOptions, 'baseURL', overrideBaseURL)
+      setProperty(requestOptions, 'url', overrideURL)
       setProperty(requestOptions, 'headers', overrideCommonHeaders)
     }
-
-    if (isResourceIdValid)
-      setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
 
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
     if (hasResourcePayload) {
