@@ -538,9 +538,10 @@ export default class ApiResourceManager {
    * @private
    * @async
    * @param {Object} currentRecord - The record to be deleted.
+   * @param {Object} [collectionConfig] - Optional configuration for the deletion request.
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
-  async _deleteRecord(currentRecord) {
+  async _deleteRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
       hashId: getProperty(currentRecord, 'hashId'),
@@ -556,7 +557,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: {},
+      resourceConfig: collectionConfig,
     }
 
     return this._request(requestObject)
@@ -660,12 +661,25 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The collection record to inject actions into.
    */
   _injectActions(collectionRecord) {
+    /**
+     * An object containing various actions that can be performed on a collection record.
+     *
+     * @typedef {Object} Actions
+     * @property {function(string): *} get - Gets a property of the collection record.
+     * @property {function(string, *): void} set - Sets a property of the collection record.
+     * @property {function(Object): void} setProperties - Sets multiple properties of the collection record.
+     * @property {function(): Promise<*>} save - Saves the collection record.
+     * @property {function(Object): Promise<*>} destroyRecord - Deletes the collection record.
+     * @property {function(): Promise<*>} reload - Reloads the collection record.
+     * @property {function(string, Object): Promise<*>} getCollection - Retrieves a collection of records.
+     */
     const actions = {
       get: this._getProperty,
       set: this._setProperty,
       setProperties: this._setProperties,
       save: () => this._saveRecord(collectionRecord),
-      destroyRecord: () => this._deleteRecord(collectionRecord),
+      destroyRecord: (collectionConfig) =>
+        this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
       getCollection: (collectionName, collectionConfig) =>
         this._getCollectionRecord(
