@@ -1,3 +1,4 @@
 # Add all ignore files/directories here
 node_modules
 README.md
+DOCS.md
