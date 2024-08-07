@@ -780,23 +780,23 @@ const addresses = [
     * Checks if the first value is **greater than or equal** to the second value. 
     ```javascript
     // Return boolean value
-    ARM.isGte(value)
+    ARM.isGte(value, other)
     ```
 * **isGt(value, other)**
     * Checks if the first value is **greater than** the second value. 
     ```javascript
     // Return boolean value
-    ARM.isGt(value)
+    ARM.isGt(value, other)
     ```
 * **isLte(value, other)**
     * Checks if the first value is **less than or equal** to the second value. 
     ```javascript
     // Return boolean value
-    ARM.isLte(value)
+    ARM.isLte(value, other)
     ```
 * **isLt(value, other)**
     * Checks if the first value is **less than** the second value. 
     ```javascript
     // Return boolean value
-    ARM.isLt(value)
+    ARM.isLt(value, other)
     ```
