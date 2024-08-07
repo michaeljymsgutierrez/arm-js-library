@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build:watch": "vite build --watch",
+    "build:src-docs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md"
   },
   "keywords": [
     "uuid",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@eslint/js": "^9.5.0",
     "eslint": "^9.5.0",
+    "jsdoc-to-markdown": "^8.0.3",
     "vite": "^5.3.1",
     "vite-plugin-eslint": "^1.8.1"
   },
