@@ -1192,7 +1192,8 @@ export default class ApiResourceManager {
       const resourceMetaResults = resourceRequest?.data?.meta || {}
       const isResourceResultsObject = isPlainObject(resourceResults)
       const isResourceResultsArray = isArray(resourceResults)
-      let updatedCollectionRecords = null
+      let updatedDataCollectionRecords = null
+      let updatedIncludedCollectionRecords = []
 
       if (isResourceResultsArray)
         forEach(resourceResults, (resourceResult) =>
@@ -1207,13 +1208,16 @@ export default class ApiResourceManager {
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
-        this._pushPayload(
-          getProperty(resourceIncludedResult, 'collectionName'),
-          resourceIncludedResult
+
+        updatedIncludedCollectionRecords.push(
+          this._pushPayload(
+            getProperty(resourceIncludedResult, 'collectionName'),
+            resourceIncludedResult
+          )
         )
       })
 
-      updatedCollectionRecords = await this._pushPayload(
+      updatedDataCollectionRecords = await this._pushPayload(
         resourceName,
         resourceResults
       )
@@ -1221,22 +1225,23 @@ export default class ApiResourceManager {
       if (resourceConfig.alias)
         this._addAlias(
           getProperty(resourceConfig, 'alias'),
-          updatedCollectionRecords
+          updatedDataCollectionRecords
         )
 
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord)
-      if (isResourceMethodDelete) this.unloadRecord(updatedCollectionRecords)
+      if (isResourceMethodDelete)
+        this.unloadRecord(updatedDataCollectionRecords)
 
       this.requestHashIds[requestHashId] = {
         isLoading: false,
         isError: false,
         isNew: false,
-        data: updatedCollectionRecords,
-        included: [],
+        data: updatedDataCollectionRecords,
+        included: updatedIncludedCollectionRecords,
         meta: resourceMetaResults,
       }
 
-      return Promise.resolve(updatedCollectionRecords)
+      return Promise.resolve(updatedDataCollectionRecords)
     } catch (error) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
