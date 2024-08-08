@@ -660,7 +660,7 @@ export default class ApiResourceManager {
    * @private
    * @param {Object} collectionRecord - The collection record to inject actions into.
    */
-  _injectActions(collectionRecord) {
+  _injectCollectionActions(collectionRecord) {
     /**
      * An object containing various actions that can be performed on a collection record.
      *
@@ -703,7 +703,7 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The collection record to inject keys into.
    * @param {string} collectionRecordHashId - Optional hash ID for the record.
    */
-  _injectReferenceKeys(
+  _injectCollectionReferenceKeys(
     collectionName,
     collectionRecord,
     collectionRecordHashId = null
@@ -746,7 +746,7 @@ export default class ApiResourceManager {
           }
         )
 
-        this._injectActions(collectionRecord)
+        this._injectCollectionActions(collectionRecord)
 
         if (lt(collectionRecordIndex, 0))
           this.collections[collectionName].push(collectionRecord)
@@ -772,7 +772,7 @@ export default class ApiResourceManager {
         }
       )
 
-      this._injectActions(collectionRecords)
+      this._injectCollectionActions(collectionRecords)
 
       if (lt(collectionRecordIndex, 0))
         this.collections[collectionName].push(collectionRecords)
@@ -1038,7 +1038,7 @@ export default class ApiResourceManager {
   getAlias(aliasName, fallbackRecords) {
     const isFallbacRecordsObject = isPlainObject(fallbackRecords)
 
-    if (isFallbacRecordsObject) this._injectActions(fallbackRecords)
+    if (isFallbacRecordsObject) this._injectCollectionActions(fallbackRecords)
 
     return this.aliases[aliasName] || fallbackRecords
   }
@@ -1065,8 +1065,8 @@ export default class ApiResourceManager {
 
     setProperty(collectionRecord, 'id', collectionRecordId)
 
-    this._injectReferenceKeys(collectionName, collectionRecord)
-    this._injectActions(collectionRecord)
+    this._injectCollectionReferenceKeys(collectionName, collectionRecord)
+    this._injectCollectionActions(collectionRecord)
 
     if (isCollectionRecordNotExisting)
       this.collections[collectionName].push(collectionRecord)
@@ -1196,14 +1196,14 @@ export default class ApiResourceManager {
 
       if (isResourceResultsArray)
         forEach(resourceResults, (resourceResult) =>
-          this._injectReferenceKeys(resourceName, resourceResult)
+          this._injectCollectionReferenceKeys(resourceName, resourceResult)
         )
 
       if (isResourceResultsObject)
-        this._injectReferenceKeys(resourceName, resourceResults)
+        this._injectCollectionReferenceKeys(resourceName, resourceResults)
 
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
-        this._injectReferenceKeys(
+        this._injectCollectionReferenceKeys(
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
