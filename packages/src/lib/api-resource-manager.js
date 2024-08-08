@@ -1193,6 +1193,7 @@ export default class ApiResourceManager {
       const isResourceResultsObject = isPlainObject(resourceResults)
       const isResourceResultsArray = isArray(resourceResults)
       let updatedCollectionRecords = null
+      let updatedIncludedCollectionRecords = []
 
       if (isResourceResultsArray)
         forEach(resourceResults, (resourceResult) =>
@@ -1207,9 +1208,12 @@ export default class ApiResourceManager {
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
-        this._pushPayload(
-          getProperty(resourceIncludedResult, 'collectionName'),
-          resourceIncludedResult
+
+        updatedIncludedCollectionRecords.push(
+          this._pushPayload(
+            getProperty(resourceIncludedResult, 'collectionName'),
+            resourceIncludedResult
+          )
         )
       })
 
@@ -1232,7 +1236,7 @@ export default class ApiResourceManager {
         isError: false,
         isNew: false,
         data: updatedCollectionRecords,
-        included: [],
+        included: updatedIncludedCollectionRecords,
         meta: resourceMetaResults,
       }
 
