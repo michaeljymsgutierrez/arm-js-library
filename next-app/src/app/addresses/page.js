@@ -83,6 +83,17 @@ const AddressesListPage = observer(() => {
           })}
         </tbody>
       </table>
+      {/* <button */}
+      {/*   onClick={() => { */}
+      {/*     ARM.findRecord('addresses', 2487520, {}, { autoResolve: false }).then( */}
+      {/*       (results) => { */}
+      {/*         console.log(results) */}
+      {/*       } */}
+      {/*     ) */}
+      {/*   }} */}
+      {/* > */}
+      {/*   FIND */}
+      {/* </button> */}
     </div>
   )
 })
