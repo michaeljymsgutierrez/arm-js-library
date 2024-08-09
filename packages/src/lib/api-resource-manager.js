@@ -1077,6 +1077,28 @@ export default class ApiResourceManager {
   }
 
   /**
+   * Resolves a request based on configuration.
+   *
+   * @private
+   * @param {Object} config - Configuration object for the request.
+   * @param {Object} requestObject - The request object.
+   * @param {Object} requestHashObject - The request hash object.
+   * @returns {Object|Promise} Returns the request hash object if autoResolve is true, otherwise returns a Promise from the _request function.
+   */
+  _resolveRequest(config, requestXHR, requestHashObject) {
+    const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
+    const autoResolve = hasAutoResolveConfig
+      ? getProperty(config, 'autoResolve')
+      : true
+
+    if (autoResolve) {
+      return requestHashObject
+    } else {
+      return requestXHR
+    }
+  }
+
+  /**
    * Makes an API request based on the provided configuration.
    *
    * This method is private and should not be called directly.
@@ -1241,7 +1263,7 @@ export default class ApiResourceManager {
         meta: resourceMetaResults,
       }
 
-      return Promise.resolve(updatedDataCollectionRecords)
+      return Promise.resolve(this.requestHashIds[requestHashId])
     } catch (error) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1262,7 +1284,7 @@ export default class ApiResourceManager {
         meta: {},
       }
 
-      return Promise.reject(error)
+      return Promise.reject(this.requestHashIds[requestHashId])
     }
   }
 
@@ -1289,10 +1311,9 @@ export default class ApiResourceManager {
       requestObject,
       responseObject
     )
+    const requestXHR = this._request(requestObject)
 
-    this._request(requestObject)
-
-    return requestHashObject
+    return this._resolveRequest(config, requestXHR, requestHashObject)
   }
 
   /**
@@ -1317,9 +1338,9 @@ export default class ApiResourceManager {
       requestObject,
       responseObject
     )
-    this._request(requestObject)
+    const requestXHR = this._request(requestObject)
 
-    return requestHashObject
+    return this._resolveRequest(config, requestXHR, requestHashObject)
   }
 
   /**
@@ -1344,9 +1365,9 @@ export default class ApiResourceManager {
       requestObject,
       responseObject
     )
-    this._request(requestObject)
+    const requestXHR = this._request(requestObject)
 
-    return requestHashObject
+    return this._resolveRequest(config, requestXHR, requestHashObject)
   }
 
   /**
@@ -1373,9 +1394,9 @@ export default class ApiResourceManager {
       requestObject,
       responseObject
     )
-    this._request(requestObject)
+    const requestXHR = this._request(requestObject)
 
-    return requestHashObject
+    return this._resolveRequest(config, requestXHR, requestHashObject)
   }
 
   /**

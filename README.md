@@ -317,6 +317,15 @@ import { ARM } from 'path-to-src/index.js'
         // Can be used anywhere in your application through ARM.getAlias('customerAddress')
         alias: 'customerAddress' ,
 
+        // Auto resolve serve as flag if the request functions will return 
+        // 1. Promise Function
+        //  - To handle success and errors on manual resolve) if autoResolve is set to false
+        // 2. Observable/Reactive Data
+        //  - To handle success and errors on auto resolve) if autoResolve is set to true 
+        // Note: autoResolve is only available on query, queryRecord, findAll, findRecord functions.
+        // By default autoResolve is set to true.
+        autoResolve: false,
+
         // Override serve as request override for the default configuration of axios current request.
         // Currently support host, namespace, path and headers for the meantime.
         // Example:
