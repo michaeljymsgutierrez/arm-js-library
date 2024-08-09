@@ -526,7 +526,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: payload,
       resourceFallback: {},
-      resourceConfig: {},
+      resourceConfig: { autoResolveOrigin: '_internal' },
     }
 
     return this._request(requestObject)
@@ -549,6 +549,8 @@ export default class ApiResourceManager {
     const id = getProperty(currentRecord, 'id')
     const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
+
+    setProperty(collectionConfig, 'autoResolveOrigin', '_internal')
 
     const requestObject = {
       resourceMethod: method,
@@ -583,7 +585,10 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: { skipId: uuidv1() },
+      resourceConfig: {
+        skipId: uuidv1(),
+        autoResolveOrigin: '_internal',
+      },
     }
 
     return this._request(requestObject)
@@ -1077,13 +1082,13 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Resolves a request based on configuration.
+   * Resolves the request based on configuration.
    *
    * @private
    * @param {Object} config - Configuration object for the request.
-   * @param {Object} requestObject - The request object.
+   * @param {Promise} requestXHR - The Axios request Promise.
    * @param {Object} requestHashObject - The request hash object.
-   * @returns {Object|Promise} Returns the request hash object if autoResolve is true, otherwise returns a Promise from the _request function.
+   * @returns {Promise|Object} Returns the request hash object if autoResolve is true, otherwise returns the Axios request Promise.
    */
   _resolveRequest(config, requestXHR, requestHashObject) {
     const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
@@ -1147,6 +1152,9 @@ export default class ApiResourceManager {
           id: resourceId,
         })
       : null
+    const hasResourceAutoResolveOrigin = !isNil(
+      getProperty(resourceConfig, 'autoResolveOrigin')
+    )
 
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
@@ -1263,8 +1271,11 @@ export default class ApiResourceManager {
         meta: resourceMetaResults,
       }
 
+      if (hasResourceAutoResolveOrigin)
+        return Promise.resolve(updatedDataCollectionRecords)
+
       return Promise.resolve(this.requestHashIds[requestHashId])
-    } catch (error) {
+    } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
         setProperty(resourcePayloadRecord, 'isLoading', false)
@@ -1279,10 +1290,12 @@ export default class ApiResourceManager {
         isLoading: false,
         isError: true,
         isNew: false,
-        data: error,
+        data: errors,
         included: [],
         meta: {},
       }
+
+      if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
       return Promise.reject(this.requestHashIds[requestHashId])
     }
