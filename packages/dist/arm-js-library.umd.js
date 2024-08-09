@@ -1,7 +1,7 @@
 (function(f,v){typeof exports=="object"&&typeof module<"u"?module.exports=v(require("axios"),require("lodash"),require("mobx"),require("uuid"),require("crypto-js")):typeof define=="function"&&define.amd?define(["axios","lodash","mobx","uuid","crypto-js"],v):(f=typeof globalThis<"u"?globalThis:f||self,f["arm-js-library"]=v(f.axios,f._,f.mobx,f.uuid,f.CryptoJS))})(this,function(f,v,ls,B,fs){"use strict";function ps(O){const s=Object.create(null,{[Symbol.toStringTag]:{value:"Module"}});if(O){for(const e in O)if(e!=="default"){const t=Object.getOwnPropertyDescriptor(O,e);Object.defineProperty(s,e,t.get?t:{enumerable:!0,get:()=>O[e]})}}return s.default=O,Object.freeze(s)}const Is=ps(ls);/**
  * ARM JavaScript Library
  *
- * Version: 1.5.2
+ * Version: 1.5.3
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
