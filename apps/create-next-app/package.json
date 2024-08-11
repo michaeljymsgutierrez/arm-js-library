@@ -1,5 +1,5 @@
 {
-  "name": "next-app",
+  "name": "create-next-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "arm-js-library": "../../../packages",
+    "arm-js-library": "../../packages",
     "mobx-react-lite": "^4.0.7",
     "next": "14.2.4",
     "react": "^18",
