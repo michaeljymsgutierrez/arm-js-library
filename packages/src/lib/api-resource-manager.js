@@ -960,15 +960,7 @@ export default class ApiResourceManager {
    * @param {Object} responseObject - The initial response object.
    * @returns {Object} The updated or created request hash object.
    */
-  _pushRequestHash(
-    requestObject = {},
-    responseObject = {
-      isLoading: true,
-      isError: false,
-      isNew: true,
-      data: null,
-    }
-  ) {
+  _pushRequestHash(requestObject, responseObject) {
     const requestHashId = this._generateHashId(requestObject)
     const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
     const isResponseNew = getProperty(responseObject, 'isNew')
@@ -1307,7 +1299,8 @@ export default class ApiResourceManager {
         isLoading: false,
         isError: true,
         isNew: false,
-        data: errors,
+        data: resourceFallback,
+        error: errors,
         included: [],
         meta: {},
       }
