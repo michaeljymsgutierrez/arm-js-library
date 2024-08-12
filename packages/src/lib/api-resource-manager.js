@@ -311,6 +311,30 @@ export default class ApiResourceManager {
   }
 
   /**
+   * Sets multiple properties on a target object recursively.
+   *
+   * @private
+   * @param {Object} targetObject - The object to set properties on.
+   * @param {Object} keyValuePairs - An object containing key-value pairs to set.
+   */
+  _setProperties(targetObject, keyValuePairs) {
+    function objectToArray(obj, prefix = '') {
+      return flatMap(entries(obj), ([key, value]) => {
+        const newKey = prefix ? `${prefix}.${key}` : key
+        if (isObject(value) && !isArray(value) && value !== null) {
+          return objectToArray(value, newKey)
+        } else {
+          return { key: newKey, value: value }
+        }
+      })
+    }
+    const keysAndValues = objectToArray(keyValuePairs)
+    forEach(keysAndValues, ({ key, value }) =>
+      setProperty(targetObject, key, value)
+    )
+  }
+
+  /**
    * Gets a property from the current object.
    *
    * @private
@@ -322,11 +346,11 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Sets a property on the current object and updates `isDirty` and `isPristine` flags accordingly.
+   * Sets a single property on the current record and updates its state based on changes.
    *
    * @private
-   * @param {string} key - The key of the property to set.
-   * @param {*} value - The value to assign to the property.
+   * @param {string} key - The property key to set.
+   * @param {*} value - The value to set for the property.
    */
   _setRecordProperty(key, value) {
     setProperty(this, key, value)
@@ -347,25 +371,13 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Sets multiple properties on the current object based on the provided object.
-   * Recursively handles nested objects and updates `isDirty` and `isPristine` flags accordingly.
+   * Sets properties on the current record and updates its state based on changes.
    *
    * @private
-   * @param {Object} objectKeysValues - An object containing key-value pairs to be set.
+   * @param {Object} values - An object containing key-value pairs to set.
    */
-  _setRecordProperties(objectKeysValues) {
-    function objectToArray(obj, prefix = '') {
-      return flatMap(entries(obj), ([key, value]) => {
-        const newKey = prefix ? `${prefix}.${key}` : key
-        if (isObject(value) && !isArray(value) && value !== null) {
-          return objectToArray(value, newKey)
-        } else {
-          return { key: newKey, value: value }
-        }
-      })
-    }
-    const keysAndValues = objectToArray(objectKeysValues)
-    forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
+  _setRecordProperties(values) {
+    this._setProperties(this, values)
 
     const originalRecord = omit(
       toJS(this.originalRecord),
