@@ -1,5 +1,5 @@
 {
-  "name": "example-next-js-app",
+  "name": "create-react-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -62,7 +62,7 @@
     "webpack-dev-server": "^4.6.0",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1",
-    "arm-js-library": "../packages"
+    "arm-js-library": "../../packages"
   },
   "scripts": {
     "start": "node scripts/start.js",
