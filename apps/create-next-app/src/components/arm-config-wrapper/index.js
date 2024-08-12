@@ -2,7 +2,12 @@
 
 import ApiResourceManager from 'arm-js-library'
 
-export const ARM = new ApiResourceManager(['addresses', 'users'])
+export const ARM = new ApiResourceManager([
+  'addresses',
+  'users',
+  'items',
+  'products',
+])
 
 ARM.setHost('https://www.metromart.com')
 ARM.setHeadersCommon(

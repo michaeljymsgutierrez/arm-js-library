@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.4.3-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.5.3-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
@@ -306,7 +306,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override, headers)` which are currently available.
+    * Contains request config such as `(skip, alias, override)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -317,11 +317,24 @@ import { ARM } from 'path-to-src/index.js'
         // Can be used anywhere in your application through ARM.getAlias('customerAddress')
         alias: 'customerAddress' ,
 
+        // Auto resolve serve as flag if the request functions will return 
+        // 1. Promise Function
+        //  - To handle success and errors on manual resolve) if autoResolve is set to false
+        // 2. Observable/Reactive Data
+        //  - To handle success and errors on auto resolve) if autoResolve is set to true 
+        // Note: autoResolve is only available on query, queryRecord, findAll, findRecord functions.
+        // By default autoResolve is set to true.
+        autoResolve: false,
+
         // Override serve as request override for the default configuration of axios current request.
-        // Currently support host and namespace for the meantime.
+        // Currently support host, namespace, path and headers for the meantime.
+        // Example:
+        // Before override: https://www.test-demo.com/api/v1/users/1
+        // After override: https://www.another-test-demo.com/api/v2/update-users/1
         override: {
-          host: 'https://ww7.test-demo.com',
-          namespace: 'api/v2'
+          host: 'https://www.another-test-demo.com',
+          namespace: 'api/v2',
+          path: `update-users/${user.get('id')}`,
           headers: {
             'X-Client-Platform': 'Symbian',
           }
@@ -559,12 +572,24 @@ import { ARM } from 'path-to-src/index.js'
         // Returned promise
         address.reload()
         ```
-    * **destroyRecord()**
+    * **destroyRecord(collectionConfig)**
         * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
+        * Support collectionConfig. - **optional**
+            * Available collectionConfig `(skip, alias, override)` 
         ```javascript
         // Returned promise
+        // Without collectionConfig
         address.destroyRecord()
+
+        // With collectionConfig
+        address.destroyRecord({
+          override: {
+            host: 'https://ww7.test-demo.com',
+            namespace: 'api/v2',
+            path: `destroy-addresses/${address.get('id')}`,
+          }
+        })
         ```
     * **getCollection(collectionName, collectionConfig)**
         * Retrieve records from server automatically if **async** option value is set to true **true** on **collectionConfig**.
@@ -764,23 +789,23 @@ const addresses = [
     * Checks if the first value is **greater than or equal** to the second value. 
     ```javascript
     // Return boolean value
-    ARM.isGte(value)
+    ARM.isGte(value, other)
     ```
 * **isGt(value, other)**
     * Checks if the first value is **greater than** the second value. 
     ```javascript
     // Return boolean value
-    ARM.isGt(value)
+    ARM.isGt(value, other)
     ```
 * **isLte(value, other)**
     * Checks if the first value is **less than or equal** to the second value. 
     ```javascript
     // Return boolean value
-    ARM.isLte(value)
+    ARM.isLte(value, other)
     ```
 * **isLt(value, other)**
     * Checks if the first value is **less than** the second value. 
     ```javascript
     // Return boolean value
-    ARM.isLt(value)
+    ARM.isLt(value, other)
     ```

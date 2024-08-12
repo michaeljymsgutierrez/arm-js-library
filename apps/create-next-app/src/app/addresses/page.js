@@ -56,6 +56,21 @@ const AddressesListPage = observer(() => {
                 <td>{address.get('attributes.post-code')}</td>
                 <td>{ARM.isPresent(user) ? user.get('id') : ''}</td>
                 <td>
+                  {/* <button */}
+                  {/*   type="button" */}
+                  {/*   onClick={() => */}
+                  {/*     address.destroyRecord({ */}
+                  {/*       override: { */}
+                  {/*         host: 'https://ww7.test-demo.com', */}
+                  {/*         namespace: 'api/v2', */}
+                  {/*         path: `delete/${user.get('id')}`, */}
+                  {/*       }, */}
+                  {/*     }) */}
+                  {/*   } */}
+                  {/* > */}
+                  {/*   Delete */}
+                  {/* </button> */}
+                  {/* &nbsp; */}
                   <button
                     type="button"
                     onClick={() => controller.onClickEdit(address.get('id'))}
@@ -68,6 +83,17 @@ const AddressesListPage = observer(() => {
           })}
         </tbody>
       </table>
+      {/* <button */}
+      {/*   onClick={() => { */}
+      {/*     ARM.findRecord('addresses', 2487520, {}, { autoResolve: false }).then( */}
+      {/*       (results) => { */}
+      {/*         console.log(results) */}
+      {/*       } */}
+      {/*     ) */}
+      {/*   }} */}
+      {/* > */}
+      {/*   FIND */}
+      {/* </button> */}
     </div>
   )
 })
