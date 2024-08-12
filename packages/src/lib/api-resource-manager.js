@@ -83,12 +83,14 @@ const {
  * @property {Array} data - The main data array returned by the request.
  * @property {Array} included - Additional included data related to the response.
  * @property {Object} meta - Metadata about the response.
+ * @property {?Object} error - Error information, if any (null if no error).
  */
 const defaultRequestArrayResponse = {
   isLoading: true,
   isError: false,
   isNew: true,
   data: [],
+  error: null,
   included: [],
   meta: {},
 }
@@ -103,12 +105,14 @@ const defaultRequestArrayResponse = {
  * @property {Object} data - The main data object returned by the request.
  * @property {Array} included - Additional included data related to the response.
  * @property {Object} meta - Metadata about the response.
+ * @property {?Object} error - Error information, if any (null if no error).
  */
 const defaultRequestObjectResponse = {
   isLoading: true,
   isError: false,
   isNew: true,
   data: {},
+  error: null,
   included: [],
   meta: {},
 }
@@ -313,7 +317,7 @@ export default class ApiResourceManager {
    * @param {string} key - The key of the property to retrieve.
    * @returns {*} The value of the property, or undefined if not found.
    */
-  _getProperty(key) {
+  _getRecordProperty(key) {
     return getProperty(this, key)
   }
 
@@ -324,7 +328,7 @@ export default class ApiResourceManager {
    * @param {string} key - The key of the property to set.
    * @param {*} value - The value to assign to the property.
    */
-  _setProperty(key, value) {
+  _setRecordProperty(key, value) {
     setProperty(this, key, value)
 
     const originalRecord = omit(
@@ -349,7 +353,7 @@ export default class ApiResourceManager {
    * @private
    * @param {Object} objectKeysValues - An object containing key-value pairs to be set.
    */
-  _setProperties(objectKeysValues) {
+  _setRecordProperties(objectKeysValues) {
     function objectToArray(obj, prefix = '') {
       return flatMap(entries(obj), ([key, value]) => {
         const newKey = prefix ? `${prefix}.${key}` : key
@@ -679,9 +683,9 @@ export default class ApiResourceManager {
      * @property {function(string, Object): Promise<*>} getCollection - Retrieves a collection of records.
      */
     const actions = {
-      get: this._getProperty,
-      set: this._setProperty,
-      setProperties: this._setProperties,
+      get: this._getRecordProperty,
+      set: this._setRecordProperty,
+      setProperties: this._setRecordProperties,
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: (collectionConfig) =>
         this._deleteRecord(collectionRecord, collectionConfig),
@@ -1267,6 +1271,7 @@ export default class ApiResourceManager {
         isError: false,
         isNew: false,
         data: updatedDataCollectionRecords,
+        error: null,
         included: updatedIncludedCollectionRecords,
         meta: resourceMetaResults,
       }
