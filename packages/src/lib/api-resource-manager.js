@@ -83,12 +83,14 @@ const {
  * @property {Array} data - The main data array returned by the request.
  * @property {Array} included - Additional included data related to the response.
  * @property {Object} meta - Metadata about the response.
+ * @property {?Object} error - Error information, if any (null if no error).
  */
 const defaultRequestArrayResponse = {
   isLoading: true,
   isError: false,
   isNew: true,
   data: [],
+  error: null,
   included: [],
   meta: {},
 }
@@ -103,12 +105,14 @@ const defaultRequestArrayResponse = {
  * @property {Object} data - The main data object returned by the request.
  * @property {Array} included - Additional included data related to the response.
  * @property {Object} meta - Metadata about the response.
+ * @property {?Object} error - Error information, if any (null if no error).
  */
 const defaultRequestObjectResponse = {
   isLoading: true,
   isError: false,
   isNew: true,
   data: {},
+  error: null,
   included: [],
   meta: {},
 }
@@ -307,24 +311,48 @@ export default class ApiResourceManager {
   }
 
   /**
+   * Sets multiple properties on a target object recursively.
+   *
+   * @private
+   * @param {Object} targetObject - The object to set properties on.
+   * @param {Object} keyValuePairs - An object containing key-value pairs to set.
+   */
+  _setProperties(targetObject, keyValuePairs) {
+    function objectToArray(obj, prefix = '') {
+      return flatMap(entries(obj), ([key, value]) => {
+        const newKey = prefix ? `${prefix}.${key}` : key
+        if (isObject(value) && !isArray(value) && value !== null) {
+          return objectToArray(value, newKey)
+        } else {
+          return { key: newKey, value: value }
+        }
+      })
+    }
+    const keysAndValues = objectToArray(keyValuePairs)
+    forEach(keysAndValues, ({ key, value }) =>
+      setProperty(targetObject, key, value)
+    )
+  }
+
+  /**
    * Gets a property from the current object.
    *
    * @private
    * @param {string} key - The key of the property to retrieve.
    * @returns {*} The value of the property, or undefined if not found.
    */
-  _getProperty(key) {
+  _getRecordProperty(key) {
     return getProperty(this, key)
   }
 
   /**
-   * Sets a property on the current object and updates `isDirty` and `isPristine` flags accordingly.
+   * Sets a single property on the current record and updates its state based on changes.
    *
    * @private
-   * @param {string} key - The key of the property to set.
-   * @param {*} value - The value to assign to the property.
+   * @param {string} key - The property key to set.
+   * @param {*} value - The value to set for the property.
    */
-  _setProperty(key, value) {
+  _setRecordProperty(key, value) {
     setProperty(this, key, value)
 
     const originalRecord = omit(
@@ -343,25 +371,13 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Sets multiple properties on the current object based on the provided object.
-   * Recursively handles nested objects and updates `isDirty` and `isPristine` flags accordingly.
+   * Sets properties on the current record and updates its state based on changes.
    *
    * @private
-   * @param {Object} objectKeysValues - An object containing key-value pairs to be set.
+   * @param {Object} values - An object containing key-value pairs to set.
    */
-  _setProperties(objectKeysValues) {
-    function objectToArray(obj, prefix = '') {
-      return flatMap(entries(obj), ([key, value]) => {
-        const newKey = prefix ? `${prefix}.${key}` : key
-        if (isObject(value) && !isArray(value) && value !== null) {
-          return objectToArray(value, newKey)
-        } else {
-          return { key: newKey, value: value }
-        }
-      })
-    }
-    const keysAndValues = objectToArray(objectKeysValues)
-    forEach(keysAndValues, ({ key, value }) => setProperty(this, key, value))
+  _setRecordProperties(values) {
+    this._setProperties(this, values)
 
     const originalRecord = omit(
       toJS(this.originalRecord),
@@ -679,9 +695,9 @@ export default class ApiResourceManager {
      * @property {function(string, Object): Promise<*>} getCollection - Retrieves a collection of records.
      */
     const actions = {
-      get: this._getProperty,
-      set: this._setProperty,
-      setProperties: this._setProperties,
+      get: this._getRecordProperty,
+      set: this._setRecordProperty,
+      setProperties: this._setRecordProperties,
       save: () => this._saveRecord(collectionRecord),
       destroyRecord: (collectionConfig) =>
         this._deleteRecord(collectionRecord, collectionConfig),
@@ -944,15 +960,7 @@ export default class ApiResourceManager {
    * @param {Object} responseObject - The initial response object.
    * @returns {Object} The updated or created request hash object.
    */
-  _pushRequestHash(
-    requestObject = {},
-    responseObject = {
-      isLoading: true,
-      isError: false,
-      isNew: true,
-      data: null,
-    }
-  ) {
+  _pushRequestHash(requestObject, responseObject) {
     const requestHashId = this._generateHashId(requestObject)
     const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
     const isResponseNew = getProperty(responseObject, 'isNew')
@@ -1262,14 +1270,15 @@ export default class ApiResourceManager {
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords)
 
-      this.requestHashIds[requestHashId] = {
+      this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: false,
         isNew: false,
         data: updatedDataCollectionRecords,
+        error: null,
         included: updatedIncludedCollectionRecords,
         meta: resourceMetaResults,
-      }
+      })
 
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
@@ -1286,14 +1295,15 @@ export default class ApiResourceManager {
         setProperty(collectionRecordById, 'isLoading', false)
       }
 
-      this.requestHashIds[requestHashId] = {
+      this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
         isNew: false,
-        data: errors,
+        data: resourceFallback,
+        error: errors,
         included: [],
         meta: {},
-      }
+      })
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 

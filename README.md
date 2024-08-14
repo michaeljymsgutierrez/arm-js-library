@@ -361,6 +361,9 @@ import { ARM } from 'path-to-src/index.js'
 * **data - Array || Object**
     * Contains the request returned payload.
     * By default has value of an empty **array** or **object** depending on the request function used.
+* **error - Object || String**
+    * Contains the request returned error.
+    * By default has value of a **null**.
 * **included - Array**
     * Contains the request returned payload property **included**.
     * Specifically for **JSON API**.
@@ -375,6 +378,7 @@ import { ARM } from 'path-to-src/index.js'
   isError: false,
   isNew: true,
   data: [],
+  error: null,
   included: [],
   meta: {},
 }
