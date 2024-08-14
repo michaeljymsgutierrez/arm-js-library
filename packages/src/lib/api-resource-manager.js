@@ -1270,7 +1270,7 @@ export default class ApiResourceManager {
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords)
 
-      this.requestHashIds[requestHashId] = {
+      this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: false,
         isNew: false,
@@ -1278,7 +1278,7 @@ export default class ApiResourceManager {
         error: null,
         included: updatedIncludedCollectionRecords,
         meta: resourceMetaResults,
-      }
+      })
 
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
@@ -1295,7 +1295,7 @@ export default class ApiResourceManager {
         setProperty(collectionRecordById, 'isLoading', false)
       }
 
-      this.requestHashIds[requestHashId] = {
+      this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
         isNew: false,
@@ -1303,7 +1303,7 @@ export default class ApiResourceManager {
         error: errors,
         included: [],
         meta: {},
-      }
+      })
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
