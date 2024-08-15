@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 1.5.3
+ * Version: 1.5.5
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
