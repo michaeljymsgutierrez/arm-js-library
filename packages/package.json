@@ -3,21 +3,27 @@
   "version": "1.5.3",
   "description": "API Resource Manager",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "types": "dist/arm-js-library.d.ts",
+  "files": ["dist"],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
     ".": {
-      "import": "./dist/arm-js-library.es.js",
-      "require": "./dist/arm-js-library.umd.js"
+      "import": {
+        "types": "./dist/arm-js-library.d.ts",
+        "default": "./dist/arm-js-library.es.js"
+      },
+      "require": {
+        "types": "./dist/arm-js-library.d.ts",
+        "default": "./dist/arm-js-library.umd.js"
+      }
     }
   },
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "build:src-docs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md"
+    "build:jsdocs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md",
+    "build:dts": "tsc src/lib/api-resource-manager.js --declaration --allowJs --emitDeclarationOnly --outFile dist/arm-js-library.d.ts"
   },
   "keywords": [
     "uuid",
@@ -40,6 +46,7 @@
     "@eslint/js": "^9.5.0",
     "eslint": "^9.5.0",
     "jsdoc-to-markdown": "^8.0.3",
+    "typescript": "^5.5.4",
     "vite": "^5.3.1",
     "vite-plugin-eslint": "^1.8.1"
   },
