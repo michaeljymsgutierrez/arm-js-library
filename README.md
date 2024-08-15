@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.5.3-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.5.4-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
@@ -361,6 +361,9 @@ import { ARM } from 'path-to-src/index.js'
 * **data - Array || Object**
     * Contains the request returned payload.
     * By default has value of an empty **array** or **object** depending on the request function used.
+* **error - Object || String**
+    * Contains the request returned error.
+    * By default has value of a **null**.
 * **included - Array**
     * Contains the request returned payload property **included**.
     * Specifically for **JSON API**.
@@ -375,6 +378,7 @@ import { ARM } from 'path-to-src/index.js'
   isError: false,
   isNew: true,
   data: [],
+  error: null,
   included: [],
   meta: {},
 }
