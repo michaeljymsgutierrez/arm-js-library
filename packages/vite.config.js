@@ -5,6 +5,7 @@ import eslintPlugin from 'vite-plugin-eslint'
 export default defineConfig({
   plugins: [eslintPlugin()],
   build: {
+    emptyOutDir: false,
     minify: false,
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
