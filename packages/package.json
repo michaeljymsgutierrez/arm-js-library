@@ -3,20 +3,14 @@
   "version": "1.5.5",
   "description": "API Resource Manager",
   "type": "module",
-  "types": "dist/arm-js-library.d.ts",
+  "types": "dist/index.d.ts",
   "files": ["dist", "types", "DOCS.md"],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/arm-js-library.d.ts",
-        "default": "./dist/arm-js-library.es.js"
-      },
-      "require": {
-        "types": "./dist/arm-js-library.d.ts",
-        "default": "./dist/arm-js-library.umd.js"
-      }
+      "import": "./dist/arm-js-library.es.js",
+      "require": "./dist/arm-js-library.umd.js"
     }
   },
   "scripts": {
