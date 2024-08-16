@@ -884,8 +884,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
      */
     _resolveRequest(config, requestXHR, requestHashObject) {
       const hasAutoResolveConfig = !isNil(getProperty(config, "autoResolve"));
-      const autoResolve = hasAutoResolveConfig ? getProperty(config, "autoResolve") : true;
-      if (autoResolve) {
+      const isAutoResolve = hasAutoResolveConfig ? getProperty(config, "autoResolve") : true;
+      if (isAutoResolve) {
         return requestHashObject;
       } else {
         return requestXHR;
@@ -942,6 +942,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const hasResourceAutoResolveOrigin = !isNil(
         getProperty(resourceConfig, "autoResolveOrigin")
       );
+      const hasResourceAutoResolve = !isNil(
+        getProperty(resourceConfig, "autoResolve")
+      );
+      const isAutoResolve = hasResourceAutoResolve ? getProperty(resourceConfig, "autoResolve") : true;
       if (isResourceIdValid)
         setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
       if (hasResourceConfigOverride) {
@@ -970,10 +974,21 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const isRequestHashIdExisting = !isNil(requestHashObject);
       const isRequestNew = getProperty(requestHashObject, "isNew");
       if (isResourceMethodGet) {
-        if (hasSkipRequest && skipRequest) return;
-        if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) return;
-        if (hasSkipRequest && !skipRequest && isRequestHashIdExisting && !isRequestNew)
+        if (hasSkipRequest && skipRequest) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
           return;
+        }
+        if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
+          return;
+        }
+        if (hasSkipRequest && !skipRequest && isRequestHashIdExisting && !isRequestNew) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
+          return;
+        }
       }
       if (hasResourcePayload)
         setProperty(resourcePayloadRecord, "isLoading", true);
