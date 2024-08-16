@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 1.5.5
+ * Version: 1.5.6
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -1100,11 +1100,11 @@ export default class ApiResourceManager {
    */
   _resolveRequest(config, requestXHR, requestHashObject) {
     const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
-    const autoResolve = hasAutoResolveConfig
+    const isAutoResolve = hasAutoResolveConfig
       ? getProperty(config, 'autoResolve')
       : true
 
-    if (autoResolve) {
+    if (isAutoResolve) {
       return requestHashObject
     } else {
       return requestXHR
@@ -1163,6 +1163,12 @@ export default class ApiResourceManager {
     const hasResourceAutoResolveOrigin = !isNil(
       getProperty(resourceConfig, 'autoResolveOrigin')
     )
+    const hasResourceAutoResolve = !isNil(
+      getProperty(resourceConfig, 'autoResolve')
+    )
+    const isAutoResolve = hasResourceAutoResolve
+      ? getProperty(resourceConfig, 'autoResolve')
+      : true
 
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
@@ -1207,15 +1213,26 @@ export default class ApiResourceManager {
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
-      if (hasSkipRequest && skipRequest) return
-      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) return
+      if (hasSkipRequest && skipRequest) {
+        if (hasResourceAutoResolve && !isAutoResolve)
+          return Promise.resolve(this.requestHashIds[requestHashId])
+        return
+      }
+      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+        if (hasResourceAutoResolve && !isAutoResolve)
+          return Promise.resolve(this.requestHashIds[requestHashId])
+        return
+      }
       if (
         hasSkipRequest &&
         !skipRequest &&
         isRequestHashIdExisting &&
         !isRequestNew
-      )
+      ) {
+        if (hasResourceAutoResolve && !isAutoResolve)
+          return Promise.resolve(this.requestHashIds[requestHashId])
         return
+      }
     }
 
     if (hasResourcePayload)
