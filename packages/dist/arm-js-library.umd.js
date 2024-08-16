@@ -942,6 +942,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const hasResourceAutoResolveOrigin = !isNil(
         getProperty(resourceConfig, "autoResolveOrigin")
       );
+      const hasResourceAutoResolve = !isNil(
+        getProperty(resourceConfig, "autoResolve")
+      );
+      const isAutoResolve = hasResourceAutoResolve ? getProperty(resourceConfig, "autoResolve") : true;
       if (isResourceIdValid)
         setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
       if (hasResourceConfigOverride) {
@@ -970,10 +974,21 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const isRequestHashIdExisting = !isNil(requestHashObject);
       const isRequestNew = getProperty(requestHashObject, "isNew");
       if (isResourceMethodGet) {
-        if (hasSkipRequest && skipRequest) return;
-        if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) return;
-        if (hasSkipRequest && !skipRequest && isRequestHashIdExisting && !isRequestNew)
+        if (hasSkipRequest && skipRequest) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
           return;
+        }
+        if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
+          return;
+        }
+        if (hasSkipRequest && !skipRequest && isRequestHashIdExisting && !isRequestNew) {
+          if (hasResourceAutoResolve && !isAutoResolve)
+            return Promise.resolve(this.requestHashIds[requestHashId]);
+          return;
+        }
       }
       if (hasResourcePayload)
         setProperty(resourcePayloadRecord, "isLoading", true);
