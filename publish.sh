@@ -56,6 +56,13 @@ cp -v DOCS.md .. && print_status_done || print_status_failed
 
 print_separator
 
+print_process "updating:apps-demo-and-packages-dependency"
+
+cd .. && cd apps/create-react-app && npm install && print_status_done || print_status_failed
+cd .. && cd create-next-app && npm install && print_status_done || print_status_failed
+cd .. && cd .. && cd packages && npm install && print_status_done || print_status_failed
+
+print_separator
 
 if [ "$1" == "release:latest" ]; then
   print_process "publishing:latest"
