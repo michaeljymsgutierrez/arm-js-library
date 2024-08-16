@@ -1100,11 +1100,11 @@ export default class ApiResourceManager {
    */
   _resolveRequest(config, requestXHR, requestHashObject) {
     const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
-    const autoResolve = hasAutoResolveConfig
+    const isAutoResolve = hasAutoResolveConfig
       ? getProperty(config, 'autoResolve')
       : true
 
-    if (autoResolve) {
+    if (isAutoResolve) {
       return requestHashObject
     } else {
       return requestXHR

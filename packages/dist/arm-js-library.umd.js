@@ -884,8 +884,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
      */
     _resolveRequest(config, requestXHR, requestHashObject) {
       const hasAutoResolveConfig = !isNil(getProperty(config, "autoResolve"));
-      const autoResolve = hasAutoResolveConfig ? getProperty(config, "autoResolve") : true;
-      if (autoResolve) {
+      const isAutoResolve = hasAutoResolveConfig ? getProperty(config, "autoResolve") : true;
+      if (isAutoResolve) {
         return requestHashObject;
       } else {
         return requestXHR;
