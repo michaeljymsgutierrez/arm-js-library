@@ -4,9 +4,7 @@
   "description": "API Resource Manager",
   "type": "module",
   "types": "dist/arm-js-library.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist", "types", "DOCS.md"],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
