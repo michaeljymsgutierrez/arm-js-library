@@ -3,27 +3,21 @@
   "version": "1.5.5",
   "description": "API Resource Manager",
   "type": "module",
-  "types": "dist/arm-js-library.d.ts",
-  "files": ["dist"],
+  "types": "dist/index.d.ts",
+  "files": ["dist", "types", "DOCS.md"],
   "main": "dist/arm-js-library.umd.js",
   "module": "dist/arm-js-library.es.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/arm-js-library.d.ts",
-        "default": "./dist/arm-js-library.es.js"
-      },
-      "require": {
-        "types": "./dist/arm-js-library.d.ts",
-        "default": "./dist/arm-js-library.umd.js"
-      }
+      "import": "./dist/arm-js-library.es.js",
+      "require": "./dist/arm-js-library.umd.js"
     }
   },
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
     "build:jsdocs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md",
-    "build:dts": "tsc src/lib/api-resource-manager.js --declaration --allowJs --emitDeclarationOnly --outFile dist/arm-js-library.d.ts"
+    "build:dts": "tsc src/lib/api-resource-manager.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext"
   },
   "keywords": [
     "uuid",
