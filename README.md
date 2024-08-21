@@ -24,6 +24,7 @@
   * [Retrieve functions from collections](#retrieve-functions-from-collections)
   * [Create collection record function](#create-collection-record-function)
   * [Remove collection record functions](#remove-collection-record-functions)
+  * [Push collection record function](#push-collection-record-function)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
   * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
@@ -456,6 +457,20 @@ import { ARM } from 'path-to-src/index.js'
     * Remove all records from collection only.
     ```javascript
     ARM.clearCollection('addresses')
+    ```
+#### Push collection record function
+---
+* **pushPayload(collectionName, collectionRecords)**
+    * Push raw collection record/records to respective collections.
+    ```javascript
+    // Retrieve raw data with barebone ajax/fetch function.
+    ARM.ajax({
+      method: 'get',
+      url: 'addresses/12345'
+    }).then(results => {
+      // Will add/update collection records.
+      ARM.pushPayload('addresses', results.data.data)
+    })
     ```
 #### Collection Records: `Properties and Functions`
 ---
