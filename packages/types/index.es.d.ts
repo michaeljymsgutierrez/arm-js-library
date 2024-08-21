@@ -1,41 +1,17 @@
-declare module "api-resource-manager" {
-    export default class ApiResourceManager {
+declare module "arm-js-library.es" {
+    export { ApiResourceManager as default };
+    class ApiResourceManager {
         /**
          * Creates a new instance of the class.
          *
          * @param {Object[]} collections - An optional array of collections to initialize. Defaults to an empty array.
          */
         constructor(collections?: any[]);
-        /**
-         * The namespace for API requests. Defaults to 'api/v1'.
-         * @type {string}
-         */
         namespace: string;
-        /**
-         * The base URL for API requests.
-         * Defaults to the current origin if running in a browser, otherwise an empty string.
-         * @type {string}
-         */
-        host: string;
-        /**
-         * A dictionary to store collections of data.
-         * @type {Object}
-         */
-        collections: any;
-        /**
-         * A dictionary to store aliases for collections.
-         * @type {Object}
-         */
-        aliases: any;
-        /**
-         * A dictionary to store request hash IDs.
-         * @type {Object}
-         */
-        requestHashIds: any;
-        /**
-         * The reference key used for included data in request payloads. Defaults to 'type'.
-         * @type {string}
-         */
+        host: any;
+        collections: {};
+        aliases: {};
+        requestHashIds: {};
         payloadIncludedReference: string;
         /**
          * Initializes the Axios configuration with the base URL.
@@ -343,7 +319,7 @@ declare module "api-resource-manager" {
          * @param {boolean} [requestConfig.resourceConfig.skip] - Whether to skip making the request (useful for data pre-population).
          * @returns {Promise<*>} Promise resolving to the API response data or rejecting with the error.
          */
-        _request({ resourceMethod, resourceName, resourceId, resourceParams, resourcePayload, resourceFallback, resourceConfig, }: {
+        _request({ resourceMethod, resourceName, resourceId, resourceParams, resourcePayload, resourceFallback, resourceConfig }: {
             resourceMethod: string;
             resourceName: string;
             resourceId?: string;
@@ -569,70 +545,4 @@ declare module "api-resource-manager" {
          */
         isLt(value: number, other: number): boolean;
     }
-    /**
-     * Default response object for array-based requests.
-     */
-    export type DefaultRequestArrayResponse = {
-        /**
-         * - Indicates if the request is loading.
-         */
-        isLoading: boolean;
-        /**
-         * - Indicates if an error occurred during the request.
-         */
-        isError: boolean;
-        /**
-         * - Indicates if the response is new.
-         */
-        isNew: boolean;
-        /**
-         * - The main data array returned by the request.
-         */
-        data: any[];
-        /**
-         * - Additional included data related to the response.
-         */
-        included: any[];
-        /**
-         * - Metadata about the response.
-         */
-        meta: any;
-        /**
-         * - Error information, if any (null if no error).
-         */
-        error: any | null;
-    };
-    /**
-     * Default response object for object-based requests.
-     */
-    export type DefaultRequestObjectResponse = {
-        /**
-         * - Indicates if the request is loading.
-         */
-        isLoading: boolean;
-        /**
-         * - Indicates if an error occurred during the request.
-         */
-        isError: boolean;
-        /**
-         * - Indicates if the response is new.
-         */
-        isNew: boolean;
-        /**
-         * - The main data object returned by the request.
-         */
-        data: any;
-        /**
-         * - Additional included data related to the response.
-         */
-        included: any[];
-        /**
-         * - Metadata about the response.
-         */
-        meta: any;
-        /**
-         * - Error information, if any (null if no error).
-         */
-        error: any | null;
-    };
 }
