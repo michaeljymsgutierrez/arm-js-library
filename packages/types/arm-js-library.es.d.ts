@@ -219,6 +219,13 @@ declare module "arm-js-library.es" {
          */
         private _pushPayload;
         /**
+         * Pushes records to a specified collection.
+         *
+         * @param {string} collectionName - The name of the collection to push records to.
+         * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+         */
+        pushPayload(collectionName: string, collectionRecords: Array<any> | any): void;
+        /**
          * Pushes a request and its corresponding response to the request hash store.
          *
          * @private
