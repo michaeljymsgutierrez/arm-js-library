@@ -751,8 +751,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   pushPayload(collectionName, collectionRecords) {
     this._isCollectionExisting(collectionName);
     const isCollectionRecordsObject = isPlainObject(collectionRecords);
-    isArray(collectionRecords);
-    if (isCollectionRecordsObject)
+    const isCollectionRecordsArray = isArray(collectionRecords);
+    if (isCollectionRecordsArray)
       forEach(
         collectionRecords,
         (collectionRecord) => this._injectCollectionReferenceKeys(collectionName, collectionRecord)

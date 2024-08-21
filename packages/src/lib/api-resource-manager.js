@@ -964,7 +964,7 @@ export default class ApiResourceManager {
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const isCollectionRecordsArray = isArray(collectionRecords)
 
-    if (isCollectionRecordsObject)
+    if (isCollectionRecordsArray)
       forEach(collectionRecords, (collectionRecord) =>
         this._injectCollectionReferenceKeys(collectionName, collectionRecord)
       )
