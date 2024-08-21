@@ -759,6 +759,25 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       return updatedCollectionRecords;
     }
     /**
+     * Pushes records to a specified collection.
+     *
+     * @param {string} collectionName - The name of the collection to push records to.
+     * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+     */
+    pushPayload(collectionName, collectionRecords) {
+      this._isCollectionExisting(collectionName);
+      const isCollectionRecordsObject = isPlainObject(collectionRecords);
+      isArray(collectionRecords);
+      if (isCollectionRecordsObject)
+        forEach(
+          collectionRecords,
+          (collectionRecord) => this._injectCollectionReferenceKeys(collectionName, collectionRecord)
+        );
+      if (isCollectionRecordsObject)
+        this._injectCollectionReferenceKeys(collectionName, collectionRecords);
+      this._pushPayload(collectionName, collectionRecords);
+    }
+    /**
      * Pushes a request and its corresponding response to the request hash store.
      *
      * @private
