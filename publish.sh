@@ -58,9 +58,9 @@ print_separator
 
 print_process "updating:apps-and-packages-dependencies"
 
-cd .. && cd apps/create-react-app && npm install && print_status_done || print_status_failed
-cd .. && cd create-next-app && npm install && print_status_done || print_status_failed
-cd .. && cd .. && cd packages && npm install && print_status_done || print_status_failed
+cd .. && cd apps/create-react-app && npm install && npm audit fix  &&print_status_done || print_status_failed
+cd .. && cd create-next-app && npm install && npm audit fix && print_status_done || print_status_failed
+cd .. && cd .. && cd packages && npm install && npm audit fix && print_status_done || print_status_failed
 
 print_separator
 
