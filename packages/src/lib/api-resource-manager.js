@@ -522,9 +522,10 @@ export default class ApiResourceManager {
    *
    * @private
    * @param {Object} currentRecord - The record to be saved.
-   * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+   * @param {Object} [collectionConfig] - Optional configuration for the save request.
+   * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
    */
-  _saveRecord(currentRecord) {
+  _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
     const collectionRecord = find(this.collections[collectionName], {
       hashId: getProperty(currentRecord, 'hashId'),
@@ -542,7 +543,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: payload,
       resourceFallback: {},
-      resourceConfig: { autoResolveOrigin: '_internal' },
+      resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
     }
 
     return this._request(requestObject)
@@ -566,8 +567,6 @@ export default class ApiResourceManager {
     const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
 
-    setProperty(collectionConfig, 'autoResolveOrigin', '_internal')
-
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -575,7 +574,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: collectionConfig,
+      resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
     }
 
     return this._request(requestObject)
@@ -698,7 +697,8 @@ export default class ApiResourceManager {
       get: this._getRecordProperty,
       set: this._setRecordProperty,
       setProperties: this._setRecordProperties,
-      save: () => this._saveRecord(collectionRecord),
+      save: (collectionConfig) =>
+        this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) =>
         this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
@@ -1177,6 +1177,8 @@ export default class ApiResourceManager {
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, 'override')
     )
+    const resourceIgnorePayload =
+      getProperty(resourceConfig, 'ignorePayload') || []
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
     const collectionRecordById = isResourceIdValid
       ? find(this.collections[resourceName], {
@@ -1224,7 +1226,10 @@ export default class ApiResourceManager {
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
     if (hasResourcePayload) {
       const payload = {
-        data: omit(resourcePayloadRecord, keysToBeOmittedOnRequestPayload),
+        data: omit(resourcePayloadRecord, [
+          ...resourceIgnorePayload,
+          ...keysToBeOmittedOnRequestPayload,
+        ]),
       }
       setProperty(requestOptions, 'data', payload)
     }

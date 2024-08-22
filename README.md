@@ -307,7 +307,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override)` which are currently available.
+    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -326,6 +326,9 @@ import { ARM } from 'path-to-src/index.js'
         // Note: autoResolve is only available on query, queryRecord, findAll, findRecord functions.
         // By default autoResolve is set to true.
         autoResolve: false,
+
+        // Ignore payload serve as list of keys to be omitted on request payload.
+        ignorePayload: ['attributes.address2', 'attributes.address1'],
 
         // Override serve as request override for the default configuration of axios current request.
         // Currently support host, namespace, path and headers for the meantime.
@@ -567,22 +570,21 @@ import { ARM } from 'path-to-src/index.js'
         address.get('attributes.label')
         ```
 * **Request Functions**
-    * **save()**
+    * **save(collectionConfig)**
         * Persist collection record changes to server.
         * Create a new record to server  only if it doesn't already exist in the database.
             * Will call **POST** method: `POST /addresses`
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/123456`
+        * Support collectionConfig. - **optional**
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
-        // Set properties label and kind of attributes
-        address.setProperties({
-          attributes: { kind: 'school', label: 'My School' }
-        })
+        // Returned promise
+        // Without collectionConfig
+        address.save()
 
-        // Returned value 'school'
-        address.get('attributes.kind')
-        // Returned value 'My School'
-        address.get('attributes.label')
+        // With collectionConfig
+        address.save({ ignorePayload: ['attributes.address2'] })
         ```
     * **reload()**
         * Refresh collection record changes from server.
@@ -595,7 +597,7 @@ import { ARM } from 'path-to-src/index.js'
         * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, override)` 
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
         // Returned promise
         // Without collectionConfig
