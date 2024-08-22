@@ -82,7 +82,7 @@ const defaultRequestObjectResponse = {
   meta: {}
 };
 const keysToBeOmittedOnDeepCheck = [
-  "destroyRecord",
+  "estroyRecord",
   "getCollection",
   "reload",
   "save",
@@ -436,7 +436,6 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const id = getProperty(currentRecord, "id");
     const resource = getProperty(collectionRecord, "collectionName");
     const method = "delete";
-    setProperty(collectionConfig, "autoResolveOrigin", "_internal");
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -444,7 +443,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: collectionConfig
+      resourceConfig: { ...collectionConfig, autoResolveOrigin: "_internal" }
     };
     return this._request(requestObject);
   }

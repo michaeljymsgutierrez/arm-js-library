@@ -124,7 +124,7 @@ const defaultRequestObjectResponse = {
  * @constant
  */
 const keysToBeOmittedOnDeepCheck = [
-  'destroyRecord',
+  'estroyRecord',
   'getCollection',
   'reload',
   'save',
@@ -566,8 +566,6 @@ export default class ApiResourceManager {
     const resource = getProperty(collectionRecord, 'collectionName')
     const method = 'delete'
 
-    setProperty(collectionConfig, 'autoResolveOrigin', '_internal')
-
     const requestObject = {
       resourceMethod: method,
       resourceName: resource,
@@ -575,7 +573,7 @@ export default class ApiResourceManager {
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
-      resourceConfig: collectionConfig,
+      resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
     }
 
     return this._request(requestObject)
