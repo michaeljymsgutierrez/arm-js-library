@@ -134,7 +134,7 @@ declare module "arm-js-library.umd" {
              * @param {Object} currentRecord - The record to be saved.
              * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
              */
-            _saveRecord(currentRecord: any): Promise<any>;
+            _saveRecord(currentRecord: any, collectionConfig?: {}): Promise<any>;
             /**
              * Deletes a record from the server.
              *
