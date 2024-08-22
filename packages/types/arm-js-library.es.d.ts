@@ -138,7 +138,8 @@ declare module "arm-js-library.es" {
          *
          * @private
          * @param {Object} currentRecord - The record to be saved.
-         * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+         * @param {Object} [collectionConfig] - Optional configuration for the save request.
+         * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
          */
         private _saveRecord;
         /**
@@ -218,6 +219,13 @@ declare module "arm-js-library.es" {
          * @returns {Array|Object} The updated collection records.
          */
         private _pushPayload;
+        /**
+         * Pushes records to a specified collection.
+         *
+         * @param {string} collectionName - The name of the collection to push records to.
+         * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+         */
+        pushPayload(collectionName: string, collectionRecords: Array<any> | any): void;
         /**
          * Pushes a request and its corresponding response to the request hash store.
          *

@@ -1,6 +1,6 @@
 # ARM JavaScript Library
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.5.7-blue)](https://www.npmjs.com/package/arm-js-library)
+[![npm-version](https://img.shields.io/badge/npm_version-1.5.8-blue)](https://www.npmjs.com/package/arm-js-library)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
 
 ## Table of Contents
@@ -24,6 +24,7 @@
   * [Retrieve functions from collections](#retrieve-functions-from-collections)
   * [Create collection record function](#create-collection-record-function)
   * [Remove collection record functions](#remove-collection-record-functions)
+  * [Push collection record function](#push-collection-record-function)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
 * [Utility Functions](#utility-functions)
   * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
@@ -306,7 +307,7 @@ import { ARM } from 'path-to-src/index.js'
     * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
-    * Contains request config such as `(skip, alias, override)` which are currently available.
+    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
     ```javascript
       {
         // Skip serve as request go signal to proceed 
@@ -325,6 +326,9 @@ import { ARM } from 'path-to-src/index.js'
         // Note: autoResolve is only available on query, queryRecord, findAll, findRecord functions.
         // By default autoResolve is set to true.
         autoResolve: false,
+
+        // Ignore payload serve as list of keys to be omitted on request payload.
+        ignorePayload: ['attributes.address2', 'attributes.address1'],
 
         // Override serve as request override for the default configuration of axios current request.
         // Currently support host, namespace, path and headers for the meantime.
@@ -457,6 +461,20 @@ import { ARM } from 'path-to-src/index.js'
     ```javascript
     ARM.clearCollection('addresses')
     ```
+#### Push collection record function
+---
+* **pushPayload(collectionName, collectionRecords)**
+    * Push raw collection record/records to respective collections.
+    ```javascript
+    // Retrieve raw data with barebone ajax/fetch function.
+    ARM.ajax({
+      method: 'get',
+      url: 'addresses/12345'
+    }).then(results => {
+      // Will add/update collection records.
+      ARM.pushPayload('addresses', results.data.data)
+    })
+    ```
 #### Collection Records: `Properties and Functions`
 ---
 ```javascript
@@ -552,22 +570,21 @@ import { ARM } from 'path-to-src/index.js'
         address.get('attributes.label')
         ```
 * **Request Functions**
-    * **save()**
+    * **save(collectionConfig)**
         * Persist collection record changes to server.
         * Create a new record to server  only if it doesn't already exist in the database.
             * Will call **POST** method: `POST /addresses`
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/123456`
+        * Support collectionConfig. - **optional**
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
-        // Set properties label and kind of attributes
-        address.setProperties({
-          attributes: { kind: 'school', label: 'My School' }
-        })
+        // Returned promise
+        // Without collectionConfig
+        address.save()
 
-        // Returned value 'school'
-        address.get('attributes.kind')
-        // Returned value 'My School'
-        address.get('attributes.label')
+        // With collectionConfig
+        address.save({ ignorePayload: ['attributes.address2'] })
         ```
     * **reload()**
         * Refresh collection record changes from server.
@@ -580,7 +597,7 @@ import { ARM } from 'path-to-src/index.js'
         * Remove collection record permanently from server.
             * Will call **GET** method: `DELETE /addresses/123456`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, override)` 
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
         // Returned promise
         // Without collectionConfig

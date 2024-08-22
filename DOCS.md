@@ -16,6 +16,9 @@ These keys typically represent internal object properties or methods.</p>
 <dt><a href="#unloadRecord">unloadRecord(currentRecord)</a></dt>
 <dd><p>Unloads a record from the collection, request hashes, and aliases.</p>
 </dd>
+<dt><a href="#pushPayload">pushPayload(collectionName, collectionRecords)</a></dt>
+<dd><p>Pushes records to a specified collection.</p>
+</dd>
 <dt><a href="#setHost">setHost(host)</a></dt>
 <dd><p>Sets the host URL for the client and initializes the Axios configuration.</p>
 </dd>
@@ -169,6 +172,18 @@ Unloads a record from the collection, request hashes, and aliases.
 | Param | Type | Description |
 | --- | --- | --- |
 | currentRecord | <code>Object</code> | The record to be unloaded. |
+
+<a name="pushPayload"></a>
+
+## pushPayload(collectionName, collectionRecords)
+Pushes records to a specified collection.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The name of the collection to push records to. |
+| collectionRecords | <code>Array.&lt;Object&gt;</code> \| <code>Object</code> | The records to be pushed. Can be an array or a single object. |
 
 <a name="setHost"></a>
 

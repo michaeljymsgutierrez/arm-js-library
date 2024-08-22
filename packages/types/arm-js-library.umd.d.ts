@@ -132,9 +132,10 @@ declare module "arm-js-library.umd" {
              *
              * @private
              * @param {Object} currentRecord - The record to be saved.
-             * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+             * @param {Object} [collectionConfig] - Optional configuration for the save request.
+             * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
              */
-            _saveRecord(currentRecord: any): Promise<any>;
+            _saveRecord(currentRecord: any, collectionConfig?: any): Promise<any>;
             /**
              * Deletes a record from the server.
              *
@@ -212,6 +213,13 @@ declare module "arm-js-library.umd" {
              * @returns {Array|Object} The updated collection records.
              */
             _pushPayload(collectionName: string, collectionRecords: any[] | any): any[] | any;
+            /**
+             * Pushes records to a specified collection.
+             *
+             * @param {string} collectionName - The name of the collection to push records to.
+             * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+             */
+            pushPayload(collectionName: string, collectionRecords: Array<any> | any): void;
             /**
              * Pushes a request and its corresponding response to the request hash store.
              *
