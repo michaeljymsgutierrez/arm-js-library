@@ -327,6 +327,9 @@ import { ARM } from 'path-to-src/index.js'
         // By default autoResolve is set to true.
         autoResolve: false,
 
+        // Ignore payload serve as list of keys to be omitted on request payload.
+        ignorePayload: ['attributes.address2', 'attributes.address1'],
+
         // Override serve as request override for the default configuration of axios current request.
         // Currently support host, namespace, path and headers for the meantime.
         // Example:
