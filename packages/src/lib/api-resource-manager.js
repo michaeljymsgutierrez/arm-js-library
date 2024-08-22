@@ -534,11 +534,6 @@ export default class ApiResourceManager {
     const resource = collectionName
     const method = isValidId ? 'put' : 'post'
     const payload = { data: collectionRecord }
-    // const ignorePayload = getProperty(collectionConfig, 'ignorePayload')
-    // const hasIgnorePayloadConfig = !isNil(ignorePayload)
-    // const keysToBeOmittedOnRequestPayload = hasIgnorePayloadConfig
-    //   ? ignorePayload
-    //   : []
 
     const requestObject = {
       resourceMethod: method,
