@@ -4,13 +4,8 @@
   "description": "API Resource Manager",
   "type": "module",
   "files": ["dist", "types", "DOCS.md"],
-  "main": "dist/arm-js-library.umd.js",
-  "module": "dist/arm-js-library.es.js",
   "exports": {
-    ".": {
-      "import": "./dist/arm-js-library.es.js",
-      "require": "./dist/arm-js-library.umd.js"
-    }
+    ".": "./dist/arm-js-library.es.js"
   },
   "scripts": {
     "build": "vite build",
