@@ -6,7 +6,7 @@ import CryptoJS from "crypto-js";
 /**
  * ARM JavaScript Library
  *
- * Version: 1.5.7
+ * Version: 1.5.8
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
