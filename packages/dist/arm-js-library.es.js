@@ -82,7 +82,7 @@ const defaultRequestObjectResponse = {
   meta: {}
 };
 const keysToBeOmittedOnDeepCheck = [
-  "estroyRecord",
+  "destroyRecord",
   "getCollection",
   "reload",
   "save",

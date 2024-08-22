@@ -124,7 +124,7 @@ const defaultRequestObjectResponse = {
  * @constant
  */
 const keysToBeOmittedOnDeepCheck = [
-  'estroyRecord',
+  'destroyRecord',
   'getCollection',
   'reload',
   'save',
