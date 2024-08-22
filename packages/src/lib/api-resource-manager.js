@@ -522,7 +522,8 @@ export default class ApiResourceManager {
    *
    * @private
    * @param {Object} currentRecord - The record to be saved.
-   * @returns {Promise} A Promise that resolves with the response data or rejects with an error.
+   * @param {Object} [collectionConfig] - Optional configuration for the save request.
+   * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
    */
   _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
