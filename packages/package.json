@@ -1,9 +1,10 @@
 {
   "name": "arm-js-library",
-  "version": "1.5.8",
+  "version": "1.5.8-canary.4",
   "description": "API Resource Manager",
   "type": "module",
   "files": ["dist", "types", "DOCS.md"],
+  "types": "./types/arm-js-library.es.d.ts",
   "exports": {
     ".": "./dist/arm-js-library.es.js"
   },
