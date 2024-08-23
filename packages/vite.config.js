@@ -10,7 +10,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
       name: 'arm-js-library',
-      fileName: 'arm-js-library.es',
+      fileName: 'arm-js-library',
       formats: ['es'],
     },
     rollupOptions: {

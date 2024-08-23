@@ -1,4 +1,4 @@
-declare module "arm-js-library.es" {
+declare module "arm-js-library" {
     export { ApiResourceManager as default };
     class ApiResourceManager {
         /**
