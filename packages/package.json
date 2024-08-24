@@ -6,7 +6,7 @@
   "files": ["dist", "types", "DOCS.md"],
   "types": "types/index.d.ts",
   "exports": {
-    ".": "./dist/arm-js-library.js"
+    ".": { "import": "./dist/arm-js-library.js", "types": "./types/index.d.ts" }
   },
   "scripts": {
     "build": "vite build",
