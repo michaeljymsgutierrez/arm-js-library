@@ -10,7 +10,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
       name: 'arm-js-library',
-      fileName: (format) => `arm-js-library.${format}.js`,
+      fileName: 'arm-js-library',
+      formats: ['es'],
     },
     rollupOptions: {
       external: ['axios', 'lodash', 'mobx', 'uuid', 'crypto-js'],

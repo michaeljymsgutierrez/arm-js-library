@@ -1,24 +1,21 @@
 {
   "name": "arm-js-library",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "API Resource Manager",
   "type": "module",
   "files": ["dist", "types", "DOCS.md"],
-  "main": "dist/arm-js-library.umd.js",
-  "module": "dist/arm-js-library.es.js",
+  "types": "types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/arm-js-library.es.js",
-      "require": "./dist/arm-js-library.umd.js"
+      "import": "./dist/arm-js-library.js",
+      "types": "./types/index.d.ts"
     }
   },
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
     "build:jsdocs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md",
-    "build:es-dts": "tsc dist/arm-js-library.es.js --declaration --allowJs --emitDeclarationOnly --outFile types/arm-js-library.es.d.ts --lib esnext --module esnext",
-    "build:umd-dts": "tsc dist/arm-js-library.umd.js --declaration --allowJs --emitDeclarationOnly --outFile types/arm-js-library.umd.d.ts --lib esnext --module esnext",
-    "build:dts": "npm run build:es-dts && npm run build:umd-dts"
+    "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext"
   },
   "keywords": [
     "uuid",
