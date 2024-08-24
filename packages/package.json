@@ -3,10 +3,17 @@
   "version": "1.5.8",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist", "types", "DOCS.md"],
+  "files": [
+    "dist",
+    "types",
+    "DOCS.md"
+  ],
   "types": "types/index.d.ts",
   "exports": {
-    ".": { "import": "./dist/arm-js-library.js", "types": "./types/index.d.ts" }
+    ".": {
+      "import": "./dist/arm-js-library.js",
+      "types": "./types/index.d.ts"
+    }
   },
   "scripts": {
     "build": "vite build",
@@ -37,8 +44,7 @@
     "jsdoc-to-markdown": "^8.0.3",
     "typescript": "^5.5.4",
     "vite": "^5.3.1",
-    "vite-plugin-eslint": "^1.8.1",
-    "vite-tsconfig-paths": "^5.0.1"
+    "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
     "axios": "^1.7.2",
