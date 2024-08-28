@@ -595,7 +595,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         if (lt(collectionRecordIndex, 0))
           this.collections[collectionName].push(collectionRecord);
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] = collectionRecord;
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
+            collectionRecord
+          );
       });
       return map(
         collectionRecordsHashIds,
@@ -616,7 +619,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       if (lt(collectionRecordIndex, 0))
         this.collections[collectionName].push(collectionRecords);
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] = collectionRecords;
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
+          collectionRecords
+        );
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId
       });
@@ -642,7 +648,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               hashId: getProperty(collectionRecord, "hashId")
             });
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord;
+              this._setProperties(
+                this.aliases[aliasKey][aliasRecordIndex],
+                collectionRecord
+              );
           });
         }
         if (isAliasRecordsObject) {
@@ -651,7 +660,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               getProperty(collectionRecord, "hashId"),
               getProperty(this.aliases[aliasKey], "hashId")
             ))
-              this.aliases[aliasKey] = collectionRecord;
+              this._setProperties(this.aliases[aliasKey], collectionRecord);
           });
         }
       });
@@ -666,7 +675,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               hashId: getProperty(collectionRecord, "hashId")
             });
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord;
+              this._setProperties(
+                this.aliases[aliasKey][aliasRecordIndex],
+                collectionRecord
+              );
           });
         }
         if (isAliasRecordsObject) {
@@ -674,7 +686,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             getProperty(collectionRecords, "hashId"),
             getProperty(this.aliases[aliasKey], "hashId")
           ))
-            this.aliases[aliasKey] = collectionRecords;
+            this._setProperties(this.aliases[aliasKey], collectionRecords);
         }
       });
     }
@@ -708,16 +720,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             }
           );
           if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]["data"][requestHashIdRecordIndex] = collectionRecord;
+            this._setProperties(
+              this.requestHashIds[requestHashIdKey]["data"][requestHashIdRecordIndex],
+              collectionRecord
+            );
         }
         if (isRequestHashIdDataObject) {
           if (isEqual(
             getProperty(collectionRecord, "hashId"),
             getProperty(this.requestHashIds[requestHashIdKey], "data.hashId")
           ))
-            setProperty(
-              this.requestHashIds[requestHashIdKey],
-              "data",
+            this._setProperties(
+              this.requestHashIds[requestHashIdKey]["data"],
               collectionRecord
             );
         }

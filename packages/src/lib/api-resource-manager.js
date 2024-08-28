@@ -772,9 +772,12 @@ export default class ApiResourceManager {
         if (lt(collectionRecordIndex, 0))
           this.collections[collectionName].push(collectionRecord)
 
+        // Marker here
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] =
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
             collectionRecord
+          )
       })
 
       return map(collectionRecordsHashIds, (collectionRecordHashId) =>
@@ -798,9 +801,12 @@ export default class ApiResourceManager {
       if (lt(collectionRecordIndex, 0))
         this.collections[collectionName].push(collectionRecords)
 
+      // Marker here
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] =
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
           collectionRecords
+        )
 
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId,
@@ -829,11 +835,17 @@ export default class ApiResourceManager {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
               hashId: getProperty(collectionRecord, 'hashId'),
             })
+
+            // Marker here
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+              this._setProperties(
+                this.aliases[aliasKey][aliasRecordIndex],
+                collectionRecord
+              )
           })
         }
 
+        // Marker here
         if (isAliasRecordsObject) {
           forEach(collectionRecords, (collectionRecord) => {
             if (
@@ -842,7 +854,7 @@ export default class ApiResourceManager {
                 getProperty(this.aliases[aliasKey], 'hashId')
               )
             )
-              this.aliases[aliasKey] = collectionRecord
+              this._setProperties(this.aliases[aliasKey], collectionRecord)
           })
         }
       })
@@ -858,11 +870,17 @@ export default class ApiResourceManager {
             const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
               hashId: getProperty(collectionRecord, 'hashId'),
             })
+
+            // Marker here
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+              this._setProperties(
+                this.aliases[aliasKey][aliasRecordIndex],
+                collectionRecord
+              )
           })
         }
 
+        // Marker here
         if (isAliasRecordsObject) {
           if (
             isEqual(
@@ -870,7 +888,7 @@ export default class ApiResourceManager {
               getProperty(this.aliases[aliasKey], 'hashId')
             )
           )
-            this.aliases[aliasKey] = collectionRecords
+            this._setProperties(this.aliases[aliasKey], collectionRecords)
         }
       })
     }
@@ -907,12 +925,18 @@ export default class ApiResourceManager {
               hashId: getProperty(collectionRecord, 'hashId'),
             }
           )
+
+          // Marker here
           if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]['data'][
-              requestHashIdRecordIndex
-            ] = collectionRecord
+            this._setProperties(
+              this.requestHashIds[requestHashIdKey]['data'][
+                requestHashIdRecordIndex
+              ],
+              collectionRecord
+            )
         }
 
+        // Marker here
         if (isRequestHashIdDataObject) {
           if (
             isEqual(
@@ -920,9 +944,8 @@ export default class ApiResourceManager {
               getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
             )
           )
-            setProperty(
-              this.requestHashIds[requestHashIdKey],
-              'data',
+            this._setProperties(
+              this.requestHashIds[requestHashIdKey]['data'],
               collectionRecord
             )
         }
