@@ -867,7 +867,11 @@ export default class ApiResourceManager {
               hashId: getProperty(collectionRecord, 'hashId'),
             })
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+              setProperty(
+                this.aliases,
+                [aliasKey, aliasRecordIndex],
+                collectionRecord
+              )
           })
         }
 
@@ -878,7 +882,7 @@ export default class ApiResourceManager {
               getProperty(this.aliases[aliasKey], 'hashId')
             )
           )
-            this.aliases[aliasKey] = collectionRecords
+            setProperty(this.aliases, aliasKey, collectionRecords)
         }
       })
     }
