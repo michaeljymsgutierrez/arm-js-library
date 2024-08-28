@@ -1174,6 +1174,7 @@ export default class ApiResourceManager {
     const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
+    const hasResourceAlias = !isNil(getProperty(resourceConfig, 'alias'))
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, 'override')
     )
@@ -1305,7 +1306,7 @@ export default class ApiResourceManager {
         resourceResults
       )
 
-      if (resourceConfig.alias)
+      if (hasResourceAlias)
         this._addAlias(
           getProperty(resourceConfig, 'alias'),
           updatedDataCollectionRecords
