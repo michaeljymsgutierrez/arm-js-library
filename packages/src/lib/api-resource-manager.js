@@ -773,8 +773,10 @@ export default class ApiResourceManager {
           this.collections[collectionName].push(collectionRecord)
 
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] =
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
             collectionRecord
+          )
       })
 
       return map(collectionRecordsHashIds, (collectionRecordHashId) =>
@@ -799,8 +801,10 @@ export default class ApiResourceManager {
         this.collections[collectionName].push(collectionRecords)
 
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] =
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
           collectionRecords
+        )
 
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId,

@@ -595,7 +595,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         if (lt(collectionRecordIndex, 0))
           this.collections[collectionName].push(collectionRecord);
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] = collectionRecord;
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
+            collectionRecord
+          );
       });
       return map(
         collectionRecordsHashIds,
@@ -616,7 +619,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       if (lt(collectionRecordIndex, 0))
         this.collections[collectionName].push(collectionRecords);
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] = collectionRecords;
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
+          collectionRecords
+        );
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId
       });
