@@ -920,9 +920,11 @@ export default class ApiResourceManager {
             }
           )
           if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]['data'][
-              requestHashIdRecordIndex
-            ] = collectionRecord
+            setProperty(
+              this.requestHashIds,
+              [requestHashIdKey, 'data', requestHashIdRecordIndex],
+              collectionRecord
+            )
         }
 
         if (isRequestHashIdDataObject) {
