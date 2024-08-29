@@ -180,7 +180,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Array} collectionRecords - The records for the collection.
    */
   _addCollection(collectionName, collectionRecords) {
-    this.collections[collectionName] = collectionRecords;
+    setProperty(this.collections, collectionName, collectionRecords);
   }
   /**
    * Adds an alias to the aliases object.
@@ -190,10 +190,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
    */
   _addAlias(aliasName, aliasRecords) {
-    const isAliasRecordsArray = isArray(aliasRecords);
-    const isAliasRecordsObject = isPlainObject(aliasRecords);
-    if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || [];
-    if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {};
+    let aliasCollectionRecords = null;
+    if (isArray(aliasRecords)) aliasCollectionRecords = aliasRecords || [];
+    if (isPlainObject(aliasRecords)) aliasCollectionRecords = aliasRecords || {};
+    setProperty(this.aliases, aliasName, aliasCollectionRecords);
   }
   /**
    * Generates a hash ID based on the provided object.
@@ -311,9 +311,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   _unloadFromCollection(collectionRecord) {
     const collectionName = getProperty(collectionRecord, "collectionName");
-    const collectionRecordIndex = findIndex(this.collections[collectionName], {
-      hashId: getProperty(collectionRecord, "hashId")
-    });
+    const collectionRecordIndex = findIndex(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(collectionRecord, "hashId")
+      }
+    );
     if (gte(collectionRecordIndex, 0))
       this.collections[collectionName].splice(collectionRecordIndex, 1);
   }
@@ -325,32 +328,32 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   _unloadFromRequestHashes(collectionRecord) {
     const requestHashIdsKeys = keysIn(this.requestHashIds);
+    const collectionRecordHashId = getProperty(collectionRecord, "hashId");
     forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
+      const requestHashIdData = getProperty(this.requestHashIds, [
+        requestHashIdKey,
         "data"
-      );
-      const isRequestHashIdDataArray = isArray(requestHashIdData);
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData);
-      if (isRequestHashIdDataArray) {
-        const requestHashIdRecordIndex = findIndex(
-          getProperty(this.requestHashIds[requestHashIdKey], "data"),
-          {
-            hashId: getProperty(collectionRecord, "hashId")
-          }
-        );
+      ]);
+      if (isArray(requestHashIdData)) {
+        const requestHashIdRecordIndex = findIndex(requestHashIdData, {
+          hashId: collectionRecordHashId
+        });
         if (gte(requestHashIdRecordIndex, 0))
           this.requestHashIds[requestHashIdKey]["data"].splice(
             requestHashIdRecordIndex,
             1
           );
       }
-      if (isRequestHashIdDataObject) {
+      if (isPlainObject(requestHashIdData)) {
         if (isEqual(
-          getProperty(collectionRecord, "hashId"),
-          getProperty(this.requestHashIds[requestHashIdKey], "data.hashId")
+          collectionRecordHashId,
+          getProperty(this.requestHashIds, [
+            requestHashIdKey,
+            "data",
+            "hashId"
+          ])
         ))
-          setProperty(this.requestHashIds[requestHashIdKey], "data", {});
+          setProperty(this.requestHashIds, [requestHashIdKey, "data"], {});
       }
     });
   }
@@ -648,7 +651,11 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               hashId: getProperty(collectionRecord, "hashId")
             });
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord;
+              setProperty(
+                this.aliases,
+                [aliasKey, aliasRecordIndex],
+                collectionRecord
+              );
           });
         }
         if (isAliasRecordsObject) {
@@ -657,7 +664,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               getProperty(collectionRecord, "hashId"),
               getProperty(this.aliases[aliasKey], "hashId")
             ))
-              this.aliases[aliasKey] = collectionRecord;
+              setProperty(this.aliases, aliasKey, collectionRecord);
           });
         }
       });
@@ -672,7 +679,11 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
               hashId: getProperty(collectionRecord, "hashId")
             });
             if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord;
+              setProperty(
+                this.aliases,
+                [aliasKey, aliasRecordIndex],
+                collectionRecord
+              );
           });
         }
         if (isAliasRecordsObject) {
@@ -680,7 +691,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             getProperty(collectionRecords, "hashId"),
             getProperty(this.aliases[aliasKey], "hashId")
           ))
-            this.aliases[aliasKey] = collectionRecords;
+            setProperty(this.aliases, aliasKey, collectionRecords);
         }
       });
     }
@@ -714,7 +725,11 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             }
           );
           if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]["data"][requestHashIdRecordIndex] = collectionRecord;
+            setProperty(
+              this.requestHashIds,
+              [requestHashIdKey, "data", requestHashIdRecordIndex],
+              collectionRecord
+            );
         }
         if (isRequestHashIdDataObject) {
           if (isEqual(

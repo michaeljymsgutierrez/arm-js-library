@@ -447,10 +447,8 @@ export default class ApiResourceManager {
         requestHashIdKey,
         'data',
       ])
-      const isRequestHashIdDataArray = isArray(requestHashIdData)
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
 
-      if (isRequestHashIdDataArray) {
+      if (isArray(requestHashIdData)) {
         const requestHashIdRecordIndex = findIndex(requestHashIdData, {
           hashId: collectionRecordHashId,
         })
@@ -461,7 +459,7 @@ export default class ApiResourceManager {
           )
       }
 
-      if (isRequestHashIdDataObject) {
+      if (isPlainObject(requestHashIdData)) {
         if (
           isEqual(
             collectionRecordHashId,
