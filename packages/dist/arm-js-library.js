@@ -61,7 +61,8 @@ const {
   last,
   orderBy,
   uniqBy,
-  groupBy
+  groupBy,
+  pullAt
 } = _;
 const defaultRequestArrayResponse = {
   isLoading: true,
@@ -318,7 +319,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       }
     );
     if (gte(collectionRecordIndex, 0))
-      this.collections[collectionName].splice(collectionRecordIndex, 1);
+      pullAt(
+        getProperty(this.collections, collectionName),
+        collectionRecordIndex
+      );
   }
   /**
    * Removes a record from all request hashes based on its hash ID.

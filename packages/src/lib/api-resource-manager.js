@@ -71,6 +71,7 @@ const {
   orderBy,
   uniqBy,
   groupBy,
+  pullAt,
 } = _
 
 /**
@@ -429,7 +430,10 @@ export default class ApiResourceManager {
     )
 
     if (gte(collectionRecordIndex, 0))
-      this.collections[collectionName].splice(collectionRecordIndex, 1)
+      pullAt(
+        getProperty(this.collections, collectionName),
+        collectionRecordIndex
+      )
   }
 
   /**
