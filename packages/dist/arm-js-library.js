@@ -343,9 +343,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           hashId: collectionRecordHashId
         });
         if (gte(requestHashIdRecordIndex, 0))
-          this.requestHashIds[requestHashIdKey]["data"].splice(
-            requestHashIdRecordIndex,
-            1
+          pullAt(
+            getProperty(this.requestHashIds, [requestHashIdKey, "data"]),
+            requestHashIdRecordIndex
           );
       }
       if (isPlainObject(requestHashIdData)) {

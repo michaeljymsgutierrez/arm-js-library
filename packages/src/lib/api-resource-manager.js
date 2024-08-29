@@ -457,9 +457,9 @@ export default class ApiResourceManager {
           hashId: collectionRecordHashId,
         })
         if (gte(requestHashIdRecordIndex, 0))
-          this.requestHashIds[requestHashIdKey]['data'].splice(
-            requestHashIdRecordIndex,
-            1
+          pullAt(
+            getProperty(this.requestHashIds, [requestHashIdKey, 'data']),
+            requestHashIdRecordIndex
           )
       }
 
