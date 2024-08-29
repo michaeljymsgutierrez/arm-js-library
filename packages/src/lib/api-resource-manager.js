@@ -534,21 +534,20 @@ export default class ApiResourceManager {
    */
   _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const isValidId = isNumber(getProperty(collectionRecord, 'id'))
-    const id = isValidId ? getProperty(collectionRecord, 'id') : null
-    const resource = collectionName
-    const method = isValidId ? 'put' : 'post'
-    const payload = { data: collectionRecord }
-
+    const collectionRecord = find(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(currentRecord, 'hashId'),
+      }
+    )
+    const collectionRecordId = getProperty(collectionRecord, 'id')
+    const isCollectionRecordIdValid = isNumber(collectionRecordId)
     const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: id,
+      resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',
+      resourceName: collectionName,
+      resourceId: isCollectionRecordIdValid ? collectionRecordId : null,
       resourceParams: {},
-      resourcePayload: payload,
+      resourcePayload: { data: collectionRecord },
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
     }
