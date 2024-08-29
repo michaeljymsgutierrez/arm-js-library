@@ -6,7 +6,7 @@ import CryptoJS from "crypto-js";
 /**
  * ARM JavaScript Library
  *
- * Version: 1.5.9
+ * Version: 1.6.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -595,7 +595,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         if (lt(collectionRecordIndex, 0))
           this.collections[collectionName].push(collectionRecord);
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] = collectionRecord;
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
+            collectionRecord
+          );
       });
       return map(
         collectionRecordsHashIds,
@@ -616,7 +619,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       if (lt(collectionRecordIndex, 0))
         this.collections[collectionName].push(collectionRecords);
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] = collectionRecords;
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
+          collectionRecords
+        );
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId
       });
@@ -935,6 +941,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const isResourceIdValid = isNumber(resourceId) || isString(resourceId);
     const hasResourceParams = !isEmpty(resourceParams);
     const hasResourcePayload = !isEmpty(resourcePayload);
+    const hasResourceAlias = !isNil(getProperty(resourceConfig, "alias"));
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, "override")
     );
@@ -1032,7 +1039,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         resourceName,
         resourceResults
       );
-      if (resourceConfig.alias)
+      if (hasResourceAlias)
         this._addAlias(
           getProperty(resourceConfig, "alias"),
           updatedDataCollectionRecords

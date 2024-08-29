@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 1.5.9
+ * Version: 1.6.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -773,8 +773,10 @@ export default class ApiResourceManager {
           this.collections[collectionName].push(collectionRecord)
 
         if (gte(collectionRecordIndex, 0))
-          this.collections[collectionName][collectionRecordIndex] =
+          this._setProperties(
+            this.collections[collectionName][collectionRecordIndex],
             collectionRecord
+          )
       })
 
       return map(collectionRecordsHashIds, (collectionRecordHashId) =>
@@ -799,8 +801,10 @@ export default class ApiResourceManager {
         this.collections[collectionName].push(collectionRecords)
 
       if (gte(collectionRecordIndex, 0))
-        this.collections[collectionName][collectionRecordIndex] =
+        this._setProperties(
+          this.collections[collectionName][collectionRecordIndex],
           collectionRecords
+        )
 
       return find(this.collections[collectionName], {
         hashId: collectionRecordHashId,
@@ -1174,6 +1178,7 @@ export default class ApiResourceManager {
     const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
+    const hasResourceAlias = !isNil(getProperty(resourceConfig, 'alias'))
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, 'override')
     )
@@ -1305,7 +1310,7 @@ export default class ApiResourceManager {
         resourceResults
       )
 
-      if (resourceConfig.alias)
+      if (hasResourceAlias)
         this._addAlias(
           getProperty(resourceConfig, 'alias'),
           updatedDataCollectionRecords
