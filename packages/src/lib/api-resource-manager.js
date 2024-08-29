@@ -292,10 +292,12 @@ export default class ApiResourceManager {
   _addAlias(aliasName, aliasRecords) {
     const isAliasRecordsArray = isArray(aliasRecords)
     const isAliasRecordsObject = isPlainObject(aliasRecords)
+    let aliasCollectionRecords = null
 
-    if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || []
+    if (isAliasRecordsArray) aliasCollectionRecords = aliasRecords || []
+    if (isAliasRecordsObject) aliasCollectionRecords = aliasRecords || {}
 
-    if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
+    setProperty(this.aliases, aliasName, aliasRecords)
   }
 
   /**
