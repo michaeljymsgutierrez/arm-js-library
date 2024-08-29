@@ -421,11 +421,12 @@ export default class ApiResourceManager {
    */
   _unloadFromCollection(collectionRecord) {
     const collectionName = getProperty(collectionRecord, 'collectionName')
-    const collectionHashId = getProperty(collectionRecord, 'hashId')
-    const collectionRecords = getProperty(this.collections, collectionName)
-    const collectionRecordIndex = findIndex(collectionRecords, {
-      hashId: collectionHashId,
-    })
+    const collectionRecordIndex = findIndex(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(collectionRecord, 'hashId'),
+      }
+    )
 
     if (gte(collectionRecordIndex, 0))
       this.collections[collectionName].splice(collectionRecordIndex, 1)
