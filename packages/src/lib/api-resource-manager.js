@@ -279,7 +279,7 @@ export default class ApiResourceManager {
    * @param {Array} collectionRecords - The records for the collection.
    */
   _addCollection(collectionName, collectionRecords) {
-    this.collections[collectionName] = collectionRecords
+    setProperty(this.collections, collectionName, collectionRecords)
   }
 
   /**
