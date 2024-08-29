@@ -483,28 +483,28 @@ export default class ApiResourceManager {
    */
   _unloadFromAliases(collectionRecord) {
     const aliasesKeys = keysIn(this.aliases)
+    const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
     forEach(aliasesKeys, (aliasKey) => {
-      const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-      const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+      const aliasCollectionRecords = getProperty(this.aliases, aliasKey)
 
-      if (isAliasRecordsArray) {
-        const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-          hashId: getProperty(collectionRecord, 'hashId'),
+      if (isArray(aliasCollectionRecords)) {
+        const aliasRecordIndex = findIndex(aliasCollectionRecords, {
+          hashId: collectionRecordHashId,
         })
 
         if (gte(aliasRecordIndex, 0))
           this.aliases[aliasKey].splice(aliasRecordIndex, 1)
       }
 
-      if (isAliasRecordsObject) {
+      if (isPlainObject(aliasCollectionRecords)) {
         if (
           isEqual(
-            getProperty(collectionRecord, 'hashId'),
-            getProperty(this.aliases[aliasKey], 'hashId')
+            collectionRecordHashId,
+            getProperty(this.aliases, [aliasKey, 'hashId'])
           )
         )
-          this.aliases[aliasKey] = {}
+          setProperty(this.aliases, aliasKey, {})
       }
     })
   }
