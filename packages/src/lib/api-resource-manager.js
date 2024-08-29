@@ -423,8 +423,10 @@ export default class ApiResourceManager {
    */
   _unloadFromCollection(collectionRecord) {
     const collectionName = getProperty(collectionRecord, 'collectionName')
-    const collectionRecordIndex = findIndex(this.collections[collectionName], {
-      hashId: getProperty(collectionRecord, 'hashId'),
+    const collectionHashId = getProperty(collectionRecord, 'hashId')
+    const collectionRecords = getProperty(this.collections, collectionName)
+    const collectionRecordIndex = findIndex(collectionRecords, {
+      hashId: collectionHashId,
     })
 
     if (gte(collectionRecordIndex, 0))
