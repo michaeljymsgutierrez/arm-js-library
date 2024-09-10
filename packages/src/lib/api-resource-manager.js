@@ -172,8 +172,8 @@ export default class ApiResourceManager {
      * The namespace for API requests. Defaults to 'api/v1'.
      * @type {string}
      */
-
     this.namespace = 'api/v1'
+
     /**
      * The base URL for API requests.
      * Defaults to the current origin if running in a browser, otherwise an empty string.
@@ -566,17 +566,16 @@ export default class ApiResourceManager {
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const id = getProperty(currentRecord, 'id')
-    const resource = getProperty(collectionRecord, 'collectionName')
-    const method = 'delete'
-
+    const collectionRecord = find(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(currentRecord, 'hashId'),
+      }
+    )
     const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+      resourceMethod: 'delete',
+      resourceName: collectionName,
+      resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},

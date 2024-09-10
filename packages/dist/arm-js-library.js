@@ -438,16 +438,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, "collectionName");
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, "hashId")
-    });
-    const id = getProperty(currentRecord, "id");
-    const resource = getProperty(collectionRecord, "collectionName");
-    const method = "delete";
+    find(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(currentRecord, "hashId")
+      }
+    );
     const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+      resourceMethod: "delete",
+      resourceName: collectionName,
+      resourceId: Number(getProperty(currentRecord, "id")),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
