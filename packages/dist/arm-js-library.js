@@ -464,13 +464,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
-    const id = getProperty(currentRecord, "id");
-    const resource = getProperty(currentRecord, "collectionName");
-    const method = "get";
     const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+      resourceMethod: "get",
+      resourceName: getProperty(currentRecord, "collectionName"),
+      resourceId: Number(getProperty(currentRecord, "id")),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
