@@ -543,9 +543,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       )
     };
     const actionKeys = keysIn(actions);
-    forEach(actionKeys, (actionKey) => {
-      collectionRecord[actionKey] = actions[actionKey];
-    });
+    forEach(
+      actionKeys,
+      (actionKey) => setProperty(collectionRecord, actionKey, getProperty(actions, actionKey))
+    );
   }
   /**
    * Injects reference keys into a collection record.

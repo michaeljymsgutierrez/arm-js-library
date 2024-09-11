@@ -701,9 +701,9 @@ export default class ApiResourceManager {
     }
     const actionKeys = keysIn(actions)
 
-    forEach(actionKeys, (actionKey) => {
-      collectionRecord[actionKey] = actions[actionKey]
-    })
+    forEach(actionKeys, (actionKey) =>
+      setProperty(collectionRecord, actionKey, getProperty(actions, actionKey))
+    )
   }
 
   /**
