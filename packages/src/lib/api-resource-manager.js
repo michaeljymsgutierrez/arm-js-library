@@ -565,16 +565,9 @@ export default class ApiResourceManager {
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
-    const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(
-      getProperty(this.collections, collectionName),
-      {
-        hashId: getProperty(currentRecord, 'hashId'),
-      }
-    )
     const requestObject = {
       resourceMethod: 'delete',
-      resourceName: collectionName,
+      resourceName: getProperty(currentRecord, 'collectionName'),
       resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
