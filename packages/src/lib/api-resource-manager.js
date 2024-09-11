@@ -624,19 +624,20 @@ export default class ApiResourceManager {
     const collectionRecords = observable([])
 
     forEach(relatedRecords, (relatedRecord) => {
-      const relatedRecordHashId = this._generateHashId({
-        id: getProperty(relatedRecord, 'id'),
-        collectionName: collectionName,
-      })
-
-      const collectionRecord = find(this.collections[collectionName], {
-        hashId: relatedRecordHashId,
-      })
+      const collectionRecord = find(
+        getProperty(this.collections, collectionName),
+        {
+          hashId: this._generateHashId({
+            id: getProperty(relatedRecord, 'id'),
+            collectionName: collectionName,
+          }),
+        }
+      )
 
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        if (collectionAsync) {
+        if (isEqual(collectionAsync, true)) {
           const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
