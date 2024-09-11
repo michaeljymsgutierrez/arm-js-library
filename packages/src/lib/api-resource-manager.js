@@ -542,7 +542,8 @@ export default class ApiResourceManager {
     )
     const collectionRecordId = getProperty(collectionRecord, 'id')
     const isCollectionRecordIdValid = isNumber(collectionRecordId)
-    const requestObject = {
+
+    return this._request({
       resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',
       resourceName: collectionName,
       resourceId: isCollectionRecordIdValid ? collectionRecordId : null,
@@ -550,9 +551,7 @@ export default class ApiResourceManager {
       resourcePayload: { data: collectionRecord },
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
@@ -565,7 +564,7 @@ export default class ApiResourceManager {
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
-    const requestObject = {
+    return this._request({
       resourceMethod: 'delete',
       resourceName: getProperty(currentRecord, 'collectionName'),
       resourceId: Number(getProperty(currentRecord, 'id')),
@@ -573,9 +572,7 @@ export default class ApiResourceManager {
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
@@ -587,7 +584,7 @@ export default class ApiResourceManager {
    * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
-    const requestObject = {
+    return this._request({
       resourceMethod: 'get',
       resourceName: getProperty(currentRecord, 'collectionName'),
       resourceId: Number(getProperty(currentRecord, 'id')),
@@ -598,9 +595,7 @@ export default class ApiResourceManager {
         skipId: uuidv1(),
         autoResolveOrigin: '_internal',
       },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**

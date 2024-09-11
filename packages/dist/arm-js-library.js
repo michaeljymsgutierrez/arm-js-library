@@ -416,7 +416,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const collectionRecordId = getProperty(collectionRecord, "id");
     const isCollectionRecordIdValid = isNumber(collectionRecordId);
-    const requestObject = {
+    return this._request({
       resourceMethod: isCollectionRecordIdValid ? "put" : "post",
       resourceName: collectionName,
       resourceId: isCollectionRecordIdValid ? collectionRecordId : null,
@@ -424,8 +424,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourcePayload: { data: collectionRecord },
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: "_internal" }
-    };
-    return this._request(requestObject);
+    });
   }
   /**
    * Deletes a record from the server.
@@ -437,7 +436,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
-    const requestObject = {
+    return this._request({
       resourceMethod: "delete",
       resourceName: getProperty(currentRecord, "collectionName"),
       resourceId: Number(getProperty(currentRecord, "id")),
@@ -445,8 +444,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: "_internal" }
-    };
-    return this._request(requestObject);
+    });
   }
   /**
    * Reloads a record from the server.
@@ -457,7 +455,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
-    const requestObject = {
+    return this._request({
       resourceMethod: "get",
       resourceName: getProperty(currentRecord, "collectionName"),
       resourceId: Number(getProperty(currentRecord, "id")),
@@ -468,8 +466,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         skipId: v1(),
         autoResolveOrigin: "_internal"
       }
-    };
-    return this._request(requestObject);
+    });
   }
   /**
    * Retrieves records from a specified collection based on given criteria.
