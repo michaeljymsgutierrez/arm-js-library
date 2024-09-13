@@ -1,7 +1,17 @@
-# ARM JavaScript Library
+<p align="center" style="margin-bottom:10px;">
+  <a href="https://www.npmjs.com/package/arm-js-library">
+    <img src="https://test140166510.wordpress.com/wp-content/uploads/2024/09/arm-js.png" alt="arm-js-logo" height="200" />
+  </a>
+</p>
 
-[![npm-version](https://img.shields.io/badge/npm_version-1.6.0-blue)](https://www.npmjs.com/package/arm-js-library)
-[![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file)
+<p align="center">
+  <a href="https://www.npmjs.com/package/arm-js-library">
+    <img src="https://img.shields.io/badge/npm_version-1.6.0-blue" alt="npm-badge-logo" />
+  </a>
+  <a href="https://www.npmjs.com/package/arm-js-library">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt=license"-badge-logo" />
+  </a>
+</p>
 
 ## Table of Contents
 
