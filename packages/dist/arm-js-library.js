@@ -577,51 +577,54 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
    */
   _pushToCollection(collectionName, collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords);
-    const isCollectionRecordsObject = isPlainObject(collectionRecords);
-    if (isCollectionRecordsArray) {
+    if (isArray(collectionRecords)) {
       const collectionRecordsHashIds = map(collectionRecords, "hashId");
       forEach(collectionRecords, (collectionRecord) => {
         const collectionRecordIndex = findIndex(
-          this.collections[collectionName],
+          getProperty(this.collections, collectionName),
           {
             hashId: getProperty(collectionRecord, "hashId")
           }
         );
         this._injectCollectionActions(collectionRecord);
         if (lt(collectionRecordIndex, 0))
-          this.collections[collectionName].push(collectionRecord);
+          getProperty(this.collections, collectionName).push(collectionRecord);
         if (gte(collectionRecordIndex, 0))
           this._setProperties(
-            this.collections[collectionName][collectionRecordIndex],
+            getProperty(this.collections, [
+              collectionName,
+              collectionRecordIndex
+            ]),
             collectionRecord
           );
       });
       return map(
         collectionRecordsHashIds,
-        (collectionRecordHashId) => find(this.collections[collectionName], {
+        (collectionRecordHashId) => find(getProperty(this.collections, collectionName), {
           hashId: collectionRecordHashId
         })
       );
     }
-    if (isCollectionRecordsObject) {
-      const collectionRecordHashId = collectionRecords.hashId;
+    if (isPlainObject(collectionRecords)) {
       const collectionRecordIndex = findIndex(
-        this.collections[collectionName],
+        getProperty(this.collections, collectionName),
         {
           hashId: getProperty(collectionRecords, "hashId")
         }
       );
       this._injectCollectionActions(collectionRecords);
       if (lt(collectionRecordIndex, 0))
-        this.collections[collectionName].push(collectionRecords);
+        getProperty(this.collections, collectionName).push(collectionRecords);
       if (gte(collectionRecordIndex, 0))
         this._setProperties(
-          this.collections[collectionName][collectionRecordIndex],
+          getProperty(this.collections, [
+            collectionName,
+            collectionRecordIndex
+          ]),
           collectionRecords
         );
-      return find(this.collections[collectionName], {
-        hashId: collectionRecordHashId
+      return find(getProperty(this.collections, collectionName), {
+        hashId: getProperty(collectionRecords, "hashId")
       });
     }
   }
