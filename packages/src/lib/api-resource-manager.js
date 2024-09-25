@@ -982,17 +982,17 @@ export default class ApiResourceManager {
    * @returns {Object} The updated or created request hash object.
    */
   _pushRequestHash(requestObject, responseObject) {
-    const requestHashId = this._generateHashId(requestObject)
-    const isRequestHashExisting = !isNil(this.requestHashes[requestHashId])
+    const requestHashKey = this._generateHashId(requestObject)
+    const isRequestHashExisting = !isNil(this.requestHashes[requestHashKey])
     const isResponseNew = getProperty(responseObject, 'isNew')
 
     if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashes[requestHashId], 'isNew', false)
+      setProperty(this.requestHashes[requestHashKey], 'isNew', false)
     } else {
-      this.requestHashes[requestHashId] = responseObject
+      this.requestHashes[requestHashKey] = responseObject
     }
 
-    return this.requestHashes[requestHashId]
+    return this.requestHashes[requestHashKey]
   }
 
   /**
@@ -1165,7 +1165,7 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
-    const requestHashId = this._generateHashId({ ...arguments[0] })
+    const requestHashKey = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
@@ -1235,19 +1235,19 @@ export default class ApiResourceManager {
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashes[requestHashId]
+    const requestHashObject = this.requestHashes[requestHashKey]
     const isRequestHashExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
       if (
@@ -1257,7 +1257,7 @@ export default class ApiResourceManager {
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
     }
@@ -1327,7 +1327,7 @@ export default class ApiResourceManager {
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashes[requestHashId])
+      return Promise.resolve(this.requestHashes[requestHashKey])
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1351,7 +1351,7 @@ export default class ApiResourceManager {
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashes[requestHashId])
+      return Promise.reject(this.requestHashes[requestHashKey])
     }
   }
 

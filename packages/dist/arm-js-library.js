@@ -780,15 +780,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Object} The updated or created request hash object.
    */
   _pushRequestHash(requestObject, responseObject) {
-    const requestHashId = this._generateHashId(requestObject);
-    const isRequestHashExisting = !isNil(this.requestHashes[requestHashId]);
+    const requestHashKey = this._generateHashId(requestObject);
+    const isRequestHashExisting = !isNil(this.requestHashes[requestHashKey]);
     const isResponseNew = getProperty(responseObject, "isNew");
     if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashes[requestHashId], "isNew", false);
+      setProperty(this.requestHashes[requestHashKey], "isNew", false);
     } else {
-      this.requestHashes[requestHashId] = responseObject;
+      this.requestHashes[requestHashKey] = responseObject;
     }
-    return this.requestHashes[requestHashId];
+    return this.requestHashes[requestHashKey];
   }
   /**
    * Sets the host URL for the client and initializes the Axios configuration.
@@ -938,7 +938,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       method: resourceMethod,
       url: resourceName
     };
-    const requestHashId = this._generateHashId({ ...arguments[0] });
+    const requestHashKey = this._generateHashId({ ...arguments[0] });
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
     const isResourceMethodPost = isEqual(resourceMethod, "post");
@@ -988,23 +988,23 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     }
     const hasSkipRequest = !isNil(getProperty(resourceConfig, "skip"));
     const skipRequest = isEqual(getProperty(resourceConfig, "skip"), true);
-    const requestHashObject = this.requestHashes[requestHashId];
+    const requestHashObject = this.requestHashes[requestHashKey];
     const isRequestHashExisting = !isNil(requestHashObject);
     const isRequestNew = getProperty(requestHashObject, "isNew");
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId]);
+          return Promise.resolve(this.requestHashes[requestHashKey]);
         return;
       }
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId]);
+          return Promise.resolve(this.requestHashes[requestHashKey]);
         return;
       }
       if (hasSkipRequest && !skipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashId]);
+          return Promise.resolve(this.requestHashes[requestHashKey]);
         return;
       }
     }
@@ -1062,7 +1062,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       });
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords);
-      return Promise.resolve(this.requestHashes[requestHashId]);
+      return Promise.resolve(this.requestHashes[requestHashKey]);
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, "isError", true);
@@ -1082,7 +1082,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         meta: {}
       });
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors);
-      return Promise.reject(this.requestHashes[requestHashId]);
+      return Promise.reject(this.requestHashes[requestHashKey]);
     }
   }
   /**
