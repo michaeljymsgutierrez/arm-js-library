@@ -443,30 +443,25 @@ export default class ApiResourceManager {
     const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
     forEach(requestHashesKeys, (requestHashKey) => {
-      const requestHashData = getProperty(this.requestHashes, [
-        requestHashKey,
-        'data',
-      ])
+      const requestHash = getProperty(this.requestHashes, requestHashKey)
+      const requestHashData = getProperty(requestHash, 'data')
 
       if (isArray(requestHashData)) {
         const requestHashRecordIndex = findIndex(requestHashData, {
           hashId: collectionRecordHashId,
         })
         if (gte(requestHashRecordIndex, 0))
-          pullAt(
-            getProperty(this.requestHashes, [requestHashKey, 'data']),
-            requestHashRecordIndex
-          )
+          pullAt(getProperty(requestHash, 'data'), requestHashRecordIndex)
       }
 
       if (isPlainObject(requestHashData)) {
         if (
           isEqual(
             collectionRecordHashId,
-            getProperty(this.requestHashes, [requestHashKey, 'data', 'hashId'])
+            getProperty(requestHashData, 'hashId')
           )
         )
-          setProperty(this.requestHashes, [requestHashKey, 'data'], {})
+          setProperty(requestHash, 'data', {})
       }
     })
   }
