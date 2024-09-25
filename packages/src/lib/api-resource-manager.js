@@ -421,19 +421,15 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The record to be removed from the collection.
    */
   _unloadFromCollection(collectionRecord) {
-    const collectionName = getProperty(collectionRecord, 'collectionName')
-    const collectionRecordIndex = findIndex(
-      getProperty(this.collections, collectionName),
-      {
-        hashId: getProperty(collectionRecord, 'hashId'),
-      }
+    const collection = getProperty(
+      this.collections,
+      getProperty(collectionRecord, 'collectionName')
     )
+    const collectionRecordIndex = findIndex(collection, {
+      hashId: getProperty(collectionRecord, 'hashId'),
+    })
 
-    if (gte(collectionRecordIndex, 0))
-      pullAt(
-        getProperty(this.collections, collectionName),
-        collectionRecordIndex
-      )
+    if (gte(collectionRecordIndex, 0)) pullAt(collection, collectionRecordIndex)
   }
 
   /**
