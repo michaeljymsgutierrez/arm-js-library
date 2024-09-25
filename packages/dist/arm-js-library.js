@@ -989,7 +989,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const hasSkipRequest = !isNil(getProperty(resourceConfig, "skip"));
     const skipRequest = isEqual(getProperty(resourceConfig, "skip"), true);
     const requestHashObject = this.requestHashes[requestHashId];
-    const isRequestHashIdExisting = !isNil(requestHashObject);
+    const isRequestHashExisting = !isNil(requestHashObject);
     const isRequestNew = getProperty(requestHashObject, "isNew");
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
@@ -997,12 +997,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           return Promise.resolve(this.requestHashes[requestHashId]);
         return;
       }
-      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+      if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
           return Promise.resolve(this.requestHashes[requestHashId]);
         return;
       }
-      if (hasSkipRequest && !skipRequest && isRequestHashIdExisting && !isRequestNew) {
+      if (hasSkipRequest && !skipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
           return Promise.resolve(this.requestHashes[requestHashId]);
         return;
