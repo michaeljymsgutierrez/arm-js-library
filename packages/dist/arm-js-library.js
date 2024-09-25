@@ -335,13 +335,13 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         "data"
       ]);
       if (isArray(requestHashData)) {
-        const requestHashIdRecordIndex = findIndex(requestHashData, {
+        const requestHashRecordIndex = findIndex(requestHashData, {
           hashId: collectionRecordHashId
         });
-        if (gte(requestHashIdRecordIndex, 0))
+        if (gte(requestHashRecordIndex, 0))
           pullAt(
             getProperty(this.requestHashes, [requestHashKey, "data"]),
-            requestHashIdRecordIndex
+            requestHashRecordIndex
           );
       }
       if (isPlainObject(requestHashData)) {
@@ -707,16 +707,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const isRequestHashIdDataObject = isPlainObject(requestHashData);
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
-          const requestHashIdRecordIndex = findIndex(
+          const requestHashRecordIndex = findIndex(
             getProperty(this.requestHashes[requestHashKey], "data"),
             {
               hashId: getProperty(collectionRecord, "hashId")
             }
           );
-          if (gte(requestHashIdRecordIndex, 0))
+          if (gte(requestHashRecordIndex, 0))
             setProperty(
               this.requestHashes,
-              [requestHashKey, "data", requestHashIdRecordIndex],
+              [requestHashKey, "data", requestHashRecordIndex],
               collectionRecord
             );
         }

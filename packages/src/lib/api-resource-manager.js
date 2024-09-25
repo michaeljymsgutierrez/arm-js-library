@@ -449,13 +449,13 @@ export default class ApiResourceManager {
       ])
 
       if (isArray(requestHashData)) {
-        const requestHashIdRecordIndex = findIndex(requestHashData, {
+        const requestHashRecordIndex = findIndex(requestHashData, {
           hashId: collectionRecordHashId,
         })
-        if (gte(requestHashIdRecordIndex, 0))
+        if (gte(requestHashRecordIndex, 0))
           pullAt(
             getProperty(this.requestHashes, [requestHashKey, 'data']),
-            requestHashIdRecordIndex
+            requestHashRecordIndex
           )
       }
 
@@ -897,16 +897,16 @@ export default class ApiResourceManager {
 
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
-          const requestHashIdRecordIndex = findIndex(
+          const requestHashRecordIndex = findIndex(
             getProperty(this.requestHashes[requestHashKey], 'data'),
             {
               hashId: getProperty(collectionRecord, 'hashId'),
             }
           )
-          if (gte(requestHashIdRecordIndex, 0))
+          if (gte(requestHashRecordIndex, 0))
             setProperty(
               this.requestHashes,
-              [requestHashKey, 'data', requestHashIdRecordIndex],
+              [requestHashKey, 'data', requestHashRecordIndex],
               collectionRecord
             )
         }
