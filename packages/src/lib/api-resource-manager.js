@@ -197,7 +197,7 @@ export default class ApiResourceManager {
      * A dictionary to store request hash IDs.
      * @type {Object}
      */
-    this.requestHashIds = {}
+    this.requestHashes = {}
 
     /**
      * The reference key used for included data in request payloads. Defaults to 'type'.
@@ -439,11 +439,11 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The record to be removed from request hashes.
    */
   _unloadFromRequestHashes(collectionRecord) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
+    const requestHashIdsKeys = keysIn(this.requestHashes)
     const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
     forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(this.requestHashIds, [
+      const requestHashIdData = getProperty(this.requestHashes, [
         requestHashIdKey,
         'data',
       ])
@@ -454,7 +454,7 @@ export default class ApiResourceManager {
         })
         if (gte(requestHashIdRecordIndex, 0))
           pullAt(
-            getProperty(this.requestHashIds, [requestHashIdKey, 'data']),
+            getProperty(this.requestHashes, [requestHashIdKey, 'data']),
             requestHashIdRecordIndex
           )
       }
@@ -463,14 +463,14 @@ export default class ApiResourceManager {
         if (
           isEqual(
             collectionRecordHashId,
-            getProperty(this.requestHashIds, [
+            getProperty(this.requestHashes, [
               requestHashIdKey,
               'data',
               'hashId',
             ])
           )
         )
-          setProperty(this.requestHashIds, [requestHashIdKey, 'data'], {})
+          setProperty(this.requestHashes, [requestHashIdKey, 'data'], {})
       }
     })
   }
@@ -883,7 +883,7 @@ export default class ApiResourceManager {
    * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
    */
   _pushToRequestHashes(collectionRecords) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
+    const requestHashIdsKeys = keysIn(this.requestHashes)
     const isCollectionRecordsArray = isArray(collectionRecords)
     const isCollectionRecordsObject = isPlainObject(collectionRecords)
     let newCollectionRecords = null
@@ -893,7 +893,7 @@ export default class ApiResourceManager {
 
     forEach(requestHashIdsKeys, (requestHashIdKey) => {
       const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
+        this.requestHashes[requestHashIdKey],
         'data'
       )
       const isRequestHashIdDataArray = isArray(requestHashIdData)
@@ -902,14 +902,14 @@ export default class ApiResourceManager {
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
           const requestHashIdRecordIndex = findIndex(
-            getProperty(this.requestHashIds[requestHashIdKey], 'data'),
+            getProperty(this.requestHashes[requestHashIdKey], 'data'),
             {
               hashId: getProperty(collectionRecord, 'hashId'),
             }
           )
           if (gte(requestHashIdRecordIndex, 0))
             setProperty(
-              this.requestHashIds,
+              this.requestHashes,
               [requestHashIdKey, 'data', requestHashIdRecordIndex],
               collectionRecord
             )
@@ -919,11 +919,11 @@ export default class ApiResourceManager {
           if (
             isEqual(
               getProperty(collectionRecord, 'hashId'),
-              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+              getProperty(this.requestHashes[requestHashIdKey], 'data.hashId')
             )
           )
             setProperty(
-              this.requestHashIds[requestHashIdKey],
+              this.requestHashes[requestHashIdKey],
               'data',
               collectionRecord
             )
@@ -987,16 +987,16 @@ export default class ApiResourceManager {
    */
   _pushRequestHash(requestObject, responseObject) {
     const requestHashId = this._generateHashId(requestObject)
-    const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
+    const isRequestHashExisting = !isNil(this.requestHashes[requestHashId])
     const isResponseNew = getProperty(responseObject, 'isNew')
 
     if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashIds[requestHashId], 'isNew', false)
+      setProperty(this.requestHashes[requestHashId], 'isNew', false)
     } else {
-      this.requestHashIds[requestHashId] = responseObject
+      this.requestHashes[requestHashId] = responseObject
     }
 
-    return this.requestHashIds[requestHashId]
+    return this.requestHashes[requestHashId]
   }
 
   /**
@@ -1239,19 +1239,19 @@ export default class ApiResourceManager {
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashIds[requestHashId]
+    const requestHashObject = this.requestHashes[requestHashId]
     const isRequestHashIdExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashId])
         return
       }
       if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashId])
         return
       }
       if (
@@ -1261,7 +1261,7 @@ export default class ApiResourceManager {
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashId])
         return
       }
     }
@@ -1331,7 +1331,7 @@ export default class ApiResourceManager {
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashIds[requestHashId])
+      return Promise.resolve(this.requestHashes[requestHashId])
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1355,7 +1355,7 @@ export default class ApiResourceManager {
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashIds[requestHashId])
+      return Promise.reject(this.requestHashes[requestHashId])
     }
   }
 
