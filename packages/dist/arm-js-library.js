@@ -329,9 +329,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   _unloadFromRequestHashes(collectionRecord) {
     const requestHashesKeys = keysIn(this.requestHashes);
     const collectionRecordHashId = getProperty(collectionRecord, "hashId");
-    forEach(requestHashesKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashKey) => {
       const requestHashIdData = getProperty(this.requestHashes, [
-        requestHashIdKey,
+        requestHashKey,
         "data"
       ]);
       if (isArray(requestHashIdData)) {
@@ -340,20 +340,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         });
         if (gte(requestHashIdRecordIndex, 0))
           pullAt(
-            getProperty(this.requestHashes, [requestHashIdKey, "data"]),
+            getProperty(this.requestHashes, [requestHashKey, "data"]),
             requestHashIdRecordIndex
           );
       }
       if (isPlainObject(requestHashIdData)) {
         if (isEqual(
           collectionRecordHashId,
-          getProperty(this.requestHashes, [
-            requestHashIdKey,
-            "data",
-            "hashId"
-          ])
+          getProperty(this.requestHashes, [requestHashKey, "data", "hashId"])
         ))
-          setProperty(this.requestHashes, [requestHashIdKey, "data"], {});
+          setProperty(this.requestHashes, [requestHashKey, "data"], {});
       }
     });
   }
@@ -702,9 +698,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     let newCollectionRecords = null;
     if (isCollectionRecordsArray) newCollectionRecords = collectionRecords;
     if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords];
-    forEach(requestHashesKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashKey) => {
       const requestHashIdData = getProperty(
-        this.requestHashes[requestHashIdKey],
+        this.requestHashes[requestHashKey],
         "data"
       );
       const isRequestHashIdDataArray = isArray(requestHashIdData);
@@ -712,7 +708,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
           const requestHashIdRecordIndex = findIndex(
-            getProperty(this.requestHashes[requestHashIdKey], "data"),
+            getProperty(this.requestHashes[requestHashKey], "data"),
             {
               hashId: getProperty(collectionRecord, "hashId")
             }
@@ -720,17 +716,17 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           if (gte(requestHashIdRecordIndex, 0))
             setProperty(
               this.requestHashes,
-              [requestHashIdKey, "data", requestHashIdRecordIndex],
+              [requestHashKey, "data", requestHashIdRecordIndex],
               collectionRecord
             );
         }
         if (isRequestHashIdDataObject) {
           if (isEqual(
             getProperty(collectionRecord, "hashId"),
-            getProperty(this.requestHashes[requestHashIdKey], "data.hashId")
+            getProperty(this.requestHashes[requestHashKey], "data.hashId")
           ))
             setProperty(
-              this.requestHashes[requestHashIdKey],
+              this.requestHashes[requestHashKey],
               "data",
               collectionRecord
             );

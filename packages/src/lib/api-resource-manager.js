@@ -442,9 +442,9 @@ export default class ApiResourceManager {
     const requestHashesKeys = keysIn(this.requestHashes)
     const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
-    forEach(requestHashesKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashKey) => {
       const requestHashIdData = getProperty(this.requestHashes, [
-        requestHashIdKey,
+        requestHashKey,
         'data',
       ])
 
@@ -454,7 +454,7 @@ export default class ApiResourceManager {
         })
         if (gte(requestHashIdRecordIndex, 0))
           pullAt(
-            getProperty(this.requestHashes, [requestHashIdKey, 'data']),
+            getProperty(this.requestHashes, [requestHashKey, 'data']),
             requestHashIdRecordIndex
           )
       }
@@ -463,14 +463,10 @@ export default class ApiResourceManager {
         if (
           isEqual(
             collectionRecordHashId,
-            getProperty(this.requestHashes, [
-              requestHashIdKey,
-              'data',
-              'hashId',
-            ])
+            getProperty(this.requestHashes, [requestHashKey, 'data', 'hashId'])
           )
         )
-          setProperty(this.requestHashes, [requestHashIdKey, 'data'], {})
+          setProperty(this.requestHashes, [requestHashKey, 'data'], {})
       }
     })
   }
@@ -891,9 +887,9 @@ export default class ApiResourceManager {
     if (isCollectionRecordsArray) newCollectionRecords = collectionRecords
     if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords]
 
-    forEach(requestHashesKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashKey) => {
       const requestHashIdData = getProperty(
-        this.requestHashes[requestHashIdKey],
+        this.requestHashes[requestHashKey],
         'data'
       )
       const isRequestHashIdDataArray = isArray(requestHashIdData)
@@ -902,7 +898,7 @@ export default class ApiResourceManager {
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
           const requestHashIdRecordIndex = findIndex(
-            getProperty(this.requestHashes[requestHashIdKey], 'data'),
+            getProperty(this.requestHashes[requestHashKey], 'data'),
             {
               hashId: getProperty(collectionRecord, 'hashId'),
             }
@@ -910,7 +906,7 @@ export default class ApiResourceManager {
           if (gte(requestHashIdRecordIndex, 0))
             setProperty(
               this.requestHashes,
-              [requestHashIdKey, 'data', requestHashIdRecordIndex],
+              [requestHashKey, 'data', requestHashIdRecordIndex],
               collectionRecord
             )
         }
@@ -919,11 +915,11 @@ export default class ApiResourceManager {
           if (
             isEqual(
               getProperty(collectionRecord, 'hashId'),
-              getProperty(this.requestHashes[requestHashIdKey], 'data.hashId')
+              getProperty(this.requestHashes[requestHashKey], 'data.hashId')
             )
           )
             setProperty(
-              this.requestHashes[requestHashIdKey],
+              this.requestHashes[requestHashKey],
               'data',
               collectionRecord
             )
