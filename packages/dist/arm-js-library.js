@@ -128,7 +128,7 @@ class ApiResourceManager {
     makeObservable(this, {
       collections: observable,
       aliases: observable,
-      requestHashIds: observable,
+      requestHashes: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
@@ -327,9 +327,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Object} collectionRecord - The record to be removed from request hashes.
    */
   _unloadFromRequestHashes(collectionRecord) {
-    const requestHashIdsKeys = keysIn(this.requestHashes);
+    const requestHashesKeys = keysIn(this.requestHashes);
     const collectionRecordHashId = getProperty(collectionRecord, "hashId");
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashIdKey) => {
       const requestHashIdData = getProperty(this.requestHashes, [
         requestHashIdKey,
         "data"
@@ -696,13 +696,13 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
    */
   _pushToRequestHashes(collectionRecords) {
-    const requestHashIdsKeys = keysIn(this.requestHashes);
+    const requestHashesKeys = keysIn(this.requestHashes);
     const isCollectionRecordsArray = isArray(collectionRecords);
     const isCollectionRecordsObject = isPlainObject(collectionRecords);
     let newCollectionRecords = null;
     if (isCollectionRecordsArray) newCollectionRecords = collectionRecords;
     if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords];
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
+    forEach(requestHashesKeys, (requestHashIdKey) => {
       const requestHashIdData = getProperty(
         this.requestHashes[requestHashIdKey],
         "data"
