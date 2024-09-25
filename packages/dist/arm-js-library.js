@@ -330,12 +330,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const requestHashesKeys = keysIn(this.requestHashes);
     const collectionRecordHashId = getProperty(collectionRecord, "hashId");
     forEach(requestHashesKeys, (requestHashKey) => {
-      const requestHashIdData = getProperty(this.requestHashes, [
+      const requestHashData = getProperty(this.requestHashes, [
         requestHashKey,
         "data"
       ]);
-      if (isArray(requestHashIdData)) {
-        const requestHashIdRecordIndex = findIndex(requestHashIdData, {
+      if (isArray(requestHashData)) {
+        const requestHashIdRecordIndex = findIndex(requestHashData, {
           hashId: collectionRecordHashId
         });
         if (gte(requestHashIdRecordIndex, 0))
@@ -344,7 +344,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             requestHashIdRecordIndex
           );
       }
-      if (isPlainObject(requestHashIdData)) {
+      if (isPlainObject(requestHashData)) {
         if (isEqual(
           collectionRecordHashId,
           getProperty(this.requestHashes, [requestHashKey, "data", "hashId"])
@@ -699,12 +699,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     if (isCollectionRecordsArray) newCollectionRecords = collectionRecords;
     if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords];
     forEach(requestHashesKeys, (requestHashKey) => {
-      const requestHashIdData = getProperty(
+      const requestHashData = getProperty(
         this.requestHashes[requestHashKey],
         "data"
       );
-      const isRequestHashIdDataArray = isArray(requestHashIdData);
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData);
+      const isRequestHashIdDataArray = isArray(requestHashData);
+      const isRequestHashIdDataObject = isPlainObject(requestHashData);
       forEach(newCollectionRecords, (collectionRecord) => {
         if (isRequestHashIdDataArray) {
           const requestHashIdRecordIndex = findIndex(
