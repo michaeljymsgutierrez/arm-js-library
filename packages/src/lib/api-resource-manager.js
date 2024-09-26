@@ -194,7 +194,7 @@ export default class ApiResourceManager {
     this.aliases = {}
 
     /**
-     * A dictionary to store request hash IDs.
+     * A dictionary to store request hash keys.
      * @type {Object}
      */
     this.requestHashes = {}
