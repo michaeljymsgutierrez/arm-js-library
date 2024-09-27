@@ -713,12 +713,14 @@ export default class ApiResourceManager {
         })
       : collectionRecordHashId
 
-    setProperty(collectionRecord, 'collectionName', collectionName)
-    setProperty(collectionRecord, 'hashId', recordHashId)
-    setProperty(collectionRecord, 'isLoading', false)
-    setProperty(collectionRecord, 'isError', false)
-    setProperty(collectionRecord, 'isPristine', true)
-    setProperty(collectionRecord, 'isDirty', false)
+    this._setProperties(collectionRecord, {
+      collectionName: collectionName,
+      hashId: recordHashId,
+      isLoading: false,
+      isError: false,
+      isPristine: true,
+      isDirty: false,
+    })
   }
 
   /**

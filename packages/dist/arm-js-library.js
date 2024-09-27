@@ -548,12 +548,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       id: getProperty(collectionRecord, "id"),
       collectionName
     }) : collectionRecordHashId;
-    setProperty(collectionRecord, "collectionName", collectionName);
-    setProperty(collectionRecord, "hashId", recordHashId);
-    setProperty(collectionRecord, "isLoading", false);
-    setProperty(collectionRecord, "isError", false);
-    setProperty(collectionRecord, "isPristine", true);
-    setProperty(collectionRecord, "isDirty", false);
+    this._setProperties(collectionRecord, {
+      collectionName,
+      hashId: recordHashId,
+      isLoading: false,
+      isError: false,
+      isPristine: true,
+      isDirty: false
+    });
   }
   /**
    * Pushes records to a specified collection.
