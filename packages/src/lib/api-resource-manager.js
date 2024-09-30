@@ -137,6 +137,7 @@ const keysToBeOmittedOnDeepCheck = [
   'isLoading',
   'isPristine',
   'originalRecord',
+  'getARMContext',
 ]
 
 /**
@@ -161,6 +162,7 @@ const keysToBeOmittedOnRequestPayload = [
   'hashId',
   'collectionName',
   'originalRecord',
+  'getARMContext',
 ]
 
 export default class ApiResourceManager {
@@ -363,14 +365,15 @@ export default class ApiResourceManager {
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
@@ -380,21 +383,22 @@ export default class ApiResourceManager {
    * @param {Object} values - An object containing key-value pairs to set.
    */
   _setRecordProperties(values) {
-    this._setProperties(this, values)
+    this.getARMContext()._setProperties(this, values)
 
     const originalRecord = omit(
       toJS(this.originalRecord),
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
@@ -677,6 +681,7 @@ export default class ApiResourceManager {
       get: this._getRecordProperty,
       set: this._setRecordProperty,
       setProperties: this._setRecordProperties,
+      getARMContext: () => this,
       save: (collectionConfig) =>
         this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) =>

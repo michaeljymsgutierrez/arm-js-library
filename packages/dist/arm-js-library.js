@@ -94,7 +94,8 @@ const keysToBeOmittedOnDeepCheck = [
   "isError",
   "isLoading",
   "isPristine",
-  "originalRecord"
+  "originalRecord",
+  "getARMContext"
 ];
 const keysToBeOmittedOnRequestPayload = [
   "destroyRecord",
@@ -110,7 +111,8 @@ const keysToBeOmittedOnRequestPayload = [
   "isPristine",
   "hashId",
   "collectionName",
-  "originalRecord"
+  "originalRecord",
+  "getARMContext"
 ];
 class ApiResourceManager {
   /**
@@ -257,13 +259,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       keysToBeOmittedOnDeepCheck
     );
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck);
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, "isDirty", false);
-      setProperty(this, "isPristine", true);
-    } else {
-      setProperty(this, "isDirty", true);
-      setProperty(this, "isPristine", false);
-    }
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    );
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false
+    });
   }
   /**
    * Sets properties on the current record and updates its state based on changes.
@@ -272,19 +275,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Object} values - An object containing key-value pairs to set.
    */
   _setRecordProperties(values) {
-    this._setProperties(this, values);
+    this.getARMContext()._setProperties(this, values);
     const originalRecord = omit(
       toJS(this.originalRecord),
       keysToBeOmittedOnDeepCheck
     );
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck);
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, "isDirty", false);
-      setProperty(this, "isPristine", true);
-    } else {
-      setProperty(this, "isDirty", true);
-      setProperty(this, "isPristine", false);
-    }
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    );
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false
+    });
   }
   /**
    * Sorts an array of records based on specified properties and sort orders.
@@ -523,6 +527,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       get: this._getRecordProperty,
       set: this._setRecordProperty,
       setProperties: this._setRecordProperties,
+      getARMContext: () => this,
       save: (collectionConfig) => this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) => this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
