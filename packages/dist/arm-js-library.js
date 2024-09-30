@@ -344,7 +344,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           collectionRecordHashId,
           getProperty(requestHashData, "hashId")
         ))
-          setProperty(requestHash, "data", {});
+          setProperty(requestHash, "data", null);
       }
     });
   }
@@ -371,7 +371,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           collectionRecordHashId,
           getProperty(aliasCollection, "hashId")
         ))
-          setProperty(this.aliases, aliasKey, {});
+          setProperty(this.aliases, aliasKey, null);
       }
     });
   }
@@ -476,11 +476,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const relatedRecords = isRecordsFromCurrentRecordObject ? [recordsFromCurrentRecord] : recordsFromCurrentRecord;
     const collectionRecords = observable([]);
     forEach(relatedRecords, (relatedRecord) => {
+      const relatedRecordId = getProperty(relatedRecord, "id");
       const collectionRecord = find(
         getProperty(this.collections, collectionName),
         {
           hashId: this._generateHashId({
-            id: getProperty(relatedRecord, "id"),
+            id: relatedRecordId,
             collectionName
           })
         }
@@ -492,7 +493,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
           const requestObject = {
             resourceMethod: "get",
             resourceName: collectionName,
-            resourceId: getProperty(relatedRecord, "id"),
+            resourceId: relatedRecordId,
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},

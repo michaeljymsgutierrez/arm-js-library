@@ -611,11 +611,12 @@ export default class ApiResourceManager {
     const collectionRecords = observable([])
 
     forEach(relatedRecords, (relatedRecord) => {
+      const relatedRecordId = getProperty(relatedRecord, 'id')
       const collectionRecord = find(
         getProperty(this.collections, collectionName),
         {
           hashId: this._generateHashId({
-            id: getProperty(relatedRecord, 'id'),
+            id: relatedRecordId,
             collectionName: collectionName,
           }),
         }
@@ -628,7 +629,7 @@ export default class ApiResourceManager {
           const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
-            resourceId: getProperty(relatedRecord, 'id'),
+            resourceId: relatedRecordId,
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
