@@ -136,6 +136,7 @@ const keysToBeOmittedOnDeepCheck = [
   'isError',
   'isLoading',
   'isPristine',
+  'originalRecord',
 ]
 
 /**
@@ -159,6 +160,7 @@ const keysToBeOmittedOnRequestPayload = [
   'isPristine',
   'hashId',
   'collectionName',
+  'originalRecord',
 ]
 
 export default class ApiResourceManager {
@@ -721,6 +723,10 @@ export default class ApiResourceManager {
       isError: false,
       isPristine: true,
       isDirty: false,
+    })
+
+    this._setProperties(collectionRecord, {
+      originalRecord: omit(toJS(collectionRecord), keysToBeOmittedOnDeepCheck),
     })
   }
 

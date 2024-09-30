@@ -93,7 +93,8 @@ const keysToBeOmittedOnDeepCheck = [
   "isDirty",
   "isError",
   "isLoading",
-  "isPristine"
+  "isPristine",
+  "originalRecord"
 ];
 const keysToBeOmittedOnRequestPayload = [
   "destroyRecord",
@@ -108,7 +109,8 @@ const keysToBeOmittedOnRequestPayload = [
   "isLoading",
   "isPristine",
   "hashId",
-  "collectionName"
+  "collectionName",
+  "originalRecord"
 ];
 class ApiResourceManager {
   /**
@@ -556,6 +558,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       isError: false,
       isPristine: true,
       isDirty: false
+    });
+    this._setProperties(collectionRecord, {
+      originalRecord: omit(toJS(collectionRecord), keysToBeOmittedOnDeepCheck)
     });
   }
   /**
