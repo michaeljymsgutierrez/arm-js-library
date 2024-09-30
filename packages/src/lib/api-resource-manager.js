@@ -461,7 +461,7 @@ export default class ApiResourceManager {
             getProperty(requestHashData, 'hashId')
           )
         )
-          setProperty(requestHash, 'data', {})
+          setProperty(requestHash, 'data', null)
       }
     })
   }
@@ -495,7 +495,7 @@ export default class ApiResourceManager {
             getProperty(aliasCollection, 'hashId')
           )
         )
-          setProperty(this.aliases, aliasKey, {})
+          setProperty(this.aliases, aliasKey, null)
       }
     })
   }
