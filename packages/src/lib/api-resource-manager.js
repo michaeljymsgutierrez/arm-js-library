@@ -93,7 +93,7 @@ const defaultRequestArrayResponse = {
   data: [],
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**
@@ -115,7 +115,7 @@ const defaultRequestObjectResponse = {
   data: {},
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**

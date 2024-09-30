@@ -71,7 +71,7 @@ const defaultRequestArrayResponse = {
   data: [],
   error: null,
   included: [],
-  meta: {}
+  meta: null
 };
 const defaultRequestObjectResponse = {
   isLoading: true,
@@ -80,7 +80,7 @@ const defaultRequestObjectResponse = {
   data: {},
   error: null,
   included: [],
-  meta: {}
+  meta: null
 };
 const keysToBeOmittedOnDeepCheck = [
   "destroyRecord",
