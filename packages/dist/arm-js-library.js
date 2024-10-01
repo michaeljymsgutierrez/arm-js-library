@@ -623,11 +623,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
    */
   _pushToAliases(collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords);
-    const isCollectionRecordsObject = isPlainObject(collectionRecords);
     const aliasesKeys = keysIn(this.aliases);
-    if (isCollectionRecordsArray) {
+    if (isArray(collectionRecords)) {
       forEach(aliasesKeys, (aliasKey) => {
+        getProperty(this.aliases, aliasKey);
         const isAliasRecordsArray = isArray(this.aliases[aliasKey]);
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey]);
         if (isAliasRecordsArray) {
@@ -654,7 +653,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         }
       });
     }
-    if (isCollectionRecordsObject) {
+    if (isPlainObject(collectionRecords)) {
       forEach(aliasesKeys, (aliasKey) => {
         const isAliasRecordsArray = isArray(this.aliases[aliasKey]);
         const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey]);
@@ -681,6 +680,75 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       });
     }
   }
+  // _pushToAliases(collectionRecords) {
+  //   const isCollectionRecordsArray = isArray(collectionRecords)
+  //   const isCollectionRecordsObject = isPlainObject(collectionRecords)
+  //   const aliasesKeys = keysIn(this.aliases)
+  //
+  //   if (isCollectionRecordsArray) {
+  //     forEach(aliasesKeys, (aliasKey) => {
+  //       const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+  //       const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+  //
+  //       if (isAliasRecordsArray) {
+  //         forEach(collectionRecords, (collectionRecord) => {
+  //           const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+  //             hashId: getProperty(collectionRecord, 'hashId'),
+  //           })
+  //           if (gte(aliasRecordIndex, 0))
+  //             setProperty(
+  //               this.aliases,
+  //               [aliasKey, aliasRecordIndex],
+  //               collectionRecord
+  //             )
+  //         })
+  //       }
+  //
+  //       if (isAliasRecordsObject) {
+  //         forEach(collectionRecords, (collectionRecord) => {
+  //           if (
+  //             isEqual(
+  //               getProperty(collectionRecord, 'hashId'),
+  //               getProperty(this.aliases[aliasKey], 'hashId')
+  //             )
+  //           )
+  //             setProperty(this.aliases, aliasKey, collectionRecord)
+  //         })
+  //       }
+  //     })
+  //   }
+  //
+  //   if (isCollectionRecordsObject) {
+  //     forEach(aliasesKeys, (aliasKey) => {
+  //       const isAliasRecordsArray = isArray(this.aliases[aliasKey])
+  //       const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+  //
+  //       if (isAliasRecordsArray) {
+  //         forEach([collectionRecords], (collectionRecord) => {
+  //           const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
+  //             hashId: getProperty(collectionRecord, 'hashId'),
+  //           })
+  //           if (gte(aliasRecordIndex, 0))
+  //             setProperty(
+  //               this.aliases,
+  //               [aliasKey, aliasRecordIndex],
+  //               collectionRecord
+  //             )
+  //         })
+  //       }
+  //
+  //       if (isAliasRecordsObject) {
+  //         if (
+  //           isEqual(
+  //             getProperty(collectionRecords, 'hashId'),
+  //             getProperty(this.aliases[aliasKey], 'hashId')
+  //           )
+  //         )
+  //           setProperty(this.aliases, aliasKey, collectionRecords)
+  //       }
+  //     })
+  //   }
+  // }
   /**
    * Pushes records to specified request hashes.
    *

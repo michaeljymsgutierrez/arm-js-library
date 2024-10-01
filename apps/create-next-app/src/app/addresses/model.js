@@ -26,8 +26,6 @@ const Model = () => {
     }
   )
 
-  ARM.findRecord('addresses', 2511445, null)
-
   return addresses
 }
 
