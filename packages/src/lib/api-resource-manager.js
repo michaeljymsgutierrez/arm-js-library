@@ -801,41 +801,39 @@ export default class ApiResourceManager {
    * @private
    * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
    */
-
   _pushToAliases(collectionRecords) {
     const aliasesKeys = keysIn(this.aliases)
 
     if (isArray(collectionRecords)) {
       forEach(aliasesKeys, (aliasKey) => {
         const aliasCollection = getProperty(this.aliases, aliasKey)
-        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
 
-        if (isAliasRecordsArray) {
-          forEach(collectionRecords, (collectionRecord) => {
-            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: getProperty(collectionRecord, 'hashId'),
+        forEach(collectionRecords, (collectionRecord) => {
+          const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
+
+          if (isArray(aliasCollection)) {
+            const aliasCollectionRecordIndex = findIndex(aliasCollection, {
+              hashId: collectionRecordHashId,
             })
-            if (gte(aliasRecordIndex, 0))
+
+            if (gte(aliasCollectionRecordIndex, 0))
               setProperty(
-                this.aliases,
-                [aliasKey, aliasRecordIndex],
+                aliasCollection,
+                aliasCollectionRecordIndex,
                 collectionRecord
               )
-          })
-        }
+          }
 
-        if (isAliasRecordsObject) {
-          forEach(collectionRecords, (collectionRecord) => {
+          if (isPlainObject(aliasCollection)) {
             if (
               isEqual(
-                getProperty(collectionRecord, 'hashId'),
-                getProperty(this.aliases[aliasKey], 'hashId')
+                collectionRecordHashId,
+                getProperty(this.aliases, [aliasKey, 'hashId'])
               )
             )
               setProperty(this.aliases, aliasKey, collectionRecord)
-          })
-        }
+          }
+        })
       })
     }
 
