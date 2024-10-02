@@ -957,7 +957,7 @@ export default class ApiResourceManager {
    * @param {string} host - The base URL of the API server.
    */
   setHost(host) {
-    this.host = host
+    setProperty(this, 'host', host)
     this._initializeAxiosConfig()
   }
 
@@ -967,7 +967,7 @@ export default class ApiResourceManager {
    * @param {string} namespace - The namespace for API requests.
    */
   setNamespace(namespace) {
-    this.namespace = namespace
+    setProperty(this, 'namespace', namespace)
   }
 
   /**

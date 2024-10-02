@@ -743,7 +743,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string} host - The base URL of the API server.
    */
   setHost(host) {
-    this.host = host;
+    setProperty(this, "host", host);
     this._initializeAxiosConfig();
   }
   /**
@@ -752,7 +752,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string} namespace - The namespace for API requests.
    */
   setNamespace(namespace) {
-    this.namespace = namespace;
+    setProperty(this, "namespace", namespace);
   }
   /**
    * Sets a common header for all Axios requests.
