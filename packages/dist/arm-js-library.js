@@ -730,14 +730,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   _pushRequestHash(requestObject, responseObject) {
     const requestHashKey = this._generateHashId(requestObject);
-    const isRequestHashExisting = !isNil(this.requestHashes[requestHashKey]);
-    const isResponseNew = getProperty(responseObject, "isNew");
-    if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashes[requestHashKey], "isNew", false);
+    if (!isNil(getProperty(this.requestHashes, requestHashKey)) && getProperty(responseObject, "isNew")) {
+      setProperty(this.requestHashes, [requestHashKey, "isNew"], false);
     } else {
-      this.requestHashes[requestHashKey] = responseObject;
+      setProperty(this.requestHashes, requestHashKey, responseObject);
     }
-    return this.requestHashes[requestHashKey];
+    return getProperty(this.requestHashes, requestHashKey);
   }
   /**
    * Sets the host URL for the client and initializes the Axios configuration.
