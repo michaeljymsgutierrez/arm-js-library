@@ -977,7 +977,7 @@ export default class ApiResourceManager {
    * @param {string|number|boolean} value - The header value.
    */
   setHeadersCommon(key, value) {
-    axios.defaults.headers.common[`${key}`] = value
+    setProperty(axios, ['defaults', 'headers', 'common', key], value)
   }
 
   /**

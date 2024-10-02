@@ -761,7 +761,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string|number|boolean} value - The header value.
    */
   setHeadersCommon(key, value) {
-    axios.defaults.headers.common[`${key}`] = value;
+    setProperty(axios, ["defaults", "headers", "common", key], value);
   }
   /**
    * Sets the reference key used for included data in request payloads.
