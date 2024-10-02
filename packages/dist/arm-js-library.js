@@ -658,43 +658,29 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   _pushToRequestHashes(collectionRecords) {
     const requestHashesKeys = keysIn(this.requestHashes);
-    const isCollectionRecordsArray = isArray(collectionRecords);
-    const isCollectionRecordsObject = isPlainObject(collectionRecords);
-    let newCollectionRecords = null;
-    if (isCollectionRecordsArray) newCollectionRecords = collectionRecords;
-    if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords];
+    collectionRecords = isArray(collectionRecords) ? collectionRecords : [collectionRecords];
     forEach(requestHashesKeys, (requestHashKey) => {
-      const requestHashData = getProperty(
-        this.requestHashes[requestHashKey],
-        "data"
-      );
-      const isRequestHashDataArray = isArray(requestHashData);
-      const isRequestHashDataObject = isPlainObject(requestHashData);
-      forEach(newCollectionRecords, (collectionRecord) => {
-        if (isRequestHashDataArray) {
-          const requestHashRecordIndex = findIndex(
-            getProperty(this.requestHashes[requestHashKey], "data"),
-            {
-              hashId: getProperty(collectionRecord, "hashId")
-            }
-          );
+      const requestHash = getProperty(this.requestHashes, requestHashKey);
+      const requestHashData = getProperty(requestHash, "data");
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordHashId = getProperty(collectionRecord, "hashId");
+        if (isArray(requestHashData)) {
+          const requestHashRecordIndex = findIndex(requestHashData, {
+            hashId: collectionRecordHashId
+          });
           if (gte(requestHashRecordIndex, 0))
             setProperty(
-              this.requestHashes,
-              [requestHashKey, "data", requestHashRecordIndex],
+              requestHash,
+              ["data", requestHashRecordIndex],
               collectionRecord
             );
         }
-        if (isRequestHashDataObject) {
+        if (isPlainObject(requestHashData)) {
           if (isEqual(
-            getProperty(collectionRecord, "hashId"),
-            getProperty(this.requestHashes[requestHashKey], "data.hashId")
+            collectionRecordHashId,
+            getProperty(requestHashData, "hashId")
           ))
-            setProperty(
-              this.requestHashes[requestHashKey],
-              "data",
-              collectionRecord
-            );
+            setProperty(requestHash, "data", collectionRecord);
         }
       });
     });
