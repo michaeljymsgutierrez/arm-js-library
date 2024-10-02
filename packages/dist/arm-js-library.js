@@ -643,7 +643,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         if (isPlainObject(aliasCollection)) {
           if (isEqual(
             collectionRecordHashId,
-            getProperty(this.aliases, [aliasKey, "hashId"])
+            getProperty(aliasCollection, "hashId")
           ))
             setProperty(this.aliases, aliasKey, collectionRecord);
         }

@@ -831,7 +831,7 @@ export default class ApiResourceManager {
           if (
             isEqual(
               collectionRecordHashId,
-              getProperty(this.aliases, [aliasKey, 'hashId'])
+              getProperty(aliasCollection, 'hashId')
             )
           )
             setProperty(this.aliases, aliasKey, collectionRecord)
