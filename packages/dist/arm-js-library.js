@@ -769,7 +769,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string} key - The new reference key.
    */
   setPayloadIncludeReference(key) {
-    this.payloadIncludedReference = key;
+    setProperty(this, "payloadIncludedReference", key);
   }
   /**
    * Makes the instance accessible globally in a browser environment.
@@ -787,7 +787,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Array} The collection data, or an empty array if not found.
    */
   getCollection(collectionName) {
-    return this.collections[collectionName] || [];
+    return getProperty(this.collections, collectionName) || observable([]);
   }
   /**
    * Clears the contents of a specified collection.

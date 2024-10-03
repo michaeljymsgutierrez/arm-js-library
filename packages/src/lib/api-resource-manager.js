@@ -986,7 +986,7 @@ export default class ApiResourceManager {
    * @param {string} key - The new reference key.
    */
   setPayloadIncludeReference(key) {
-    this.payloadIncludedReference = key
+    setProperty(this, 'payloadIncludedReference', key)
   }
 
   /**
@@ -1006,7 +1006,7 @@ export default class ApiResourceManager {
    * @returns {Array} The collection data, or an empty array if not found.
    */
   getCollection(collectionName) {
-    return this.collections[collectionName] || []
+    return getProperty(this.collections, collectionName) || observable([])
   }
 
   /**
