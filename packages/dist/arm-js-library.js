@@ -142,6 +142,10 @@ class ApiResourceManager {
   /**
    * Initializes the Axios configuration with the base URL.
    *
+   * Sets the `baseURL` property in the Axios defaults to the value
+   * returned by the `_getBaseURL()` method. This ensures that all
+   * Axios requests use the correct base URL for the API.
+   *
    * @private
    */
   _initializeAxiosConfig() {
@@ -149,6 +153,10 @@ class ApiResourceManager {
   }
   /**
    * Initializes a collection of collections with optional default values.
+   *
+   * Iterates through the provided array of `collections` and calls the
+   * `_addCollection` method for each collection name, initializing it
+   * with an empty array (`[]`) as the default value.
    *
    * @private
    * @param {string[]} collections - An array of collection names to initialize.
@@ -159,14 +167,20 @@ class ApiResourceManager {
   /**
    * Gets the base URL for API requests.
    *
+   * Constructs the base URL by combining the `host` and `namespace`
+   * properties of the instance.
+   *
    * @private
-   * @returns {string} The base URL constructed from `host` and `namespace` properties.
+   * @returns {string} The base URL constructed from `host` and `namespace`.
    */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`;
   }
   /**
    * Checks if a collection exists in the current instance.
+   *
+   * This method verifies if a collection with the given `collectionName`
+   * exists in the `collections` object of the `ApiResourceManager` instance.
    *
    * @private
    * @param {string} collectionName - The name of the collection to check.
@@ -180,9 +194,13 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Adds a collection to the current instance.
    *
+   * This method adds a new collection with the specified `collectionName`
+   * to the `collections` object of the `ApiResourceManager`. The
+   * `collectionRecords` array is used to initialize the collection's data.
+   *
    * @private
    * @param {string} collectionName - The name of the collection to add.
-   * @param {Array} collectionRecords - The records for the collection.
+   * @param {Array} collectionRecords - The initial records for the collection.
    */
   _addCollection(collectionName, collectionRecords) {
     setProperty(this.collections, collectionName, collectionRecords);
@@ -190,9 +208,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Adds an alias to the aliases object.
    *
+   * This method creates an alias for a collection or a single record.
+   * The `aliasName` specifies the name of the alias, and `aliasRecords`
+   * can be either an array of records (for a collection alias) or a
+   * single record object.
+   *
+   * If `aliasRecords` is an array, it's used directly (or an empty array
+   * if `aliasRecords` is falsy). If it's a plain object, it's used directly
+   * (or an empty object if `aliasRecords` is falsy).
+   *
    * @private
    * @param {string} aliasName - The name of the alias.
-   * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
+   * @param {Array|Object} aliasRecords - The records to be aliased.
    */
   _addAlias(aliasName, aliasRecords) {
     let aliasCollectionRecords = null;
@@ -203,8 +230,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Generates a hash ID based on the provided object.
    *
+   * This method generates a unique hash ID by stringifying the given
+   * `object` and then calculating its MD5 hash using CryptoJS.
+   * If no `object` is provided, it defaults to an object with an
+   * `id` property generated using `uuidv1()`.
+   *
    * @private
-   * @param {Object} object - The object to generate the hash ID from. Defaults to an object with an `id` property generated using `uuidv1()`.
+   * @param {Object} [object={ id: uuidv1() }] - The object to generate
+   *                                            the hash ID from.
    * @returns {string} The generated hash ID.
    */
   _generateHashId(object = { id: v1() }) {
@@ -214,8 +247,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Sets multiple properties on a target object recursively.
    *
+   * This method iterates through the `keyValuePairs` object and sets the
+   * corresponding properties on the `targetObject`. It handles nested
+   * objects by recursively calling itself with an updated `prefix`.
+   *
    * @private
-   * @param {Object} targetObject - The object to set properties on.
+   * @param {Object} targetObject - The object on which to set the properties.
    * @param {Object} keyValuePairs - An object containing key-value pairs to set.
    */
   _setProperties(targetObject, keyValuePairs) {
@@ -236,17 +273,28 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
   }
   /**
-   * Gets a property from the current object.
+   * Gets a property from the current record.
+   *
+   * This method retrieves the value of a property with the given `key`
+   * from the current record object (`this`). It uses Lodash's `get`
+   * function (aliased as `getProperty`) to access the property.
    *
    * @private
    * @param {string} key - The key of the property to retrieve.
-   * @returns {*} The value of the property, or undefined if not found.
+   * @returns {*} The value of the property.
    */
   _getRecordProperty(key) {
     return getProperty(this, key);
   }
   /**
-   * Sets a single property on the current record and updates its state based on changes.
+   * Sets a single property on the current record and updates its state
+   * based on changes.
+   *
+   * This method sets the property with the given `key` to the specified
+   * `value` on the current record object (`this`). It then checks if the
+   * record has been modified by comparing it with the `originalRecord`.
+   * If changes are detected, it updates the `isDirty` and `isPristine`
+   * flags accordingly.
    *
    * @private
    * @param {string} key - The property key to set.
@@ -269,10 +317,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     });
   }
   /**
-   * Sets properties on the current record and updates its state based on changes.
+   * Sets multiple properties on the current record and updates its state
+   * based on changes.
+   *
+   * This method sets multiple properties on the current record object
+   * (`this`) using the provided `values` object. It then compares the
+   * updated record with the `originalRecord` to detect any modifications.
+   * If the record has been changed, it updates the `isDirty` and
+   * `isPristine` flags.
    *
    * @private
-   * @param {Object} values - An object containing key-value pairs to set.
+   * @param {Object} values - An object containing key-value pairs to set
+   *                          on the record.
    */
   _setRecordProperties(values) {
     this.getARMContext()._setProperties(this, values);
@@ -293,10 +349,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Sorts an array of records based on specified properties and sort orders.
    *
+   * This method sorts the `currentRecords` array using the provided
+   * `sortProperties`. Each `sortProperty` should be a string in the
+   * format "property:order", where "property" is the name of the property
+   * to sort by and "order" is either "asc" (ascending) or "desc"
+   * (descending).
+   *
    * @private
    * @param {Array} currentRecords - The array of records to sort.
-   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
-   *  Valid orders are 'asc' (ascending) and 'desc' (descending).
+   * @param {Array<string>} [sortProperties=[]] - An array of sort properties.
    * @returns {Array} The sorted array of records.
    */
   _sortRecordsBy(currentRecords, sortProperties = []) {
@@ -313,8 +374,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Removes a record from a specified collection based on its hash ID.
    *
+   * This method removes a `collectionRecord` from its corresponding
+   * collection in the `collections` object. It determines the collection
+   * using the record's `collectionName` property and finds the record's
+   * index within the collection using its `hashId`. If the record is
+   * found, it's removed from the collection using Lodash's `pullAt`.
+   *
    * @private
-   * @param {Object} collectionRecord - The record to be removed from the collection.
+   * @param {Object} collectionRecord - The record to be removed from
+   *                                   the collection.
    */
   _unloadFromCollection(collectionRecord) {
     const collection = getProperty(
@@ -329,8 +397,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Removes a record from all request hashes based on its hash ID.
    *
+   * This method iterates through all request hashes in the `requestHashes`
+   * object and removes any occurrences of the `collectionRecord` based on
+   * its `hashId`. It handles both array-based and object-based request
+   * hash data.
+   *
    * @private
-   * @param {Object} collectionRecord - The record to be removed from request hashes.
+   * @param {Object} collectionRecord - The record to be removed from
+   *                                   request hashes.
    */
   _unloadFromRequestHashes(collectionRecord) {
     const requestHashesKeys = keysIn(this.requestHashes);
@@ -356,6 +430,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   }
   /**
    * Removes a record from all aliases based on its hash ID.
+   *
+   * This method iterates through all aliases in the `aliases` object
+   * and removes any occurrences of the `collectionRecord` based on its
+   * `hashId`. It handles both array-based and object-based alias data.
    *
    * @private
    * @param {Object} collectionRecord - The record to be removed from aliases.
@@ -384,6 +462,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Unloads a record from the collection, request hashes, and aliases.
    *
+   * This method removes a `currentRecord` from all relevant data stores
+   * within the `ApiResourceManager`:
+   *  - The main collection where the record belongs.
+   *  - Any request hashes where the record might be present.
+   *  - Any aliases that refer to the record.
+   *
    * @param {Object} currentRecord - The record to be unloaded.
    */
   unloadRecord(currentRecord) {
@@ -394,10 +478,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Saves a record to the server.
    *
+   * This method saves the `currentRecord` to the server by making an API
+   * request. It determines whether to use a PUT (update) or POST (create)
+   * request based on the validity of the record's `id`. The `collectionConfig`
+   * parameter can be used to provide additional configuration for the
+   * request.
+   *
    * @private
    * @param {Object} currentRecord - The record to be saved.
-   * @param {Object} [collectionConfig] - Optional configuration for the save request.
-   * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
+   * @param {Object} [collectionConfig={}] - Optional configuration for the
+   *                                        save request.
+   * @returns {Promise} A Promise that resolves when the save is successful
+   *                    or rejects with an error.
    */
   _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, "collectionName");
@@ -422,11 +514,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Deletes a record from the server.
    *
+   * This method deletes the `currentRecord` from the server by making
+   * a DELETE API request. The `collectionConfig` parameter can be used
+   * to provide additional configuration for the request.
+   *
    * @private
-   * @async
    * @param {Object} currentRecord - The record to be deleted.
-   * @param {Object} [collectionConfig] - Optional configuration for the deletion request.
-   * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+   * @param {Object} [collectionConfig={}] - Optional configuration for the
+   *                                        delete request.
+   * @returns {Promise} A Promise that resolves when the deletion is
+   *                    successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
     return this._request({
@@ -442,10 +539,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Reloads a record from the server.
    *
+   * This method reloads the `currentRecord` from the server by making
+   * a GET API request. It fetches the latest data for the record and
+   * updates the local copy.
+   *
    * @private
-   * @async
    * @param {Object} currentRecord - The record to be reloaded.
-   * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
+   * @returns {Promise} A Promise that resolves with the updated record
+   *                    or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
     return this._request({
@@ -464,11 +565,24 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Retrieves records from a specified collection based on given criteria.
    *
+   * This method retrieves records from the collection with the specified
+   * `collectionName`, potentially fetching them asynchronously if needed.
+   * It uses the `collectionConfig` to determine how to filter, sort,
+   * and retrieve the records.
+   *
+   * The `currentRecord` is used to extract related records based on the
+   * `referenceKey` provided in the `collectionConfig`. If the related
+   * records are not already in the local collection and `async` is true
+   * in the `collectionConfig`, it initiates an asynchronous request to
+   * fetch them.
+   *
    * @private
-   * @param {string} collectionName - The name of the collection to retrieve records from.
-   * @param {Object} collectionConfig - Optional configuration for the collection, including referenceKey, async, filterBy, and sortBy properties.
-   * @param {Object|Array} currentRecord - The current record containing potential related records.
-   * @returns {Object|Array} The retrieved records, either a single object or an array depending on the input.
+   * @param {string} collectionName - The name of the collection.
+   * @param {Object} [collectionConfig={}] - Configuration for retrieving
+   *                                        the records.
+   * @param {Object|Array} currentRecord - The record containing potential
+   *                                       related records.
+   * @returns {Object|Array} The retrieved records (single object or array).
    */
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey = getProperty(collectionConfig, "referenceKey") || "";
@@ -519,8 +633,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Injects action methods into a collection record.
    *
+   * This method adds predefined action methods to a `collectionRecord`.
+   * These methods provide convenient ways to interact with the record,
+   * such as getting and setting properties, saving, deleting, reloading,
+   * and retrieving related collections.
+   *
    * @private
-   * @param {Object} collectionRecord - The collection record to inject actions into.
+   * @param {Object} collectionRecord - The collection record to inject
+   *                                   actions into.
    */
   _injectCollectionActions(collectionRecord) {
     const actions = {
@@ -546,10 +666,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Injects reference keys into a collection record.
    *
+   * This method adds essential reference keys to a `collectionRecord`,
+   * including:
+   *  - `collectionName`: The name of the collection the record belongs to.
+   *  - `hashId`: A unique hash ID generated for the record.
+   *  - `isLoading`, `isError`, `isPristine`, `isDirty`: Flags to track
+   *     the record's state.
+   *  - `originalRecord`: A copy of the original record data for change
+   *     tracking.
+   *
    * @private
    * @param {string} collectionName - The name of the collection.
    * @param {Object} collectionRecord - The collection record to inject keys into.
-   * @param {string} collectionRecordHashId - Optional hash ID for the record.
+   * @param {string} [collectionRecordHashId=null] - Optional pre-generated
+   *                                                 hash ID for the record.
    */
   _injectCollectionReferenceKeys(collectionName, collectionRecord, collectionRecordHashId = null) {
     const recordHashId = isNull(collectionRecordHashId) ? this._generateHashId({
@@ -571,10 +701,24 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Pushes records to a specified collection.
    *
+   * This method adds or updates records in the collection with the given
+   * `collectionName`. The `collectionRecords` can be either an array of
+   * records or a single record object.
+   *
+   * If `collectionRecords` is an array, it iterates through the records
+   * and adds them to the collection if they don't already exist. If a
+   * record with the same `hashId` already exists, it updates the existing
+   * record with the new data.
+   *
+   * If `collectionRecords` is a single object, it adds it to the collection
+   * if it doesn't exist or updates the existing record if it has the same
+   * `hashId`.
+   *
    * @private
-   * @param {string} collectionName - The name of the collection to push records to.
-   * @param {Array|Object} collectionRecords - The records to be pushed. Can be an array or an object.
-   * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
+   * @param {string} collectionName - The name of the collection to push
+   *                                 records to.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The pushed records (array or single object).
    */
   _pushToCollection(collectionName, collectionRecords) {
     const collection = getProperty(this.collections, collectionName);
@@ -619,8 +763,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Pushes records to specified aliases.
    *
+   * This method updates aliases in the `aliases` object with the provided
+   * `collectionRecords`. It handles both array-based and object-based
+   * aliases.
+   *
+   * If an alias refers to an array of records, the method iterates through
+   * the `collectionRecords` and updates any matching records within the
+   * alias array based on their `hashId`.
+   *
+   * If an alias refers to a single record object, the method updates the
+   * alias with the matching `collectionRecord` based on its `hashId`.
+   *
    * @private
-   * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
+   * @param {Array|Object} collectionRecords - The records to be pushed to
+   *                                          aliases.
    */
   _pushToAliases(collectionRecords) {
     const aliasesKeys = keysIn(this.aliases);
@@ -653,8 +809,21 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Pushes records to specified request hashes.
    *
+   * This method updates request hashes in the `requestHashes` object with
+   * the provided `collectionRecords`. It handles both array-based and
+   * object-based request hash data.
+   *
+   * If a request hash's `data` property is an array, the method iterates
+   * through the `collectionRecords` and updates any matching records
+   * within the `data` array based on their `hashId`.
+   *
+   * If a request hash's `data` property is a single record object, the
+   * method updates the `data` with the matching `collectionRecord` based
+   * on its `hashId`.
+   *
    * @private
-   * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
+   * @param {Array|Object} collectionRecords - The records to be pushed to
+   *                                          request hashes.
    */
   _pushToRequestHashes(collectionRecords) {
     const requestHashesKeys = keysIn(this.requestHashes);
@@ -688,6 +857,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Pushes records to a collection, aliases, and request hashes.
    *
+   * This method orchestrates the process of adding or updating records
+   * in various data stores within the `ApiResourceManager`. It takes a
+   * `collectionName` and `collectionRecords` (which can be an array or
+   * a single object) and performs the following actions:
+   *
+   * 1. Checks if the specified collection exists.
+   * 2. Pushes the records to the collection using `_pushToCollection`.
+   * 3. Updates any relevant aliases using `_pushToAliases`.
+   * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
+   *
    * @private
    * @param {string} collectionName - The name of the collection.
    * @param {Array|Object} collectionRecords - The records to be pushed.
@@ -704,10 +883,22 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return updatedCollectionRecords;
   }
   /**
-   * Pushes records to a specified collection.
+   * Pushes records to a collection, aliases, and request hashes.
    *
-   * @param {string} collectionName - The name of the collection to push records to.
-   * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+   * This method orchestrates the process of adding or updating records
+   * in various data stores within the `ApiResourceManager`. It takes a
+   * `collectionName` and `collectionRecords` (which can be an array or
+   * a single object) and performs the following actions:
+   *
+   * 1. Checks if the specified collection exists.
+   * 2. Pushes the records to the collection using `_pushToCollection`.
+   * 3. Updates any relevant aliases using `_pushToAliases`.
+   * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The updated collection records.
    */
   pushPayload(collectionName, collectionRecords) {
     this._isCollectionExisting(collectionName);
