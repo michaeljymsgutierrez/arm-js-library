@@ -818,18 +818,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Object} The created record.
    */
   createRecord(collectionName, collectionRecord = {}, collectionRecordRandomId = true) {
+    const collection = getProperty(this.collections, collectionName);
     const collectionRecordId = collectionRecordRandomId ? v1() : NIL;
     const isCollectionRecordNotExisting = isNil(
-      find(this.collections[collectionName], {
+      find(collection, {
         id: collectionRecordId
       })
     );
     setProperty(collectionRecord, "id", collectionRecordId);
     this._injectCollectionReferenceKeys(collectionName, collectionRecord);
     this._injectCollectionActions(collectionRecord);
-    if (isCollectionRecordNotExisting)
-      this.collections[collectionName].push(collectionRecord);
-    return find(this.collections[collectionName], {
+    if (isCollectionRecordNotExisting) collection.push(collectionRecord);
+    return find(collection, {
       id: collectionRecordId
     });
   }

@@ -1045,9 +1045,10 @@ export default class ApiResourceManager {
     collectionRecord = {},
     collectionRecordRandomId = true
   ) {
+    const collection = getProperty(this.collections, collectionName)
     const collectionRecordId = collectionRecordRandomId ? uuidv1() : NIL_UUID
     const isCollectionRecordNotExisting = isNil(
-      find(this.collections[collectionName], {
+      find(collection, {
         id: collectionRecordId,
       })
     )
@@ -1057,10 +1058,9 @@ export default class ApiResourceManager {
     this._injectCollectionReferenceKeys(collectionName, collectionRecord)
     this._injectCollectionActions(collectionRecord)
 
-    if (isCollectionRecordNotExisting)
-      this.collections[collectionName].push(collectionRecord)
+    if (isCollectionRecordNotExisting) collection.push(collectionRecord)
 
-    return find(this.collections[collectionName], {
+    return find(collection, {
       id: collectionRecordId,
     })
   }
