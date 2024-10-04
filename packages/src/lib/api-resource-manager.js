@@ -241,7 +241,7 @@ export default class ApiResourceManager {
    * @private
    */
   _initializeAxiosConfig() {
-    axios.defaults.baseURL = this._getBaseURL()
+    setProperty(axios, ['defaults', 'baseURL'], this._getBaseURL())
   }
 
   /**

@@ -145,7 +145,7 @@ class ApiResourceManager {
    * @private
    */
   _initializeAxiosConfig() {
-    axios.defaults.baseURL = this._getBaseURL();
+    setProperty(axios, ["defaults", "baseURL"], this._getBaseURL());
   }
   /**
    * Initializes a collection of collections with optional default values.
