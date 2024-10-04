@@ -91,7 +91,7 @@ const App = observer(() => {
         <div className="form">
           <label>Address1 </label>
           <input
-            defaultValue={address.get('attributes.address1')}
+            value={address.get('attributes.address1')}
             onChange={(event) =>
               address.set('attributes.address1', event.target.value)
             }
