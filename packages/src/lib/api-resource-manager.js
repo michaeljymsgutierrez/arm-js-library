@@ -1113,9 +1113,20 @@ export default class ApiResourceManager {
   /**
    * Pushes a request and its corresponding response to the request hash store.
    *
+   * This method adds or updates a request hash in the `requestHashes` object.
+   * It generates a unique `requestHashKey` using the `_generateHashId`
+   * method based on the `requestObject`.
+   *
+   * If a request hash with the same key already exists and the `responseObject`
+   * is marked as `isNew`, it updates the existing hash's `isNew` flag to
+   * `false`. Otherwise, it adds a new request hash with the given key and
+   * `responseObject`.
+   *
    * @private
-   * @param {Object} requestObject - The request object.
-   * @param {Object} responseObject - The initial response object.
+   * @param {Object} requestObject - The request object used to generate the
+   *                                 hash key.
+   * @param {Object} responseObject - The response object associated with
+   *                                  the request.
    * @returns {Object} The updated or created request hash object.
    */
   _pushRequestHash(requestObject, responseObject) {
@@ -1136,6 +1147,11 @@ export default class ApiResourceManager {
   /**
    * Sets the host URL for the client and initializes the Axios configuration.
    *
+   * This method sets the `host` property of the `ApiResourceManager` instance
+   * to the provided `host` URL. It then calls the `_initializeAxiosConfig`
+   * method to update the Axios configuration with the new host, ensuring
+   * that subsequent API requests use the correct base URL.
+   *
    * @param {string} host - The base URL of the API server.
    */
   setHost(host) {
@@ -1146,6 +1162,13 @@ export default class ApiResourceManager {
   /**
    * Sets the namespace for the client.
    *
+   * This method sets the `namespace` property of the `ApiResourceManager`
+   * instance to the provided `namespace`. The namespace is typically used
+   * as a path prefix in the base URL for API requests, allowing you to
+   * version your API or organize it into different sections. For example,
+   * a namespace of "api/v2" would result in a base URL like
+   * "https://example.com/api/v2".
+   *
    * @param {string} namespace - The namespace for API requests.
    */
   setNamespace(namespace) {
@@ -1155,7 +1178,12 @@ export default class ApiResourceManager {
   /**
    * Sets a common header for all Axios requests.
    *
-   * @param {string} key - The header key.
+   * This method sets a common header that will be included in all
+   * Axios requests made by the `ApiResourceManager`. The `key` parameter
+   * specifies the header name, and the `value` parameter specifies the
+   * header value.
+   *
+   * @param {string} key - The header key (e.g., 'Authorization', 'Content-Type').
    * @param {string|number|boolean} value - The header value.
    */
   setHeadersCommon(key, value) {
@@ -1165,7 +1193,13 @@ export default class ApiResourceManager {
   /**
    * Sets the reference key used for included data in request payloads.
    *
-   * @param {string} key - The new reference key.
+   * This method sets the `payloadIncludedReference` property of the
+   * `ApiResourceManager` instance. This property determines the key used
+   * to identify the type of included data in API request payloads.
+   * For example, if the payload includes related resources, this key
+   * might be used to specify the type of each included resource.
+   *
+   * @param {string} key - The new reference key for included data.
    */
   setPayloadIncludeReference(key) {
     setProperty(this, 'payloadIncludedReference', key)
@@ -1174,8 +1208,14 @@ export default class ApiResourceManager {
   /**
    * Makes the instance accessible globally in a browser environment.
    *
-   * Attaches the instance to the `window` object as `window.ARM`.
-   * **Caution:** This method should be used with care as it modifies the global scope.
+   * This method attaches the `ApiResourceManager` instance to the `window`
+   * object in a browser environment, making it globally accessible as
+   * `window.ARM`. The instance is frozen using `Object.freeze()` to prevent
+   * accidental modifications.
+   *
+   * Caution: This method should be used with care as it modifies the
+   * global scope and could potentially lead to naming conflicts.
+   *
    */
   setGlobal() {
     if (typeof window !== 'undefined') window.ARM = Object.freeze(this)
@@ -1184,8 +1224,12 @@ export default class ApiResourceManager {
   /**
    * Retrieves a collection by its name.
    *
+   * This method retrieves the collection with the specified `collectionName`
+   * from the `collections` object of the `ApiResourceManager`. If the
+   * collection does not exist, it returns an empty observable array.
+   *
    * @param {string} collectionName - The name of the collection to retrieve.
-   * @returns {Array} The collection data, or an empty array if not found.
+   * @returns {Array} The collection data as an observable array.
    */
   getCollection(collectionName) {
     return getProperty(this.collections, collectionName) || observable([])
@@ -1193,6 +1237,10 @@ export default class ApiResourceManager {
 
   /**
    * Clears the contents of a specified collection.
+   *
+   * This method removes all records from the collection with the given
+   * `collectionName` in the `collections` object of the
+   * `ApiResourceManager`.
    *
    * @param {string} collectionName - The name of the collection to clear.
    */
@@ -1203,8 +1251,17 @@ export default class ApiResourceManager {
   /**
    * Retrieves an alias by its name, with optional fallback records.
    *
+   * This method retrieves the alias with the specified `aliasName` from
+   * the `aliases` object of the `ApiResourceManager`. If the alias does
+   * not exist, it returns the provided `fallbackRecords` (if any).
+   *
+   * If `fallbackRecords` is a plain object, the method injects collection
+   * actions into it using `_injectCollectionActions` before returning it.
+   *
    * @param {string} aliasName - The name of the alias to retrieve.
-   * @param {Object} fallbackRecords - Optional fallback records to return if the alias is not found.
+   * @param {Array|Object} [fallbackRecords] - Optional fallback records
+   *                                           to return if the alias
+   *                                           is not found.
    * @returns {Array|Object} The alias data or the fallback records.
    */
   getAlias(aliasName, fallbackRecords) {
@@ -1217,9 +1274,22 @@ export default class ApiResourceManager {
   /**
    * Creates a new record in a specified collection.
    *
-   * @param {string} collectionName - The name of the collection.
-   * @param {Object} collectionRecord - Optional initial data for the record.
-   * @param {boolean} collectionRecordRandomId - Whether to generate a random ID for the record. Defaults to true.
+   * This method creates a new record in the collection with the given
+   * `collectionName`. The `collectionRecord` parameter can be used to
+   * provide initial data for the record. If `collectionRecordRandomId`
+   * is true (default), a unique ID is generated for the record using
+   * `uuidv1()`. Otherwise, a NIL UUID is used.
+   *
+   * The method injects necessary reference keys and actions into the
+   * record using `_injectCollectionReferenceKeys` and
+   * `_injectCollectionActions`.
+   *
+   * @param {string} collectionName - The name of the collection to create
+   *                                 the record in.
+   * @param {Object} [collectionRecord={}] - Optional initial data for the
+   *                                        record.
+   * @param {boolean} [collectionRecordRandomId=true] - Whether to generate
+   *                                                    a random ID.
    * @returns {Object} The created record.
    */
   createRecord(
@@ -1250,11 +1320,25 @@ export default class ApiResourceManager {
   /**
    * Resolves the request based on configuration.
    *
+   * This method determines how to resolve an API request based on the
+   * `autoResolve` option in the `config` object.
+   *
+   * If `autoResolve` is true (which is the default if not explicitly
+   * provided), the method returns the `requestHashObject`, which likely
+   * contains the cached response data.
+   *
+   * If `autoResolve` is false, the method returns the `requestXHR` object,
+   * which represents the actual Axios request Promise. This allows for
+   * more control over handling the response, such as accessing the raw
+   * response data or handling specific HTTP status codes.
+   *
    * @private
-   * @param {Object} config - Configuration object for the request.
+   * @param {Object} config - The configuration object for the request.
    * @param {Promise} requestXHR - The Axios request Promise.
-   * @param {Object} requestHashObject - The request hash object.
-   * @returns {Promise|Object} Returns the request hash object if autoResolve is true, otherwise returns the Axios request Promise.
+   * @param {Object} requestHashObject - The request hash object containing
+   *                                    cached response data.
+   * @returns {Promise|Object} The resolved value based on the
+   *                          `autoResolve` configuration.
    */
   _resolveRequest(config, requestXHR, requestHashObject) {
     const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
@@ -1272,22 +1356,27 @@ export default class ApiResourceManager {
   /**
    * Makes an API request based on the provided configuration.
    *
-   * This method is private and should not be called directly.
+   * This method handles the core logic for making API requests. It takes
+   * a `requestConfig` object that specifies various aspects of the request,
+   * such as the HTTP method, resource name, ID, parameters, payload, and
+   * configuration overrides.
    *
-   * @param {Object} requestConfig - Configuration object for the request.
-   * @param {string} requestConfig.resourceMethod - HTTP method for the request (e.g. 'get', 'post', 'delete').
-   * @param {string} requestConfig.resourceName - API endpoint name.
-   * @param {string} [requestConfig.resourceId] - Optional resource ID for GET/DELETE requests.
-   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
-   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST requests.
-   * @param {*} [requestConfig.resourceFallback] - Optional value to return if the request fails and no fallback data is provided.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request.
-   * @param {boolean} [requestConfig.resourceConfig.override] - Whether to override default client configuration.
-   * @param {string} [requestConfig.resourceConfig.host] - Optional override for the base URL host.
-   * @param {string} [requestConfig.resourceConfig.namespace] - Optional override for the API namespace.
-   * @param {Object} [requestConfig.resourceConfig.headers] - Optional override for request headers.
-   * @param {boolean} [requestConfig.resourceConfig.skip] - Whether to skip making the request (useful for data pre-population).
-   * @returns {Promise<*>} Promise resolving to the API response data or rejecting with the error.
+   * The method constructs the request options, handles configuration
+   * overrides, manages request caching, and performs the actual API request
+   * using Axios. It also includes error handling and updates the request
+   * hash store with the response data or error information.
+   *
+   * @private
+   * @param {Object} requestConfig - The configuration object for the request.
+   * @param {string} requestConfig.resourceMethod - The HTTP method (e.g., 'get', 'post', 'put', 'delete').
+   * @param {string} requestConfig.resourceName - The name of the API resource.
+   * @param {number|string} [requestConfig.resourceId] - Optional ID of the resource.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters.
+   * @param {Object} [requestConfig.resourcePayload] - Optional request payload.
+   * @param {Object} [requestConfig.resourceFallback] - Optional fallback data.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides.
+   * @returns {Promise} A Promise that resolves with the API response data
+   *                    or rejects with an error.
    */
   async _request({
     resourceMethod,
@@ -1495,10 +1584,17 @@ export default class ApiResourceManager {
   /**
    * Queries a resource with specified parameters and configuration.
    *
-   * @param {string} resource - The resource to query.
-   * @param {Object} params - Optional query parameters.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object.
+   * This method sends a GET request to the specified `resource` with the
+   * given `params` (query parameters) and `config` (request configuration).
+   * It uses the `_request` method to handle the API request and the
+   * `_resolveRequest` method to determine how to resolve the request
+   * (either with cached data or the raw Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   query(resource, params = {}, config = {}) {
     const requestObject = {
@@ -1521,10 +1617,19 @@ export default class ApiResourceManager {
 
   /**
    * Queries a single record from a specified resource.
-   * @param {string} resource - The name of the resource to query.
-   * @param {Object} params - Optional query parameters for the request.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   *
+   * This method sends a GET request to the specified `resource` to
+   * retrieve a single record. The `params` (query parameters) and
+   * `config` (request configuration) can be used to customize the
+   * request. It uses the `_request` method to handle the API request
+   * and the `_resolveRequest` method to determine how to resolve the
+   * request (either with cached data or the raw Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   queryRecord(resource, params = {}, config = {}) {
     const requestObject = {
@@ -1548,9 +1653,17 @@ export default class ApiResourceManager {
   /**
    * Fetches a collection of records from a specified resource.
    *
-   * @param {string} resource - The name of the resource to query.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   * This method sends a GET request to the specified `resource` to
+   * retrieve all records. The `config` (request configuration) can be
+   * used to customize the request. It uses the `_request` method to
+   * handle the API request and the `_resolveRequest` method to determine
+   * how to resolve the request (either with cached data or the raw
+   * Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   findAll(resource, config = {}) {
     const requestObject = {
@@ -1574,11 +1687,20 @@ export default class ApiResourceManager {
   /**
    * Finds a specific record by ID from a given resource.
    *
-   * @param {string} resource - The name of the resource to query.
+   * This method sends a GET request to the specified `resource` to
+   * retrieve a single record with the given `id`. The `params`
+   * (query parameters) and `config` (request configuration) can be used
+   * to customize the request. It uses the `_request` method to handle
+   * the API request and the `_resolveRequest` method to determine how
+   * to resolve the request (either with cached data or the raw Axios
+   * Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
    * @param {number|string} id - The ID of the record to find.
-   * @param {Object} params - Optional query parameters for the request.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   findRecord(resource, id, params = {}, config = {}) {
     const requestObject = {
@@ -1600,10 +1722,17 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Peeks at all records in a specified collection without triggering a request.
+   * Peeks at all records in a specified collection without triggering
+   * a request.
+   *
+   * This method retrieves all records from the collection with the
+   * specified `collectionName` from the `collections` object of the
+   * `ApiResourceManager`. It does not make an API request to fetch
+   * the data; it only returns the locally stored records.
    *
    * @param {string} collectionName - The name of the collection to peek at.
-   * @returns {Array} The collection records, or an empty array if the collection is not found.
+   * @returns {Array|undefined} The collection records, or undefined if
+   *                           the collection is not found.
    */
   peekAll(collectionName) {
     return getProperty(this.collections, collectionName)
@@ -1612,9 +1741,15 @@ export default class ApiResourceManager {
   /**
    * Peeks at a specific record in a collection without triggering a request.
    *
-   * @param {string} collectionName - The name of the collection to peek at.
+   * This method retrieves a specific record from the collection with the
+   * given `collectionName` and `collectionRecordId` from the `collections`
+   * object of the `ApiResourceManager`. It does not make an API request;
+   * it only returns the locally stored record if found.
+   *
+   * @param {string} collectionName - The name of the collection.
    * @param {number|string} collectionRecordId - The ID of the record to find.
-   * @returns {Object|undefined} The found record, or undefined if not found.
+   * @returns {Object|undefined} The found record, or undefined if not found
+   *                             in the local collection.
    */
   peekRecord(collectionName, collectionRecordId) {
     return find(getProperty(this.collections, collectionName), {
@@ -1625,8 +1760,9 @@ export default class ApiResourceManager {
   /**
    * Makes an AJAX request using the axios library.
    *
-   * @param {Object} config - Configuration object for the axios request.
-   * @returns {Promise} A Promise that resolves with the Axios response or rejects with an error.
+   * @param {Object} [config={}] - Configuration object for the axios request.
+   * @returns {Promise} A Promise that resolves with the Axios response or
+   *                    rejects with an error.
    */
   ajax(config = {}) {
     return axios.request(config)
@@ -1636,7 +1772,7 @@ export default class ApiResourceManager {
    * Finds the first object in an array that matches the specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to search.
-   * @param {Object} findProperties - The properties to match.
+   * @param {Object} [findProperties={}] - The properties to match.
    * @returns {Object|undefined} The found object, or undefined if not found.
    */
   findBy(objects, findProperties = {}) {
@@ -1644,10 +1780,11 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Finds the index of the first object in an array that matches the specified properties.
+   * Finds the index of the first object in an array that matches the
+   * specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to search.
-   * @param {Object} findIndexProperties - The properties to match.
+   * @param {Object} [findIndexProperties={}] - The properties to match.
    * @returns {number} The index of the found object, or -1 if not found.
    */
   findIndexBy(objects, findIndexProperties = {}) {
@@ -1658,7 +1795,7 @@ export default class ApiResourceManager {
    * Filters an array of objects based on the specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to filter.
-   * @param {Object} filterProperties - The filter criteria.
+   * @param {Object} [filterProperties={}] - The filter criteria.
    * @returns {Array<Object>} The filtered array of objects.
    */
   filterBy(objects, filterProperties = {}) {
@@ -1669,7 +1806,8 @@ export default class ApiResourceManager {
    * Creates a new array of unique objects based on a specified property.
    *
    * @param {Array<Object>} objects - The array of objects to process.
-   * @param {string} uniqByProperty - The property to use for uniqueness comparison.
+   * @param {string} uniqByProperty - The property to use for uniqueness
+   *                                 comparison.
    * @returns {Array<Object>} The array of unique objects.
    */
   uniqBy(objects, uniqByProperty) {
@@ -1681,7 +1819,8 @@ export default class ApiResourceManager {
    *
    * @param {Array<Object>} objects - The array of objects to group.
    * @param {string} groupByProperty - The property to group by.
-   * @returns {Object} An object where keys are group values and values are arrays of objects.
+   * @returns {Object} An object where keys are group values and values
+   *                   are arrays of objects.
    */
   groupBy(objects, groupByProperty) {
     return groupBy(objects, groupByProperty)
@@ -1690,8 +1829,9 @@ export default class ApiResourceManager {
   /**
    * Returns the first object in an array.
    *
-   * @param {Array<Object>} objects - The array of objects.
-   * @returns {Object|undefined} The first object, or undefined if the array is empty.
+   * @param {Array<Object>} [objects=[]] - The array of objects.
+   * @returns {Object|undefined} The first object, or undefined if the
+   *                             array is empty.
    */
   firstObject(objects = []) {
     return first(objects)
@@ -1700,8 +1840,9 @@ export default class ApiResourceManager {
   /**
    * Returns the last object in an array.
    *
-   * @param {Array<Object>} objects - The array of objects.
-   * @returns {Object|undefined} The last object, or undefined if the array is empty.
+   * @param {Array<Object>} [objects=[]] - The array of objects.
+   * @returns {Object|undefined} The last object, or undefined if the
+   *                             array is empty.
    */
   lastObject(objects = []) {
     return last(objects)
@@ -1710,8 +1851,8 @@ export default class ApiResourceManager {
   /**
    * Merges two arrays of objects into a single array, removing duplicates.
    *
-   * @param {Array<Object>} objects - The first array of objects.
-   * @param {Array<Object>} otherObjects - The second array of objects.
+   * @param {Array<Object>} [objects=[]] - The first array of objects.
+   * @param {Array<Object>} [otherObjects=[]] - The second array of objects.
    * @returns {Array<Object>} The merged array of objects without duplicates.
    */
   mergeObjects(objects = [], otherObjects = []) {
@@ -1721,8 +1862,8 @@ export default class ApiResourceManager {
   /**
    * Splits an array of objects into chunks of a specified size.
    *
-   * @param {Array<Object>} objects - The array of objects to chunk.
-   * @param {number} chunkSize - The size of each chunk.
+   * @param {Array<Object>} [objects=[]] - The array of objects to chunk.
+   * @param {number} [chunkSize=1] - The size of each chunk.
    * @returns {Array<Array<Object>>} An array of chunks.
    */
   chunkObjects(objects = [], chunkSize = 1) {
@@ -1733,7 +1874,8 @@ export default class ApiResourceManager {
    * Sorts an array of objects based on specified properties and sort orders.
    *
    * @param {Array<Object>} objects - The array of objects to sort.
-   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
+   * @param {Array<string>} sortProperties - An array of sort properties in
+   *                                       the format of 'property:order'.
    * @returns {Array<Object>} The sorted array of objects.
    */
   sortBy(objects, sortProperties) {
@@ -1806,7 +1948,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is greater than or equal to the second value, false otherwise.
+   * @returns {boolean} True if the first value is greater than or equal
+   *                   to the second value, false otherwise.
    */
   isGte(value, other) {
     return gte(value, other)
@@ -1817,7 +1960,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is greater than the second value, false otherwise.
+   * @returns {boolean} True if the first value is greater than the second
+   *                   value, false otherwise.
    */
   isGt(value, other) {
     return gt(value, other)
@@ -1828,7 +1972,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is less than or equal to the second value, false otherwise.
+   * @returns {boolean} True if the first value is less than or equal to
+   *                   the second value, false otherwise.
    */
   isLte(value, other) {
     return lte(value, other)
@@ -1839,7 +1984,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is less than the second value, false otherwise.
+   * @returns {boolean} True if the first value is less than the second
+   *                   value, false otherwise.
    */
   isLt(value, other) {
     return lt(value, other)
