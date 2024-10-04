@@ -1050,10 +1050,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourceFallback: [],
       resourceConfig: config
     };
-    const responseObject = defaultRequestArrayResponse;
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     );
     const requestXHR = this._request(requestObject);
     return this._resolveRequest(config, requestXHR, requestHashObject);
@@ -1075,10 +1074,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourceFallback: {},
       resourceConfig: config
     };
-    const responseObject = defaultRequestObjectResponse;
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     );
     const requestXHR = this._request(requestObject);
     return this._resolveRequest(config, requestXHR, requestHashObject);
@@ -1100,10 +1098,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourceFallback: [],
       resourceConfig: config
     };
-    const responseObject = defaultRequestArrayResponse;
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     );
     const requestXHR = this._request(requestObject);
     return this._resolveRequest(config, requestXHR, requestHashObject);
@@ -1127,10 +1124,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourceFallback: {},
       resourceConfig: config
     };
-    const responseObject = defaultRequestObjectResponse;
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     );
     const requestXHR = this._request(requestObject);
     return this._resolveRequest(config, requestXHR, requestHashObject);
@@ -1142,7 +1138,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Array} The collection records, or an empty array if the collection is not found.
    */
   peekAll(collectionName) {
-    return this.collections[collectionName];
+    return getProperty(this.collections, collectionName);
   }
   /**
    * Peeks at a specific record in a collection without triggering a request.
@@ -1152,7 +1148,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Object|undefined} The found record, or undefined if not found.
    */
   peekRecord(collectionName, collectionRecordId) {
-    return find(this.collections[collectionName], {
+    return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId
     });
   }

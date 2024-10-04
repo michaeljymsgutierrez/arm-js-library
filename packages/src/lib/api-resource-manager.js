@@ -1328,10 +1328,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1355,10 +1354,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1382,10 +1380,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1411,10 +1408,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1428,7 +1424,7 @@ export default class ApiResourceManager {
    * @returns {Array} The collection records, or an empty array if the collection is not found.
    */
   peekAll(collectionName) {
-    return this.collections[collectionName]
+    return getProperty(this.collections, collectionName)
   }
 
   /**
@@ -1439,7 +1435,7 @@ export default class ApiResourceManager {
    * @returns {Object|undefined} The found record, or undefined if not found.
    */
   peekRecord(collectionName, collectionRecordId) {
-    return find(this.collections[collectionName], {
+    return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId,
     })
   }
