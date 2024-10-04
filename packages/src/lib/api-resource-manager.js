@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 1.6.0
+ * Version: 1.6.1
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -71,6 +71,7 @@ const {
   orderBy,
   uniqBy,
   groupBy,
+  pullAt,
 } = _
 
 /**
@@ -92,7 +93,7 @@ const defaultRequestArrayResponse = {
   data: [],
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**
@@ -114,11 +115,14 @@ const defaultRequestObjectResponse = {
   data: {},
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**
  * An array of keys to be omitted during a deep check operation.
+ * These keys typically represent internal properties or methods that
+ * should not be considered when comparing the current state of a record
+ * with its original state.
  *
  * @type {string[]}
  * @constant
@@ -135,11 +139,14 @@ const keysToBeOmittedOnDeepCheck = [
   'isError',
   'isLoading',
   'isPristine',
+  'originalRecord',
+  'getARMContext',
 ]
 
 /**
  * An array of keys to be omitted when constructing a request payload.
- * These keys typically represent internal object properties or methods.
+ * These keys typically represent internal object properties or methods
+ * that should not be included in the data sent to the server.
  *
  * @type {string[]}
  * @constant
@@ -158,6 +165,8 @@ const keysToBeOmittedOnRequestPayload = [
   'isPristine',
   'hashId',
   'collectionName',
+  'originalRecord',
+  'getARMContext',
 ]
 
 export default class ApiResourceManager {
@@ -171,8 +180,8 @@ export default class ApiResourceManager {
      * The namespace for API requests. Defaults to 'api/v1'.
      * @type {string}
      */
-
     this.namespace = 'api/v1'
+
     /**
      * The base URL for API requests.
      * Defaults to the current origin if running in a browser, otherwise an empty string.
@@ -193,10 +202,10 @@ export default class ApiResourceManager {
     this.aliases = {}
 
     /**
-     * A dictionary to store request hash IDs.
+     * A dictionary to store request hash keys.
      * @type {Object}
      */
-    this.requestHashIds = {}
+    this.requestHashes = {}
 
     /**
      * The reference key used for included data in request payloads. Defaults to 'type'.
@@ -222,7 +231,7 @@ export default class ApiResourceManager {
     makeObservable(this, {
       collections: observable,
       aliases: observable,
-      requestHashIds: observable,
+      requestHashes: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
@@ -233,14 +242,22 @@ export default class ApiResourceManager {
   /**
    * Initializes the Axios configuration with the base URL.
    *
+   * Sets the `baseURL` property in the Axios defaults to the value
+   * returned by the `_getBaseURL()` method. This ensures that all
+   * Axios requests use the correct base URL for the API.
+   *
    * @private
    */
   _initializeAxiosConfig() {
-    axios.defaults.baseURL = this._getBaseURL()
+    setProperty(axios, ['defaults', 'baseURL'], this._getBaseURL())
   }
 
   /**
    * Initializes a collection of collections with optional default values.
+   *
+   * Iterates through the provided array of `collections` and calls the
+   * `_addCollection` method for each collection name, initializing it
+   * with an empty array (`[]`) as the default value.
    *
    * @private
    * @param {string[]} collections - An array of collection names to initialize.
@@ -252,8 +269,11 @@ export default class ApiResourceManager {
   /**
    * Gets the base URL for API requests.
    *
+   * Constructs the base URL by combining the `host` and `namespace`
+   * properties of the instance.
+   *
    * @private
-   * @returns {string} The base URL constructed from `host` and `namespace` properties.
+   * @returns {string} The base URL constructed from `host` and `namespace`.
    */
   _getBaseURL() {
     return `${this.host}/${this.namespace}`
@@ -261,6 +281,9 @@ export default class ApiResourceManager {
 
   /**
    * Checks if a collection exists in the current instance.
+   *
+   * This method verifies if a collection with the given `collectionName`
+   * exists in the `collections` object of the `ApiResourceManager` instance.
    *
    * @private
    * @param {string} collectionName - The name of the collection to check.
@@ -274,35 +297,54 @@ export default class ApiResourceManager {
   /**
    * Adds a collection to the current instance.
    *
+   * This method adds a new collection with the specified `collectionName`
+   * to the `collections` object of the `ApiResourceManager`. The
+   * `collectionRecords` array is used to initialize the collection's data.
+   *
    * @private
    * @param {string} collectionName - The name of the collection to add.
-   * @param {Array} collectionRecords - The records for the collection.
+   * @param {Array} collectionRecords - The initial records for the collection.
    */
   _addCollection(collectionName, collectionRecords) {
-    this.collections[collectionName] = collectionRecords
+    setProperty(this.collections, collectionName, collectionRecords)
   }
 
   /**
    * Adds an alias to the aliases object.
    *
+   * This method creates an alias for a collection or a single record.
+   * The `aliasName` specifies the name of the alias, and `aliasRecords`
+   * can be either an array of records (for a collection alias) or a
+   * single record object.
+   *
+   * If `aliasRecords` is an array, it's used directly (or an empty array
+   * if `aliasRecords` is falsy). If it's a plain object, it's used directly
+   * (or an empty object if `aliasRecords` is falsy).
+   *
    * @private
    * @param {string} aliasName - The name of the alias.
-   * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
+   * @param {Array|Object} aliasRecords - The records to be aliased.
    */
   _addAlias(aliasName, aliasRecords) {
-    const isAliasRecordsArray = isArray(aliasRecords)
-    const isAliasRecordsObject = isPlainObject(aliasRecords)
+    let aliasCollectionRecords = null
 
-    if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || []
+    if (isArray(aliasRecords)) aliasCollectionRecords = aliasRecords || []
+    if (isPlainObject(aliasRecords)) aliasCollectionRecords = aliasRecords || {}
 
-    if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
+    setProperty(this.aliases, aliasName, aliasCollectionRecords)
   }
 
   /**
    * Generates a hash ID based on the provided object.
    *
+   * This method generates a unique hash ID by stringifying the given
+   * `object` and then calculating its MD5 hash using CryptoJS.
+   * If no `object` is provided, it defaults to an object with an
+   * `id` property generated using `uuidv1()`.
+   *
    * @private
-   * @param {Object} object - The object to generate the hash ID from. Defaults to an object with an `id` property generated using `uuidv1()`.
+   * @param {Object} [object={ id: uuidv1() }] - The object to generate
+   *                                            the hash ID from.
    * @returns {string} The generated hash ID.
    */
   _generateHashId(object = { id: uuidv1() }) {
@@ -313,8 +355,12 @@ export default class ApiResourceManager {
   /**
    * Sets multiple properties on a target object recursively.
    *
+   * This method iterates through the `keyValuePairs` object and sets the
+   * corresponding properties on the `targetObject`. It handles nested
+   * objects by recursively calling itself with an updated `prefix`.
+   *
    * @private
-   * @param {Object} targetObject - The object to set properties on.
+   * @param {Object} targetObject - The object on which to set the properties.
    * @param {Object} keyValuePairs - An object containing key-value pairs to set.
    */
   _setProperties(targetObject, keyValuePairs) {
@@ -335,18 +381,29 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Gets a property from the current object.
+   * Gets a property from the current record.
+   *
+   * This method retrieves the value of a property with the given `key`
+   * from the current record object (`this`). It uses Lodash's `get`
+   * function (aliased as `getProperty`) to access the property.
    *
    * @private
    * @param {string} key - The key of the property to retrieve.
-   * @returns {*} The value of the property, or undefined if not found.
+   * @returns {*} The value of the property.
    */
   _getRecordProperty(key) {
     return getProperty(this, key)
   }
 
   /**
-   * Sets a single property on the current record and updates its state based on changes.
+   * Sets a single property on the current record and updates its state
+   * based on changes.
+   *
+   * This method sets the property with the given `key` to the specified
+   * `value` on the current record object (`this`). It then checks if the
+   * record has been modified by comparing it with the `originalRecord`.
+   * If changes are detected, it updates the `isDirty` and `isPristine`
+   * flags accordingly.
    *
    * @private
    * @param {string} key - The property key to set.
@@ -360,47 +417,62 @@ export default class ApiResourceManager {
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
-   * Sets properties on the current record and updates its state based on changes.
+   * Sets multiple properties on the current record and updates its state
+   * based on changes.
+   *
+   * This method sets multiple properties on the current record object
+   * (`this`) using the provided `values` object. It then compares the
+   * updated record with the `originalRecord` to detect any modifications.
+   * If the record has been changed, it updates the `isDirty` and
+   * `isPristine` flags.
    *
    * @private
-   * @param {Object} values - An object containing key-value pairs to set.
+   * @param {Object} values - An object containing key-value pairs to set
+   *                          on the record.
    */
   _setRecordProperties(values) {
-    this._setProperties(this, values)
+    this.getARMContext()._setProperties(this, values)
 
     const originalRecord = omit(
       toJS(this.originalRecord),
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
    * Sorts an array of records based on specified properties and sort orders.
    *
+   * This method sorts the `currentRecords` array using the provided
+   * `sortProperties`. Each `sortProperty` should be a string in the
+   * format "property:order", where "property" is the name of the property
+   * to sort by and "order" is either "asc" (ascending) or "desc"
+   * (descending).
+   *
    * @private
    * @param {Array} currentRecords - The array of records to sort.
-   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
-   *  Valid orders are 'asc' (ascending) and 'desc' (descending).
+   * @param {Array<string>} [sortProperties=[]] - An array of sort properties.
    * @returns {Array} The sorted array of records.
    */
   _sortRecordsBy(currentRecords, sortProperties = []) {
@@ -416,58 +488,64 @@ export default class ApiResourceManager {
   /**
    * Removes a record from a specified collection based on its hash ID.
    *
+   * This method removes a `collectionRecord` from its corresponding
+   * collection in the `collections` object. It determines the collection
+   * using the record's `collectionName` property and finds the record's
+   * index within the collection using its `hashId`. If the record is
+   * found, it's removed from the collection using Lodash's `pullAt`.
+   *
    * @private
-   * @param {Object} collectionRecord - The record to be removed from the collection.
+   * @param {Object} collectionRecord - The record to be removed from
+   *                                   the collection.
    */
   _unloadFromCollection(collectionRecord) {
-    const collectionName = getProperty(collectionRecord, 'collectionName')
-    const collectionRecordIndex = findIndex(this.collections[collectionName], {
+    const collection = getProperty(
+      this.collections,
+      getProperty(collectionRecord, 'collectionName')
+    )
+    const collectionRecordIndex = findIndex(collection, {
       hashId: getProperty(collectionRecord, 'hashId'),
     })
 
-    if (gte(collectionRecordIndex, 0))
-      this.collections[collectionName].splice(collectionRecordIndex, 1)
+    if (gte(collectionRecordIndex, 0)) pullAt(collection, collectionRecordIndex)
   }
 
   /**
    * Removes a record from all request hashes based on its hash ID.
    *
+   * This method iterates through all request hashes in the `requestHashes`
+   * object and removes any occurrences of the `collectionRecord` based on
+   * its `hashId`. It handles both array-based and object-based request
+   * hash data.
+   *
    * @private
-   * @param {Object} collectionRecord - The record to be removed from request hashes.
+   * @param {Object} collectionRecord - The record to be removed from
+   *                                   request hashes.
    */
   _unloadFromRequestHashes(collectionRecord) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
+    const requestHashesKeys = keysIn(this.requestHashes)
+    const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
-        'data'
-      )
-      const isRequestHashIdDataArray = isArray(requestHashIdData)
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+    forEach(requestHashesKeys, (requestHashKey) => {
+      const requestHash = getProperty(this.requestHashes, requestHashKey)
+      const requestHashData = getProperty(requestHash, 'data')
 
-      if (isRequestHashIdDataArray) {
-        const requestHashIdRecordIndex = findIndex(
-          getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-          {
-            hashId: getProperty(collectionRecord, 'hashId'),
-          }
-        )
-        if (gte(requestHashIdRecordIndex, 0))
-          this.requestHashIds[requestHashIdKey]['data'].splice(
-            requestHashIdRecordIndex,
-            1
-          )
+      if (isArray(requestHashData)) {
+        const requestHashRecordIndex = findIndex(requestHashData, {
+          hashId: collectionRecordHashId,
+        })
+        if (gte(requestHashRecordIndex, 0))
+          pullAt(getProperty(requestHash, 'data'), requestHashRecordIndex)
       }
 
-      if (isRequestHashIdDataObject) {
+      if (isPlainObject(requestHashData)) {
         if (
           isEqual(
-            getProperty(collectionRecord, 'hashId'),
-            getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+            collectionRecordHashId,
+            getProperty(requestHashData, 'hashId')
           )
         )
-          setProperty(this.requestHashIds[requestHashIdKey], 'data', {})
+          setProperty(requestHash, 'data', null)
       }
     })
   }
@@ -475,39 +553,49 @@ export default class ApiResourceManager {
   /**
    * Removes a record from all aliases based on its hash ID.
    *
+   * This method iterates through all aliases in the `aliases` object
+   * and removes any occurrences of the `collectionRecord` based on its
+   * `hashId`. It handles both array-based and object-based alias data.
+   *
    * @private
    * @param {Object} collectionRecord - The record to be removed from aliases.
    */
   _unloadFromAliases(collectionRecord) {
     const aliasesKeys = keysIn(this.aliases)
+    const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
     forEach(aliasesKeys, (aliasKey) => {
-      const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-      const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+      const aliasCollection = getProperty(this.aliases, aliasKey)
 
-      if (isAliasRecordsArray) {
-        const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-          hashId: getProperty(collectionRecord, 'hashId'),
+      if (isArray(aliasCollection)) {
+        const aliasCollectionRecordIndex = findIndex(aliasCollection, {
+          hashId: collectionRecordHashId,
         })
 
-        if (gte(aliasRecordIndex, 0))
-          this.aliases[aliasKey].splice(aliasRecordIndex, 1)
+        if (gte(aliasCollectionRecordIndex, 0))
+          aliasCollection.splice(aliasCollectionRecordIndex, 1)
       }
 
-      if (isAliasRecordsObject) {
+      if (isPlainObject(aliasCollection)) {
         if (
           isEqual(
-            getProperty(collectionRecord, 'hashId'),
-            getProperty(this.aliases[aliasKey], 'hashId')
+            collectionRecordHashId,
+            getProperty(aliasCollection, 'hashId')
           )
         )
-          this.aliases[aliasKey] = {}
+          setProperty(this.aliases, aliasKey, null)
       }
     })
   }
 
   /**
    * Unloads a record from the collection, request hashes, and aliases.
+   *
+   * This method removes a `currentRecord` from all relevant data stores
+   * within the `ApiResourceManager`:
+   *  - The main collection where the record belongs.
+   *  - Any request hashes where the record might be present.
+   *  - Any aliases that refer to the record.
    *
    * @param {Object} currentRecord - The record to be unloaded.
    */
@@ -520,83 +608,84 @@ export default class ApiResourceManager {
   /**
    * Saves a record to the server.
    *
+   * This method saves the `currentRecord` to the server by making an API
+   * request. It determines whether to use a PUT (update) or POST (create)
+   * request based on the validity of the record's `id`. The `collectionConfig`
+   * parameter can be used to provide additional configuration for the
+   * request.
+   *
    * @private
    * @param {Object} currentRecord - The record to be saved.
-   * @param {Object} [collectionConfig] - Optional configuration for the save request.
-   * @returns {Promise} A Promise that resolves when the save is successful or rejects with an error.
+   * @param {Object} [collectionConfig={}] - Optional configuration for the
+   *                                        save request.
+   * @returns {Promise} A Promise that resolves when the save is successful
+   *                    or rejects with an error.
    */
   _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const isValidId = isNumber(getProperty(collectionRecord, 'id'))
-    const id = isValidId ? getProperty(collectionRecord, 'id') : null
-    const resource = collectionName
-    const method = isValidId ? 'put' : 'post'
-    const payload = { data: collectionRecord }
+    const collectionRecord = find(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(currentRecord, 'hashId'),
+      }
+    )
+    const collectionRecordId = getProperty(collectionRecord, 'id')
+    const isCollectionRecordIdValid = isNumber(collectionRecordId)
 
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: id,
+    return this._request({
+      resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',
+      resourceName: collectionName,
+      resourceId: isCollectionRecordIdValid ? collectionRecordId : null,
       resourceParams: {},
-      resourcePayload: payload,
+      resourcePayload: { data: collectionRecord },
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
    * Deletes a record from the server.
    *
+   * This method deletes the `currentRecord` from the server by making
+   * a DELETE API request. The `collectionConfig` parameter can be used
+   * to provide additional configuration for the request.
+   *
    * @private
-   * @async
    * @param {Object} currentRecord - The record to be deleted.
-   * @param {Object} [collectionConfig] - Optional configuration for the deletion request.
-   * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
+   * @param {Object} [collectionConfig={}] - Optional configuration for the
+   *                                        delete request.
+   * @returns {Promise} A Promise that resolves when the deletion is
+   *                    successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
-    const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const id = getProperty(currentRecord, 'id')
-    const resource = getProperty(collectionRecord, 'collectionName')
-    const method = 'delete'
-
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+    return this._request({
+      resourceMethod: 'delete',
+      resourceName: getProperty(currentRecord, 'collectionName'),
+      resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
    * Reloads a record from the server.
    *
+   * This method reloads the `currentRecord` from the server by making
+   * a GET API request. It fetches the latest data for the record and
+   * updates the local copy.
+   *
    * @private
-   * @async
    * @param {Object} currentRecord - The record to be reloaded.
-   * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
+   * @returns {Promise} A Promise that resolves with the updated record
+   *                    or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
-    const id = getProperty(currentRecord, 'id')
-    const resource = getProperty(currentRecord, 'collectionName')
-    const method = 'get'
-
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+    return this._request({
+      resourceMethod: 'get',
+      resourceName: getProperty(currentRecord, 'collectionName'),
+      resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -604,19 +693,30 @@ export default class ApiResourceManager {
         skipId: uuidv1(),
         autoResolveOrigin: '_internal',
       },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
    * Retrieves records from a specified collection based on given criteria.
    *
+   * This method retrieves records from the collection with the specified
+   * `collectionName`, potentially fetching them asynchronously if needed.
+   * It uses the `collectionConfig` to determine how to filter, sort,
+   * and retrieve the records.
+   *
+   * The `currentRecord` is used to extract related records based on the
+   * `referenceKey` provided in the `collectionConfig`. If the related
+   * records are not already in the local collection and `async` is true
+   * in the `collectionConfig`, it initiates an asynchronous request to
+   * fetch them.
+   *
    * @private
-   * @param {string} collectionName - The name of the collection to retrieve records from.
-   * @param {Object} collectionConfig - Optional configuration for the collection, including referenceKey, async, filterBy, and sortBy properties.
-   * @param {Object|Array} currentRecord - The current record containing potential related records.
-   * @returns {Object|Array} The retrieved records, either a single object or an array depending on the input.
+   * @param {string} collectionName - The name of the collection.
+   * @param {Object} [collectionConfig={}] - Configuration for retrieving
+   *                                        the records.
+   * @param {Object|Array} currentRecord - The record containing potential
+   *                                       related records.
+   * @returns {Object|Array} The retrieved records (single object or array).
    */
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey =
@@ -635,23 +735,25 @@ export default class ApiResourceManager {
     const collectionRecords = observable([])
 
     forEach(relatedRecords, (relatedRecord) => {
-      const relatedRecordHashId = this._generateHashId({
-        id: getProperty(relatedRecord, 'id'),
-        collectionName: collectionName,
-      })
-
-      const collectionRecord = find(this.collections[collectionName], {
-        hashId: relatedRecordHashId,
-      })
+      const relatedRecordId = getProperty(relatedRecord, 'id')
+      const collectionRecord = find(
+        getProperty(this.collections, collectionName),
+        {
+          hashId: this._generateHashId({
+            id: relatedRecordId,
+            collectionName: collectionName,
+          }),
+        }
+      )
 
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        if (collectionAsync) {
+        if (isEqual(collectionAsync, true)) {
           const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
-            resourceId: getProperty(relatedRecord, 'id'),
+            resourceId: relatedRecordId,
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
@@ -677,26 +779,21 @@ export default class ApiResourceManager {
   /**
    * Injects action methods into a collection record.
    *
+   * This method adds predefined action methods to a `collectionRecord`.
+   * These methods provide convenient ways to interact with the record,
+   * such as getting and setting properties, saving, deleting, reloading,
+   * and retrieving related collections.
+   *
    * @private
-   * @param {Object} collectionRecord - The collection record to inject actions into.
+   * @param {Object} collectionRecord - The collection record to inject
+   *                                   actions into.
    */
   _injectCollectionActions(collectionRecord) {
-    /**
-     * An object containing various actions that can be performed on a collection record.
-     *
-     * @typedef {Object} Actions
-     * @property {function(string): *} get - Gets a property of the collection record.
-     * @property {function(string, *): void} set - Sets a property of the collection record.
-     * @property {function(Object): void} setProperties - Sets multiple properties of the collection record.
-     * @property {function(): Promise<*>} save - Saves the collection record.
-     * @property {function(Object): Promise<*>} destroyRecord - Deletes the collection record.
-     * @property {function(): Promise<*>} reload - Reloads the collection record.
-     * @property {function(string, Object): Promise<*>} getCollection - Retrieves a collection of records.
-     */
     const actions = {
       get: this._getRecordProperty,
       set: this._setRecordProperty,
       setProperties: this._setRecordProperties,
+      getARMContext: () => this,
       save: (collectionConfig) =>
         this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) =>
@@ -711,18 +808,28 @@ export default class ApiResourceManager {
     }
     const actionKeys = keysIn(actions)
 
-    forEach(actionKeys, (actionKey) => {
-      collectionRecord[actionKey] = actions[actionKey]
-    })
+    forEach(actionKeys, (actionKey) =>
+      setProperty(collectionRecord, actionKey, getProperty(actions, actionKey))
+    )
   }
 
   /**
    * Injects reference keys into a collection record.
    *
+   * This method adds essential reference keys to a `collectionRecord`,
+   * including:
+   *  - `collectionName`: The name of the collection the record belongs to.
+   *  - `hashId`: A unique hash ID generated for the record.
+   *  - `isLoading`, `isError`, `isPristine`, `isDirty`: Flags to track
+   *     the record's state.
+   *  - `originalRecord`: A copy of the original record data for change
+   *     tracking.
+   *
    * @private
    * @param {string} collectionName - The name of the collection.
    * @param {Object} collectionRecord - The collection record to inject keys into.
-   * @param {string} collectionRecordHashId - Optional hash ID for the record.
+   * @param {string} [collectionRecordHashId=null] - Optional pre-generated
+   *                                                 hash ID for the record.
    */
   _injectCollectionReferenceKeys(
     collectionName,
@@ -736,77 +843,88 @@ export default class ApiResourceManager {
         })
       : collectionRecordHashId
 
-    setProperty(collectionRecord, 'collectionName', collectionName)
-    setProperty(collectionRecord, 'hashId', recordHashId)
-    setProperty(collectionRecord, 'isLoading', false)
-    setProperty(collectionRecord, 'isError', false)
-    setProperty(collectionRecord, 'isPristine', true)
-    setProperty(collectionRecord, 'isDirty', false)
+    this._setProperties(collectionRecord, {
+      collectionName: collectionName,
+      hashId: recordHashId,
+      isLoading: false,
+      isError: false,
+      isPristine: true,
+      isDirty: false,
+    })
+
+    this._setProperties(collectionRecord, {
+      originalRecord: omit(toJS(collectionRecord), keysToBeOmittedOnDeepCheck),
+    })
   }
 
   /**
    * Pushes records to a specified collection.
    *
+   * This method adds or updates records in the collection with the given
+   * `collectionName`. The `collectionRecords` can be either an array of
+   * records or a single record object.
+   *
+   * If `collectionRecords` is an array, it iterates through the records
+   * and adds them to the collection if they don't already exist. If a
+   * record with the same `hashId` already exists, it updates the existing
+   * record with the new data.
+   *
+   * If `collectionRecords` is a single object, it adds it to the collection
+   * if it doesn't exist or updates the existing record if it has the same
+   * `hashId`.
+   *
    * @private
-   * @param {string} collectionName - The name of the collection to push records to.
-   * @param {Array|Object} collectionRecords - The records to be pushed. Can be an array or an object.
-   * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
+   * @param {string} collectionName - The name of the collection to push
+   *                                 records to.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The pushed records (array or single object).
    */
   _pushToCollection(collectionName, collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    const collection = getProperty(this.collections, collectionName)
 
-    if (isCollectionRecordsArray) {
+    if (isArray(collectionRecords)) {
       const collectionRecordsHashIds = map(collectionRecords, 'hashId')
 
       forEach(collectionRecords, (collectionRecord) => {
-        const collectionRecordIndex = findIndex(
-          this.collections[collectionName],
-          {
-            hashId: getProperty(collectionRecord, 'hashId'),
-          }
-        )
+        const collectionRecordIndex = findIndex(collection, {
+          hashId: getProperty(collectionRecord, 'hashId'),
+        })
 
         this._injectCollectionActions(collectionRecord)
 
-        if (lt(collectionRecordIndex, 0))
-          this.collections[collectionName].push(collectionRecord)
+        if (lt(collectionRecordIndex, 0)) collection.push(collectionRecord)
 
         if (gte(collectionRecordIndex, 0))
           this._setProperties(
-            this.collections[collectionName][collectionRecordIndex],
+            getProperty(collection, collectionRecordIndex),
             collectionRecord
           )
       })
 
       return map(collectionRecordsHashIds, (collectionRecordHashId) =>
-        find(this.collections[collectionName], {
+        find(collection, {
           hashId: collectionRecordHashId,
         })
       )
     }
 
-    if (isCollectionRecordsObject) {
-      const collectionRecordHashId = collectionRecords.hashId
-      const collectionRecordIndex = findIndex(
-        this.collections[collectionName],
-        {
-          hashId: getProperty(collectionRecords, 'hashId'),
-        }
-      )
+    if (isPlainObject(collectionRecords)) {
+      const collectionRecordHashId = getProperty(collectionRecords, 'hashId')
+      const collectionRecordIndex = findIndex(collection, {
+        hashId: collectionRecordHashId,
+      })
 
       this._injectCollectionActions(collectionRecords)
 
-      if (lt(collectionRecordIndex, 0))
-        this.collections[collectionName].push(collectionRecords)
+      if (lt(collectionRecordIndex, 0)) collection.push(collectionRecords)
 
       if (gte(collectionRecordIndex, 0))
         this._setProperties(
-          this.collections[collectionName][collectionRecordIndex],
+          getProperty(collection, collectionRecordIndex),
           collectionRecords
         )
 
-      return find(this.collections[collectionName], {
+      return find(collection, {
         hashId: collectionRecordHashId,
       })
     }
@@ -815,120 +933,114 @@ export default class ApiResourceManager {
   /**
    * Pushes records to specified aliases.
    *
+   * This method updates aliases in the `aliases` object with the provided
+   * `collectionRecords`. It handles both array-based and object-based
+   * aliases.
+   *
+   * If an alias refers to an array of records, the method iterates through
+   * the `collectionRecords` and updates any matching records within the
+   * alias array based on their `hashId`.
+   *
+   * If an alias refers to a single record object, the method updates the
+   * alias with the matching `collectionRecord` based on its `hashId`.
+   *
    * @private
-   * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
+   * @param {Array|Object} collectionRecords - The records to be pushed to
+   *                                          aliases.
    */
   _pushToAliases(collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
 
-    if (isCollectionRecordsArray) {
-      forEach(aliasesKeys, (aliasKey) => {
-        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+    collectionRecords = isArray(collectionRecords)
+      ? collectionRecords
+      : [collectionRecords]
 
-        if (isAliasRecordsArray) {
-          forEach(collectionRecords, (collectionRecord) => {
-            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            })
-            if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+    forEach(aliasesKeys, (aliasKey) => {
+      const aliasCollection = getProperty(this.aliases, aliasKey)
+
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
+
+        if (isArray(aliasCollection)) {
+          const aliasCollectionRecordIndex = findIndex(aliasCollection, {
+            hashId: collectionRecordHashId,
           })
-        }
 
-        if (isAliasRecordsObject) {
-          forEach(collectionRecords, (collectionRecord) => {
-            if (
-              isEqual(
-                getProperty(collectionRecord, 'hashId'),
-                getProperty(this.aliases[aliasKey], 'hashId')
-              )
+          if (gte(aliasCollectionRecordIndex, 0))
+            setProperty(
+              aliasCollection,
+              aliasCollectionRecordIndex,
+              collectionRecord
             )
-              this.aliases[aliasKey] = collectionRecord
-          })
-        }
-      })
-    }
-
-    if (isCollectionRecordsObject) {
-      forEach(aliasesKeys, (aliasKey) => {
-        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
-
-        if (isAliasRecordsArray) {
-          forEach([collectionRecords], (collectionRecord) => {
-            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            })
-            if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
-          })
         }
 
-        if (isAliasRecordsObject) {
+        if (isPlainObject(aliasCollection)) {
           if (
             isEqual(
-              getProperty(collectionRecords, 'hashId'),
-              getProperty(this.aliases[aliasKey], 'hashId')
+              collectionRecordHashId,
+              getProperty(aliasCollection, 'hashId')
             )
           )
-            this.aliases[aliasKey] = collectionRecords
+            setProperty(this.aliases, aliasKey, collectionRecord)
         }
       })
-    }
+    })
   }
 
   /**
    * Pushes records to specified request hashes.
    *
+   * This method updates request hashes in the `requestHashes` object with
+   * the provided `collectionRecords`. It handles both array-based and
+   * object-based request hash data.
+   *
+   * If a request hash's `data` property is an array, the method iterates
+   * through the `collectionRecords` and updates any matching records
+   * within the `data` array based on their `hashId`.
+   *
+   * If a request hash's `data` property is a single record object, the
+   * method updates the `data` with the matching `collectionRecord` based
+   * on its `hashId`.
+   *
    * @private
-   * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
+   * @param {Array|Object} collectionRecords - The records to be pushed to
+   *                                          request hashes.
    */
   _pushToRequestHashes(collectionRecords) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
-    let newCollectionRecords = null
+    const requestHashesKeys = keysIn(this.requestHashes)
 
-    if (isCollectionRecordsArray) newCollectionRecords = collectionRecords
-    if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords]
+    collectionRecords = isArray(collectionRecords)
+      ? collectionRecords
+      : [collectionRecords]
 
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
-        'data'
-      )
-      const isRequestHashIdDataArray = isArray(requestHashIdData)
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+    forEach(requestHashesKeys, (requestHashKey) => {
+      const requestHash = getProperty(this.requestHashes, requestHashKey)
+      const requestHashData = getProperty(requestHash, 'data')
 
-      forEach(newCollectionRecords, (collectionRecord) => {
-        if (isRequestHashIdDataArray) {
-          const requestHashIdRecordIndex = findIndex(
-            getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-            {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            }
-          )
-          if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]['data'][
-              requestHashIdRecordIndex
-            ] = collectionRecord
-        }
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
-        if (isRequestHashIdDataObject) {
-          if (
-            isEqual(
-              getProperty(collectionRecord, 'hashId'),
-              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
-            )
-          )
+        if (isArray(requestHashData)) {
+          const requestHashRecordIndex = findIndex(requestHashData, {
+            hashId: collectionRecordHashId,
+          })
+
+          if (gte(requestHashRecordIndex, 0))
             setProperty(
-              this.requestHashIds[requestHashIdKey],
-              'data',
+              requestHash,
+              ['data', requestHashRecordIndex],
               collectionRecord
             )
+        }
+
+        if (isPlainObject(requestHashData)) {
+          if (
+            isEqual(
+              collectionRecordHashId,
+              getProperty(requestHashData, 'hashId')
+            )
+          )
+            setProperty(requestHash, 'data', collectionRecord)
         }
       })
     })
@@ -936,6 +1048,16 @@ export default class ApiResourceManager {
 
   /**
    * Pushes records to a collection, aliases, and request hashes.
+   *
+   * This method orchestrates the process of adding or updating records
+   * in various data stores within the `ApiResourceManager`. It takes a
+   * `collectionName` and `collectionRecords` (which can be an array or
+   * a single object) and performs the following actions:
+   *
+   * 1. Checks if the specified collection exists.
+   * 2. Pushes the records to the collection using `_pushToCollection`.
+   * 3. Updates any relevant aliases using `_pushToAliases`.
+   * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
    *
    * @private
    * @param {string} collectionName - The name of the collection.
@@ -957,23 +1079,32 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Pushes records to a specified collection.
+   * Pushes records to a collection, aliases, and request hashes.
    *
-   * @param {string} collectionName - The name of the collection to push records to.
-   * @param {Array<Object>|Object} collectionRecords - The records to be pushed. Can be an array or a single object.
+   * This method orchestrates the process of adding or updating records
+   * in various data stores within the `ApiResourceManager`. It takes a
+   * `collectionName` and `collectionRecords` (which can be an array or
+   * a single object) and performs the following actions:
+   *
+   * 1. Checks if the specified collection exists.
+   * 2. Pushes the records to the collection using `_pushToCollection`.
+   * 3. Updates any relevant aliases using `_pushToAliases`.
+   * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection.
+   * @param {Array|Object} collectionRecords - The records to be pushed.
+   * @returns {Array|Object} The updated collection records.
    */
   pushPayload(collectionName, collectionRecords) {
     this._isCollectionExisting(collectionName)
 
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
-    const isCollectionRecordsArray = isArray(collectionRecords)
-
-    if (isCollectionRecordsArray)
+    if (isArray(collectionRecords))
       forEach(collectionRecords, (collectionRecord) =>
         this._injectCollectionReferenceKeys(collectionName, collectionRecord)
       )
 
-    if (isCollectionRecordsObject)
+    if (isPlainObject(collectionRecords))
       this._injectCollectionReferenceKeys(collectionName, collectionRecords)
 
     this._pushPayload(collectionName, collectionRecords)
@@ -982,68 +1113,109 @@ export default class ApiResourceManager {
   /**
    * Pushes a request and its corresponding response to the request hash store.
    *
+   * This method adds or updates a request hash in the `requestHashes` object.
+   * It generates a unique `requestHashKey` using the `_generateHashId`
+   * method based on the `requestObject`.
+   *
+   * If a request hash with the same key already exists and the `responseObject`
+   * is marked as `isNew`, it updates the existing hash's `isNew` flag to
+   * `false`. Otherwise, it adds a new request hash with the given key and
+   * `responseObject`.
+   *
    * @private
-   * @param {Object} requestObject - The request object.
-   * @param {Object} responseObject - The initial response object.
+   * @param {Object} requestObject - The request object used to generate the
+   *                                 hash key.
+   * @param {Object} responseObject - The response object associated with
+   *                                  the request.
    * @returns {Object} The updated or created request hash object.
    */
   _pushRequestHash(requestObject, responseObject) {
-    const requestHashId = this._generateHashId(requestObject)
-    const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
-    const isResponseNew = getProperty(responseObject, 'isNew')
+    const requestHashKey = this._generateHashId(requestObject)
 
-    if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashIds[requestHashId], 'isNew', false)
+    if (
+      !isNil(getProperty(this.requestHashes, requestHashKey)) &&
+      getProperty(responseObject, 'isNew')
+    ) {
+      setProperty(this.requestHashes, [requestHashKey, 'isNew'], false)
     } else {
-      this.requestHashIds[requestHashId] = responseObject
+      setProperty(this.requestHashes, requestHashKey, responseObject)
     }
 
-    return this.requestHashIds[requestHashId]
+    return getProperty(this.requestHashes, requestHashKey)
   }
 
   /**
    * Sets the host URL for the client and initializes the Axios configuration.
    *
+   * This method sets the `host` property of the `ApiResourceManager` instance
+   * to the provided `host` URL. It then calls the `_initializeAxiosConfig`
+   * method to update the Axios configuration with the new host, ensuring
+   * that subsequent API requests use the correct base URL.
+   *
    * @param {string} host - The base URL of the API server.
    */
   setHost(host) {
-    this.host = host
+    setProperty(this, 'host', host)
     this._initializeAxiosConfig()
   }
 
   /**
    * Sets the namespace for the client.
    *
+   * This method sets the `namespace` property of the `ApiResourceManager`
+   * instance to the provided `namespace`. The namespace is typically used
+   * as a path prefix in the base URL for API requests, allowing you to
+   * version your API or organize it into different sections. For example,
+   * a namespace of "api/v2" would result in a base URL like
+   * "https://example.com/api/v2".
+   *
    * @param {string} namespace - The namespace for API requests.
    */
   setNamespace(namespace) {
-    this.namespace = namespace
+    setProperty(this, 'namespace', namespace)
   }
 
   /**
    * Sets a common header for all Axios requests.
    *
-   * @param {string} key - The header key.
+   * This method sets a common header that will be included in all
+   * Axios requests made by the `ApiResourceManager`. The `key` parameter
+   * specifies the header name, and the `value` parameter specifies the
+   * header value.
+   *
+   * @param {string} key - The header key (e.g., 'Authorization', 'Content-Type').
    * @param {string|number|boolean} value - The header value.
    */
   setHeadersCommon(key, value) {
-    axios.defaults.headers.common[`${key}`] = value
+    setProperty(axios, ['defaults', 'headers', 'common', key], value)
   }
 
   /**
    * Sets the reference key used for included data in request payloads.
    *
-   * @param {string} key - The new reference key.
+   * This method sets the `payloadIncludedReference` property of the
+   * `ApiResourceManager` instance. This property determines the key used
+   * to identify the type of included data in API request payloads.
+   * For example, if the payload includes related resources, this key
+   * might be used to specify the type of each included resource.
+   *
+   * @param {string} key - The new reference key for included data.
    */
   setPayloadIncludeReference(key) {
-    this.payloadIncludedReference = key
+    setProperty(this, 'payloadIncludedReference', key)
   }
 
   /**
    * Makes the instance accessible globally in a browser environment.
    *
-   * Attaches the instance to the `window` object as `window.ARM`.
-   * **Caution:** This method should be used with care as it modifies the global scope.
+   * This method attaches the `ApiResourceManager` instance to the `window`
+   * object in a browser environment, making it globally accessible as
+   * `window.ARM`. The instance is frozen using `Object.freeze()` to prevent
+   * accidental modifications.
+   *
+   * Caution: This method should be used with care as it modifies the
+   * global scope and could potentially lead to naming conflicts.
+   *
    */
   setGlobal() {
     if (typeof window !== 'undefined') window.ARM = Object.freeze(this)
@@ -1052,43 +1224,72 @@ export default class ApiResourceManager {
   /**
    * Retrieves a collection by its name.
    *
+   * This method retrieves the collection with the specified `collectionName`
+   * from the `collections` object of the `ApiResourceManager`. If the
+   * collection does not exist, it returns an empty observable array.
+   *
    * @param {string} collectionName - The name of the collection to retrieve.
-   * @returns {Array} The collection data, or an empty array if not found.
+   * @returns {Array} The collection data as an observable array.
    */
   getCollection(collectionName) {
-    return this.collections[collectionName] || []
+    return getProperty(this.collections, collectionName) || observable([])
   }
 
   /**
    * Clears the contents of a specified collection.
    *
+   * This method removes all records from the collection with the given
+   * `collectionName` in the `collections` object of the
+   * `ApiResourceManager`.
+   *
    * @param {string} collectionName - The name of the collection to clear.
    */
   clearCollection(collectionName) {
-    this.collections[collectionName] = []
+    setProperty(this.collections, collectionName, [])
   }
 
   /**
    * Retrieves an alias by its name, with optional fallback records.
    *
+   * This method retrieves the alias with the specified `aliasName` from
+   * the `aliases` object of the `ApiResourceManager`. If the alias does
+   * not exist, it returns the provided `fallbackRecords` (if any).
+   *
+   * If `fallbackRecords` is a plain object, the method injects collection
+   * actions into it using `_injectCollectionActions` before returning it.
+   *
    * @param {string} aliasName - The name of the alias to retrieve.
-   * @param {Object} fallbackRecords - Optional fallback records to return if the alias is not found.
+   * @param {Array|Object} [fallbackRecords] - Optional fallback records
+   *                                           to return if the alias
+   *                                           is not found.
    * @returns {Array|Object} The alias data or the fallback records.
    */
   getAlias(aliasName, fallbackRecords) {
-    const isFallbacRecordsObject = isPlainObject(fallbackRecords)
+    if (isPlainObject(fallbackRecords))
+      this._injectCollectionActions(fallbackRecords)
 
-    if (isFallbacRecordsObject) this._injectCollectionActions(fallbackRecords)
-
-    return this.aliases[aliasName] || fallbackRecords
+    return getProperty(this.aliases, aliasName) || observable(fallbackRecords)
   }
 
   /**
    * Creates a new record in a specified collection.
    *
-   * @param {string} collectionName - The name of the collection.
-   * @param {Object} collectionRecord - Optional initial data for the record.
-   * @param {boolean} collectionRecordRandomId - Whether to generate a random ID for the record. Defaults to true.
+   * This method creates a new record in the collection with the given
+   * `collectionName`. The `collectionRecord` parameter can be used to
+   * provide initial data for the record. If `collectionRecordRandomId`
+   * is true (default), a unique ID is generated for the record using
+   * `uuidv1()`. Otherwise, a NIL UUID is used.
+   *
+   * The method injects necessary reference keys and actions into the
+   * record using `_injectCollectionReferenceKeys` and
+   * `_injectCollectionActions`.
+   *
+   * @param {string} collectionName - The name of the collection to create
+   *                                 the record in.
+   * @param {Object} [collectionRecord={}] - Optional initial data for the
+   *                                        record.
+   * @param {boolean} [collectionRecordRandomId=true] - Whether to generate
+   *                                                    a random ID.
    * @returns {Object} The created record.
    */
   createRecord(
@@ -1096,9 +1297,10 @@ export default class ApiResourceManager {
     collectionRecord = {},
     collectionRecordRandomId = true
   ) {
+    const collection = getProperty(this.collections, collectionName)
     const collectionRecordId = collectionRecordRandomId ? uuidv1() : NIL_UUID
     const isCollectionRecordNotExisting = isNil(
-      find(this.collections[collectionName], {
+      find(collection, {
         id: collectionRecordId,
       })
     )
@@ -1108,10 +1310,9 @@ export default class ApiResourceManager {
     this._injectCollectionReferenceKeys(collectionName, collectionRecord)
     this._injectCollectionActions(collectionRecord)
 
-    if (isCollectionRecordNotExisting)
-      this.collections[collectionName].push(collectionRecord)
+    if (isCollectionRecordNotExisting) collection.push(collectionRecord)
 
-    return find(this.collections[collectionName], {
+    return find(collection, {
       id: collectionRecordId,
     })
   }
@@ -1119,11 +1320,25 @@ export default class ApiResourceManager {
   /**
    * Resolves the request based on configuration.
    *
+   * This method determines how to resolve an API request based on the
+   * `autoResolve` option in the `config` object.
+   *
+   * If `autoResolve` is true (which is the default if not explicitly
+   * provided), the method returns the `requestHashObject`, which likely
+   * contains the cached response data.
+   *
+   * If `autoResolve` is false, the method returns the `requestXHR` object,
+   * which represents the actual Axios request Promise. This allows for
+   * more control over handling the response, such as accessing the raw
+   * response data or handling specific HTTP status codes.
+   *
    * @private
-   * @param {Object} config - Configuration object for the request.
+   * @param {Object} config - The configuration object for the request.
    * @param {Promise} requestXHR - The Axios request Promise.
-   * @param {Object} requestHashObject - The request hash object.
-   * @returns {Promise|Object} Returns the request hash object if autoResolve is true, otherwise returns the Axios request Promise.
+   * @param {Object} requestHashObject - The request hash object containing
+   *                                    cached response data.
+   * @returns {Promise|Object} The resolved value based on the
+   *                          `autoResolve` configuration.
    */
   _resolveRequest(config, requestXHR, requestHashObject) {
     const hasAutoResolveConfig = !isNil(getProperty(config, 'autoResolve'))
@@ -1141,22 +1356,27 @@ export default class ApiResourceManager {
   /**
    * Makes an API request based on the provided configuration.
    *
-   * This method is private and should not be called directly.
+   * This method handles the core logic for making API requests. It takes
+   * a `requestConfig` object that specifies various aspects of the request,
+   * such as the HTTP method, resource name, ID, parameters, payload, and
+   * configuration overrides.
    *
-   * @param {Object} requestConfig - Configuration object for the request.
-   * @param {string} requestConfig.resourceMethod - HTTP method for the request (e.g. 'get', 'post', 'delete').
-   * @param {string} requestConfig.resourceName - API endpoint name.
-   * @param {string} [requestConfig.resourceId] - Optional resource ID for GET/DELETE requests.
-   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
-   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST requests.
-   * @param {*} [requestConfig.resourceFallback] - Optional value to return if the request fails and no fallback data is provided.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request.
-   * @param {boolean} [requestConfig.resourceConfig.override] - Whether to override default client configuration.
-   * @param {string} [requestConfig.resourceConfig.host] - Optional override for the base URL host.
-   * @param {string} [requestConfig.resourceConfig.namespace] - Optional override for the API namespace.
-   * @param {Object} [requestConfig.resourceConfig.headers] - Optional override for request headers.
-   * @param {boolean} [requestConfig.resourceConfig.skip] - Whether to skip making the request (useful for data pre-population).
-   * @returns {Promise<*>} Promise resolving to the API response data or rejecting with the error.
+   * The method constructs the request options, handles configuration
+   * overrides, manages request caching, and performs the actual API request
+   * using Axios. It also includes error handling and updates the request
+   * hash store with the response data or error information.
+   *
+   * @private
+   * @param {Object} requestConfig - The configuration object for the request.
+   * @param {string} requestConfig.resourceMethod - The HTTP method (e.g., 'get', 'post', 'put', 'delete').
+   * @param {string} requestConfig.resourceName - The name of the API resource.
+   * @param {number|string} [requestConfig.resourceId] - Optional ID of the resource.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters.
+   * @param {Object} [requestConfig.resourcePayload] - Optional request payload.
+   * @param {Object} [requestConfig.resourceFallback] - Optional fallback data.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides.
+   * @returns {Promise} A Promise that resolves with the API response data
+   *                    or rejects with an error.
    */
   async _request({
     resourceMethod,
@@ -1171,7 +1391,7 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
-    const requestHashId = this._generateHashId({ ...arguments[0] })
+    const requestHashKey = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
@@ -1241,29 +1461,29 @@ export default class ApiResourceManager {
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashIds[requestHashId]
-    const isRequestHashIdExisting = !isNil(requestHashObject)
+    const requestHashObject = this.requestHashes[requestHashKey]
+    const isRequestHashExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
-      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+      if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
       if (
         hasSkipRequest &&
         !skipRequest &&
-        isRequestHashIdExisting &&
+        isRequestHashExisting &&
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
     }
@@ -1333,7 +1553,7 @@ export default class ApiResourceManager {
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashIds[requestHashId])
+      return Promise.resolve(this.requestHashes[requestHashKey])
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1357,17 +1577,24 @@ export default class ApiResourceManager {
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashIds[requestHashId])
+      return Promise.reject(this.requestHashes[requestHashKey])
     }
   }
 
   /**
    * Queries a resource with specified parameters and configuration.
    *
-   * @param {string} resource - The resource to query.
-   * @param {Object} params - Optional query parameters.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object.
+   * This method sends a GET request to the specified `resource` with the
+   * given `params` (query parameters) and `config` (request configuration).
+   * It uses the `_request` method to handle the API request and the
+   * `_resolveRequest` method to determine how to resolve the request
+   * (either with cached data or the raw Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   query(resource, params = {}, config = {}) {
     const requestObject = {
@@ -1379,10 +1606,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1391,10 +1617,19 @@ export default class ApiResourceManager {
 
   /**
    * Queries a single record from a specified resource.
-   * @param {string} resource - The name of the resource to query.
-   * @param {Object} params - Optional query parameters for the request.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   *
+   * This method sends a GET request to the specified `resource` to
+   * retrieve a single record. The `params` (query parameters) and
+   * `config` (request configuration) can be used to customize the
+   * request. It uses the `_request` method to handle the API request
+   * and the `_resolveRequest` method to determine how to resolve the
+   * request (either with cached data or the raw Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   queryRecord(resource, params = {}, config = {}) {
     const requestObject = {
@@ -1406,10 +1641,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1419,9 +1653,17 @@ export default class ApiResourceManager {
   /**
    * Fetches a collection of records from a specified resource.
    *
-   * @param {string} resource - The name of the resource to query.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   * This method sends a GET request to the specified `resource` to
+   * retrieve all records. The `config` (request configuration) can be
+   * used to customize the request. It uses the `_request` method to
+   * handle the API request and the `_resolveRequest` method to determine
+   * how to resolve the request (either with cached data or the raw
+   * Axios Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   findAll(resource, config = {}) {
     const requestObject = {
@@ -1433,10 +1675,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1446,11 +1687,20 @@ export default class ApiResourceManager {
   /**
    * Finds a specific record by ID from a given resource.
    *
-   * @param {string} resource - The name of the resource to query.
+   * This method sends a GET request to the specified `resource` to
+   * retrieve a single record with the given `id`. The `params`
+   * (query parameters) and `config` (request configuration) can be used
+   * to customize the request. It uses the `_request` method to handle
+   * the API request and the `_resolveRequest` method to determine how
+   * to resolve the request (either with cached data or the raw Axios
+   * Promise).
+   *
+   * @param {string} resource - The name of the API resource to query.
    * @param {number|string} id - The ID of the record to find.
-   * @param {Object} params - Optional query parameters for the request.
-   * @param {Object} config - Optional configuration for the request.
-   * @returns {Object} The request hash object containing the query status and results.
+   * @param {Object} [params={}] - Optional query parameters for the request.
+   * @param {Object} [config={}] - Optional configuration for the request.
+   * @returns {Object|Promise} The resolved value based on the `autoResolve`
+   *                          configuration in `config`.
    */
   findRecord(resource, id, params = {}, config = {}) {
     const requestObject = {
@@ -1462,10 +1712,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1473,24 +1722,37 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Peeks at all records in a specified collection without triggering a request.
+   * Peeks at all records in a specified collection without triggering
+   * a request.
+   *
+   * This method retrieves all records from the collection with the
+   * specified `collectionName` from the `collections` object of the
+   * `ApiResourceManager`. It does not make an API request to fetch
+   * the data; it only returns the locally stored records.
    *
    * @param {string} collectionName - The name of the collection to peek at.
-   * @returns {Array} The collection records, or an empty array if the collection is not found.
+   * @returns {Array|undefined} The collection records, or undefined if
+   *                           the collection is not found.
    */
   peekAll(collectionName) {
-    return this.collections[collectionName]
+    return getProperty(this.collections, collectionName)
   }
 
   /**
    * Peeks at a specific record in a collection without triggering a request.
    *
-   * @param {string} collectionName - The name of the collection to peek at.
+   * This method retrieves a specific record from the collection with the
+   * given `collectionName` and `collectionRecordId` from the `collections`
+   * object of the `ApiResourceManager`. It does not make an API request;
+   * it only returns the locally stored record if found.
+   *
+   * @param {string} collectionName - The name of the collection.
    * @param {number|string} collectionRecordId - The ID of the record to find.
-   * @returns {Object|undefined} The found record, or undefined if not found.
+   * @returns {Object|undefined} The found record, or undefined if not found
+   *                             in the local collection.
    */
   peekRecord(collectionName, collectionRecordId) {
-    return find(this.collections[collectionName], {
+    return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId,
     })
   }
@@ -1498,8 +1760,9 @@ export default class ApiResourceManager {
   /**
    * Makes an AJAX request using the axios library.
    *
-   * @param {Object} config - Configuration object for the axios request.
-   * @returns {Promise} A Promise that resolves with the Axios response or rejects with an error.
+   * @param {Object} [config={}] - Configuration object for the axios request.
+   * @returns {Promise} A Promise that resolves with the Axios response or
+   *                    rejects with an error.
    */
   ajax(config = {}) {
     return axios.request(config)
@@ -1509,7 +1772,7 @@ export default class ApiResourceManager {
    * Finds the first object in an array that matches the specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to search.
-   * @param {Object} findProperties - The properties to match.
+   * @param {Object} [findProperties={}] - The properties to match.
    * @returns {Object|undefined} The found object, or undefined if not found.
    */
   findBy(objects, findProperties = {}) {
@@ -1517,10 +1780,11 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Finds the index of the first object in an array that matches the specified properties.
+   * Finds the index of the first object in an array that matches the
+   * specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to search.
-   * @param {Object} findIndexProperties - The properties to match.
+   * @param {Object} [findIndexProperties={}] - The properties to match.
    * @returns {number} The index of the found object, or -1 if not found.
    */
   findIndexBy(objects, findIndexProperties = {}) {
@@ -1531,7 +1795,7 @@ export default class ApiResourceManager {
    * Filters an array of objects based on the specified properties.
    *
    * @param {Array<Object>} objects - The array of objects to filter.
-   * @param {Object} filterProperties - The filter criteria.
+   * @param {Object} [filterProperties={}] - The filter criteria.
    * @returns {Array<Object>} The filtered array of objects.
    */
   filterBy(objects, filterProperties = {}) {
@@ -1542,7 +1806,8 @@ export default class ApiResourceManager {
    * Creates a new array of unique objects based on a specified property.
    *
    * @param {Array<Object>} objects - The array of objects to process.
-   * @param {string} uniqByProperty - The property to use for uniqueness comparison.
+   * @param {string} uniqByProperty - The property to use for uniqueness
+   *                                 comparison.
    * @returns {Array<Object>} The array of unique objects.
    */
   uniqBy(objects, uniqByProperty) {
@@ -1554,7 +1819,8 @@ export default class ApiResourceManager {
    *
    * @param {Array<Object>} objects - The array of objects to group.
    * @param {string} groupByProperty - The property to group by.
-   * @returns {Object} An object where keys are group values and values are arrays of objects.
+   * @returns {Object} An object where keys are group values and values
+   *                   are arrays of objects.
    */
   groupBy(objects, groupByProperty) {
     return groupBy(objects, groupByProperty)
@@ -1563,8 +1829,9 @@ export default class ApiResourceManager {
   /**
    * Returns the first object in an array.
    *
-   * @param {Array<Object>} objects - The array of objects.
-   * @returns {Object|undefined} The first object, or undefined if the array is empty.
+   * @param {Array<Object>} [objects=[]] - The array of objects.
+   * @returns {Object|undefined} The first object, or undefined if the
+   *                             array is empty.
    */
   firstObject(objects = []) {
     return first(objects)
@@ -1573,8 +1840,9 @@ export default class ApiResourceManager {
   /**
    * Returns the last object in an array.
    *
-   * @param {Array<Object>} objects - The array of objects.
-   * @returns {Object|undefined} The last object, or undefined if the array is empty.
+   * @param {Array<Object>} [objects=[]] - The array of objects.
+   * @returns {Object|undefined} The last object, or undefined if the
+   *                             array is empty.
    */
   lastObject(objects = []) {
     return last(objects)
@@ -1583,8 +1851,8 @@ export default class ApiResourceManager {
   /**
    * Merges two arrays of objects into a single array, removing duplicates.
    *
-   * @param {Array<Object>} objects - The first array of objects.
-   * @param {Array<Object>} otherObjects - The second array of objects.
+   * @param {Array<Object>} [objects=[]] - The first array of objects.
+   * @param {Array<Object>} [otherObjects=[]] - The second array of objects.
    * @returns {Array<Object>} The merged array of objects without duplicates.
    */
   mergeObjects(objects = [], otherObjects = []) {
@@ -1594,8 +1862,8 @@ export default class ApiResourceManager {
   /**
    * Splits an array of objects into chunks of a specified size.
    *
-   * @param {Array<Object>} objects - The array of objects to chunk.
-   * @param {number} chunkSize - The size of each chunk.
+   * @param {Array<Object>} [objects=[]] - The array of objects to chunk.
+   * @param {number} [chunkSize=1] - The size of each chunk.
    * @returns {Array<Array<Object>>} An array of chunks.
    */
   chunkObjects(objects = [], chunkSize = 1) {
@@ -1606,7 +1874,8 @@ export default class ApiResourceManager {
    * Sorts an array of objects based on specified properties and sort orders.
    *
    * @param {Array<Object>} objects - The array of objects to sort.
-   * @param {Array<string>} sortProperties - An array of sort properties in the format of 'property:order'.
+   * @param {Array<string>} sortProperties - An array of sort properties in
+   *                                       the format of 'property:order'.
    * @returns {Array<Object>} The sorted array of objects.
    */
   sortBy(objects, sortProperties) {
@@ -1679,7 +1948,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is greater than or equal to the second value, false otherwise.
+   * @returns {boolean} True if the first value is greater than or equal
+   *                   to the second value, false otherwise.
    */
   isGte(value, other) {
     return gte(value, other)
@@ -1690,7 +1960,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is greater than the second value, false otherwise.
+   * @returns {boolean} True if the first value is greater than the second
+   *                   value, false otherwise.
    */
   isGt(value, other) {
     return gt(value, other)
@@ -1701,7 +1972,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is less than or equal to the second value, false otherwise.
+   * @returns {boolean} True if the first value is less than or equal to
+   *                   the second value, false otherwise.
    */
   isLte(value, other) {
     return lte(value, other)
@@ -1712,7 +1984,8 @@ export default class ApiResourceManager {
    *
    * @param {number} value - The first value.
    * @param {number} other - The second value.
-   * @returns {boolean} True if the first value is less than the second value, false otherwise.
+   * @returns {boolean} True if the first value is less than the second
+   *                   value, false otherwise.
    */
   isLt(value, other) {
     return lt(value, other)
