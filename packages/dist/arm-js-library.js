@@ -795,7 +795,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string} collectionName - The name of the collection to clear.
    */
   clearCollection(collectionName) {
-    this.collections[collectionName] = [];
+    setProperty(this.collections, collectionName, []);
   }
   /**
    * Retrieves an alias by its name, with optional fallback records.
@@ -805,9 +805,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Array|Object} The alias data or the fallback records.
    */
   getAlias(aliasName, fallbackRecords) {
-    const isFallbacRecordsObject = isPlainObject(fallbackRecords);
-    if (isFallbacRecordsObject) this._injectCollectionActions(fallbackRecords);
-    return this.aliases[aliasName] || fallbackRecords;
+    if (isPlainObject(fallbackRecords))
+      this._injectCollectionActions(fallbackRecords);
+    return getProperty(this.aliases, aliasName) || observable(fallbackRecords);
   }
   /**
    * Creates a new record in a specified collection.

@@ -1015,7 +1015,7 @@ export default class ApiResourceManager {
    * @param {string} collectionName - The name of the collection to clear.
    */
   clearCollection(collectionName) {
-    this.collections[collectionName] = []
+    setProperty(this.collections, collectionName, [])
   }
 
   /**
@@ -1026,11 +1026,10 @@ export default class ApiResourceManager {
    * @returns {Array|Object} The alias data or the fallback records.
    */
   getAlias(aliasName, fallbackRecords) {
-    const isFallbacRecordsObject = isPlainObject(fallbackRecords)
+    if (isPlainObject(fallbackRecords))
+      this._injectCollectionActions(fallbackRecords)
 
-    if (isFallbacRecordsObject) this._injectCollectionActions(fallbackRecords)
-
-    return this.aliases[aliasName] || fallbackRecords
+    return getProperty(this.aliases, aliasName) || observable(fallbackRecords)
   }
 
   /**
