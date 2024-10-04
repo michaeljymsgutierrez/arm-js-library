@@ -71,6 +71,7 @@ const {
   orderBy,
   uniqBy,
   groupBy,
+  pullAt,
 } = _
 
 /**
@@ -92,7 +93,7 @@ const defaultRequestArrayResponse = {
   data: [],
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**
@@ -114,7 +115,7 @@ const defaultRequestObjectResponse = {
   data: {},
   error: null,
   included: [],
-  meta: {},
+  meta: null,
 }
 
 /**
@@ -135,6 +136,8 @@ const keysToBeOmittedOnDeepCheck = [
   'isError',
   'isLoading',
   'isPristine',
+  'originalRecord',
+  'getARMContext',
 ]
 
 /**
@@ -158,6 +161,8 @@ const keysToBeOmittedOnRequestPayload = [
   'isPristine',
   'hashId',
   'collectionName',
+  'originalRecord',
+  'getARMContext',
 ]
 
 export default class ApiResourceManager {
@@ -171,8 +176,8 @@ export default class ApiResourceManager {
      * The namespace for API requests. Defaults to 'api/v1'.
      * @type {string}
      */
-
     this.namespace = 'api/v1'
+
     /**
      * The base URL for API requests.
      * Defaults to the current origin if running in a browser, otherwise an empty string.
@@ -193,10 +198,10 @@ export default class ApiResourceManager {
     this.aliases = {}
 
     /**
-     * A dictionary to store request hash IDs.
+     * A dictionary to store request hash keys.
      * @type {Object}
      */
-    this.requestHashIds = {}
+    this.requestHashes = {}
 
     /**
      * The reference key used for included data in request payloads. Defaults to 'type'.
@@ -222,7 +227,7 @@ export default class ApiResourceManager {
     makeObservable(this, {
       collections: observable,
       aliases: observable,
-      requestHashIds: observable,
+      requestHashes: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
@@ -236,7 +241,7 @@ export default class ApiResourceManager {
    * @private
    */
   _initializeAxiosConfig() {
-    axios.defaults.baseURL = this._getBaseURL()
+    setProperty(axios, ['defaults', 'baseURL'], this._getBaseURL())
   }
 
   /**
@@ -245,6 +250,7 @@ export default class ApiResourceManager {
    * @private
    * @param {string[]} collections - An array of collection names to initialize.
    */
+
   _initializeCollections(collections) {
     forEach(collections, (collection) => this._addCollection(collection, []))
   }
@@ -279,7 +285,7 @@ export default class ApiResourceManager {
    * @param {Array} collectionRecords - The records for the collection.
    */
   _addCollection(collectionName, collectionRecords) {
-    this.collections[collectionName] = collectionRecords
+    setProperty(this.collections, collectionName, collectionRecords)
   }
 
   /**
@@ -290,12 +296,12 @@ export default class ApiResourceManager {
    * @param {Array|Object} aliasRecords - The records for the alias. Can be an array or an object.
    */
   _addAlias(aliasName, aliasRecords) {
-    const isAliasRecordsArray = isArray(aliasRecords)
-    const isAliasRecordsObject = isPlainObject(aliasRecords)
+    let aliasCollectionRecords = null
 
-    if (isAliasRecordsArray) this.aliases[aliasName] = aliasRecords || []
+    if (isArray(aliasRecords)) aliasCollectionRecords = aliasRecords || []
+    if (isPlainObject(aliasRecords)) aliasCollectionRecords = aliasRecords || {}
 
-    if (isAliasRecordsObject) this.aliases[aliasName] = aliasRecords || {}
+    setProperty(this.aliases, aliasName, aliasCollectionRecords)
   }
 
   /**
@@ -360,14 +366,15 @@ export default class ApiResourceManager {
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
@@ -377,21 +384,22 @@ export default class ApiResourceManager {
    * @param {Object} values - An object containing key-value pairs to set.
    */
   _setRecordProperties(values) {
-    this._setProperties(this, values)
+    this.getARMContext()._setProperties(this, values)
 
     const originalRecord = omit(
       toJS(this.originalRecord),
       keysToBeOmittedOnDeepCheck
     )
     const currentRecord = omit(toJS(this), keysToBeOmittedOnDeepCheck)
+    const isOriginalAndCurrentRecordEqual = isEqual(
+      originalRecord,
+      currentRecord
+    )
 
-    if (isEqual(originalRecord, currentRecord)) {
-      setProperty(this, 'isDirty', false)
-      setProperty(this, 'isPristine', true)
-    } else {
-      setProperty(this, 'isDirty', true)
-      setProperty(this, 'isPristine', false)
-    }
+    this.getARMContext()._setProperties(this, {
+      isDirty: isOriginalAndCurrentRecordEqual ? false : true,
+      isPristine: isOriginalAndCurrentRecordEqual ? true : false,
+    })
   }
 
   /**
@@ -420,13 +428,15 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The record to be removed from the collection.
    */
   _unloadFromCollection(collectionRecord) {
-    const collectionName = getProperty(collectionRecord, 'collectionName')
-    const collectionRecordIndex = findIndex(this.collections[collectionName], {
+    const collection = getProperty(
+      this.collections,
+      getProperty(collectionRecord, 'collectionName')
+    )
+    const collectionRecordIndex = findIndex(collection, {
       hashId: getProperty(collectionRecord, 'hashId'),
     })
 
-    if (gte(collectionRecordIndex, 0))
-      this.collections[collectionName].splice(collectionRecordIndex, 1)
+    if (gte(collectionRecordIndex, 0)) pullAt(collection, collectionRecordIndex)
   }
 
   /**
@@ -436,38 +446,29 @@ export default class ApiResourceManager {
    * @param {Object} collectionRecord - The record to be removed from request hashes.
    */
   _unloadFromRequestHashes(collectionRecord) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
+    const requestHashesKeys = keysIn(this.requestHashes)
+    const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
-        'data'
-      )
-      const isRequestHashIdDataArray = isArray(requestHashIdData)
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+    forEach(requestHashesKeys, (requestHashKey) => {
+      const requestHash = getProperty(this.requestHashes, requestHashKey)
+      const requestHashData = getProperty(requestHash, 'data')
 
-      if (isRequestHashIdDataArray) {
-        const requestHashIdRecordIndex = findIndex(
-          getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-          {
-            hashId: getProperty(collectionRecord, 'hashId'),
-          }
-        )
-        if (gte(requestHashIdRecordIndex, 0))
-          this.requestHashIds[requestHashIdKey]['data'].splice(
-            requestHashIdRecordIndex,
-            1
-          )
+      if (isArray(requestHashData)) {
+        const requestHashRecordIndex = findIndex(requestHashData, {
+          hashId: collectionRecordHashId,
+        })
+        if (gte(requestHashRecordIndex, 0))
+          pullAt(getProperty(requestHash, 'data'), requestHashRecordIndex)
       }
 
-      if (isRequestHashIdDataObject) {
+      if (isPlainObject(requestHashData)) {
         if (
           isEqual(
-            getProperty(collectionRecord, 'hashId'),
-            getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
+            collectionRecordHashId,
+            getProperty(requestHashData, 'hashId')
           )
         )
-          setProperty(this.requestHashIds[requestHashIdKey], 'data', {})
+          setProperty(requestHash, 'data', null)
       }
     })
   }
@@ -480,28 +481,28 @@ export default class ApiResourceManager {
    */
   _unloadFromAliases(collectionRecord) {
     const aliasesKeys = keysIn(this.aliases)
+    const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
     forEach(aliasesKeys, (aliasKey) => {
-      const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-      const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+      const aliasCollection = getProperty(this.aliases, aliasKey)
 
-      if (isAliasRecordsArray) {
-        const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-          hashId: getProperty(collectionRecord, 'hashId'),
+      if (isArray(aliasCollection)) {
+        const aliasCollectionRecordIndex = findIndex(aliasCollection, {
+          hashId: collectionRecordHashId,
         })
 
-        if (gte(aliasRecordIndex, 0))
-          this.aliases[aliasKey].splice(aliasRecordIndex, 1)
+        if (gte(aliasCollectionRecordIndex, 0))
+          aliasCollection.splice(aliasCollectionRecordIndex, 1)
       }
 
-      if (isAliasRecordsObject) {
+      if (isPlainObject(aliasCollection)) {
         if (
           isEqual(
-            getProperty(collectionRecord, 'hashId'),
-            getProperty(this.aliases[aliasKey], 'hashId')
+            collectionRecordHashId,
+            getProperty(aliasCollection, 'hashId')
           )
         )
-          this.aliases[aliasKey] = {}
+          setProperty(this.aliases, aliasKey, null)
       }
     })
   }
@@ -527,26 +528,24 @@ export default class ApiResourceManager {
    */
   _saveRecord(currentRecord, collectionConfig = {}) {
     const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const isValidId = isNumber(getProperty(collectionRecord, 'id'))
-    const id = isValidId ? getProperty(collectionRecord, 'id') : null
-    const resource = collectionName
-    const method = isValidId ? 'put' : 'post'
-    const payload = { data: collectionRecord }
+    const collectionRecord = find(
+      getProperty(this.collections, collectionName),
+      {
+        hashId: getProperty(currentRecord, 'hashId'),
+      }
+    )
+    const collectionRecordId = getProperty(collectionRecord, 'id')
+    const isCollectionRecordIdValid = isNumber(collectionRecordId)
 
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: id,
+    return this._request({
+      resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',
+      resourceName: collectionName,
+      resourceId: isCollectionRecordIdValid ? collectionRecordId : null,
       resourceParams: {},
-      resourcePayload: payload,
+      resourcePayload: { data: collectionRecord },
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
@@ -559,25 +558,15 @@ export default class ApiResourceManager {
    * @returns {Promise} A Promise that resolves when the deletion is successful or rejects with an error.
    */
   async _deleteRecord(currentRecord, collectionConfig = {}) {
-    const collectionName = getProperty(currentRecord, 'collectionName')
-    const collectionRecord = find(this.collections[collectionName], {
-      hashId: getProperty(currentRecord, 'hashId'),
-    })
-    const id = getProperty(currentRecord, 'id')
-    const resource = getProperty(collectionRecord, 'collectionName')
-    const method = 'delete'
-
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+    return this._request({
+      resourceMethod: 'delete',
+      resourceName: getProperty(currentRecord, 'collectionName'),
+      resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: { ...collectionConfig, autoResolveOrigin: '_internal' },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
@@ -589,14 +578,10 @@ export default class ApiResourceManager {
    * @returns {Promise} A Promise that resolves with the updated record or rejects with an error.
    */
   async _reloadRecord(currentRecord) {
-    const id = getProperty(currentRecord, 'id')
-    const resource = getProperty(currentRecord, 'collectionName')
-    const method = 'get'
-
-    const requestObject = {
-      resourceMethod: method,
-      resourceName: resource,
-      resourceId: Number(id),
+    return this._request({
+      resourceMethod: 'get',
+      resourceName: getProperty(currentRecord, 'collectionName'),
+      resourceId: Number(getProperty(currentRecord, 'id')),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -604,9 +589,7 @@ export default class ApiResourceManager {
         skipId: uuidv1(),
         autoResolveOrigin: '_internal',
       },
-    }
-
-    return this._request(requestObject)
+    })
   }
 
   /**
@@ -635,23 +618,25 @@ export default class ApiResourceManager {
     const collectionRecords = observable([])
 
     forEach(relatedRecords, (relatedRecord) => {
-      const relatedRecordHashId = this._generateHashId({
-        id: getProperty(relatedRecord, 'id'),
-        collectionName: collectionName,
-      })
-
-      const collectionRecord = find(this.collections[collectionName], {
-        hashId: relatedRecordHashId,
-      })
+      const relatedRecordId = getProperty(relatedRecord, 'id')
+      const collectionRecord = find(
+        getProperty(this.collections, collectionName),
+        {
+          hashId: this._generateHashId({
+            id: relatedRecordId,
+            collectionName: collectionName,
+          }),
+        }
+      )
 
       if (!isEmpty(collectionRecord)) {
         collectionRecords.push(collectionRecord)
       } else {
-        if (collectionAsync) {
+        if (isEqual(collectionAsync, true)) {
           const requestObject = {
             resourceMethod: 'get',
             resourceName: collectionName,
-            resourceId: getProperty(relatedRecord, 'id'),
+            resourceId: relatedRecordId,
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
@@ -697,6 +682,7 @@ export default class ApiResourceManager {
       get: this._getRecordProperty,
       set: this._setRecordProperty,
       setProperties: this._setRecordProperties,
+      getARMContext: () => this,
       save: (collectionConfig) =>
         this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) =>
@@ -711,9 +697,9 @@ export default class ApiResourceManager {
     }
     const actionKeys = keysIn(actions)
 
-    forEach(actionKeys, (actionKey) => {
-      collectionRecord[actionKey] = actions[actionKey]
-    })
+    forEach(actionKeys, (actionKey) =>
+      setProperty(collectionRecord, actionKey, getProperty(actions, actionKey))
+    )
   }
 
   /**
@@ -736,12 +722,18 @@ export default class ApiResourceManager {
         })
       : collectionRecordHashId
 
-    setProperty(collectionRecord, 'collectionName', collectionName)
-    setProperty(collectionRecord, 'hashId', recordHashId)
-    setProperty(collectionRecord, 'isLoading', false)
-    setProperty(collectionRecord, 'isError', false)
-    setProperty(collectionRecord, 'isPristine', true)
-    setProperty(collectionRecord, 'isDirty', false)
+    this._setProperties(collectionRecord, {
+      collectionName: collectionName,
+      hashId: recordHashId,
+      isLoading: false,
+      isError: false,
+      isPristine: true,
+      isDirty: false,
+    })
+
+    this._setProperties(collectionRecord, {
+      originalRecord: omit(toJS(collectionRecord), keysToBeOmittedOnDeepCheck),
+    })
   }
 
   /**
@@ -753,60 +745,51 @@ export default class ApiResourceManager {
    * @returns {Array|Object} The pushed records, either an array or an object depending on the input.
    */
   _pushToCollection(collectionName, collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
+    const collection = getProperty(this.collections, collectionName)
 
-    if (isCollectionRecordsArray) {
+    if (isArray(collectionRecords)) {
       const collectionRecordsHashIds = map(collectionRecords, 'hashId')
 
       forEach(collectionRecords, (collectionRecord) => {
-        const collectionRecordIndex = findIndex(
-          this.collections[collectionName],
-          {
-            hashId: getProperty(collectionRecord, 'hashId'),
-          }
-        )
+        const collectionRecordIndex = findIndex(collection, {
+          hashId: getProperty(collectionRecord, 'hashId'),
+        })
 
         this._injectCollectionActions(collectionRecord)
 
-        if (lt(collectionRecordIndex, 0))
-          this.collections[collectionName].push(collectionRecord)
+        if (lt(collectionRecordIndex, 0)) collection.push(collectionRecord)
 
         if (gte(collectionRecordIndex, 0))
           this._setProperties(
-            this.collections[collectionName][collectionRecordIndex],
+            getProperty(collection, collectionRecordIndex),
             collectionRecord
           )
       })
 
       return map(collectionRecordsHashIds, (collectionRecordHashId) =>
-        find(this.collections[collectionName], {
+        find(collection, {
           hashId: collectionRecordHashId,
         })
       )
     }
 
-    if (isCollectionRecordsObject) {
-      const collectionRecordHashId = collectionRecords.hashId
-      const collectionRecordIndex = findIndex(
-        this.collections[collectionName],
-        {
-          hashId: getProperty(collectionRecords, 'hashId'),
-        }
-      )
+    if (isPlainObject(collectionRecords)) {
+      const collectionRecordHashId = getProperty(collectionRecords, 'hashId')
+      const collectionRecordIndex = findIndex(collection, {
+        hashId: collectionRecordHashId,
+      })
 
       this._injectCollectionActions(collectionRecords)
 
-      if (lt(collectionRecordIndex, 0))
-        this.collections[collectionName].push(collectionRecords)
+      if (lt(collectionRecordIndex, 0)) collection.push(collectionRecords)
 
       if (gte(collectionRecordIndex, 0))
         this._setProperties(
-          this.collections[collectionName][collectionRecordIndex],
+          getProperty(collection, collectionRecordIndex),
           collectionRecords
         )
 
-      return find(this.collections[collectionName], {
+      return find(collection, {
         hashId: collectionRecordHashId,
       })
     }
@@ -819,65 +802,42 @@ export default class ApiResourceManager {
    * @param {Array|Object} collectionRecords - The records to be pushed to aliases.
    */
   _pushToAliases(collectionRecords) {
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
     const aliasesKeys = keysIn(this.aliases)
 
-    if (isCollectionRecordsArray) {
-      forEach(aliasesKeys, (aliasKey) => {
-        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
+    collectionRecords = isArray(collectionRecords)
+      ? collectionRecords
+      : [collectionRecords]
 
-        if (isAliasRecordsArray) {
-          forEach(collectionRecords, (collectionRecord) => {
-            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            })
-            if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
+    forEach(aliasesKeys, (aliasKey) => {
+      const aliasCollection = getProperty(this.aliases, aliasKey)
+
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
+
+        if (isArray(aliasCollection)) {
+          const aliasCollectionRecordIndex = findIndex(aliasCollection, {
+            hashId: collectionRecordHashId,
           })
-        }
 
-        if (isAliasRecordsObject) {
-          forEach(collectionRecords, (collectionRecord) => {
-            if (
-              isEqual(
-                getProperty(collectionRecord, 'hashId'),
-                getProperty(this.aliases[aliasKey], 'hashId')
-              )
+          if (gte(aliasCollectionRecordIndex, 0))
+            setProperty(
+              aliasCollection,
+              aliasCollectionRecordIndex,
+              collectionRecord
             )
-              this.aliases[aliasKey] = collectionRecord
-          })
-        }
-      })
-    }
-
-    if (isCollectionRecordsObject) {
-      forEach(aliasesKeys, (aliasKey) => {
-        const isAliasRecordsArray = isArray(this.aliases[aliasKey])
-        const isAliasRecordsObject = isPlainObject(this.aliases[aliasKey])
-
-        if (isAliasRecordsArray) {
-          forEach([collectionRecords], (collectionRecord) => {
-            const aliasRecordIndex = findIndex(this.aliases[aliasKey], {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            })
-            if (gte(aliasRecordIndex, 0))
-              this.aliases[aliasKey][aliasRecordIndex] = collectionRecord
-          })
         }
 
-        if (isAliasRecordsObject) {
+        if (isPlainObject(aliasCollection)) {
           if (
             isEqual(
-              getProperty(collectionRecords, 'hashId'),
-              getProperty(this.aliases[aliasKey], 'hashId')
+              collectionRecordHashId,
+              getProperty(aliasCollection, 'hashId')
             )
           )
-            this.aliases[aliasKey] = collectionRecords
+            setProperty(this.aliases, aliasKey, collectionRecord)
         }
       })
-    }
+    })
   }
 
   /**
@@ -887,48 +847,40 @@ export default class ApiResourceManager {
    * @param {Array|Object} collectionRecords - The records to be pushed to request hashes.
    */
   _pushToRequestHashes(collectionRecords) {
-    const requestHashIdsKeys = keysIn(this.requestHashIds)
-    const isCollectionRecordsArray = isArray(collectionRecords)
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
-    let newCollectionRecords = null
+    const requestHashesKeys = keysIn(this.requestHashes)
 
-    if (isCollectionRecordsArray) newCollectionRecords = collectionRecords
-    if (isCollectionRecordsObject) newCollectionRecords = [collectionRecords]
+    collectionRecords = isArray(collectionRecords)
+      ? collectionRecords
+      : [collectionRecords]
 
-    forEach(requestHashIdsKeys, (requestHashIdKey) => {
-      const requestHashIdData = getProperty(
-        this.requestHashIds[requestHashIdKey],
-        'data'
-      )
-      const isRequestHashIdDataArray = isArray(requestHashIdData)
-      const isRequestHashIdDataObject = isPlainObject(requestHashIdData)
+    forEach(requestHashesKeys, (requestHashKey) => {
+      const requestHash = getProperty(this.requestHashes, requestHashKey)
+      const requestHashData = getProperty(requestHash, 'data')
 
-      forEach(newCollectionRecords, (collectionRecord) => {
-        if (isRequestHashIdDataArray) {
-          const requestHashIdRecordIndex = findIndex(
-            getProperty(this.requestHashIds[requestHashIdKey], 'data'),
-            {
-              hashId: getProperty(collectionRecord, 'hashId'),
-            }
-          )
-          if (gte(requestHashIdRecordIndex, 0))
-            this.requestHashIds[requestHashIdKey]['data'][
-              requestHashIdRecordIndex
-            ] = collectionRecord
-        }
+      forEach(collectionRecords, (collectionRecord) => {
+        const collectionRecordHashId = getProperty(collectionRecord, 'hashId')
 
-        if (isRequestHashIdDataObject) {
-          if (
-            isEqual(
-              getProperty(collectionRecord, 'hashId'),
-              getProperty(this.requestHashIds[requestHashIdKey], 'data.hashId')
-            )
-          )
+        if (isArray(requestHashData)) {
+          const requestHashRecordIndex = findIndex(requestHashData, {
+            hashId: collectionRecordHashId,
+          })
+
+          if (gte(requestHashRecordIndex, 0))
             setProperty(
-              this.requestHashIds[requestHashIdKey],
-              'data',
+              requestHash,
+              ['data', requestHashRecordIndex],
               collectionRecord
             )
+        }
+
+        if (isPlainObject(requestHashData)) {
+          if (
+            isEqual(
+              collectionRecordHashId,
+              getProperty(requestHashData, 'hashId')
+            )
+          )
+            setProperty(requestHash, 'data', collectionRecord)
         }
       })
     })
@@ -965,15 +917,12 @@ export default class ApiResourceManager {
   pushPayload(collectionName, collectionRecords) {
     this._isCollectionExisting(collectionName)
 
-    const isCollectionRecordsObject = isPlainObject(collectionRecords)
-    const isCollectionRecordsArray = isArray(collectionRecords)
-
-    if (isCollectionRecordsArray)
+    if (isArray(collectionRecords))
       forEach(collectionRecords, (collectionRecord) =>
         this._injectCollectionReferenceKeys(collectionName, collectionRecord)
       )
 
-    if (isCollectionRecordsObject)
+    if (isPlainObject(collectionRecords))
       this._injectCollectionReferenceKeys(collectionName, collectionRecords)
 
     this._pushPayload(collectionName, collectionRecords)
@@ -988,17 +937,18 @@ export default class ApiResourceManager {
    * @returns {Object} The updated or created request hash object.
    */
   _pushRequestHash(requestObject, responseObject) {
-    const requestHashId = this._generateHashId(requestObject)
-    const isRequestHashExisting = !isNil(this.requestHashIds[requestHashId])
-    const isResponseNew = getProperty(responseObject, 'isNew')
+    const requestHashKey = this._generateHashId(requestObject)
 
-    if (isRequestHashExisting && isResponseNew) {
-      setProperty(this.requestHashIds[requestHashId], 'isNew', false)
+    if (
+      !isNil(getProperty(this.requestHashes, requestHashKey)) &&
+      getProperty(responseObject, 'isNew')
+    ) {
+      setProperty(this.requestHashes, [requestHashKey, 'isNew'], false)
     } else {
-      this.requestHashIds[requestHashId] = responseObject
+      setProperty(this.requestHashes, requestHashKey, responseObject)
     }
 
-    return this.requestHashIds[requestHashId]
+    return getProperty(this.requestHashes, requestHashKey)
   }
 
   /**
@@ -1007,7 +957,7 @@ export default class ApiResourceManager {
    * @param {string} host - The base URL of the API server.
    */
   setHost(host) {
-    this.host = host
+    setProperty(this, 'host', host)
     this._initializeAxiosConfig()
   }
 
@@ -1017,7 +967,7 @@ export default class ApiResourceManager {
    * @param {string} namespace - The namespace for API requests.
    */
   setNamespace(namespace) {
-    this.namespace = namespace
+    setProperty(this, 'namespace', namespace)
   }
 
   /**
@@ -1027,7 +977,7 @@ export default class ApiResourceManager {
    * @param {string|number|boolean} value - The header value.
    */
   setHeadersCommon(key, value) {
-    axios.defaults.headers.common[`${key}`] = value
+    setProperty(axios, ['defaults', 'headers', 'common', key], value)
   }
 
   /**
@@ -1036,7 +986,7 @@ export default class ApiResourceManager {
    * @param {string} key - The new reference key.
    */
   setPayloadIncludeReference(key) {
-    this.payloadIncludedReference = key
+    setProperty(this, 'payloadIncludedReference', key)
   }
 
   /**
@@ -1056,7 +1006,7 @@ export default class ApiResourceManager {
    * @returns {Array} The collection data, or an empty array if not found.
    */
   getCollection(collectionName) {
-    return this.collections[collectionName] || []
+    return getProperty(this.collections, collectionName) || observable([])
   }
 
   /**
@@ -1065,7 +1015,7 @@ export default class ApiResourceManager {
    * @param {string} collectionName - The name of the collection to clear.
    */
   clearCollection(collectionName) {
-    this.collections[collectionName] = []
+    setProperty(this.collections, collectionName, [])
   }
 
   /**
@@ -1076,11 +1026,10 @@ export default class ApiResourceManager {
    * @returns {Array|Object} The alias data or the fallback records.
    */
   getAlias(aliasName, fallbackRecords) {
-    const isFallbacRecordsObject = isPlainObject(fallbackRecords)
+    if (isPlainObject(fallbackRecords))
+      this._injectCollectionActions(fallbackRecords)
 
-    if (isFallbacRecordsObject) this._injectCollectionActions(fallbackRecords)
-
-    return this.aliases[aliasName] || fallbackRecords
+    return getProperty(this.aliases, aliasName) || observable(fallbackRecords)
   }
 
   /**
@@ -1096,9 +1045,10 @@ export default class ApiResourceManager {
     collectionRecord = {},
     collectionRecordRandomId = true
   ) {
+    const collection = getProperty(this.collections, collectionName)
     const collectionRecordId = collectionRecordRandomId ? uuidv1() : NIL_UUID
     const isCollectionRecordNotExisting = isNil(
-      find(this.collections[collectionName], {
+      find(collection, {
         id: collectionRecordId,
       })
     )
@@ -1108,10 +1058,9 @@ export default class ApiResourceManager {
     this._injectCollectionReferenceKeys(collectionName, collectionRecord)
     this._injectCollectionActions(collectionRecord)
 
-    if (isCollectionRecordNotExisting)
-      this.collections[collectionName].push(collectionRecord)
+    if (isCollectionRecordNotExisting) collection.push(collectionRecord)
 
-    return find(this.collections[collectionName], {
+    return find(collection, {
       id: collectionRecordId,
     })
   }
@@ -1171,7 +1120,7 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
-    const requestHashId = this._generateHashId({ ...arguments[0] })
+    const requestHashKey = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
@@ -1241,29 +1190,29 @@ export default class ApiResourceManager {
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashIds[requestHashId]
-    const isRequestHashIdExisting = !isNil(requestHashObject)
+    const requestHashObject = this.requestHashes[requestHashKey]
+    const isRequestHashExisting = !isNil(requestHashObject)
     const isRequestNew = getProperty(requestHashObject, 'isNew')
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
-      if (!hasSkipRequest && isRequestHashIdExisting && !isRequestNew) {
+      if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
       if (
         hasSkipRequest &&
         !skipRequest &&
-        isRequestHashIdExisting &&
+        isRequestHashExisting &&
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashIds[requestHashId])
+          return Promise.resolve(this.requestHashes[requestHashKey])
         return
       }
     }
@@ -1333,7 +1282,7 @@ export default class ApiResourceManager {
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashIds[requestHashId])
+      return Promise.resolve(this.requestHashes[requestHashKey])
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1357,7 +1306,7 @@ export default class ApiResourceManager {
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashIds[requestHashId])
+      return Promise.reject(this.requestHashes[requestHashKey])
     }
   }
 
@@ -1379,10 +1328,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1406,10 +1354,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1433,10 +1380,9 @@ export default class ApiResourceManager {
       resourceFallback: [],
       resourceConfig: config,
     }
-    const responseObject = defaultRequestArrayResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestArrayResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1462,10 +1408,9 @@ export default class ApiResourceManager {
       resourceFallback: {},
       resourceConfig: config,
     }
-    const responseObject = defaultRequestObjectResponse
     const requestHashObject = this._pushRequestHash(
       requestObject,
-      responseObject
+      defaultRequestObjectResponse
     )
     const requestXHR = this._request(requestObject)
 
@@ -1479,7 +1424,7 @@ export default class ApiResourceManager {
    * @returns {Array} The collection records, or an empty array if the collection is not found.
    */
   peekAll(collectionName) {
-    return this.collections[collectionName]
+    return getProperty(this.collections, collectionName)
   }
 
   /**
@@ -1490,7 +1435,7 @@ export default class ApiResourceManager {
    * @returns {Object|undefined} The found record, or undefined if not found.
    */
   peekRecord(collectionName, collectionRecordId) {
-    return find(this.collections[collectionName], {
+    return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId,
     })
   }

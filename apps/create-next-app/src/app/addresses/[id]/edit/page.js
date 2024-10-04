@@ -16,17 +16,13 @@ const AddressEditPage = observer(() => {
         <>
           <div className={styles.inputGroup}>
             <label>ID:</label>
-            <input
-              type="text"
-              disabled={true}
-              defaultValue={model.data.get('id')}
-            />
+            <input type="text" disabled={true} value={model.data.get('id')} />
           </div>
           <div className={styles.inputGroup}>
             <label>Label:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.label')}
+              value={model.data.get('attributes.label')}
               onChange={(event) =>
                 model.data.set('attributes.label', event.target.value)
               }
@@ -36,7 +32,7 @@ const AddressEditPage = observer(() => {
             <label>Kind:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.kind')}
+              value={model.data.get('attributes.kind')}
               onChange={(event) =>
                 model.data.set('attributes.kind', event.target.value)
               }
@@ -46,7 +42,7 @@ const AddressEditPage = observer(() => {
             <label>Address 1:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.address1')}
+              value={model.data.get('attributes.address1')}
               onChange={(event) =>
                 model.data.set('attributes.address1', event.target.value)
               }
@@ -56,7 +52,7 @@ const AddressEditPage = observer(() => {
             <label>Address 2:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.address2')}
+              value={model.data.get('attributes.address2')}
               onChange={(event) =>
                 model.data.set('attributes.address2', event.target.value)
               }
@@ -66,7 +62,7 @@ const AddressEditPage = observer(() => {
             <label>Landmark:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.landmark')}
+              value={model.data.get('attributes.landmark')}
               onChange={(event) =>
                 model.data.set('attributes.landmark', event.target.value)
               }
@@ -76,7 +72,7 @@ const AddressEditPage = observer(() => {
             <label>Latitude:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.latitude')}
+              value={model.data.get('attributes.latitude')}
               onChange={(event) =>
                 model.data.set('attributes.latitude', event.target.value)
               }
@@ -86,7 +82,7 @@ const AddressEditPage = observer(() => {
             <label>LONGITUDE:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.longitude')}
+              value={model.data.get('attributes.longitude')}
               onChange={(event) =>
                 model.data.set('attributes.longitude', event.target.value)
               }
@@ -96,7 +92,7 @@ const AddressEditPage = observer(() => {
             <label>Post Code:</label>
             <input
               type="text"
-              defaultValue={model.data.get('attributes.post-code')}
+              value={model.data.get('attributes.post-code')}
               onChange={(event) =>
                 model.data.set('attributes.post-code', event.target.value)
               }
