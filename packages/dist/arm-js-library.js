@@ -1165,7 +1165,6 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       method: resourceMethod,
       url: resourceName
     };
-    const requestHashKey = this._generateHashId({ ...arguments[0] });
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
     const isResourceMethodPost = isEqual(resourceMethod, "post");
@@ -1178,7 +1177,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const resourceIgnorePayload = getProperty(resourceConfig, "ignorePayload") || [];
     const resourcePayloadRecord = getProperty(resourcePayload, "data") || null;
-    const collectionRecordById = isResourceIdValid ? find(this.collections[resourceName], {
+    const collectionRecordById = isResourceIdValid ? find(getProperty(this.collections, resourceName), {
       id: resourceId
     }) : null;
     const hasResourceAutoResolveOrigin = !isNil(
@@ -1215,23 +1214,24 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     }
     const hasSkipRequest = !isNil(getProperty(resourceConfig, "skip"));
     const skipRequest = isEqual(getProperty(resourceConfig, "skip"), true);
-    const requestHashObject = this.requestHashes[requestHashKey];
-    const isRequestHashExisting = !isNil(requestHashObject);
-    const isRequestNew = getProperty(requestHashObject, "isNew");
+    const requestHashKey = this._generateHashId({ ...arguments[0] });
+    const requestHash = getProperty(this.requestHashes, requestHashKey);
+    const isRequestHashExisting = !isNil(requestHash);
+    const isRequestNew = getProperty(requestHash, "isNew");
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
       if (hasSkipRequest && !skipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
     }
@@ -1243,16 +1243,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       const resourceResults = ((_a = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _a.data) || resourceFallback;
       const resourceIncludedResults = ((_b = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _b.included) || [];
       const resourceMetaResults = ((_c = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _c.meta) || {};
-      const isResourceResultsObject = isPlainObject(resourceResults);
-      const isResourceResultsArray = isArray(resourceResults);
       let updatedDataCollectionRecords = null;
       let updatedIncludedCollectionRecords = [];
-      if (isResourceResultsArray)
+      if (isArray(resourceResults))
         forEach(
           resourceResults,
           (resourceResult) => this._injectCollectionReferenceKeys(resourceName, resourceResult)
         );
-      if (isResourceResultsObject)
+      if (isPlainObject(resourceResults))
         this._injectCollectionReferenceKeys(resourceName, resourceResults);
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
         this._injectCollectionReferenceKeys(
@@ -1289,7 +1287,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       });
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords);
-      return Promise.resolve(this.requestHashes[requestHashKey]);
+      return Promise.resolve(requestHash);
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, "isError", true);
@@ -1309,7 +1307,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         meta: {}
       });
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors);
-      return Promise.reject(this.requestHashes[requestHashKey]);
+      return Promise.reject(requestHash);
     }
   }
   /**

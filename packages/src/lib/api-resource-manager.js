@@ -1391,7 +1391,6 @@ export default class ApiResourceManager {
       method: resourceMethod,
       url: resourceName,
     }
-    const requestHashKey = this._generateHashId({ ...arguments[0] })
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
@@ -1406,7 +1405,7 @@ export default class ApiResourceManager {
       getProperty(resourceConfig, 'ignorePayload') || []
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
     const collectionRecordById = isResourceIdValid
-      ? find(this.collections[resourceName], {
+      ? find(getProperty(this.collections, resourceName), {
           id: resourceId,
         })
       : null
@@ -1461,19 +1460,20 @@ export default class ApiResourceManager {
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashes[requestHashKey]
-    const isRequestHashExisting = !isNil(requestHashObject)
-    const isRequestNew = getProperty(requestHashObject, 'isNew')
+    const requestHashKey = this._generateHashId({ ...arguments[0] })
+    const requestHash = getProperty(this.requestHashes, requestHashKey)
+    const isRequestHashExisting = !isNil(requestHash)
+    const isRequestNew = getProperty(requestHash, 'isNew')
 
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
         return
       }
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
         return
       }
       if (
@@ -1483,7 +1483,7 @@ export default class ApiResourceManager {
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
         return
       }
     }
@@ -1498,17 +1498,15 @@ export default class ApiResourceManager {
       const resourceResults = resourceRequest?.data?.data || resourceFallback
       const resourceIncludedResults = resourceRequest?.data?.included || []
       const resourceMetaResults = resourceRequest?.data?.meta || {}
-      const isResourceResultsObject = isPlainObject(resourceResults)
-      const isResourceResultsArray = isArray(resourceResults)
       let updatedDataCollectionRecords = null
       let updatedIncludedCollectionRecords = []
 
-      if (isResourceResultsArray)
+      if (isArray(resourceResults))
         forEach(resourceResults, (resourceResult) =>
           this._injectCollectionReferenceKeys(resourceName, resourceResult)
         )
 
-      if (isResourceResultsObject)
+      if (isPlainObject(resourceResults))
         this._injectCollectionReferenceKeys(resourceName, resourceResults)
 
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
@@ -1553,7 +1551,7 @@ export default class ApiResourceManager {
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashes[requestHashKey])
+      return Promise.resolve(requestHash)
     } catch (errors) {
       if (hasResourcePayload) {
         setProperty(resourcePayloadRecord, 'isError', true)
@@ -1577,7 +1575,7 @@ export default class ApiResourceManager {
 
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashes[requestHashKey])
+      return Promise.reject(requestHash)
     }
   }
 
