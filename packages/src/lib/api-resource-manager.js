@@ -1422,30 +1422,8 @@ export default class ApiResourceManager {
     if (isResourceIdValid)
       setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
 
-    if (hasResourceConfigOverride) {
-      const override = getProperty(resourceConfig, 'override') || {}
-      const overrideHost = !isNil(getProperty(override, 'host'))
-        ? getProperty(override, 'host')
-        : this.host
-      const overrideNamespace = !isNil(getProperty(override, 'namespace'))
-        ? getProperty(override, 'namespace')
-        : this.namespace
-      const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
-
-      const overrideURL = !isNil(getProperty(override, 'path'))
-        ? getProperty(override, 'path')
-        : getProperty(requestOptions, 'url')
-
-      const overrideHeaders = !isNil(getProperty(override, 'headers'))
-        ? getProperty(override, 'headers')
-        : {}
-      const commonHeaders = axios.defaults.headers.common
-      const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
-
-      setProperty(requestOptions, 'baseURL', overrideBaseURL)
-      setProperty(requestOptions, 'url', overrideURL)
-      setProperty(requestOptions, 'headers', overrideCommonHeaders)
-    }
+    if (hasResourceConfigOverride)
+      this._processRequestOverride(resourceConfig, requestOptions)
 
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
     if (hasResourcePayload) {
@@ -1577,6 +1555,47 @@ export default class ApiResourceManager {
 
       return Promise.reject(requestHash)
     }
+  }
+
+  /**
+   * Processes request overrides based on the provided configuration.
+   *
+   * This method modifies the `requestOptions` object to incorporate any overrides
+   * specified in the `resourceConfig`.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request.
+   * @param {Object} resourceConfig.override - Optional overrides for the request.
+   * @param {string} [resourceConfig.override.host] - Optional override for the base URL host.
+   * @param {string} [resourceConfig.override.namespace] - Optional override for the API namespace.
+   * @param {string} [resourceConfig.override.path] - Optional override for the request path.
+   * @param {Object} [resourceConfig.override.headers] - Optional override for request headers.
+   * @param {Object} requestOptions - The request options object to be modified.
+   */
+  _processRequestOverride(resourceConfig, requestOptions) {
+    const override = getProperty(resourceConfig, 'override') || {}
+    const overrideHost = !isNil(getProperty(override, 'host'))
+      ? getProperty(override, 'host')
+      : this.host
+    const overrideNamespace = !isNil(getProperty(override, 'namespace'))
+      ? getProperty(override, 'namespace')
+      : this.namespace
+    const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+
+    const overrideURL = !isNil(getProperty(override, 'path'))
+      ? getProperty(override, 'path')
+      : getProperty(requestOptions, 'url')
+
+    const overrideHeaders = !isNil(getProperty(override, 'headers'))
+      ? getProperty(override, 'headers')
+      : {}
+    const commonHeaders = getProperty(axios, ['defaults', 'headers', 'common'])
+    const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
+
+    this._setProperties(requestOptions, {
+      baseURL: overrideBaseURL,
+      url: overrideURL,
+      headers: overrideCommonHeaders,
+    })
   }
 
   /**
