@@ -1426,15 +1426,13 @@ export default class ApiResourceManager {
       this._processRequestOverride(resourceConfig, requestOptions)
 
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
-    if (hasResourcePayload) {
-      const payload = {
-        data: omit(resourcePayloadRecord, [
-          ...resourceIgnorePayload,
-          ...keysToBeOmittedOnRequestPayload,
-        ]),
-      }
-      setProperty(requestOptions, 'data', payload)
-    }
+
+    if (hasResourcePayload)
+      this._processRequestPayload(
+        resourceIgnorePayload,
+        resourcePayloadRecord,
+        requestOptions
+      )
 
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
@@ -1554,6 +1552,26 @@ export default class ApiResourceManager {
 
       return Promise.reject(requestHash)
     }
+  }
+
+  /**
+   * Processes the payload for a request, omitting specified keys and setting it in the request options.
+   *
+   * @param {string[]} resourceIgnorePayload - An array of keys to be ignored (omitted) from the payload.
+   * @param {Object} resourcePayloadRecord - The record object containing the payload data.
+   * @param {Object} requestOptions - The options object for the request, where the processed payload will be set.
+   */
+  _processRequestPayload(
+    resourceIgnorePayload,
+    resourcePayloadRecord,
+    requestOptions
+  ) {
+    setProperty(requestOptions, 'data', {
+      data: omit(resourcePayloadRecord, [
+        ...resourceIgnorePayload,
+        ...keysToBeOmittedOnRequestPayload,
+      ]),
+    })
   }
 
   /**
