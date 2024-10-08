@@ -338,16 +338,17 @@ which represents the actual Axios request Promise. This allows for
 more control over handling the response, such as accessing the raw
 response data or handling specific HTTP status codes.</p>
 </dd>
-<dt><a href="#_request">_request(requestConfig)</a> ⇒ <code>Promise</code> ℗</dt>
+<dt><a href="#_request">_request(requestConfig)</a> ⇒ <code>Promise.&lt;*&gt;</code></dt>
 <dd><p>Makes an API request based on the provided configuration.</p>
-<p>This method handles the core logic for making API requests. It takes
-a <code>requestConfig</code> object that specifies various aspects of the request,
-such as the HTTP method, resource name, ID, parameters, payload, and
-configuration overrides.</p>
-<p>The method constructs the request options, handles configuration
-overrides, manages request caching, and performs the actual API request
-using Axios. It also includes error handling and updates the request
-hash store with the response data or error information.</p>
+<p>This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
+query parameters, payloads, and error handling. It also manages aliases,
+request caching, and asynchronous loading of related resources.</p>
+</dd>
+<dt><a href="#_processRequestPayload">_processRequestPayload(resourceIgnorePayload, resourcePayloadRecord, requestOptions)</a></dt>
+<dd><p>Processes the payload for a request, omitting specified keys and setting it in the request options.</p>
+</dd>
+<dt><a href="#_processRequestURL">_processRequestURL(requestOptions, resourceName, resourceId)</a></dt>
+<dd><p>Processes the URL for a request, constructing it from the resource name and ID.</p>
 </dd>
 <dt><a href="#_processRequestAlias">_processRequestAlias(resourceConfig, collectionRecords)</a></dt>
 <dd><p>Processes an alias for a request, adding it to the aliases store.</p>
@@ -1233,34 +1234,52 @@ response data or handling specific HTTP status codes.
 
 <a name="_request"></a>
 
-## \_request(requestConfig) ⇒ <code>Promise</code> ℗
+## \_request(requestConfig) ⇒ <code>Promise.&lt;\*&gt;</code>
 Makes an API request based on the provided configuration.
 
-This method handles the core logic for making API requests. It takes
-a `requestConfig` object that specifies various aspects of the request,
-such as the HTTP method, resource name, ID, parameters, payload, and
-configuration overrides.
-
-The method constructs the request options, handles configuration
-overrides, manages request caching, and performs the actual API request
-using Axios. It also includes error handling and updates the request
-hash store with the response data or error information.
+This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
+query parameters, payloads, and error handling. It also manages aliases,
+request caching, and asynchronous loading of related resources.
 
 **Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise that resolves with the API response data
-                   or rejects with an error.  
-**Access**: private  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | requestConfig | <code>Object</code> | The configuration object for the request. |
-| requestConfig.resourceMethod | <code>string</code> | The HTTP method (e.g., 'get', 'post', 'put', 'delete'). |
-| requestConfig.resourceName | <code>string</code> | The name of the API resource. |
-| [requestConfig.resourceId] | <code>number</code> \| <code>string</code> | Optional ID of the resource. |
-| [requestConfig.resourceParams] | <code>Object</code> | Optional query parameters. |
-| [requestConfig.resourcePayload] | <code>Object</code> | Optional request payload. |
-| [requestConfig.resourceFallback] | <code>Object</code> | Optional fallback data. |
-| [requestConfig.resourceConfig] | <code>Object</code> | Optional configuration overrides. |
+| requestConfig.resourceMethod | <code>string</code> | The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete'). |
+| requestConfig.resourceName | <code>string</code> | The name of the API resource being accessed. |
+| [requestConfig.resourceId] | <code>string</code> \| <code>number</code> | Optional ID of the specific resource for GET/PUT/DELETE requests. |
+| [requestConfig.resourceParams] | <code>Object</code> | Optional query parameters for the request. |
+| [requestConfig.resourcePayload] | <code>Object</code> | Optional payload data for POST/PUT requests. |
+| [requestConfig.resourceFallback] | <code>\*</code> | Optional fallback value to return if the request fails and no response data is available. |
+| [requestConfig.resourceConfig] | <code>Object</code> | Optional configuration overrides for the request (e.g., alias, autoResolve, skip). |
+
+<a name="_processRequestPayload"></a>
+
+## \_processRequestPayload(resourceIgnorePayload, resourcePayloadRecord, requestOptions)
+Processes the payload for a request, omitting specified keys and setting it in the request options.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resourceIgnorePayload | <code>Array.&lt;string&gt;</code> | An array of keys to be ignored (omitted) from the payload. |
+| resourcePayloadRecord | <code>Object</code> | The record object containing the payload data. |
+| requestOptions | <code>Object</code> | The options object for the request, where the processed payload will be set. |
+
+<a name="_processRequestURL"></a>
+
+## \_processRequestURL(requestOptions, resourceName, resourceId)
+Processes the URL for a request, constructing it from the resource name and ID.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| requestOptions | <code>Object</code> | The options object for the request, where the URL will be set. |
+| resourceName | <code>string</code> | The name of the resource being accessed. |
+| resourceId | <code>string</code> \| <code>number</code> | The ID of the specific resource. |
 
 <a name="_processRequestAlias"></a>
 
