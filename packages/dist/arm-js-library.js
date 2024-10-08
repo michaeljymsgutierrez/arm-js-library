@@ -1275,14 +1275,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         return Promise.resolve(updatedDataCollectionRecords);
       return Promise.resolve(requestHash);
     } catch (errors) {
-      if (hasResourcePayload) {
-        setProperty(resourcePayloadRecord, "isError", true);
-        setProperty(resourcePayloadRecord, "isLoading", false);
-      }
-      if (isResourceIdValid) {
-        setProperty(collectionRecordById, "isError", true);
-        setProperty(collectionRecordById, "isLoading", false);
-      }
+      if (hasResourcePayload)
+        this._setProperties(resourcePayloadRecord, {
+          isError: true,
+          isLoading: false
+        });
+      if (isResourceIdValid)
+        this._setProperties(collectionRecordById, {
+          isError: true,
+          isLoading: false
+        });
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
