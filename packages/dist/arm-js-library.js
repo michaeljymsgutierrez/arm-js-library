@@ -1258,10 +1258,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         resourceResults
       );
       if (hasResourceAlias)
-        this._addAlias(
-          getProperty(resourceConfig, "alias"),
-          updatedDataCollectionRecords
-        );
+        this._processRequestAlias(resourceConfig, updatedDataCollectionRecords);
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord);
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords);
@@ -1298,6 +1295,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors);
       return Promise.reject(requestHash);
     }
+  }
+  /**
+   * Processes an alias for a request, adding it to the aliases store.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
+   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+   */
+  _processRequestAlias(resourceConfig, collectionRecords) {
+    this._addAlias(getProperty(resourceConfig, "alias"), collectionRecords);
   }
   /**
    * Processes request overrides based on the provided configuration.

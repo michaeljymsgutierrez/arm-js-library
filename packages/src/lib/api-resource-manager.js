@@ -1507,10 +1507,7 @@ export default class ApiResourceManager {
       )
 
       if (hasResourceAlias)
-        this._addAlias(
-          getProperty(resourceConfig, 'alias'),
-          updatedDataCollectionRecords
-        )
+        this._processRequestAlias(resourceConfig, updatedDataCollectionRecords)
 
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord)
       if (isResourceMethodDelete)
@@ -1555,6 +1552,15 @@ export default class ApiResourceManager {
 
       return Promise.reject(requestHash)
     }
+  }
+  /**
+   * Processes an alias for a request, adding it to the aliases store.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
+   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+   */
+  _processRequestAlias(resourceConfig, collectionRecords) {
+    this._addAlias(getProperty(resourceConfig, 'alias'), collectionRecords)
   }
 
   /**
