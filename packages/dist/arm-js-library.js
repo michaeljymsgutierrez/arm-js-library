@@ -1188,7 +1188,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const isAutoResolve = hasResourceAutoResolve ? getProperty(resourceConfig, "autoResolve") : true;
     if (isResourceIdValid)
-      this._processRequestURL(requestOptions, resourceName, resourceId);
+      this._processRequestURL(resourceName, resourceId, requestOptions);
     if (hasResourceConfigOverride)
       this._processRequestOverride(resourceConfig, requestOptions);
     if (hasResourceParams) setProperty(requestOptions, "params", resourceParams);
@@ -1305,7 +1305,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {string} resourceName - The name of the resource being accessed.
    * @param {string|number} resourceId - The ID of the specific resource.
    */
-  _processRequestURL(requestOptions, resourceName, resourceId) {
+  _processRequestURL(resourceName, resourceId, requestOptions) {
     setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
   }
   /**

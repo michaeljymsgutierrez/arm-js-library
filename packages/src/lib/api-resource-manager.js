@@ -1420,7 +1420,7 @@ export default class ApiResourceManager {
       : true
 
     if (isResourceIdValid)
-      this._processRequestURL(requestOptions, resourceName, resourceId)
+      this._processRequestURL(resourceName, resourceId, requestOptions)
 
     if (hasResourceConfigOverride)
       this._processRequestOverride(resourceConfig, requestOptions)
@@ -1563,7 +1563,7 @@ export default class ApiResourceManager {
    * @param {string} resourceName - The name of the resource being accessed.
    * @param {string|number} resourceId - The ID of the specific resource.
    */
-  _processRequestURL(requestOptions, resourceName, resourceId) {
+  _processRequestURL(resourceName, resourceId, requestOptions) {
     setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
   }
 
