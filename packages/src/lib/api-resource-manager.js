@@ -1471,9 +1471,12 @@ export default class ApiResourceManager {
 
     try {
       const resourceRequest = await axios(requestOptions)
-      const resourceResults = resourceRequest?.data?.data || resourceFallback
-      const resourceIncludedResults = resourceRequest?.data?.included || []
-      const resourceMetaResults = resourceRequest?.data?.meta || {}
+      const resourceResults =
+        getProperty(resourceRequest, ['data', 'data']) || resourceFallback
+      const resourceIncludedResults =
+        getProperty(resourceRequest, ['data', 'included']) || []
+      const resourceMetaResults =
+        getProperty(resourceRequest, ['data', 'meta']) || {}
       let updatedDataCollectionRecords = null
       let updatedIncludedCollectionRecords = []
 

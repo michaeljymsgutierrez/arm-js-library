@@ -1160,7 +1160,6 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     resourceFallback,
     resourceConfig
   }) {
-    var _a, _b, _c;
     const requestOptions = {
       method: resourceMethod,
       url: resourceName
@@ -1226,9 +1225,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     if (isResourceIdValid) setProperty(collectionRecordById, "isLoading", true);
     try {
       const resourceRequest = await axios(requestOptions);
-      const resourceResults = ((_a = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _a.data) || resourceFallback;
-      const resourceIncludedResults = ((_b = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _b.included) || [];
-      const resourceMetaResults = ((_c = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _c.meta) || {};
+      const resourceResults = getProperty(resourceRequest, ["data", "data"]) || resourceFallback;
+      const resourceIncludedResults = getProperty(resourceRequest, ["data", "included"]) || [];
+      const resourceMetaResults = getProperty(resourceRequest, ["data", "meta"]) || {};
       let updatedDataCollectionRecords = null;
       let updatedIncludedCollectionRecords = [];
       if (isArray(resourceResults))
