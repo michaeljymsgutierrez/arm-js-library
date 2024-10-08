@@ -1129,27 +1129,22 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Makes an API request based on the provided configuration.
    *
-   * This method handles the core logic for making API requests. It takes
-   * a `requestConfig` object that specifies various aspects of the request,
-   * such as the HTTP method, resource name, ID, parameters, payload, and
-   * configuration overrides.
+   * This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
+   * query parameters, payloads, and error handling. It also manages aliases,
+   * request caching, and asynchronous loading of related resources.
    *
-   * The method constructs the request options, handles configuration
-   * overrides, manages request caching, and performs the actual API request
-   * using Axios. It also includes error handling and updates the request
-   * hash store with the response data or error information.
-   *
-   * @private
    * @param {Object} requestConfig - The configuration object for the request.
-   * @param {string} requestConfig.resourceMethod - The HTTP method (e.g., 'get', 'post', 'put', 'delete').
-   * @param {string} requestConfig.resourceName - The name of the API resource.
-   * @param {number|string} [requestConfig.resourceId] - Optional ID of the resource.
-   * @param {Object} [requestConfig.resourceParams] - Optional query parameters.
-   * @param {Object} [requestConfig.resourcePayload] - Optional request payload.
-   * @param {Object} [requestConfig.resourceFallback] - Optional fallback data.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides.
-   * @returns {Promise} A Promise that resolves with the API response data
-   *                    or rejects with an error.
+   * @param {string} requestConfig.resourceMethod - The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete').
+   * @param {string} requestConfig.resourceName - The name of the API resource being accessed.
+   * @param {string|number} [requestConfig.resourceId] - Optional ID of the specific resource for GET/PUT/DELETE requests.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
+   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
+   * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+   *
+   * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
+   *
+   * @async
    */
   async _request({
     resourceMethod,
