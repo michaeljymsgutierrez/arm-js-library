@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 1.6.1
+ * Version: 1.6.2
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -1356,27 +1356,22 @@ export default class ApiResourceManager {
   /**
    * Makes an API request based on the provided configuration.
    *
-   * This method handles the core logic for making API requests. It takes
-   * a `requestConfig` object that specifies various aspects of the request,
-   * such as the HTTP method, resource name, ID, parameters, payload, and
-   * configuration overrides.
+   * This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
+   * query parameters, payloads, and error handling. It also manages aliases,
+   * request caching, and asynchronous loading of related resources.
    *
-   * The method constructs the request options, handles configuration
-   * overrides, manages request caching, and performs the actual API request
-   * using Axios. It also includes error handling and updates the request
-   * hash store with the response data or error information.
-   *
-   * @private
    * @param {Object} requestConfig - The configuration object for the request.
-   * @param {string} requestConfig.resourceMethod - The HTTP method (e.g., 'get', 'post', 'put', 'delete').
-   * @param {string} requestConfig.resourceName - The name of the API resource.
-   * @param {number|string} [requestConfig.resourceId] - Optional ID of the resource.
-   * @param {Object} [requestConfig.resourceParams] - Optional query parameters.
-   * @param {Object} [requestConfig.resourcePayload] - Optional request payload.
-   * @param {Object} [requestConfig.resourceFallback] - Optional fallback data.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides.
-   * @returns {Promise} A Promise that resolves with the API response data
-   *                    or rejects with an error.
+   * @param {string} requestConfig.resourceMethod - The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete').
+   * @param {string} requestConfig.resourceName - The name of the API resource being accessed.
+   * @param {string|number} [requestConfig.resourceId] - Optional ID of the specific resource for GET/PUT/DELETE requests.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
+   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
+   * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+   *
+   * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
+   *
+   * @async
    */
   async _request({
     resourceMethod,
@@ -1387,95 +1382,104 @@ export default class ApiResourceManager {
     resourceFallback,
     resourceConfig,
   }) {
+    // Initialize request options with the HTTP method and base resource URL
     const requestOptions = {
       method: resourceMethod,
       url: resourceName,
     }
-    const requestHashKey = this._generateHashId({ ...arguments[0] })
+
+    // Determine the HTTP method for conditional logic later
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
+
+    // Check if a valid resource ID is provided
     const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
+
+    // Check for the presence of query parameters, payload, alias, and config overrides
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
     const hasResourceAlias = !isNil(getProperty(resourceConfig, 'alias'))
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, 'override')
     )
+
+    // Extract the keys to be ignored from the payload
     const resourceIgnorePayload =
       getProperty(resourceConfig, 'ignorePayload') || []
+
+    // Extract the payload record (if any)
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
+
+    // Find the existing collection record by ID (if applicable)
     const collectionRecordById = isResourceIdValid
-      ? find(this.collections[resourceName], {
+      ? find(getProperty(this.collections, resourceName), {
           id: resourceId,
         })
       : null
+
+    // Check for auto-resolve configuration options
     const hasResourceAutoResolveOrigin = !isNil(
       getProperty(resourceConfig, 'autoResolveOrigin')
     )
     const hasResourceAutoResolve = !isNil(
       getProperty(resourceConfig, 'autoResolve')
     )
+
+    // Determine whether to auto-resolve the request (defaults to true)
     const isAutoResolve = hasResourceAutoResolve
       ? getProperty(resourceConfig, 'autoResolve')
       : true
 
+    // Process the request URL if a valid resource ID is provided
     if (isResourceIdValid)
-      setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
+      this._processRequestURL(resourceName, resourceId, requestOptions)
 
-    if (hasResourceConfigOverride) {
-      const override = getProperty(resourceConfig, 'override') || {}
-      const overrideHost = !isNil(getProperty(override, 'host'))
-        ? getProperty(override, 'host')
-        : this.host
-      const overrideNamespace = !isNil(getProperty(override, 'namespace'))
-        ? getProperty(override, 'namespace')
-        : this.namespace
-      const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+    // Process any configuration overrides
+    if (hasResourceConfigOverride)
+      this._processRequestOverride(resourceConfig, requestOptions)
 
-      const overrideURL = !isNil(getProperty(override, 'path'))
-        ? getProperty(override, 'path')
-        : getProperty(requestOptions, 'url')
-
-      const overrideHeaders = !isNil(getProperty(override, 'headers'))
-        ? getProperty(override, 'headers')
-        : {}
-      const commonHeaders = axios.defaults.headers.common
-      const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
-
-      setProperty(requestOptions, 'baseURL', overrideBaseURL)
-      setProperty(requestOptions, 'url', overrideURL)
-      setProperty(requestOptions, 'headers', overrideCommonHeaders)
-    }
-
+    // Add query parameters to the request options
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
-    if (hasResourcePayload) {
-      const payload = {
-        data: omit(resourcePayloadRecord, [
-          ...resourceIgnorePayload,
-          ...keysToBeOmittedOnRequestPayload,
-        ]),
-      }
-      setProperty(requestOptions, 'data', payload)
-    }
 
+    // Process the request payload (if any)
+    if (hasResourcePayload)
+      this._processRequestPayload(
+        resourceIgnorePayload,
+        resourcePayloadRecord,
+        requestOptions
+      )
+
+    // Check for the 'skip' option in the configuration
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
-    const requestHashObject = this.requestHashes[requestHashKey]
-    const isRequestHashExisting = !isNil(requestHashObject)
-    const isRequestNew = getProperty(requestHashObject, 'isNew')
 
+    // Generate a hash key for the request to track it in the requestHashes store
+    const requestHashKey = this._generateHashId({ ...arguments[0] })
+    const requestHash = getProperty(this.requestHashes, requestHashKey)
+
+    // Check if this request already exists in the requestHashes store
+    const isRequestHashExisting = !isNil(requestHash)
+    const isRequestNew = getProperty(requestHash, 'isNew')
+
+    // Handle GET requests with potential skipping and caching
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
+        // If the request is configured to be skipped and autoResolve is false, return the request hash
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
+        // Otherwise, skip the request
         return
       }
+
+      // If the request is not new and autoResolve is false, return the existing request hash
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
         return
       }
+
+      // If the request is configured to be skipped but is not new and autoResolve is false, return the existing request hash
       if (
         hasSkipRequest &&
         !skipRequest &&
@@ -1483,40 +1487,53 @@ export default class ApiResourceManager {
         !isRequestNew
       ) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey])
+          return Promise.resolve(requestHash)
         return
       }
     }
 
+    // Set isLoading to true for the payload record (if any)
     if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)
 
+    // Set isLoading to true for the collection record (if a valid ID is provided)
     if (isResourceIdValid) setProperty(collectionRecordById, 'isLoading', true)
 
     try {
+      // Make the API request using axios
       const resourceRequest = await axios(requestOptions)
-      const resourceResults = resourceRequest?.data?.data || resourceFallback
-      const resourceIncludedResults = resourceRequest?.data?.included || []
-      const resourceMetaResults = resourceRequest?.data?.meta || {}
-      const isResourceResultsObject = isPlainObject(resourceResults)
-      const isResourceResultsArray = isArray(resourceResults)
+
+      // Extract the results, included data, and meta information from the response
+      const resourceResults =
+        getProperty(resourceRequest, ['data', 'data']) || resourceFallback
+      const resourceIncludedResults =
+        getProperty(resourceRequest, ['data', 'included']) || []
+      const resourceMetaResults =
+        getProperty(resourceRequest, ['data', 'meta']) || {}
+
+      // Initialize variables to store updated collection records
       let updatedDataCollectionRecords = null
       let updatedIncludedCollectionRecords = []
 
-      if (isResourceResultsArray)
+      // Inject collection reference keys into the data results (if an array)
+      if (isArray(resourceResults))
         forEach(resourceResults, (resourceResult) =>
           this._injectCollectionReferenceKeys(resourceName, resourceResult)
         )
 
-      if (isResourceResultsObject)
+      // Inject collection reference keys into the data results (if an object)
+      if (isPlainObject(resourceResults))
         this._injectCollectionReferenceKeys(resourceName, resourceResults)
 
+      // Process included results
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
+        // Inject collection reference keys into each included result
         this._injectCollectionReferenceKeys(
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
 
+        // Push the processed included result into the updatedIncludedCollectionRecords array
         updatedIncludedCollectionRecords.push(
           this._pushPayload(
             getProperty(resourceIncludedResult, 'collectionName'),
@@ -1525,21 +1542,24 @@ export default class ApiResourceManager {
         )
       })
 
+      // Push the data results into the appropriate collection and update related data
       updatedDataCollectionRecords = await this._pushPayload(
         resourceName,
         resourceResults
       )
 
+      // Process the alias (if any)
       if (hasResourceAlias)
-        this._addAlias(
-          getProperty(resourceConfig, 'alias'),
-          updatedDataCollectionRecords
-        )
+        this._processRequestAlias(resourceConfig, updatedDataCollectionRecords)
 
+      // Unload the payload record if this was a POST request
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord)
+
+      // Unload the updated data collection records if this was a DELETE request
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords)
 
+      // Push the request and its response to the requestHashes store
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: false,
@@ -1550,21 +1570,30 @@ export default class ApiResourceManager {
         meta: resourceMetaResults,
       })
 
+      // If autoResolveOrigin is true, resolve with the updated data collection records.
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
-      return Promise.resolve(this.requestHashes[requestHashKey])
+      // Otherwise, resolve with the request hash object.
+      return Promise.resolve(requestHash)
     } catch (errors) {
-      if (hasResourcePayload) {
-        setProperty(resourcePayloadRecord, 'isError', true)
-        setProperty(resourcePayloadRecord, 'isLoading', false)
-      }
+      // Handle errors during the request.
 
-      if (isResourceIdValid) {
-        setProperty(collectionRecordById, 'isError', true)
-        setProperty(collectionRecordById, 'isLoading', false)
-      }
+      // Set isError and isLoading to true for the payload record (if any).
+      if (hasResourcePayload)
+        this._setProperties(resourcePayloadRecord, {
+          isError: true,
+          isLoading: false,
+        })
 
+      // Set isError and isLoading to true for the collection record (if a valid ID is provided).
+      if (isResourceIdValid)
+        this._setProperties(collectionRecordById, {
+          isError: true,
+          isLoading: false,
+        })
+
+      // Push the request and the error information to the requestHashes store.
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
@@ -1575,10 +1604,94 @@ export default class ApiResourceManager {
         meta: {},
       })
 
+      // If autoResolveOrigin is true, reject with the error.
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
-      return Promise.reject(this.requestHashes[requestHashKey])
+      // Otherwise, reject with the request hash object.
+      return Promise.reject(requestHash)
     }
+  }
+
+  /**
+   * Processes the payload for a request, omitting specified keys and setting it in the request options.
+   *
+   * @param {string[]} resourceIgnorePayload - An array of keys to be ignored (omitted) from the payload.
+   * @param {Object} resourcePayloadRecord - The record object containing the payload data.
+   * @param {Object} requestOptions - The options object for the request, where the processed payload will be set.
+   */
+  _processRequestPayload(
+    resourceIgnorePayload,
+    resourcePayloadRecord,
+    requestOptions
+  ) {
+    setProperty(requestOptions, 'data', {
+      data: omit(resourcePayloadRecord, [
+        ...resourceIgnorePayload,
+        ...keysToBeOmittedOnRequestPayload,
+      ]),
+    })
+  }
+
+  /**
+   * Processes the URL for a request, constructing it from the resource name and ID.
+   *
+   * @param {Object} requestOptions - The options object for the request, where the URL will be set.
+   * @param {string} resourceName - The name of the resource being accessed.
+   * @param {string|number} resourceId - The ID of the specific resource.
+   */
+  _processRequestURL(resourceName, resourceId, requestOptions) {
+    setProperty(requestOptions, 'url', `${resourceName}/${resourceId}`)
+  }
+
+  /**
+   * Processes an alias for a request, adding it to the aliases store.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
+   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+   */
+  _processRequestAlias(resourceConfig, collectionRecords) {
+    this._addAlias(getProperty(resourceConfig, 'alias'), collectionRecords)
+  }
+
+  /**
+   * Processes request overrides based on the provided configuration.
+   *
+   * This method modifies the `requestOptions` object to incorporate any overrides
+   * specified in the `resourceConfig`.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request.
+   * @param {Object} resourceConfig.override - Optional overrides for the request.
+   * @param {string} [resourceConfig.override.host] - Optional override for the base URL host.
+   * @param {string} [resourceConfig.override.namespace] - Optional override for the API namespace.
+   * @param {string} [resourceConfig.override.path] - Optional override for the request path.
+   * @param {Object} [resourceConfig.override.headers] - Optional override for request headers.
+   * @param {Object} requestOptions - The request options object to be modified.
+   */
+  _processRequestOverride(resourceConfig, requestOptions) {
+    const override = getProperty(resourceConfig, 'override') || {}
+    const overrideHost = !isNil(getProperty(override, 'host'))
+      ? getProperty(override, 'host')
+      : this.host
+    const overrideNamespace = !isNil(getProperty(override, 'namespace'))
+      ? getProperty(override, 'namespace')
+      : this.namespace
+    const overrideBaseURL = `${overrideHost}/${overrideNamespace}`
+
+    const overrideURL = !isNil(getProperty(override, 'path'))
+      ? getProperty(override, 'path')
+      : getProperty(requestOptions, 'url')
+
+    const overrideHeaders = !isNil(getProperty(override, 'headers'))
+      ? getProperty(override, 'headers')
+      : {}
+    const commonHeaders = getProperty(axios, ['defaults', 'headers', 'common'])
+    const overrideCommonHeaders = assign(commonHeaders, overrideHeaders)
+
+    this._setProperties(requestOptions, {
+      baseURL: overrideBaseURL,
+      url: overrideURL,
+      headers: overrideCommonHeaders,
+    })
   }
 
   /**

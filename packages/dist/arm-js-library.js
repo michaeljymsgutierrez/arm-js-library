@@ -6,7 +6,7 @@ import CryptoJS from "crypto-js";
 /**
  * ARM JavaScript Library
  *
- * Version: 1.6.1
+ * Version: 1.6.2
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -1129,27 +1129,22 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Makes an API request based on the provided configuration.
    *
-   * This method handles the core logic for making API requests. It takes
-   * a `requestConfig` object that specifies various aspects of the request,
-   * such as the HTTP method, resource name, ID, parameters, payload, and
-   * configuration overrides.
+   * This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
+   * query parameters, payloads, and error handling. It also manages aliases,
+   * request caching, and asynchronous loading of related resources.
    *
-   * The method constructs the request options, handles configuration
-   * overrides, manages request caching, and performs the actual API request
-   * using Axios. It also includes error handling and updates the request
-   * hash store with the response data or error information.
-   *
-   * @private
    * @param {Object} requestConfig - The configuration object for the request.
-   * @param {string} requestConfig.resourceMethod - The HTTP method (e.g., 'get', 'post', 'put', 'delete').
-   * @param {string} requestConfig.resourceName - The name of the API resource.
-   * @param {number|string} [requestConfig.resourceId] - Optional ID of the resource.
-   * @param {Object} [requestConfig.resourceParams] - Optional query parameters.
-   * @param {Object} [requestConfig.resourcePayload] - Optional request payload.
-   * @param {Object} [requestConfig.resourceFallback] - Optional fallback data.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides.
-   * @returns {Promise} A Promise that resolves with the API response data
-   *                    or rejects with an error.
+   * @param {string} requestConfig.resourceMethod - The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete').
+   * @param {string} requestConfig.resourceName - The name of the API resource being accessed.
+   * @param {string|number} [requestConfig.resourceId] - Optional ID of the specific resource for GET/PUT/DELETE requests.
+   * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
+   * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
+   * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+   *
+   * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
+   *
+   * @async
    */
   async _request({
     resourceMethod,
@@ -1160,12 +1155,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     resourceFallback,
     resourceConfig
   }) {
-    var _a, _b, _c;
     const requestOptions = {
       method: resourceMethod,
       url: resourceName
     };
-    const requestHashKey = this._generateHashId({ ...arguments[0] });
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
     const isResourceMethodPost = isEqual(resourceMethod, "post");
@@ -1178,7 +1171,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const resourceIgnorePayload = getProperty(resourceConfig, "ignorePayload") || [];
     const resourcePayloadRecord = getProperty(resourcePayload, "data") || null;
-    const collectionRecordById = isResourceIdValid ? find(this.collections[resourceName], {
+    const collectionRecordById = isResourceIdValid ? find(getProperty(this.collections, resourceName), {
       id: resourceId
     }) : null;
     const hasResourceAutoResolveOrigin = !isNil(
@@ -1189,49 +1182,36 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const isAutoResolve = hasResourceAutoResolve ? getProperty(resourceConfig, "autoResolve") : true;
     if (isResourceIdValid)
-      setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
-    if (hasResourceConfigOverride) {
-      const override = getProperty(resourceConfig, "override") || {};
-      const overrideHost = !isNil(getProperty(override, "host")) ? getProperty(override, "host") : this.host;
-      const overrideNamespace = !isNil(getProperty(override, "namespace")) ? getProperty(override, "namespace") : this.namespace;
-      const overrideBaseURL = `${overrideHost}/${overrideNamespace}`;
-      const overrideURL = !isNil(getProperty(override, "path")) ? getProperty(override, "path") : getProperty(requestOptions, "url");
-      const overrideHeaders = !isNil(getProperty(override, "headers")) ? getProperty(override, "headers") : {};
-      const commonHeaders = axios.defaults.headers.common;
-      const overrideCommonHeaders = assign(commonHeaders, overrideHeaders);
-      setProperty(requestOptions, "baseURL", overrideBaseURL);
-      setProperty(requestOptions, "url", overrideURL);
-      setProperty(requestOptions, "headers", overrideCommonHeaders);
-    }
+      this._processRequestURL(resourceName, resourceId, requestOptions);
+    if (hasResourceConfigOverride)
+      this._processRequestOverride(resourceConfig, requestOptions);
     if (hasResourceParams) setProperty(requestOptions, "params", resourceParams);
-    if (hasResourcePayload) {
-      const payload = {
-        data: omit(resourcePayloadRecord, [
-          ...resourceIgnorePayload,
-          ...keysToBeOmittedOnRequestPayload
-        ])
-      };
-      setProperty(requestOptions, "data", payload);
-    }
+    if (hasResourcePayload)
+      this._processRequestPayload(
+        resourceIgnorePayload,
+        resourcePayloadRecord,
+        requestOptions
+      );
     const hasSkipRequest = !isNil(getProperty(resourceConfig, "skip"));
     const skipRequest = isEqual(getProperty(resourceConfig, "skip"), true);
-    const requestHashObject = this.requestHashes[requestHashKey];
-    const isRequestHashExisting = !isNil(requestHashObject);
-    const isRequestNew = getProperty(requestHashObject, "isNew");
+    const requestHashKey = this._generateHashId({ ...arguments[0] });
+    const requestHash = getProperty(this.requestHashes, requestHashKey);
+    const isRequestHashExisting = !isNil(requestHash);
+    const isRequestNew = getProperty(requestHash, "isNew");
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
       if (hasSkipRequest && !skipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
-          return Promise.resolve(this.requestHashes[requestHashKey]);
+          return Promise.resolve(requestHash);
         return;
       }
     }
@@ -1240,19 +1220,17 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     if (isResourceIdValid) setProperty(collectionRecordById, "isLoading", true);
     try {
       const resourceRequest = await axios(requestOptions);
-      const resourceResults = ((_a = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _a.data) || resourceFallback;
-      const resourceIncludedResults = ((_b = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _b.included) || [];
-      const resourceMetaResults = ((_c = resourceRequest == null ? void 0 : resourceRequest.data) == null ? void 0 : _c.meta) || {};
-      const isResourceResultsObject = isPlainObject(resourceResults);
-      const isResourceResultsArray = isArray(resourceResults);
+      const resourceResults = getProperty(resourceRequest, ["data", "data"]) || resourceFallback;
+      const resourceIncludedResults = getProperty(resourceRequest, ["data", "included"]) || [];
+      const resourceMetaResults = getProperty(resourceRequest, ["data", "meta"]) || {};
       let updatedDataCollectionRecords = null;
       let updatedIncludedCollectionRecords = [];
-      if (isResourceResultsArray)
+      if (isArray(resourceResults))
         forEach(
           resourceResults,
           (resourceResult) => this._injectCollectionReferenceKeys(resourceName, resourceResult)
         );
-      if (isResourceResultsObject)
+      if (isPlainObject(resourceResults))
         this._injectCollectionReferenceKeys(resourceName, resourceResults);
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
         this._injectCollectionReferenceKeys(
@@ -1271,10 +1249,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         resourceResults
       );
       if (hasResourceAlias)
-        this._addAlias(
-          getProperty(resourceConfig, "alias"),
-          updatedDataCollectionRecords
-        );
+        this._processRequestAlias(resourceConfig, updatedDataCollectionRecords);
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord);
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords);
@@ -1289,16 +1264,18 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       });
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords);
-      return Promise.resolve(this.requestHashes[requestHashKey]);
+      return Promise.resolve(requestHash);
     } catch (errors) {
-      if (hasResourcePayload) {
-        setProperty(resourcePayloadRecord, "isError", true);
-        setProperty(resourcePayloadRecord, "isLoading", false);
-      }
-      if (isResourceIdValid) {
-        setProperty(collectionRecordById, "isError", true);
-        setProperty(collectionRecordById, "isLoading", false);
-      }
+      if (hasResourcePayload)
+        this._setProperties(resourcePayloadRecord, {
+          isError: true,
+          isLoading: false
+        });
+      if (isResourceIdValid)
+        this._setProperties(collectionRecordById, {
+          isError: true,
+          isLoading: false
+        });
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
@@ -1309,8 +1286,71 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         meta: {}
       });
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors);
-      return Promise.reject(this.requestHashes[requestHashKey]);
+      return Promise.reject(requestHash);
     }
+  }
+  /**
+   * Processes the payload for a request, omitting specified keys and setting it in the request options.
+   *
+   * @param {string[]} resourceIgnorePayload - An array of keys to be ignored (omitted) from the payload.
+   * @param {Object} resourcePayloadRecord - The record object containing the payload data.
+   * @param {Object} requestOptions - The options object for the request, where the processed payload will be set.
+   */
+  _processRequestPayload(resourceIgnorePayload, resourcePayloadRecord, requestOptions) {
+    setProperty(requestOptions, "data", {
+      data: omit(resourcePayloadRecord, [
+        ...resourceIgnorePayload,
+        ...keysToBeOmittedOnRequestPayload
+      ])
+    });
+  }
+  /**
+   * Processes the URL for a request, constructing it from the resource name and ID.
+   *
+   * @param {Object} requestOptions - The options object for the request, where the URL will be set.
+   * @param {string} resourceName - The name of the resource being accessed.
+   * @param {string|number} resourceId - The ID of the specific resource.
+   */
+  _processRequestURL(resourceName, resourceId, requestOptions) {
+    setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
+  }
+  /**
+   * Processes an alias for a request, adding it to the aliases store.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
+   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+   */
+  _processRequestAlias(resourceConfig, collectionRecords) {
+    this._addAlias(getProperty(resourceConfig, "alias"), collectionRecords);
+  }
+  /**
+   * Processes request overrides based on the provided configuration.
+   *
+   * This method modifies the `requestOptions` object to incorporate any overrides
+   * specified in the `resourceConfig`.
+   *
+   * @param {Object} resourceConfig - The configuration object for the resource request.
+   * @param {Object} resourceConfig.override - Optional overrides for the request.
+   * @param {string} [resourceConfig.override.host] - Optional override for the base URL host.
+   * @param {string} [resourceConfig.override.namespace] - Optional override for the API namespace.
+   * @param {string} [resourceConfig.override.path] - Optional override for the request path.
+   * @param {Object} [resourceConfig.override.headers] - Optional override for request headers.
+   * @param {Object} requestOptions - The request options object to be modified.
+   */
+  _processRequestOverride(resourceConfig, requestOptions) {
+    const override = getProperty(resourceConfig, "override") || {};
+    const overrideHost = !isNil(getProperty(override, "host")) ? getProperty(override, "host") : this.host;
+    const overrideNamespace = !isNil(getProperty(override, "namespace")) ? getProperty(override, "namespace") : this.namespace;
+    const overrideBaseURL = `${overrideHost}/${overrideNamespace}`;
+    const overrideURL = !isNil(getProperty(override, "path")) ? getProperty(override, "path") : getProperty(requestOptions, "url");
+    const overrideHeaders = !isNil(getProperty(override, "headers")) ? getProperty(override, "headers") : {};
+    const commonHeaders = getProperty(axios, ["defaults", "headers", "common"]);
+    const overrideCommonHeaders = assign(commonHeaders, overrideHeaders);
+    this._setProperties(requestOptions, {
+      baseURL: overrideBaseURL,
+      url: overrideURL,
+      headers: overrideCommonHeaders
+    });
   }
   /**
    * Queries a resource with specified parameters and configuration.

@@ -1,6 +1,6 @@
 {
   "name": "arm-js-library",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "API Resource Manager",
   "type": "module",
   "files": ["dist", "types", "DOCS.md"],
@@ -14,7 +14,7 @@
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "build:jsdocs": "jsdoc2md src/lib/api-resource-manager.js > DOCS.md",
+    "build:jsdocs": "jsdoc2md --private src/lib/api-resource-manager.js > DOCS.md",
     "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext"
   },
   "keywords": [
