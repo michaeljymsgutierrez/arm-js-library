@@ -609,6 +609,35 @@ declare module "arm-js-library" {
          */
         private _request;
         /**
+         * Processes an alias for a request, adding it to the aliases store.
+         *
+         * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
+         * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+         */
+        _processRequestAlias(resourceConfig: any, collectionRecords: any[] | any): void;
+        /**
+         * Processes request overrides based on the provided configuration.
+         *
+         * This method modifies the `requestOptions` object to incorporate any overrides
+         * specified in the `resourceConfig`.
+         *
+         * @param {Object} resourceConfig - The configuration object for the resource request.
+         * @param {Object} resourceConfig.override - Optional overrides for the request.
+         * @param {string} [resourceConfig.override.host] - Optional override for the base URL host.
+         * @param {string} [resourceConfig.override.namespace] - Optional override for the API namespace.
+         * @param {string} [resourceConfig.override.path] - Optional override for the request path.
+         * @param {Object} [resourceConfig.override.headers] - Optional override for request headers.
+         * @param {Object} requestOptions - The request options object to be modified.
+         */
+        _processRequestOverride(resourceConfig: {
+            override: {
+                host?: string;
+                namespace?: string;
+                path?: string;
+                headers?: any;
+            };
+        }, requestOptions: any): void;
+        /**
          * Queries a resource with specified parameters and configuration.
          *
          * This method sends a GET request to the specified `resource` with the
