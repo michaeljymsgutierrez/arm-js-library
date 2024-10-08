@@ -1382,46 +1382,67 @@ export default class ApiResourceManager {
     resourceFallback,
     resourceConfig,
   }) {
+    // Initialize request options with the HTTP method and base resource URL
     const requestOptions = {
       method: resourceMethod,
       url: resourceName,
     }
+
+    // Determine the HTTP method for conditional logic later
     const isResourceMethodGet = isEqual(resourceMethod, 'get')
     const isResourceMethodDelete = isEqual(resourceMethod, 'delete')
     const isResourceMethodPost = isEqual(resourceMethod, 'post')
+
+    // Check if a valid resource ID is provided
     const isResourceIdValid = isNumber(resourceId) || isString(resourceId)
+
+    // Check for the presence of query parameters, payload, alias, and config overrides
     const hasResourceParams = !isEmpty(resourceParams)
     const hasResourcePayload = !isEmpty(resourcePayload)
     const hasResourceAlias = !isNil(getProperty(resourceConfig, 'alias'))
     const hasResourceConfigOverride = !isNil(
       getProperty(resourceConfig, 'override')
     )
+
+    // Extract the keys to be ignored from the payload
     const resourceIgnorePayload =
       getProperty(resourceConfig, 'ignorePayload') || []
+
+    // Extract the payload record (if any)
     const resourcePayloadRecord = getProperty(resourcePayload, 'data') || null
+
+    // Find the existing collection record by ID (if applicable)
     const collectionRecordById = isResourceIdValid
       ? find(getProperty(this.collections, resourceName), {
           id: resourceId,
         })
       : null
+
+    // Check for auto-resolve configuration options
     const hasResourceAutoResolveOrigin = !isNil(
       getProperty(resourceConfig, 'autoResolveOrigin')
     )
     const hasResourceAutoResolve = !isNil(
       getProperty(resourceConfig, 'autoResolve')
     )
+
+    // Determine whether to auto-resolve the request (defaults to true)
     const isAutoResolve = hasResourceAutoResolve
       ? getProperty(resourceConfig, 'autoResolve')
       : true
 
+    // Process the request URL if a valid resource ID is provided
     if (isResourceIdValid)
       this._processRequestURL(resourceName, resourceId, requestOptions)
 
+    // Process any configuration overrides
     if (hasResourceConfigOverride)
       this._processRequestOverride(resourceConfig, requestOptions)
 
+    // Add query parameters to the request options
     if (hasResourceParams) setProperty(requestOptions, 'params', resourceParams)
 
+    // Process the request payload (if any)
     if (hasResourcePayload)
       this._processRequestPayload(
         resourceIgnorePayload,
@@ -1429,24 +1450,36 @@ export default class ApiResourceManager {
         requestOptions
       )
 
+    // Check for the 'skip' option in the configuration
     const hasSkipRequest = !isNil(getProperty(resourceConfig, 'skip'))
     const skipRequest = isEqual(getProperty(resourceConfig, 'skip'), true)
+
+    // Generate a hash key for the request to track it in the requestHashes store
     const requestHashKey = this._generateHashId({ ...arguments[0] })
     const requestHash = getProperty(this.requestHashes, requestHashKey)
+
+    // Check if this request already exists in the requestHashes store
     const isRequestHashExisting = !isNil(requestHash)
     const isRequestNew = getProperty(requestHash, 'isNew')
 
+    // Handle GET requests with potential skipping and caching
     if (isResourceMethodGet) {
       if (hasSkipRequest && skipRequest) {
+        // If the request is configured to be skipped and autoResolve is false, return the request hash
         if (hasResourceAutoResolve && !isAutoResolve)
           return Promise.resolve(requestHash)
+        // Otherwise, skip the request
         return
       }
+
+      // If the request is not new and autoResolve is false, return the existing request hash
       if (!hasSkipRequest && isRequestHashExisting && !isRequestNew) {
         if (hasResourceAutoResolve && !isAutoResolve)
           return Promise.resolve(requestHash)
         return
       }
+
+      // If the request is configured to be skipped but is not new and autoResolve is false, return the existing request hash
       if (
         hasSkipRequest &&
         !skipRequest &&
@@ -1459,36 +1492,48 @@ export default class ApiResourceManager {
       }
     }
 
+    // Set isLoading to true for the payload record (if any)
     if (hasResourcePayload)
       setProperty(resourcePayloadRecord, 'isLoading', true)
 
+    // Set isLoading to true for the collection record (if a valid ID is provided)
     if (isResourceIdValid) setProperty(collectionRecordById, 'isLoading', true)
 
     try {
+      // Make the API request using axios
       const resourceRequest = await axios(requestOptions)
+
+      // Extract the results, included data, and meta information from the response
       const resourceResults =
         getProperty(resourceRequest, ['data', 'data']) || resourceFallback
       const resourceIncludedResults =
         getProperty(resourceRequest, ['data', 'included']) || []
       const resourceMetaResults =
         getProperty(resourceRequest, ['data', 'meta']) || {}
+
+      // Initialize variables to store updated collection records
       let updatedDataCollectionRecords = null
       let updatedIncludedCollectionRecords = []
 
+      // Inject collection reference keys into the data results (if an array)
       if (isArray(resourceResults))
         forEach(resourceResults, (resourceResult) =>
           this._injectCollectionReferenceKeys(resourceName, resourceResult)
         )
 
+      // Inject collection reference keys into the data results (if an object)
       if (isPlainObject(resourceResults))
         this._injectCollectionReferenceKeys(resourceName, resourceResults)
 
+      // Process included results
       forEach(resourceIncludedResults, (resourceIncludedResult) => {
+        // Inject collection reference keys into each included result
         this._injectCollectionReferenceKeys(
           getProperty(resourceIncludedResult, this.payloadIncludedReference),
           resourceIncludedResult
         )
 
+        // Push the processed included result into the updatedIncludedCollectionRecords array
         updatedIncludedCollectionRecords.push(
           this._pushPayload(
             getProperty(resourceIncludedResult, 'collectionName'),
@@ -1497,18 +1542,24 @@ export default class ApiResourceManager {
         )
       })
 
+      // Push the data results into the appropriate collection and update related data
       updatedDataCollectionRecords = await this._pushPayload(
         resourceName,
         resourceResults
       )
 
+      // Process the alias (if any)
       if (hasResourceAlias)
         this._processRequestAlias(resourceConfig, updatedDataCollectionRecords)
 
+      // Unload the payload record if this was a POST request
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord)
+
+      // Unload the updated data collection records if this was a DELETE request
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords)
 
+      // Push the request and its response to the requestHashes store
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: false,
@@ -1519,23 +1570,30 @@ export default class ApiResourceManager {
         meta: resourceMetaResults,
       })
 
+      // If autoResolveOrigin is true, resolve with the updated data collection records.
       if (hasResourceAutoResolveOrigin)
         return Promise.resolve(updatedDataCollectionRecords)
 
+      // Otherwise, resolve with the request hash object.
       return Promise.resolve(requestHash)
     } catch (errors) {
+      // Handle errors during the request.
+
+      // Set isError and isLoading to true for the payload record (if any).
       if (hasResourcePayload)
         this._setProperties(resourcePayloadRecord, {
           isError: true,
           isLoading: false,
         })
 
+      // Set isError and isLoading to true for the collection record (if a valid ID is provided).
       if (isResourceIdValid)
         this._setProperties(collectionRecordById, {
           isError: true,
           isLoading: false,
         })
 
+      // Push the request and the error information to the requestHashes store.
       this._pushRequestHash(arguments[0], {
         isLoading: false,
         isError: true,
@@ -1546,8 +1604,10 @@ export default class ApiResourceManager {
         meta: {},
       })
 
+      // If autoResolveOrigin is true, reject with the error.
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors)
 
+      // Otherwise, reject with the request hash object.
       return Promise.reject(requestHash)
     }
   }
