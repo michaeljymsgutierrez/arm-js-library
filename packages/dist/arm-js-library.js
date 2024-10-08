@@ -1188,7 +1188,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
     const isAutoResolve = hasResourceAutoResolve ? getProperty(resourceConfig, "autoResolve") : true;
     if (isResourceIdValid)
-      setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
+      this._processRequestURL(requestOptions, resourceName, resourceId);
     if (hasResourceConfigOverride)
       this._processRequestOverride(resourceConfig, requestOptions);
     if (hasResourceParams) setProperty(requestOptions, "params", resourceParams);
@@ -1295,6 +1295,16 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       if (hasResourceAutoResolveOrigin) return Promise.reject(errors);
       return Promise.reject(requestHash);
     }
+  }
+  /**
+   * Processes the URL for a request, constructing it from the resource name and ID.
+   *
+   * @param {Object} requestOptions - The options object for the request, where the URL will be set.
+   * @param {string} resourceName - The name of the resource being accessed.
+   * @param {string|number} resourceId - The ID of the specific resource.
+   */
+  _processRequestURL(requestOptions, resourceName, resourceId) {
+    setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
   }
   /**
    * Processes an alias for a request, adding it to the aliases store.
