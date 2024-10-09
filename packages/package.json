@@ -27,7 +27,7 @@
     "mobx",
     "json-api",
     "lodash",
-    "crypto-js",
+    "md5",
     "centralized-data",
     "javascript",
     "reactjs"
