@@ -14,14 +14,14 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['axios', 'lodash', 'mobx', 'uuid', 'crypto-js'],
+      external: ['axios', 'lodash', 'mobx', 'uuid', 'md5'],
       output: {
         globals: {
           axios: 'axios',
           lodash: '_',
           mobx: 'mobx',
           uuid: 'uuid',
-          'crypto-js': 'CryptoJS',
+          md5: 'md5',
         },
       },
     },
