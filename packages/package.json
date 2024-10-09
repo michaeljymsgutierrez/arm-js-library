@@ -3,7 +3,11 @@
   "version": "1.6.2",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist", "types", "DOCS.md"],
+  "files": [
+    "dist",
+    "types",
+    "DOCS.md"
+  ],
   "types": "types/index.d.ts",
   "exports": {
     ".": {
@@ -43,7 +47,7 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "lodash": "^4.17.21",
     "mobx": "^6.12.4",
