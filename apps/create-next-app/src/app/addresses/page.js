@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './page.module.css'
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 import Model from './model'
 import Controller from './controller'
 
