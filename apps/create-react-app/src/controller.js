@@ -1,5 +1,3 @@
-import { ARM } from './index.js'
-
 const Controller = (props) => {
   const onClickEdit = (id) => {
     console.log('Clicked edit')
