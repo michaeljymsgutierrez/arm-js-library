@@ -58,7 +58,7 @@ if <code>aliasRecords</code> is falsy). If it&#39;s a plain object, it&#39;s use
 <dt><a href="#_generateHashId">_generateHashId([object])</a> ⇒ <code>string</code> ℗</dt>
 <dd><p>Generates a hash ID based on the provided object.</p>
 <p>This method generates a unique hash ID by stringifying the given
-<code>object</code> and then calculating its MD5 hash using CryptoJS.
+<code>object</code> and then calculating its MD5 hash using the <code>md5</code> library.
 If no <code>object</code> is provided, it defaults to an object with an
 <code>id</code> property generated using <code>uuidv1()</code>.</p>
 </dd>
@@ -605,7 +605,7 @@ if `aliasRecords` is falsy). If it's a plain object, it's used directly
 Generates a hash ID based on the provided object.
 
 This method generates a unique hash ID by stringifying the given
-`object` and then calculating its MD5 hash using CryptoJS.
+`object` and then calculating its MD5 hash using the `md5` library.
 If no `object` is provided, it defaults to an object with an
 `id` property generated using `uuidv1()`.
 
@@ -615,7 +615,7 @@ If no `object` is provided, it defaults to an object with an
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [object] | <code>Object</code> | <code>{ id: uuidv1() }</code> | The object to generate                                            the hash ID from. |
+| [object] | <code>Object</code> | <code>{ id: uuidv1() }</code> | The object to generate the hash ID from. |
 
 <a name="_setProperties"></a>
 

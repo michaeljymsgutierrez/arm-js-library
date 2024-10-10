@@ -3,7 +3,11 @@
   "version": "1.6.2",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist", "types", "DOCS.md"],
+  "files": [
+    "dist",
+    "types",
+    "DOCS.md"
+  ],
   "types": "types/index.d.ts",
   "exports": {
     ".": {
@@ -23,7 +27,7 @@
     "mobx",
     "json-api",
     "lodash",
-    "crypto-js",
+    "md5",
     "centralized-data",
     "javascript",
     "reactjs"
@@ -43,10 +47,10 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
-    "axios": "^1.7.2",
-    "crypto-js": "^4.2.0",
+    "axios": "^1.7.7",
     "lodash": "^4.17.21",
-    "mobx": "^6.12.4",
+    "md5": "^2.3.0",
+    "mobx": "^6.13.3",
     "uuid": "^10.0.0"
   }
 }

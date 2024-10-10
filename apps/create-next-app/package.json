@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "arm-js-library": "../../packages",
-    "mobx-react-lite": "^4.0.7",
-    "next": "14.2.4",
+    "mobx-react": "^9.1.1",
+    "next": "14.2.14",
     "react": "^18",
     "react-dom": "^18",
     "use-debounce": "^10.0.2"

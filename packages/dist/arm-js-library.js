@@ -2,7 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 import * as mobx from "mobx";
 import { v1, NIL } from "uuid";
-import CryptoJS from "crypto-js";
+import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
@@ -16,7 +16,7 @@ import CryptoJS from "crypto-js";
  * @see https://axios-http.com/docs/
  *
  * Lodash utility library.
- * @see https://lodash.com/docs/4.17.21
+ * @see https://lodash.com/docs/
  *
  * MobX state management library.
  * @see https://mobx.js.org/
@@ -24,8 +24,8 @@ import CryptoJS from "crypto-js";
  * UUID generation library.
  * @see https://www.npmjs.com/package/uuid
  *
- * CryptoJS library for cryptographic functions.
- * @see https://crypto-js.org/
+ * md5 library for MD5 hashing.
+ * @see https://www.npmjs.com/package/md5
  */
 const { makeObservable, observable, action, toJS } = mobx;
 const {
@@ -231,18 +231,17 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * Generates a hash ID based on the provided object.
    *
    * This method generates a unique hash ID by stringifying the given
-   * `object` and then calculating its MD5 hash using CryptoJS.
+   * `object` and then calculating its MD5 hash using the `md5` library.
    * If no `object` is provided, it defaults to an object with an
    * `id` property generated using `uuidv1()`.
    *
    * @private
-   * @param {Object} [object={ id: uuidv1() }] - The object to generate
-   *                                            the hash ID from.
+   * @param {Object} [object={ id: uuidv1() }] - The object to generate the hash ID from.
    * @returns {string} The generated hash ID.
    */
   _generateHashId(object = { id: v1() }) {
     const stringifyObject = JSON.stringify(object);
-    return CryptoJS.MD5(stringifyObject).toString();
+    return md5(stringifyObject).toString();
   }
   /**
    * Sets multiple properties on a target object recursively.
