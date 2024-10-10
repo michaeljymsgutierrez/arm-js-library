@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-1.6.2-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.0.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt=license"-badge-logo" />
