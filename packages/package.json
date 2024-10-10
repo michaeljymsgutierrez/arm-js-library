@@ -52,8 +52,5 @@
     "md5": "^2.3.0",
     "mobx": "^6.13.3",
     "uuid": "^10.0.0"
-  },
-  "peerDependencies": {
-    "mobx-react": "7.6.0"
   }
 }
