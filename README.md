@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-1.6.2-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.0.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt=license"-badge-logo" />
@@ -73,8 +73,8 @@ By centralizing data management and offering flexible access to it, ARM empowers
 ```javascript
 // Example usage in ReactJS
 
-import { observer } from 'mobx-react-lite'
-import { ARM } from './index.js'
+import { observer } from 'mobx-react'
+import { ARM } from '@components/arm-config-wrapper'
 
 const App = observer(() => {
   const { isLoading, isError, data: address } = ARM.findRecord(
@@ -121,30 +121,17 @@ npm install arm-js-library --save
 ```
 ## Dependency Packages
 ```
-npm install mobx-react-lite --save
+npm install mobx-react --save
 ```
 ## Initialization and Configuration 
 
 #### Initialization
 
-Somewhere on your application init, create and store new ARM instance.<br/>
+Create `arm-config-wrapper` component that will store the new `ARM` instance.<br/>
 
-#### Initialization on create-react-app
-* Store it on `src/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/app/src/index.js)
+* Store it on component wrapper `src/components/arm-config-wrapper/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/arm-config-wrapper/index.js)
     ```javascript
-    // Create a new instance of ARM
-    import ApiResourceManager from 'arm-js-library'
-
-    // Create an array of collections to initialize
-    const collections = ['addresses', 'users']
-
-    // Export new instance of ARM for later utilization
-    export const ARM = new ApiResourceManager(collections)
-    ```
-#### Initialization on create-next-app
-* Store it on component wrapper `src/components/arm-config-wrapper/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/components/arm-config-wrapper/index.js)
-    ```javascript
-    // Tag component wrapper as client
+    // Tag component wrapper as client for NextJS specific only
     'use client'
 
     // Create a new instance of ARM
@@ -156,14 +143,14 @@ Somewhere on your application init, create and store new ARM instance.<br/>
     // Export new instance of ARM for later utilization
     export const ARM = new ApiResourceManager(collections)
 
-    //
+    // Main config wrapper
     const ARMConfigWrapper = ({ children }) => {
       return <>{children}</>
     }
 
     export default ARMConfigWrapper
     ```
-* Wrap root layout children `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/next-app/src/app/layout.js)
+* For `NextJS` project, wrap root layout `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
     ```javascript
     import dynamic from 'next/dynamic'
 
@@ -181,6 +168,19 @@ Somewhere on your application init, create and store new ARM instance.<br/>
         </html>
       )
     }
+    ```
+* For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
+    ```javascript
+    import ARMConfigWrapper from '@components/arm-config-wrapper'
+    import ReactDOM from 'react-dom/client'
+    import App from './App'
+
+    const root = ReactDOM.createRoot(document.getElementById('root'))
+    root.render(
+      <ARMConfigWrapper>
+        <App />
+      </ARMConfigWrapper>
+    )
     ```
 #### Configuration
 
@@ -229,10 +229,10 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
     ARM.setPayloadIncludeReference('type')
     ```
 ## Utilization
-To be able to use ARM features. You have to import the stored ARM instance from the init file of the application.
+To be able to use ARM features. You have to import the stored ARM instance from `arm-config-wrapper` component.
 ```javascript
-// ARM instance is stored on /src/index.js
-import { ARM } from 'path-to-src/index.js'
+// ARM instance is stored on src/components/arm-config-wrapper/index.js
+import { ARM } from '@components/arm-config-wrapper'
 ```
 
 #### Request functions from server

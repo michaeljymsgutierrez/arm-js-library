@@ -88,13 +88,12 @@ declare module "arm-js-library" {
          * Generates a hash ID based on the provided object.
          *
          * This method generates a unique hash ID by stringifying the given
-         * `object` and then calculating its MD5 hash using CryptoJS.
+         * `object` and then calculating its MD5 hash using the `md5` library.
          * If no `object` is provided, it defaults to an object with an
          * `id` property generated using `uuidv1()`.
          *
          * @private
-         * @param {Object} [object={ id: uuidv1() }] - The object to generate
-         *                                            the hash ID from.
+         * @param {Object} [object={ id: uuidv1() }] - The object to generate the hash ID from.
          * @returns {string} The generated hash ID.
          */
         private _generateHashId;
