@@ -5,319 +5,83 @@ import Controller from './controller'
 import { ARM } from './index.js'
 
 const App = observer(() => {
-  const customerAddressesFromAlias = ARM.getAlias('customerAddresses', [])
-  const customerAddressesFromCollection = ARM.getCollection('addresses')
-
-  const { isLoading, data: customerAddressesFromRequest } = ARM.findAll(
-    'addresses',
-    { alias: 'customerAddresses' }
-  )
-
-  // const { isLoading, data: address } = ARM.findRecord(
-  //   'addresses',
-  //   2461018,
-  //   { include: 'user' },
-  //   { alias: 'customerAddress' }
-  // )
-  //
-
-  // const { isLoading, data: user } = ARM.findRecord(
-  //   'users',
-  //   12980860,
-  //   {},
-  //   // { include: 'addresses' },
-  //   { alias: 'currentUser' }
-  // )
+  const model = Model()
+  const controller = Controller(model)
 
   return (
     <div className="App">
       <table>
         <thead>
           <tr>
-            <th>HASH ID</th>
             <th>ID</th>
-            <th>ADDRESS1</th>
-            <th>ADDRESS2</th>
-            <th>KIND</th>
-            <th>UPDATED</th>
-            <th>LOADING</th>
-            <th>ERROR</th>
-            <th>PRISTINE</th>
-            <th>DIRTY</th>
-            <th>ACTION</th>
+            <th>Label</th>
+            <th>Kind</th>
+            <th>Address 1</th>
+            <th>Address 2</th>
+            <th>Landmark</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Post Code</th>
+            <th>User ID</th>
+            <th>
+              <button onClick={controller.onClickNew}>New</button>
+            </th>
           </tr>
         </thead>
 
         <tbody>
-          <tr>
-            <td colSpan="100%">FROM COLLECTION</td>
-          </tr>
-          {customerAddressesFromCollection.map((customerAddress, index) => (
-            <tr key={index}>
-              <td>{customerAddress.get('hashId')}</td>
-              <td>{customerAddress.get('id')}</td>
-              <td>{customerAddress.get('attributes.address1')}</td>
-              <td>{customerAddress.get('attributes.address2')}</td>
-              <td>{customerAddress.get('attributes.kind')}</td>
-              <td>
-                {(() => {
-                  const formattedDate = new Date(
-                    customerAddress.get('attributes.updated-at')
-                  ).toLocaleString()
-                  return formattedDate
-                })()}
-              </td>
-              <td>{String(customerAddress.get('isLoading'))}</td>
-              <td>{String(customerAddress.get('isError'))}</td>
-              <td>{String(customerAddress.get('isPristine'))}</td>
-              <td>{String(customerAddress.get('isDirty'))}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    customerAddress.set(
-                      'attributes.address1',
-                      `Test ${new Date().getTime()}`
-                    )
-                    customerAddress
-                      .save()
-                      .then((result) => {
-                        console.log(result)
-                      })
-                      .catch((error) => {
-                        console.log(error)
-                      })
-                  }}
-                >
-                  {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
-                </button>
-                <button onClick={() => customerAddress.destroyRecord()}>
-                  Delete
-                </button>
-                <button onClick={() => ARM.unloadRecord(customerAddress)}>
-                  Unload
-                </button>
-              </td>
+          {model.isLoading && (
+            <tr>
+              <td colSpan="10">Loading...</td>
             </tr>
-          ))}
+          )}
 
-          <tr>
-            <td colSpan="100%">FROM ALIAS</td>
-          </tr>
-          {customerAddressesFromAlias.map((customerAddress, index) => (
-            <tr key={index}>
-              <td>{customerAddress.get('hashId')}</td>
-              <td>{customerAddress.get('id')}</td>
-              <td>{customerAddress.get('attributes.address1')}</td>
-              <td>{customerAddress.get('attributes.address2')}</td>
-              <td>{customerAddress.get('attributes.kind')}</td>
-              <td>
-                {(() => {
-                  const formattedDate = new Date(
-                    customerAddress.get('attributes.updated-at')
-                  ).toLocaleString()
-                  return formattedDate
-                })()}
-              </td>
-              <td>{String(customerAddress.get('isLoading'))}</td>
-              <td>{String(customerAddress.get('isError'))}</td>
-              <td>{String(customerAddress.get('isPristine'))}</td>
-              <td>{String(customerAddress.get('isDirty'))}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    customerAddress.set(
-                      'attributes.address1',
-                      `Test ${new Date().getTime()}`
-                    )
-                    customerAddress
-                      .save()
-                      .then((result) => {
-                        console.log(result)
-                      })
-                      .catch((error) => {
-                        console.log(error)
-                      })
-                  }}
-                >
-                  {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
-                </button>
-                <button onClick={() => customerAddress.destroyRecord()}>
-                  Delete
-                </button>
-                <button onClick={() => ARM.unloadRecord(customerAddress)}>
-                  Unload
-                </button>
-              </td>
-            </tr>
-          ))}
+          {model.data.map((address, index) => {
+            const user = address.getCollection('users', {
+              referenceKey: 'relationships.user.data',
+              async: true,
+            })
 
-          <tr>
-            <td colSpan="100%">
-              FROM REQUEST: {isLoading ? 'FETCHING' : 'DONE'}
-            </td>
-          </tr>
-          {customerAddressesFromRequest.map((customerAddress, index) => (
-            <tr key={index}>
-              <td>{customerAddress.get('hashId')}</td>
-              <td>{customerAddress.get('id')}</td>
-              <td>{customerAddress.get('attributes.address1')}</td>
-              <td>{customerAddress.get('attributes.address2')}</td>
-              <td>{customerAddress.get('attributes.kind')}</td>
-              <td>
-                {(() => {
-                  const formattedDate = new Date(
-                    customerAddress.get('attributes.updated-at')
-                  ).toLocaleString()
-                  return formattedDate
-                })()}
-              </td>
-              <td>{String(customerAddress.get('isLoading'))}</td>
-              <td>{String(customerAddress.get('isError'))}</td>
-              <td>{String(customerAddress.get('isPristine'))}</td>
-              <td>{String(customerAddress.get('isDirty'))}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    customerAddress.set(
-                      'attributes.address1',
-                      `Test ${new Date().getTime()}`
-                    )
-                    customerAddress
-                      .save()
-                      .then((result) => {
-                        console.log(result)
-                      })
-                      .catch((error) => {
-                        console.log(error)
-                      })
-                  }}
-                >
-                  {customerAddress.get('isLoading') ? 'Saving' : 'Save'}
-                </button>
-                <button onClick={() => customerAddress.destroyRecord()}>
-                  Delete
-                </button>
-                <button onClick={() => ARM.unloadRecord(customerAddress)}>
-                  Unload
-                </button>
-              </td>
-            </tr>
-          ))}
+            return (
+              <tr key={index}>
+                <td>{address.get('id')}</td>
+                <td>{address.get('attributes.label')}</td>
+                <td>{address.get('attributes.kind')}</td>
+                <td>{address.get('attributes.address1')}</td>
+                <td>{address.get('attributes.address2')}</td>
+                <td>{address.get('attributes.landmark')}</td>
+                <td>{address.get('attributes.latitude')}</td>
+                <td>{address.get('attributes.longitude')}</td>
+                <td>{address.get('attributes.post-code')}</td>
+                <td>{ARM.isPresent(user) ? user.get('id') : ''}</td>
+                <td>
+                  {/* <button */}
+                  {/*   type="button" */}
+                  {/*   onClick={() => */}
+                  {/*     address.destroyRecord({ */}
+                  {/*       override: { */}
+                  {/*         host: 'https://ww7.test-demo.com', */}
+                  {/*         namespace: 'api/v2', */}
+                  {/*         path: `delete/${user.get('id')}`, */}
+                  {/*       }, */}
+                  {/*     }) */}
+                  {/*   } */}
+                  {/* > */}
+                  {/*   Delete */}
+                  {/* </button> */}
+                  {/* &nbsp; */}
+                  <button
+                    type="button"
+                    onClick={() => controller.onClickEdit(address.get('id'))}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
-
-      {/* {!isLoading && ( */}
-      {/*   <h4> */}
-      {/*     Current User: {user.get('id')} */}
-      {/*     <button onClick={() => user.reload()}>Reload</button> */}
-      {/*   </h4> */}
-      {/* )} */}
-      {/* <table> */}
-      {/*   <thead> */}
-      {/*     <tr> */}
-      {/*       <th>HASH ID</th> */}
-      {/*       <th>ID</th> */}
-      {/*       <th>ADDRESS1</th> */}
-      {/*       <th>ADDRESS2</th> */}
-      {/*       <th>KIND</th> */}
-      {/*       <th>UPDATED</th> */}
-      {/*       <th>LOADING</th> */}
-      {/*       <th>ERROR</th> */}
-      {/*       <th>PRISTINE</th> */}
-      {/*       <th>DIRTY</th> */}
-      {/*       <th>ACTION</th> */}
-      {/*     </tr> */}
-      {/*   </thead> */}
-      {/*  */}
-      {/*   <tbody> */}
-      {/*     <tr> */}
-      {/*       <td colSpan="100%">FROM RECORD GET COLLECTION</td> */}
-      {/*     </tr> */}
-      {/*     {!isLoading && */}
-      {/*       user */}
-      {/*         .getCollection('addresses', { */}
-      {/*           referenceKey: 'relationships.addresses.data', */}
-      {/*           async: true, */}
-      {/*         }) */}
-      {/*         .map((customerAddress, index) => ( */}
-      {/*           <tr key={index}> */}
-      {/*             <td>{customerAddress.get('hashId')}</td> */}
-      {/*             <td>{customerAddress.get('id')}</td> */}
-      {/*             <td>{customerAddress.get('attributes.address1')}</td> */}
-      {/*             <td>{customerAddress.get('attributes.address2')}</td> */}
-      {/*             <td>{customerAddress.get('attributes.kind')}</td> */}
-      {/*             <td> */}
-      {/*               {(() => { */}
-      {/*                 const formattedDate = new Date( */}
-      {/*                   customerAddress.get('attributes.updated-at') */}
-      {/*                 ).toLocaleString() */}
-      {/*                 return formattedDate */}
-      {/*               })()} */}
-      {/*             </td> */}
-      {/*             <td>{String(customerAddress.get('isLoading'))}</td> */}
-      {/*             <td>{String(customerAddress.get('isError'))}</td> */}
-      {/*             <td>{String(customerAddress.get('isPristine'))}</td> */}
-      {/*             <td>{String(customerAddress.get('isDirty'))}</td> */}
-      {/*             <td> */}
-      {/*               <button */}
-      {/*                 onClick={() => { */}
-      {/*                   customerAddress.set( */}
-      {/*                     'attributes.address1', */}
-      {/*                     `Test ${new Date().getTime()}` */}
-      {/*                   ) */}
-      {/*                   customerAddress */}
-      {/*                     .save() */}
-      {/*                     .then((result) => { */}
-      {/*                       console.log(result) */}
-      {/*                     }) */}
-      {/*                     .catch((error) => { */}
-      {/*                       console.log(error) */}
-      {/*                     }) */}
-      {/*                 }} */}
-      {/*               > */}
-      {/*                 {customerAddress.get('isLoading') ? 'Saving' : 'Save'} */}
-      {/*               </button> */}
-      {/*               <button onClick={() => customerAddress.destroyRecord()}> */}
-      {/*                 Delete */}
-      {/*               </button> */}
-      {/*               <button onClick={() => ARM.unloadRecord(customerAddress)}> */}
-      {/*                 Unload */}
-      {/*               </button> */}
-      {/*             </td> */}
-      {/*           </tr> */}
-      {/*         ))} */}
-      {/*   </tbody> */}
-      {/* </table> */}
-
-      {/* <ul> */}
-      {/*   {addresses.map((address, index) => ( */}
-      {/*     <li key={index}>{address.get('id')}</li> */}
-      {/*   ))} */}
-      {/* </ul> */}
-
-      {/* {isLoading && <span>Loading...</span>} */}
-      {/* {!isLoading && ( */}
-      {/*   <div className="form"> */}
-      {/*     <label>Address1 </label> */}
-      {/*     <input */}
-      {/*       value={address.get('attributes.address1')} */}
-      {/*       onChange={(event) => */}
-      {/*         address.set('attributes.address1', event.target.value) */}
-      {/*       } */}
-      {/*     /> */}
-      {/*     &nbsp; */}
-      {/*     <button */}
-      {/*       onClick={() => { */}
-      {/*         address */}
-      {/*           .save() */}
-      {/*           .then((result) => console.log(result)) */}
-      {/*           .catch((error) => console.log(error)) */}
-      {/*       }} */}
-      {/*     > */}
-      {/*       {address.get('isLoading') ? 'Saving' : 'Save'} */}
-      {/*     </button> */}
-      {/*   </div> */}
-      {/* )} */}
     </div>
   )
 })

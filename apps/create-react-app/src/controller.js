@@ -1,44 +1,14 @@
 import { ARM } from './index.js'
 
 const Controller = (props) => {
-  const customerAddresses = ARM.getAlias('customerAddresses', [])
-  const addresses = ARM.getCollection('addresses', [])
-
-  const unloadRecord = (record) => {
-    ARM.unloadRecord(record)
+  const onClickEdit = (id) => {
+    console.log('Clicked edit')
+  }
+  const onClickNew = () => {
+    console.log('Clicked new')
   }
 
-  const createRecord = () => {
-    const newRecord = ARM.createRecord('addresses')
-
-    newRecord.setProperties({
-      attributes: {
-        address1: 'Imus, Cavite, Philippines',
-        address2: new Date().getTime(),
-        landmark: null,
-        city: null,
-        'post-code': null,
-        kind: 'home',
-        label: 'Anabu Hills',
-        latitude: 14.394261,
-        longitude: 120.940783,
-      },
-      relationships: {
-        user: {
-          data: null,
-        },
-        area: {
-          data: {
-            id: '166',
-          },
-        },
-      },
-    })
-
-    newRecord.save()
-  }
-
-  return { customerAddresses, addresses, unloadRecord, createRecord }
+  return { onClickEdit, onClickNew }
 }
 
 export default Controller
