@@ -58,7 +58,7 @@ print_separator
 
 print_process "updating:apps-and-packages-dependencies"
 
-cd .. && cd create-next-app && npm install && print_status_done || print_status_failed
+cd .. && cd apps/create-next-app && npm install && print_status_done || print_status_failed
 cd .. && cd .. && cd packages && npm install && print_status_done || print_status_failed
 
 print_separator
