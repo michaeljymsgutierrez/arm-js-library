@@ -24,8 +24,6 @@
 * [Dependency Packages](#dependency-packages)
   * [Initialization and Configuration](#initialization-and-configuration)
     * [Initialization](#initialization)
-      * [Initialization on create-react-app](#initialization-on-create-react-app)
-      * [Initialization on create-next-app](#initialization-on-create-next-app)
     * [Configuration](#configuration)
 * [Utilization](#utilization)
   * [Request functions from server](#request-functions-from-server)
