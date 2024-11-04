@@ -71,5 +71,18 @@ describe('Utility functions', () => {
         { id: 2, attributes: { kind: 'school', label: 'My School' } },
       ])
     })
+
+    test('Verify groupBy functionality', () => {
+      expect(ARM.groupBy(addresses, 'attributes.kind')).toEqual({
+        office: [{ id: 1, attributes: { kind: 'office', label: 'My Office' } }],
+        school: [
+          { id: 2, attributes: { kind: 'school', label: 'My School' } },
+          {
+            id: 3,
+            attributes: { kind: 'school', label: "My Brother's School" },
+          },
+        ],
+      })
+    })
   })
 })
