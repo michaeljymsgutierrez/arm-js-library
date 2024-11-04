@@ -732,6 +732,13 @@ const addresses = [
     // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]} 
     ARM.groupBy(addresses, 'attributes.kind')
     ```
+* **mapBy(objects, mapByProperty)**
+    * **Maps** an array of objects, extracting a specific property from each.
+    ```javascript
+    // Returns ['office', 'school', 'school']
+    ARM.mapBy(addresses, 'attributes.kind')
+    ```
+
 * **firstObject(objects)**
     * Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**. 
     ```javascript

@@ -802,6 +802,13 @@ declare module "arm-js-library" {
          */
         groupBy(objects: Array<any>, groupByProperty: string): any;
         /**
+         * Maps an array of objects to a new array of values, extracting a specific property from each object.
+         * @param {Array<Object>} objects - The array of objects to map.
+         * @param {string} mapByProperty - The property to extract from each object.
+         * @returns {Array<*>} A new array containing the extracted values.
+         */
+        mapBy(objects: Array<any>, mapByProperty: string): Array<any>;
+        /**
          * Returns the first object in an array.
          *
          * @param {Array<Object>} [objects=[]] - The array of objects.

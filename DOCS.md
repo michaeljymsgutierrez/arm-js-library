@@ -428,6 +428,9 @@ specified properties.</p>
 <dt><a href="#groupBy">groupBy(objects, groupByProperty)</a> ⇒ <code>Object</code></dt>
 <dd><p>Groups objects into arrays based on a specified property.</p>
 </dd>
+<dt><a href="#mapBy">mapBy(objects, mapByProperty)</a> ⇒ <code>Array.&lt;*&gt;</code></dt>
+<dd><p>Maps an array of objects to a new array of values, extracting a specific property from each object.</p>
+</dd>
 <dt><a href="#firstObject">firstObject([objects])</a> ⇒ <code>Object</code> | <code>undefined</code></dt>
 <dd><p>Returns the first object in an array.</p>
 </dd>
@@ -1517,6 +1520,19 @@ Groups objects into arrays based on a specified property.
 | --- | --- | --- |
 | objects | <code>Array.&lt;Object&gt;</code> | The array of objects to group. |
 | groupByProperty | <code>string</code> | The property to group by. |
+
+<a name="mapBy"></a>
+
+## mapBy(objects, mapByProperty) ⇒ <code>Array.&lt;\*&gt;</code>
+Maps an array of objects to a new array of values, extracting a specific property from each object.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;\*&gt;</code> - A new array containing the extracted values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array of objects to map. |
+| mapByProperty | <code>string</code> | The property to extract from each object. |
 
 <a name="firstObject"></a>
 
