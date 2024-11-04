@@ -6,7 +6,14 @@ import ApiResourceManager from '../src'
 
 const ARM = new ApiResourceManager(['addresses'])
 
-test('Validate creation of address collection', () => {
-  console.log(window.ARM)
-  expect(Object.keys(ARM.collections)).toContain('addresses')
+ARM.setGlobal()
+
+describe('ARM: Instance initialization', () => {
+  test('Verify address collection creation', () => {
+    expect(Object.keys(ARM.collections)).toContain('addresses')
+  })
+
+  test('Verify global ARM instance', () => {
+    expect(typeof window.ARM).not.toBeUndefined()
+  })
 })
