@@ -232,7 +232,7 @@ a single object) and performs the following actions:</p>
 <li>Updates any relevant request hashes using <code>_pushToRequestHashes</code>.</li>
 </ol>
 </dd>
-<dt><a href="#pushPayload">pushPayload(collectionName, collectionRecords)</a> ⇒ <code>Array</code> | <code>Object</code> ℗</dt>
+<dt><a href="#pushPayload">pushPayload(collectionName, collectionRecords)</a> ⇒ <code>Array</code> | <code>Object</code></dt>
 <dd><p>Pushes records to a collection, aliases, and request hashes.</p>
 <p>This method orchestrates the process of adding or updating records
 in various data stores within the <code>ApiResourceManager</code>. It takes a
@@ -1002,7 +1002,7 @@ a single object) and performs the following actions:
 
 <a name="pushPayload"></a>
 
-## pushPayload(collectionName, collectionRecords) ⇒ <code>Array</code> \| <code>Object</code> ℗
+## pushPayload(collectionName, collectionRecords) ⇒ <code>Array</code> \| <code>Object</code>
 Pushes records to a collection, aliases, and request hashes.
 
 This method orchestrates the process of adding or updating records
@@ -1017,7 +1017,6 @@ a single object) and performs the following actions:
 
 **Kind**: global function  
 **Returns**: <code>Array</code> \| <code>Object</code> - The updated collection records.  
-**Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |

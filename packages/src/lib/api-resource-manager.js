@@ -1090,7 +1090,6 @@ export default class ApiResourceManager {
    * 3. Updates any relevant aliases using `_pushToAliases`.
    * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
    *
-   * @private
    * @param {string} collectionName - The name of the collection.
    * @param {Array|Object} collectionRecords - The records to be pushed.
    * @returns {Array|Object} The updated collection records.
