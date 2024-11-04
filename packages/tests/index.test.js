@@ -6,6 +6,8 @@ import ApiResourceManager from '../src'
 
 const ARM = new ApiResourceManager(['addresses'])
 
+ARM.setHost('https://api.arm-js-library.com')
+ARM.setNamespace('api/v2')
 ARM.setGlobal()
 
 describe('ARM: Instance initialization', () => {
@@ -14,6 +16,14 @@ describe('ARM: Instance initialization', () => {
   })
 
   test('Verify global ARM instance', () => {
-    expect(typeof window.ARM).not.toBeUndefined()
+    expect(window.ARM).toBeDefined()
+  })
+
+  test('Verify host value', () => {
+    expect(ARM.host).toBe('https://api.arm-js-library.com')
+  })
+
+  test('Verify namespace value', () => {
+    expect(ARM.namespace).toBe('api/v2')
   })
 })
