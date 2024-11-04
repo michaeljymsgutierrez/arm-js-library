@@ -50,6 +50,12 @@ npm run build:dts && print_status_done || print_status_failed
 
 print_separator
 
+print_process "running:test"
+
+npm run test && print_status_done || print_status_failed
+
+print_separator
+
 print_process "copying:docs"
 
 cp -v DOCS.md .. && print_status_done || print_status_failed
