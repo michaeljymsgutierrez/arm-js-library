@@ -232,7 +232,7 @@ a single object) and performs the following actions:</p>
 <li>Updates any relevant request hashes using <code>_pushToRequestHashes</code>.</li>
 </ol>
 </dd>
-<dt><a href="#pushPayload">pushPayload(collectionName, collectionRecords)</a> ⇒ <code>Array</code> | <code>Object</code> ℗</dt>
+<dt><a href="#pushPayload">pushPayload(collectionName, collectionRecords)</a> ⇒ <code>Array</code> | <code>Object</code></dt>
 <dd><p>Pushes records to a collection, aliases, and request hashes.</p>
 <p>This method orchestrates the process of adding or updating records
 in various data stores within the <code>ApiResourceManager</code>. It takes a
@@ -427,6 +427,9 @@ specified properties.</p>
 </dd>
 <dt><a href="#groupBy">groupBy(objects, groupByProperty)</a> ⇒ <code>Object</code></dt>
 <dd><p>Groups objects into arrays based on a specified property.</p>
+</dd>
+<dt><a href="#mapBy">mapBy(objects, mapByProperty)</a> ⇒ <code>Array.&lt;*&gt;</code></dt>
+<dd><p>Maps an array of objects to a new array of values, extracting a specific property from each object.</p>
 </dd>
 <dt><a href="#firstObject">firstObject([objects])</a> ⇒ <code>Object</code> | <code>undefined</code></dt>
 <dd><p>Returns the first object in an array.</p>
@@ -1002,7 +1005,7 @@ a single object) and performs the following actions:
 
 <a name="pushPayload"></a>
 
-## pushPayload(collectionName, collectionRecords) ⇒ <code>Array</code> \| <code>Object</code> ℗
+## pushPayload(collectionName, collectionRecords) ⇒ <code>Array</code> \| <code>Object</code>
 Pushes records to a collection, aliases, and request hashes.
 
 This method orchestrates the process of adding or updating records
@@ -1017,7 +1020,6 @@ a single object) and performs the following actions:
 
 **Kind**: global function  
 **Returns**: <code>Array</code> \| <code>Object</code> - The updated collection records.  
-**Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1518,6 +1520,19 @@ Groups objects into arrays based on a specified property.
 | --- | --- | --- |
 | objects | <code>Array.&lt;Object&gt;</code> | The array of objects to group. |
 | groupByProperty | <code>string</code> | The property to group by. |
+
+<a name="mapBy"></a>
+
+## mapBy(objects, mapByProperty) ⇒ <code>Array.&lt;\*&gt;</code>
+Maps an array of objects to a new array of values, extracting a specific property from each object.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;\*&gt;</code> - A new array containing the extracted values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array of objects to map. |
+| mapByProperty | <code>string</code> | The property to extract from each object. |
 
 <a name="firstObject"></a>
 

@@ -6,7 +6,7 @@ import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.0.0
+ * Version: 2.0.1
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -894,7 +894,6 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * 3. Updates any relevant aliases using `_pushToAliases`.
    * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
    *
-   * @private
    * @param {string} collectionName - The name of the collection.
    * @param {Array|Object} collectionRecords - The records to be pushed.
    * @returns {Array|Object} The updated collection records.
@@ -1579,6 +1578,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   groupBy(objects, groupByProperty) {
     return groupBy(objects, groupByProperty);
+  }
+  /**
+   * Maps an array of objects to a new array of values, extracting a specific property from each object.
+   * @param {Array<Object>} objects - The array of objects to map.
+   * @param {string} mapByProperty - The property to extract from each object.
+   * @returns {Array<*>} A new array containing the extracted values.
+   */
+  mapBy(objects, mapByProperty) {
+    return map(objects, mapByProperty);
   }
   /**
    * Returns the first object in an array.
