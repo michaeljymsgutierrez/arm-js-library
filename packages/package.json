@@ -19,7 +19,7 @@
     "build": "vite build",
     "build:watch": "vite build --watch",
     "build:jsdocs": "jsdoc2md --private src/lib/api-resource-manager.js > DOCS.md",
-    "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext",
+    "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext --skipLibCheck",
     "test": "jest"
   },
   "keywords": [
