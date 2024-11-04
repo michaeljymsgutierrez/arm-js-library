@@ -1938,6 +1938,16 @@ export default class ApiResourceManager {
   }
 
   /**
+   * Maps an array of objects to a new array of values, extracting a specific property from each object.
+   * @param {Array<Object>} objects - The array of objects to map.
+   * @param {string} mapByProperty - The property to extract from each object.
+   * @returns {Array<*>} A new array containing the extracted values.
+   */
+  mapBy(objects, mapByProperty) {
+    return map(objects, mapByProperty)
+  }
+
+  /**
    * Returns the first object in an array.
    *
    * @param {Array<Object>} [objects=[]] - The array of objects.
