@@ -3,11 +3,7 @@
   "version": "2.0.1",
   "description": "API Resource Manager",
   "type": "module",
-  "files": [
-    "dist",
-    "types",
-    "DOCS.md"
-  ],
+  "files": ["dist", "types", "DOCS.md"],
   "types": "types/index.d.ts",
   "exports": {
     ".": {
@@ -19,7 +15,8 @@
     "build": "vite build",
     "build:watch": "vite build --watch",
     "build:jsdocs": "jsdoc2md --private src/lib/api-resource-manager.js > DOCS.md",
-    "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext"
+    "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext",
+    "test": "jest"
   },
   "keywords": [
     "uuid",
@@ -39,9 +36,11 @@
   "author": "Michael Jyms Gutierrez",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
     "@eslint/js": "^9.5.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.5.2",
+    "babel-jest": "^29.7.0",
     "eslint": "^9.5.0",
     "jest": "^29.7.0",
     "jsdoc-to-markdown": "^8.0.3",
