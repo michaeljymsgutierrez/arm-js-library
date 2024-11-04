@@ -64,5 +64,12 @@ describe('Utility functions', () => {
         },
       ])
     })
+
+    test('Verify uniqBy functionality', () => {
+      expect(ARM.uniqBy(addresses, 'attributes.kind')).toEqual([
+        { id: 1, attributes: { kind: 'office', label: 'My Office' } },
+        { id: 2, attributes: { kind: 'school', label: 'My School' } },
+      ])
+    })
   })
 })
