@@ -50,5 +50,19 @@ describe('Utility functions', () => {
         })
       ).toEqual(0)
     })
+
+    test('Verify filterBy functionality', () => {
+      expect(
+        ARM.filterBy(addresses, {
+          attributes: { kind: 'school' },
+        })
+      ).toEqual([
+        { id: 2, attributes: { kind: 'school', label: 'My School' } },
+        {
+          id: 3,
+          attributes: { kind: 'school', label: "My Brother's School" },
+        },
+      ])
+    })
   })
 })
