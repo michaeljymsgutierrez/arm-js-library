@@ -3,16 +3,17 @@
  */
 
 import axios from 'axios'
+import { addresses } from './dummy-data'
 import ApiResourceManager from '../src'
 
-const ARM = new ApiResourceManager(['addresses'])
+const ARM = new ApiResourceManager(['addresses', 'users'])
 
 ARM.setHeadersCommon('X-Client-Platform', 'sailfish-os')
 ARM.setHost('https://api.arm-js-library.com')
 ARM.setNamespace('api/v2')
 ARM.setGlobal()
 
-describe('ARM: Instance initialization', () => {
+describe('Instance initialization', () => {
   test('Verify address collection creation', () => {
     expect(ARM.collections).toHaveProperty('addresses')
   })
@@ -30,6 +31,24 @@ describe('ARM: Instance initialization', () => {
   })
 
   test('Verify common headers setter', () => {
-    expect(axios.defaults.headers.common['X-Client-Platform']).toBe('sailfish-os')
+    expect(axios.defaults.headers.common['X-Client-Platform']).toBe(
+      'sailfish-os'
+    )
+  })
+})
+
+describe('Utility functions', () => {
+  describe('Data Retrieval and Manipulation', () => {
+    test('Verify findBy functionality', () => {
+      expect(ARM.findBy(addresses, { id: 1 })).toEqual(addresses[0])
+    })
+
+    test('Verify findIndexBy functionality', () => {
+      expect(
+        ARM.findIndexBy(addresses, {
+          attributes: { kind: 'office' },
+        })
+      ).toEqual(0)
+    })
   })
 })
