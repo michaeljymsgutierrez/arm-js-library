@@ -153,6 +153,30 @@ const execUtilsTest = (ARM) => {
         expect(ARM.isNull({})).toBe(false)
         expect(ARM.isNull([])).toBe(false)
       })
+
+      test('Verify isGte functionality', () => {
+        expect(ARM.isGte(1, 0)).toBe(true)
+        expect(ARM.isGte(1, 1)).toBe(true)
+        expect(ARM.isGte(0, 1)).toBe(false)
+      })
+
+      test('Verify isGt functionality', () => {
+        expect(ARM.isGt(1, 0)).toBe(true)
+        expect(ARM.isGt(1, 1)).toBe(false)
+        expect(ARM.isGt(0, 1)).toBe(false)
+      })
+
+      test('Verify isLte functionality', () => {
+        expect(ARM.isLte(0, 1)).toBe(true)
+        expect(ARM.isLte(1, 0)).toBe(false)
+        expect(ARM.isLte(1, 1)).toBe(true)
+      })
+
+      test('Verify isLt functionality', () => {
+        expect(ARM.isLt(0, 1)).toBe(true)
+        expect(ARM.isLt(1, 0)).toBe(false)
+        expect(ARM.isLt(1, 1)).toBe(false)
+      })
     })
   })
 }
