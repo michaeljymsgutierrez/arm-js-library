@@ -92,6 +92,25 @@ const execUtilsTest = (ARM) => {
         expect(ARM.sortBy(addresses, ['id:desc'])).toEqual(addresses.reverse())
       })
     })
+
+    describe('Data Validation and Comparison', () => {
+      test('Verify isEmpty functionality', () => {
+        expect(ARM.isEmpty(null)).toBe(true)
+        expect(ARM.isEmpty('')).toBe(true)
+        expect(ARM.isEmpty(undefined)).toBe(true)
+        expect(ARM.isEmpty({})).toBe(true)
+        expect(ARM.isEmpty([])).toBe(true)
+      })
+
+      test('Verify isPresent functionality', () => {
+        console.log(ARM.isPresent(1))
+        expect(ARM.isPresent('Hello world!')).toBe(true)
+        expect(ARM.isPresent({ message: 'Hello world!' })).toBe(true)
+        expect(ARM.isPresent({})).toBe(false)
+        expect(ARM.isPresent([1, 2, 3])).toBe(true)
+        expect(ARM.isPresent([])).toBe(false)
+      })
+    })
   })
 }
 
