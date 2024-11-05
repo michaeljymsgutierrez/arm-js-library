@@ -122,6 +122,16 @@ const execUtilsTest = (ARM) => {
         expect(ARM.isEqual('', null)).toBe(false)
         expect(ARM.isEqual(undefined, null)).toBe(false)
       })
+
+      test('Verify isNumber functionality', () => {
+        expect(ARM.isNumber(1)).toBe(true)
+        expect(ARM.isNumber(1 + 2)).toBe(true)
+        expect(ARM.isNumber(1 + '2')).toBe(false)
+        expect(ARM.isNumber('1')).toBe(false)
+        expect(ARM.isNumber('')).toBe(false)
+        expect(ARM.isNumber(null)).toBe(false)
+        expect(ARM.isNumber(undefined)).toBe(false)
+      })
     })
   })
 }
