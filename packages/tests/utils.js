@@ -103,12 +103,24 @@ const execUtilsTest = (ARM) => {
       })
 
       test('Verify isPresent functionality', () => {
-        console.log(ARM.isPresent(1))
         expect(ARM.isPresent('Hello world!')).toBe(true)
         expect(ARM.isPresent({ message: 'Hello world!' })).toBe(true)
         expect(ARM.isPresent({})).toBe(false)
         expect(ARM.isPresent([1, 2, 3])).toBe(true)
         expect(ARM.isPresent([])).toBe(false)
+      })
+
+      test('Verify isEqual functionality', () => {
+        expect(ARM.isEqual('Hello', 'Hello')).toBe(true)
+        expect(ARM.isEqual('Hello', 'world!')).toBe(false)
+        expect(ARM.isEqual(1, '1')).toBe(false)
+        expect(ARM.isEqual({ message: 'Hello' }, { message: 'Hello' })).toBe(
+          true
+        )
+        expect(ARM.isEqual([1, 2, 3], [1, 2, 3])).toBe(true)
+        expect(ARM.isEqual([1, 2, 3], [3, 2, 1])).toBe(false)
+        expect(ARM.isEqual('', null)).toBe(false)
+        expect(ARM.isEqual(undefined, null)).toBe(false)
       })
     })
   })
