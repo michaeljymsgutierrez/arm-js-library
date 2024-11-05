@@ -106,5 +106,20 @@ describe('Utility functions', () => {
         ARM.mergeObjects([addresses[0], addresses[1]], [addresses[2]])
       ).toEqual(addresses)
     })
+
+    test('Verify chunkObjects functionality', () => {
+      expect(ARM.chunkObjects(addresses, 2)).toEqual([
+        [
+          { id: 1, attributes: { kind: 'office', label: 'My Office' } },
+          { id: 2, attributes: { kind: 'school', label: 'My School' } },
+        ],
+        [
+          {
+            id: 3,
+            attributes: { kind: 'school', label: "My Brother's School" },
+          },
+        ],
+      ])
+    })
   })
 })
