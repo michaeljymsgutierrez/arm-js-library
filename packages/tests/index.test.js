@@ -84,5 +84,17 @@ describe('Utility functions', () => {
         ],
       })
     })
+
+    test('Verify mapBy functionality', () => {
+      expect(ARM.mapBy(addresses, 'attributes.kind')).toEqual([
+        'office',
+        'school',
+        'school',
+      ])
+    })
+
+    test('Verify firstObject functionality', () => {
+      expect(ARM.firstObject(addresses)).toEqual(addresses[0])
+    })
   })
 })
