@@ -114,6 +114,7 @@ const execUtilsTest = (ARM) => {
         expect(ARM.isEqual('Hello', 'Hello')).toBe(true)
         expect(ARM.isEqual('Hello', 'world!')).toBe(false)
         expect(ARM.isEqual(1, '1')).toBe(false)
+        expect(ARM.isEqual(true, 'true')).toBe(false)
         expect(ARM.isEqual({ message: 'Hello' }, { message: 'Hello' })).toBe(
           true
         )
@@ -131,6 +132,26 @@ const execUtilsTest = (ARM) => {
         expect(ARM.isNumber('')).toBe(false)
         expect(ARM.isNumber(null)).toBe(false)
         expect(ARM.isNumber(undefined)).toBe(false)
+      })
+
+      test('Verify isNil functionality', () => {
+        expect(ARM.isNil(null)).toBe(true)
+        expect(ARM.isNil(undefined)).toBe(true)
+        expect(ARM.isNil(1)).toBe(false)
+        expect(ARM.isNil('Hello world!')).toBe(false)
+        expect(ARM.isNil(true)).toBe(false)
+        expect(ARM.isNil({})).toBe(false)
+        expect(ARM.isNil([])).toBe(false)
+      })
+
+      test('Verify isNull functionality', () => {
+        expect(ARM.isNull(null)).toBe(true)
+        expect(ARM.isNull(undefined)).toBe(false)
+        expect(ARM.isNull(1)).toBe(false)
+        expect(ARM.isNull('Hello world!')).toBe(false)
+        expect(ARM.isNull(true)).toBe(false)
+        expect(ARM.isNull({})).toBe(false)
+        expect(ARM.isNull([])).toBe(false)
       })
     })
   })
