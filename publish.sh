@@ -18,6 +18,8 @@ function print_status_failed {
   echo -e "\033[36mStatus: \033[31mfailed\033[0m"
 }
 
+clear
+
 print_separator
 
 print_process "prepairing"
@@ -47,6 +49,12 @@ print_separator
 print_process "generating:dts"
 
 npm run build:dts && print_status_done || print_status_failed
+
+print_separator
+
+print_process "running:test"
+
+npm run test && print_status_done || print_status_failed
 
 print_separator
 
