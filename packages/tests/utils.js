@@ -87,6 +87,10 @@ const execUtilsTest = (ARM) => {
           ],
         ])
       })
+
+      test('Verify sortBy functionality', () => {
+        expect(ARM.sortBy(addresses, ['id:desc'])).toEqual(addresses.reverse())
+      })
     })
   })
 }
