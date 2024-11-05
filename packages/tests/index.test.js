@@ -96,5 +96,15 @@ describe('Utility functions', () => {
     test('Verify firstObject functionality', () => {
       expect(ARM.firstObject(addresses)).toEqual(addresses[0])
     })
+
+    test('Verify lastObject functionality', () => {
+      expect(ARM.lastObject(addresses)).toEqual(addresses[2])
+    })
+
+    test('Verify mergeObjects functionality', () => {
+      expect(
+        ARM.mergeObjects([addresses[0], addresses[1]], [addresses[2]])
+      ).toEqual(addresses)
+    })
   })
 })
