@@ -6,15 +6,15 @@ const execInitTest = (ARM) => {
       expect(ARM.collections).toHaveProperty('addresses')
     })
 
-    test('Verify global ARM instance', () => {
+    test('Verify global ARM instance setter', () => {
       expect(window.ARM).toBeDefined()
     })
 
-    test('Verify host value', () => {
+    test('Verify host setter', () => {
       expect(ARM.host).toBe('https://api.arm-js-library.com')
     })
 
-    test('Verify namespace value', () => {
+    test('Verify namespace setter', () => {
       expect(ARM.namespace).toBe('api/v2')
     })
 
