@@ -1,4 +1,4 @@
-import { addresses } from './dummy-data'
+import { addresses } from '../data/dummy-data'
 
 const execUtilsTest = (ARM) => {
   describe('Utility functions', () => {

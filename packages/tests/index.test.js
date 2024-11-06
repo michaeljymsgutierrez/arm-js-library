@@ -3,8 +3,8 @@
  */
 
 import ApiResourceManager from '../src'
-import execInitTest from './init'
-import execUtilsTest from './utils'
+import execInitTest from './units/init'
+import execUtilsTest from './units/utils'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
