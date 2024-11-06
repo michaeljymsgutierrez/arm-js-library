@@ -6,6 +6,7 @@ import startMirage from './mirage'
 import ApiResourceManager from '../src'
 import execInitTest from './units/init'
 import execUtilsTest from './units/utils'
+import execRequestAndRetrieveTest from './units/request-and-retrieve'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
@@ -20,6 +21,7 @@ beforeEach(() => {
   server = startMirage({ environment: 'test' })
 })
 
+execRequestAndRetrieveTest(ARM)
 execInitTest(ARM)
 execUtilsTest(ARM)
 
