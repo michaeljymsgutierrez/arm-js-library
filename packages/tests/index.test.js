@@ -21,8 +21,8 @@ beforeEach(() => {
   server = startMirage({ environment: 'test' })
 })
 
-execRequestAndRetrieveTest(ARM)
 execInitTest(ARM)
+execRequestAndRetrieveTest(ARM)
 execUtilsTest(ARM)
 
 afterEach(() => {
