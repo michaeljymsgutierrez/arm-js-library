@@ -1,5 +1,5 @@
 import { createServer } from 'miragejs'
-import addressesJSON from '../data/addresses.json'
+import addresses from '../data/addresses'
 
 export default function () {
   return createServer({
@@ -7,8 +7,13 @@ export default function () {
       this.urlPrefix = 'https://api.arm-js-library.com'
       this.namespace = 'api/v1'
 
-      this.get('/addresses', () => {
-        return addressesJSON
+      this.get('/addresses', (schema, request) => {
+        const { queryParams } = request
+
+        if (queryParams['filter[id]'] === '2519858')
+          return { data: addresses.data[0] }
+
+        return addresses
       })
     },
   })
