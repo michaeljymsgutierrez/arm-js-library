@@ -1,14 +1,15 @@
-import { Server } from 'miragejs'
+import { createServer } from 'miragejs'
+import addressesJSON from '../data/addresses.json'
 
 export default function () {
-  return new Server({
+  return createServer({
     routes() {
-      this.get('/api/users', () => ({
-        users: [
-          { id: 1, name: 'John Doe' },
-          { id: 2, name: 'Jane Doe' },
-        ],
-      }))
+      this.urlPrefix = 'https://api.arm-js-library.com'
+      this.namespace = 'api/v2'
+
+      this.get('/addresses', () => {
+        return addressesJSON
+      })
     },
   })
 }
