@@ -37,6 +37,14 @@ const execRequestAndRetrieveTest = (ARM) => {
       )
       expect(ARM.getCollection('addresses')).toHaveLength(1)
     })
+
+    test('Verify findRecord functionality', async () => {
+      ARM.clearCollection('addresses')
+      expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+      // await ARM.findRecord('addresses', 2518368, {})
+      // expect(ARM.getCollection('addresses')).toHaveLength(1)
+    })
   })
 }
 

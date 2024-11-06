@@ -19,7 +19,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2519858/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2519858/user',
           },
           data: {
             type: 'users',
@@ -28,7 +29,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2519858/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2519858/area',
           },
           data: {
             type: 'areas',
@@ -37,7 +39,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2519858',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2519858',
       },
     },
     {
@@ -59,7 +61,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2518368/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2518368/user',
           },
           data: {
             type: 'users',
@@ -68,7 +71,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2518368/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2518368/area',
           },
           data: {
             type: 'areas',
@@ -77,7 +81,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2518368',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2518368',
       },
     },
     {
@@ -99,7 +103,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2518365/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2518365/user',
           },
           data: {
             type: 'users',
@@ -108,7 +113,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2518365/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2518365/area',
           },
           data: {
             type: 'areas',
@@ -117,7 +123,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2518365',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2518365',
       },
     },
     {
@@ -139,7 +145,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2517816/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2517816/user',
           },
           data: {
             type: 'users',
@@ -148,7 +155,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2517816/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2517816/area',
           },
           data: {
             type: 'areas',
@@ -157,7 +165,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2517816',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2517816',
       },
     },
     {
@@ -179,7 +187,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2515557/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2515557/user',
           },
           data: {
             type: 'users',
@@ -188,7 +197,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2515557/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2515557/area',
           },
           data: {
             type: 'areas',
@@ -197,7 +207,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2515557',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2515557',
       },
     },
     {
@@ -219,7 +229,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513872/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513872/user',
           },
           data: {
             type: 'users',
@@ -228,7 +239,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513872/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513872/area',
           },
           data: {
             type: 'areas',
@@ -237,7 +249,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513872',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513872',
       },
     },
     {
@@ -259,7 +271,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513871/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513871/user',
           },
           data: {
             type: 'users',
@@ -268,7 +281,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513871/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513871/area',
           },
           data: {
             type: 'areas',
@@ -277,7 +291,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513871',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513871',
       },
     },
     {
@@ -299,7 +313,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513870/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513870/user',
           },
           data: {
             type: 'users',
@@ -308,7 +323,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513870/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513870/area',
           },
           data: {
             type: 'areas',
@@ -317,7 +333,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513870',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513870',
       },
     },
     {
@@ -339,7 +355,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513869/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513869/user',
           },
           data: {
             type: 'users',
@@ -348,7 +365,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513869/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513869/area',
           },
           data: {
             type: 'areas',
@@ -357,7 +375,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513869',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513869',
       },
     },
     {
@@ -379,7 +397,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513868/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513868/user',
           },
           data: {
             type: 'users',
@@ -388,7 +407,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513868/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513868/area',
           },
           data: {
             type: 'areas',
@@ -397,7 +417,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513868',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513868',
       },
     },
     {
@@ -419,7 +439,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513867/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513867/user',
           },
           data: {
             type: 'users',
@@ -428,7 +449,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513867/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513867/area',
           },
           data: {
             type: 'areas',
@@ -437,7 +459,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513867',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513867',
       },
     },
     {
@@ -459,7 +481,8 @@ const addresses = {
       relationships: {
         user: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513866/user',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513866/user',
           },
           data: {
             type: 'users',
@@ -468,7 +491,8 @@ const addresses = {
         },
         area: {
           links: {
-            related: 'https://test-api.com/api/v1/addresses/2513866/area',
+            related:
+              'https://api.arm-js-library.com/api/v1/addresses/2513866/area',
           },
           data: {
             type: 'areas',
@@ -477,7 +501,7 @@ const addresses = {
         },
       },
       links: {
-        self: 'https://test-api.com/api/v1/addresses/2513866',
+        self: 'https://api.arm-js-library.com/api/v1/addresses/2513866',
       },
     },
   ],

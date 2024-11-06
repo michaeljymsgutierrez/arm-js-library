@@ -15,6 +15,10 @@ export default function () {
 
         return addresses
       })
+
+      this.get('/addresses/:id', () => {
+        return { data: addresses.data[1] }
+      })
     },
   })
 }
