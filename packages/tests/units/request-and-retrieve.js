@@ -77,6 +77,18 @@ const execRequestAndRetrieveTest = (ARM) => {
       )
       expect(ARM.getCollection('addresses')).toHaveLength(5)
     })
+
+    test('Verify getAlias functionality', async () => {
+      ARM.clearCollection('addresses')
+      expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+      await ARM.query(
+        'addresses',
+        { page: { size: 5 } },
+        { autoResolve: false, alias: 'customerAddresses' }
+      )
+      expect(ARM.getAlias('customerAddresses')).toHaveLength(5)
+    })
   })
 }
 
