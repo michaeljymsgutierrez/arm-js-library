@@ -60,6 +60,11 @@ const execRequestAndRetrieveTest = (ARM) => {
       await ARM.query('addresses', {}, { autoResolve: false })
       expect(ARM.peekAll('addresses')).toHaveLength(12)
     })
+
+    test('Verify peekRecord functionality', async () => {
+      await ARM.query('addresses', {}, { autoResolve: false })
+      expect(ARM.peekRecord('addresses', 2518368).get('id')).toBe(2518368)
+    })
   })
 }
 
