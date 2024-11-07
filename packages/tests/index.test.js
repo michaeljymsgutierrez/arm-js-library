@@ -7,8 +7,9 @@ import ApiResourceManager from '../src'
 import execInitTest from './units/init'
 import execRequestTest from './units/request'
 import execRetrieveTest from './units/request'
+import execRemoveTest from './units/request'
+import execPushTest from './units/request'
 import execUtilsTest from './units/utils'
-// import execRemoveAndPushTest from './units/remove-and-push'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
@@ -26,7 +27,8 @@ beforeEach(() => {
 execInitTest(ARM)
 execRequestTest(ARM)
 execRetrieveTest(ARM)
-// execRemoveAndPushTest(ARM)
+execRemoveTest(ARM)
+execPushTest(ARM)
 execUtilsTest(ARM)
 
 afterEach(() => {
