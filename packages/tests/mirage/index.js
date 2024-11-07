@@ -13,6 +13,17 @@ export default function () {
         if (queryParams['filter[id]'] === '2519858')
           return { data: addresses.data[0] }
 
+        if (queryParams['page[size]'] === '5')
+          return {
+            data: [
+              addresses.data[0],
+              addresses.data[1],
+              addresses.data[2],
+              addresses.data[3],
+              addresses.data[4],
+            ],
+          }
+
         return addresses
       })
 

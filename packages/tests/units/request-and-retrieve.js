@@ -65,6 +65,18 @@ const execRequestAndRetrieveTest = (ARM) => {
       await ARM.query('addresses', {}, { autoResolve: false })
       expect(ARM.peekRecord('addresses', 2518368).get('id')).toBe(2518368)
     })
+
+    test('Verify getCollection functionality', async () => {
+      ARM.clearCollection('addresses')
+      expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+      await ARM.query(
+        'addresses',
+        { page: { size: 5 } },
+        { autoResolve: false }
+      )
+      expect(ARM.getCollection('addresses')).toHaveLength(5)
+    })
   })
 }
 
