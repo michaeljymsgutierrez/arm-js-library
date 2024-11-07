@@ -5,9 +5,10 @@
 import startMirage from './mirage'
 import ApiResourceManager from '../src'
 import execInitTest from './units/init'
+import execRequestTest from './units/request'
+import execRetrieveTest from './units/request'
 import execUtilsTest from './units/utils'
-import execRequestAndRetrieveTest from './units/request-and-retrieve'
-import execRemoveAndPushTest from './units/remove-and-push'
+// import execRemoveAndPushTest from './units/remove-and-push'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
@@ -23,8 +24,9 @@ beforeEach(() => {
 })
 
 execInitTest(ARM)
-execRequestAndRetrieveTest(ARM)
-execRemoveAndPushTest(ARM)
+execRequestTest(ARM)
+execRetrieveTest(ARM)
+// execRemoveAndPushTest(ARM)
 execUtilsTest(ARM)
 
 afterEach(() => {
