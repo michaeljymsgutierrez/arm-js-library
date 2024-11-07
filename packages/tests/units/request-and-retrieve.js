@@ -54,6 +54,13 @@ const execRequestAndRetrieveTest = (ARM) => {
       expect(ARM.getCollection('addresses')).toHaveLength(12)
     })
   })
+
+  describe('Retrieve functions from collections', () => {
+    test('Verify peekAll functionality', async () => {
+      await ARM.query('addresses', {}, { autoResolve: false })
+      expect(ARM.peekAll('addresses')).toHaveLength(12)
+    })
+  })
 }
 
 export default execRequestAndRetrieveTest
