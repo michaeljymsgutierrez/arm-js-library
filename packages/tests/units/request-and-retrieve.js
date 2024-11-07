@@ -1,17 +1,7 @@
-const turnOffConsole = () => {
-  jest.spyOn(console, 'log').mockImplementation(() => {})
-  jest.spyOn(console, 'error').mockImplementation(() => {})
-  jest.spyOn(console, 'groupCollapsed').mockImplementation(() => {})
-}
-
-const turnOnConsole = () => {
-  console.log.mockRestore()
-  console.error.mockRestore()
-  console.groupCollapsed.mockRestore()
-}
+import { killConsole } from '../helpers'
 
 const execRequestAndRetrieveTest = (ARM) => {
-  turnOffConsole()
+  killConsole()
 
   ARM.setNamespace('api/v1')
 
