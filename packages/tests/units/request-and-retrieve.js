@@ -1,8 +1,8 @@
+import { v1 as uuidv1 } from 'uuid'
 import { killConsole } from '../helpers'
 
 const execRequestAndRetrieveTest = (ARM) => {
   killConsole()
-
   ARM.setNamespace('api/v1')
 
   describe('Request functions from server', () => {
@@ -10,7 +10,7 @@ const execRequestAndRetrieveTest = (ARM) => {
       ARM.clearCollection('addresses')
       expect(ARM.getCollection('addresses')).toHaveLength(0)
 
-      await ARM.query('addresses', {}, { autoResolve: false })
+      await ARM.query('addresses', {}, { autoResolve: false, skipId: uuidv1() })
       expect(ARM.getCollection('addresses')).toHaveLength(12)
     })
 
@@ -23,7 +23,7 @@ const execRequestAndRetrieveTest = (ARM) => {
         {
           filter: { id: 2519858 },
         },
-        { autoResolve: false }
+        { autoResolve: false, skipId: uuidv1() }
       )
       expect(ARM.getCollection('addresses')).toHaveLength(1)
     })
@@ -32,7 +32,10 @@ const execRequestAndRetrieveTest = (ARM) => {
       ARM.clearCollection('addresses')
       expect(ARM.getCollection('addresses')).toHaveLength(0)
 
-      await ARM.findRecord('addresses', 2518368, null, { autoResolve: false })
+      await ARM.findRecord('addresses', 2518368, null, {
+        autoResolve: false,
+        skipId: uuidv1(),
+      })
       expect(ARM.getCollection('addresses')).toHaveLength(1)
     })
 
@@ -40,19 +43,19 @@ const execRequestAndRetrieveTest = (ARM) => {
       ARM.clearCollection('addresses')
       expect(ARM.getCollection('addresses')).toHaveLength(0)
 
-      await ARM.findAll('addresses', { autoResolve: false })
+      await ARM.findAll('addresses', { autoResolve: false, skipId: uuidv1() })
       expect(ARM.getCollection('addresses')).toHaveLength(12)
     })
   })
 
   describe('Retrieve functions from collections', () => {
     test('Verify peekAll functionality', async () => {
-      await ARM.query('addresses', {}, { autoResolve: false })
+      await ARM.query('addresses', {}, { autoResolve: false, skipId: uuidv1() })
       expect(ARM.peekAll('addresses')).toHaveLength(12)
     })
 
     test('Verify peekRecord functionality', async () => {
-      await ARM.query('addresses', {}, { autoResolve: false })
+      await ARM.query('addresses', {}, { autoResolve: false, skipId: uuidv1() })
       expect(ARM.peekRecord('addresses', 2518368).get('id')).toBe(2518368)
     })
 
@@ -63,7 +66,7 @@ const execRequestAndRetrieveTest = (ARM) => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
-        { autoResolve: false }
+        { autoResolve: false, skipId: uuidv1() }
       )
       expect(ARM.getCollection('addresses')).toHaveLength(5)
     })
@@ -75,7 +78,7 @@ const execRequestAndRetrieveTest = (ARM) => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
-        { autoResolve: false, alias: 'customerAddresses' }
+        { autoResolve: false, alias: 'customerAddresses', skipId: uuidv1() }
       )
       expect(ARM.getAlias('customerAddresses')).toHaveLength(5)
     })
