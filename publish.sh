@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Script for auto copy and publish arm-js-library
 # Available flags: release:latest, release:beta
 
