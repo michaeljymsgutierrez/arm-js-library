@@ -1,6 +1,7 @@
 import { createServer } from 'miragejs'
 import { Response } from 'miragejs'
 import addresses from '../data/addresses'
+import users from '../data/users'
 
 export default function () {
   return createServer({
@@ -10,6 +11,9 @@ export default function () {
 
       this.get('/addresses', (schema, request) => {
         const { queryParams } = request
+
+        if (queryParams['include'] === 'users')
+          return { data: addresses.data, included: users }
 
         if (queryParams['filter[id]'] === '2519858')
           return { data: addresses.data[0] }
@@ -36,6 +40,10 @@ export default function () {
         return request.params.id === '2519858'
           ? new Response(422, {}, { errors: ['An error has occured'] })
           : request.requestBody
+      })
+
+      this.delete('/addresses/:id', () => {
+        return { data: addresses.data[1] }
       })
     },
   })
