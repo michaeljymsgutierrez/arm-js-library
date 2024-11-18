@@ -142,6 +142,23 @@ const execRecordTest = (ARM) => {
         expect(result).toBeDefined()
         expect(record.get('attributes.address1')).toBe('Anabu Hills Modified')
       })
+
+      test('Verify reload functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
+
+        record.set('attributes.address1', 'Anabu Hills Modified')
+        const result = await record.reload()
+        expect(result).toBeDefined()
+        expect(record.get('isPristine')).toBe(true)
+        expect(record.get('attributes.address1')).toBe('Anabu Hills Test 4')
+      })
     })
   })
 }
