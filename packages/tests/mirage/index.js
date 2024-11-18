@@ -1,4 +1,5 @@
 import { createServer } from 'miragejs'
+import { Response } from 'miragejs'
 import addresses from '../data/addresses'
 
 export default function () {
@@ -32,7 +33,9 @@ export default function () {
       })
 
       this.put('/addresses/:id', (schema, request) => {
-        return request.requestBody
+        return request.params.id === '2519858'
+          ? new Response(422, {}, { errors: ['An error has occured'] })
+          : request.requestBody
       })
     },
   })

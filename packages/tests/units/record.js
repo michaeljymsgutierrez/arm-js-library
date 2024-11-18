@@ -41,6 +41,26 @@ const execRecordTest = (ARM) => {
         expect(record.get('isDirty')).toBe(false)
       })
 
+      test('Verify isError functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findAll('addresses', { autoResolve: false, skipId: uuidv1() })
+        const record = ARM.peekRecord('addresses', 2519858)
+
+        record.set(
+          'attributes.address1',
+          'Paseo de Roxas, Makati, Metro Manila, Philippines Modified'
+        )
+        expect(record.get('isError')).toBe(false)
+
+        try {
+          await record.save()
+        } catch (err) {
+          expect(record.get('isError')).toBe(true)
+        }
+      })
+
       test('Verify isPristine functionality', async () => {
         ARM.clearCollection('addresses')
         expect(ARM.getCollection('addresses')).toHaveLength(0)
