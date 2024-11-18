@@ -174,6 +174,27 @@ const execRecordTest = (ARM) => {
         expect(result).toBeDefined()
         expect(ARM.peekRecord('addresses', 2518368)).toBeUndefined()
       })
+
+      test('Verify getCollection functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.query(
+          'addresses',
+          {
+            include: 'users',
+          },
+          { autoResolve: false, skipId: uuidv1() }
+        )
+        const record = ARM.peekRecord('addresses', 2518368)
+        const user = record.getCollection('users', {
+          referenceKey: 'relationships.user.data',
+          async: false,
+        })
+
+        expect(user).toBeDefined()
+        expect(user.get('id')).toBe(12980860)
+      })
     })
   })
 }
