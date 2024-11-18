@@ -30,6 +30,10 @@ export default function () {
       this.get('/addresses/:id', () => {
         return { data: addresses.data[1] }
       })
+
+      this.put('/addresses/:id', (schema, request) => {
+        return request.requestBody
+      })
     },
   })
 }

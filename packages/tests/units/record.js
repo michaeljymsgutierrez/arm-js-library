@@ -6,6 +6,24 @@ const execRecordTest = (ARM) => {
   ARM.setNamespace('api/v1')
 
   describe('Collection Records: Properties and Functions', () => {
+    describe('State Properties', () => {
+      test('Verify isLoading functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
+        const recordResult = record.save()
+        expect(record.get('isLoading')).toBe(true)
+
+        await recordResult
+        expect(record.get('isLoading')).toBe(false)
+      })
+    })
+
     describe('Getter and Setter Functions', () => {
       test('Verify get functionality', async () => {
         ARM.clearCollection('addresses')
