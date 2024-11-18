@@ -22,6 +22,42 @@ const execRecordTest = (ARM) => {
         await recordResult
         expect(record.get('isLoading')).toBe(false)
       })
+
+      test('Verify isDirty functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
+
+        record.set('attributes.address1', 'Anabu Hills Modified')
+        expect(record.get('isDirty')).toBe(true)
+        const recordResult = record.save()
+
+        await recordResult
+        expect(record.get('isDirty')).toBe(false)
+      })
+
+      test('Verify isPristine functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
+
+        record.set('attributes.address1', 'Anabu Hills Modified')
+        expect(record.get('isPristine')).toBe(false)
+        const recordResult = record.save()
+
+        await recordResult
+        expect(record.get('isPristine')).toBe(true)
+      })
     })
 
     describe('Getter and Setter Functions', () => {
