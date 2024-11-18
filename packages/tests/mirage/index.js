@@ -37,6 +37,10 @@ export default function () {
           ? new Response(422, {}, { errors: ['An error has occured'] })
           : request.requestBody
       })
+
+      this.delete('/addresses/:id', () => {
+        return { data: addresses.data[1] }
+      })
     },
   })
 }
