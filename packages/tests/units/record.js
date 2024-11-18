@@ -31,6 +31,25 @@ const execRecordTest = (ARM) => {
         record.set('attributes.address1', 'Anabu Hills Modified')
         expect(record.get('attributes.address1')).toBe('Anabu Hills Modified')
       })
+
+      test('Verify setProperties functionality', async () => {
+        ARM.clearCollection('addresses')
+        expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
+        record.setProperties({
+          attributes: {
+            address1: 'New address1 changes',
+            address2: 'New address2 changes',
+          },
+        })
+        expect(record.get('attributes.address1')).toBe('New address1 changes')
+        expect(record.get('attributes.address2')).toBe('New address2 changes')
+      })
     })
   })
 }
