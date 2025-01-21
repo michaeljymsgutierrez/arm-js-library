@@ -3,7 +3,9 @@ name: CI/CD
 on:
   push:
     branches:
-      - features/ci-cd-setup
+      - main
+      - release
+      - develop
 
 jobs:
   build-and-test:
@@ -24,10 +26,18 @@ jobs:
         working-directory: packages
         run: npm install
 
-      # - name: Build
-      #   working-directory: ./packages
-      #   run: npm run build
-      #
-      # - name: Test
-      #   working-directory: ./packages
-      #   run: npm run test
+      - name: Test
+        working-directory: packages
+        run: npm run test
+
+      - name: Build source
+        working-directory: packages
+        run: npm run build
+
+      - name: Build types
+        working-directory: packages
+        run: npm run build:dts
+
+      - name: Build jsdocs
+        working-directory: packages
+        run: npm run build:jsdocs
