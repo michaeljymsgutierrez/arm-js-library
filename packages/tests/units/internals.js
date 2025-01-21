@@ -9,6 +9,10 @@ const execInternalsTest = (ARM) => {
       ARM._initializeCollections(['shops'])
       expect(ARM.collections.shops).toBeDefined()
     })
+
+    test('Verify _getBaseURL functionality', () => {
+      expect(ARM._getBaseURL()).toBe('https://api.arm-js-library.com/api/v2')
+    })
   })
 }
 
