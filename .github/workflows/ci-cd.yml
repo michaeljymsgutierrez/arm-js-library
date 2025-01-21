@@ -31,15 +31,14 @@ jobs:
         working-directory: packages
         run: npm run build
 
-      # - name: Test
-      #   working-directory: packages
-      #   run: npm run test
+      - name: Test
+        working-directory: packages
+        run: npm run test
 
-      #
-      # - name: Build types
-      #   working-directory: packages
-      #   run: npm run build:dts
-      #
-      # - name: Build jsdocs
-      #   working-directory: packages
-      #   run: npm run build:jsdocs
+      - name: Build types
+        working-directory: packages
+        run: npm run build:dts
+
+      - name: Build jsdocs
+        working-directory: packages
+        run: npm run build:jsdocs
