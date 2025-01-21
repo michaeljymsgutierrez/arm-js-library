@@ -6,7 +6,6 @@ export default [
     rules: {
       'no-unused-vars': 'warn',
       'no-undef': 'error',
-      'constructor-super': 'off',
     },
     files: ['src/lib/*.js'],
     languageOptions: {
