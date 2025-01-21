@@ -13,6 +13,12 @@ const execInternalsTest = (ARM) => {
     test('Verify _getBaseURL functionality', () => {
       expect(ARM._getBaseURL()).toBe('https://api.arm-js-library.com/api/v2')
     })
+
+    test('Verify _isCollectionExisting functionality', () => {
+      ARM._initializeCollections(['shops'])
+      expect(() => ARM._isCollectionExisting('shop')).toThrow()
+      expect(() => ARM._isCollectionExisting('shops')).not.toThrow()
+    })
   })
 }
 
