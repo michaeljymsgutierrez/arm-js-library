@@ -3,10 +3,9 @@ name: CI/CD
 on:
   push:
     branches:
-      - fixes/cicd-setup
-      # - main
-      # - release
-      # - develop
+      - main
+      - release
+      - develop
 
 jobs:
   build-and-test:
