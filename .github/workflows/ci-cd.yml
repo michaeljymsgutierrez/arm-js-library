@@ -6,6 +6,12 @@ on:
       - main
       - release
       - develop
+  pull_request:
+    branches:
+      - main
+      - release
+      - develop
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-test:
