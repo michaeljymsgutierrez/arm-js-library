@@ -5,7 +5,7 @@ export default [
   {
     rules: {
       'no-unused-vars': 'warn',
-      'no-undef': 'error'
+      'no-undef': 'error',
     },
     files: ['src/lib/*.js'],
     languageOptions: {
