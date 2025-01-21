@@ -21,13 +21,13 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        working-directory: ./packages/arm-js-library
+        working-directory: ./packages
         run: npm install
 
       - name: Build
-        working-directory: ./packages/arm-js-library
+        working-directory: ./packages
         run: npm run build
 
       - name: Test
-        working-directory: ./packages/arm-js-library
+        working-directory: ./packages
         run: npm run test
