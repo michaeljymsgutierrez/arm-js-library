@@ -19,6 +19,12 @@ const execInternalsTest = (ARM) => {
       expect(() => ARM._isCollectionExisting('shop')).toThrow()
       expect(() => ARM._isCollectionExisting('shops')).not.toThrow()
     })
+
+    test('Verify _addCollection functionality', () => {
+      ARM._addCollection('roles', [])
+      expect(ARM.collections.roles).toBeDefined()
+      expect(ARM.getCollection('roles')).toHaveLength(0)
+    })
   })
 }
 
