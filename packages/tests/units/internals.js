@@ -25,6 +25,12 @@ const execInternalsTest = (ARM) => {
       expect(ARM.collections.roles).toBeDefined()
       expect(ARM.getCollection('roles')).toHaveLength(0)
     })
+
+    test('Verify _addAlias functionality', () => {
+      ARM._addAlias('currentRoles', [])
+      expect(ARM.aliases.currentRoles).toBeDefined()
+      expect(ARM.getAlias('currentRoles')).toHaveLength(0)
+    })
   })
 }
 
