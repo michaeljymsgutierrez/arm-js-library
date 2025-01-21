@@ -12,6 +12,7 @@ import execPushTest from './units/request'
 import execCreateTest from './units/create'
 import execRecordTest from './units/record'
 import execUtilsTest from './units/utils'
+import execInternalsTest from './units/internals'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
@@ -34,6 +35,7 @@ execPushTest(ARM)
 execCreateTest(ARM)
 execRecordTest(ARM)
 execUtilsTest(ARM)
+execInternalsTest(ARM)
 
 afterEach(() => {
   server.shutdown()
