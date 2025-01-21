@@ -1,0 +1,43 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - release
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        working-directory: packages
+        run: npm install
+
+      - name: Test
+        working-directory: packages
+        run: npm run test
+
+      - name: Build source
+        working-directory: packages
+        run: npm run build
+
+      - name: Build types
+        working-directory: packages
+        run: npm run build:dts
+
+      - name: Build jsdocs
+        working-directory: packages
+        run: npm run build:jsdocs
