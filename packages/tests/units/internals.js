@@ -57,6 +57,17 @@ const execInternalsTest = (ARM) => {
       expect(userInfo.lastName).toBe('Wick')
       expect(userInfo.firstName).toBe('Anna')
     })
+
+    test('Verify _getRecordProperty functionality', () => {
+      let userInfo = {
+        firstName: 'John',
+        lastName: 'Doe',
+      }
+
+      ARM._injectCollectionActions(userInfo)
+
+      expect(userInfo.get('firstName')).toBe('John')
+    })
   })
 }
 
