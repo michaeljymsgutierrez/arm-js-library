@@ -38,24 +38,37 @@ const execInternalsTest = (ARM) => {
     })
 
     test('Verify _setProperties functionality', () => {
-      let userInfo = { firstName: 'John', lastName: 'Doe' }
-      ARM._setProperties(userInfo, { firstName: 'Anna', lastName: 'Wick' })
-      expect(userInfo.lastName).toBe('Wick')
-      expect(userInfo.firstName).toBe('Anna')
+      let user = { firstName: 'John', lastName: 'Doe' }
+      ARM._setProperties(user, { firstName: 'Anna', lastName: 'Wick' })
+      expect(user.lastName).toBe('Wick')
+      expect(user.firstName).toBe('Anna')
     })
 
     test('Verify _injectCollectionActions functionality', () => {
-      let userInfo = { firstName: 'John', lastName: 'Doe' }
-      ARM._injectCollectionActions(userInfo)
+      let user = { firstName: 'John', lastName: 'Doe' }
+      ARM._injectCollectionActions(user)
 
-      expect(userInfo.get).toBeDefined()
-      expect(userInfo.set).toBeDefined()
-      expect(userInfo.setProperties).toBeDefined()
-      expect(userInfo.getARMContext).toBeDefined()
-      expect(userInfo.destroyRecord).toBeDefined()
-      expect(userInfo.save).toBeDefined()
-      expect(userInfo.reload).toBeDefined()
-      expect(userInfo.getCollection).toBeDefined()
+      expect(user).toHaveProperty('get')
+      expect(user).toHaveProperty('set')
+      expect(user).toHaveProperty('setProperties')
+      expect(user).toHaveProperty('getARMContext')
+      expect(user).toHaveProperty('destroyRecord')
+      expect(user).toHaveProperty('save')
+      expect(user).toHaveProperty('reload')
+      expect(user).toHaveProperty('getCollection')
+    })
+
+    test('Verify _injectCollectionReferenceKeys functionality', () => {
+      let user = { firstName: 'John', lastName: 'Doe' }
+      ARM._injectCollectionReferenceKeys('user', user)
+
+      expect(user).toHaveProperty('collectionName')
+      expect(user).toHaveProperty('hashId')
+      expect(user).toHaveProperty('isLoading')
+      expect(user).toHaveProperty('isError')
+      expect(user).toHaveProperty('isPristine')
+      expect(user).toHaveProperty('isDirty')
+      expect(user).toHaveProperty('originalRecord')
     })
   })
 }
