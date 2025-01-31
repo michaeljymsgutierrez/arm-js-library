@@ -31,6 +31,11 @@ const execInternalsTest = (ARM) => {
       expect(ARM.aliases.currentRoles).toBeDefined()
       expect(ARM.getAlias('currentRoles')).toHaveLength(0)
     })
+
+    test('Verify _generateHashId functionality', () => {
+      const hashId = ARM._generateHashId({ value: 'test' })
+      expect(hashId).toBe('91698db377530433476ee39ee73ac62c')
+    })
   })
 }
 
