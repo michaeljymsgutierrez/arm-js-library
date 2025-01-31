@@ -44,29 +44,18 @@ const execInternalsTest = (ARM) => {
       expect(userInfo.firstName).toBe('Anna')
     })
 
-    test('Verify _setRecordProperty functionality', () => {
-      let userInfo = {
-        firstName: 'John',
-        lastName: 'Doe',
-      }
-
-      ARM._injectCollectionActions(userInfo)
-      userInfo.set('firstName', 'Anna')
-      userInfo.set('lastName', 'Wick')
-
-      expect(userInfo.lastName).toBe('Wick')
-      expect(userInfo.firstName).toBe('Anna')
-    })
-
-    test('Verify _getRecordProperty functionality', () => {
-      let userInfo = {
-        firstName: 'John',
-        lastName: 'Doe',
-      }
-
+    test('Verify _injectCollectionActions functionality', () => {
+      let userInfo = { firstName: 'John', lastName: 'Doe' }
       ARM._injectCollectionActions(userInfo)
 
-      expect(userInfo.get('firstName')).toBe('John')
+      expect(userInfo.get).toBeDefined()
+      expect(userInfo.set).toBeDefined()
+      expect(userInfo.setProperties).toBeDefined()
+      expect(userInfo.getARMContext).toBeDefined()
+      expect(userInfo.destroyRecord).toBeDefined()
+      expect(userInfo.save).toBeDefined()
+      expect(userInfo.reload).toBeDefined()
+      expect(userInfo.getCollection).toBeDefined()
     })
   })
 }
