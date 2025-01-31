@@ -43,6 +43,20 @@ const execInternalsTest = (ARM) => {
       expect(userInfo.lastName).toBe('Wick')
       expect(userInfo.firstName).toBe('Anna')
     })
+
+    test('Verify _setRecordProperty functionality', () => {
+      let userInfo = {
+        firstName: 'John',
+        lastName: 'Doe',
+      }
+
+      ARM._injectCollectionActions(userInfo)
+      userInfo.set('firstName', 'Anna')
+      userInfo.set('lastName', 'Wick')
+
+      expect(userInfo.lastName).toBe('Wick')
+      expect(userInfo.firstName).toBe('Anna')
+    })
   })
 }
 
