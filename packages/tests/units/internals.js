@@ -36,6 +36,13 @@ const execInternalsTest = (ARM) => {
       const hashId = ARM._generateHashId({ value: 'test' })
       expect(hashId).toBe('91698db377530433476ee39ee73ac62c')
     })
+
+    test('Verify _setProperties functionality', () => {
+      let userInfo = { firstName: 'John', lastName: 'Doe' }
+      ARM._setProperties(userInfo, { firstName: 'Anna', lastName: 'Wick' })
+      expect(userInfo.lastName).toBe('Wick')
+      expect(userInfo.firstName).toBe('Anna')
+    })
   })
 }
 
