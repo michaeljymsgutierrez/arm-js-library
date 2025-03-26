@@ -150,6 +150,11 @@ class ApiResourceManager {
    */
   _initializeAxiosConfig() {
     setProperty(axios, ["defaults", "baseURL"], this._getBaseURL());
+    setProperty(
+      axios,
+      ["defaults", "headers", "common", "X-Powered-By"],
+      "ARM JS Library/2.0.2"
+    );
   }
   /**
    * Initializes a collection of collections with optional default values.
