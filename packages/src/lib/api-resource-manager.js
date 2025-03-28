@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.0.2
+ * Version: 2.0.3
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -253,7 +253,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.0.2'
+      'ARM JS Library/2.0.3'
     )
   }
 
