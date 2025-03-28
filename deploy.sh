@@ -46,14 +46,14 @@ publish_release_version() {
 }
 
 cleanup_release_version() {
-  git checkout staging &&
+  git checkout develop &&
   git rebase -Xours release &&
-  git push -f origin staging &&
+  git push -f origin develop &&
   git branch -D "releases/$LATEST_VERSION" &&
   git push origin --delete "releases/$LATEST_VERSION" &&
   git fetch origin --prune --verbose
-  git checkout staging &&
-  git pull origin staging &&
+  git checkout develop &&
+  git pull origin develop &&
   git checkout release &&
   git pull origin release &&
   git checkout main &&
@@ -62,13 +62,13 @@ cleanup_release_version() {
 
 sync_repository() {
   git fetch origin --prune --verbose &&
-  git checkout staging && git pull --rebase origin staging &&
+  git checkout develop && git pull --rebase origin develop &&
   git checkout release && git pull --rebase origin release &&
   git checkout main && git pull --rebase origin main
 
   if [ "$DEPLOYMENT_TYPE" == "stable" ]; then
     TARGET_BRANCH="release"
-    git checkout staging
+    git checkout develop
   fi
 
   if [ "$DEPLOYMENT_TYPE" == "hotfix" ]; then
