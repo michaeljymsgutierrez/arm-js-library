@@ -12,7 +12,7 @@
     <img src="https://img.shields.io/badge/npm_version-2.0.3-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
-    <img src="https://img.shields.io/badge/license-MIT-green" alt=license"-badge-logo" />
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
   </a>
 </p>
 
