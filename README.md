@@ -672,7 +672,7 @@ import { ARM } from '@components/arm-config-wrapper'
         ```
 
 ## Root Scope Functions
-The root scope is an object that can be used to store and manage global state. The Root Scope Functions provide a way to manage and access the root scope of your application.
+The root scope is an object that can be used to store and manage global state. The Root Scope Functions provide a way to manage and access it.
 
 * **setRootScope(rootScopeProperty, rootScopeValue)**
     * Sets a value on the root scope.
