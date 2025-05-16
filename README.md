@@ -52,6 +52,7 @@
 * **Caching:** Optimizes performance by caching frequently accessed data, reducing API calls and improving response times.
 * **Request Management:** Tracks ongoing requests to prevent redundancy and manages their state.
 * **Utility Functions:** Offers helper functions for data manipulation, filtering, sorting, and other common operations.
+* **Root Scope:** An object that can be used to store and manage global state.
 
 ### Key Features
 * **Collections:** Stores fetched data in collections for efficient retrieval and management.
