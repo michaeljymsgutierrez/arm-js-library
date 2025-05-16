@@ -37,6 +37,7 @@
   * [Remove collection record functions](#remove-collection-record-functions)
   * [Push collection record function](#push-collection-record-function)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
+* [Root Scope: `Functions`](#root-scope-functions)
 * [Utility Functions](#utility-functions)
   * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
   * [Data Validation and Comparison](#data-validation-and-comparison)
@@ -669,6 +670,28 @@ import { ARM } from '@components/arm-config-wrapper'
           </ul>
         )}
         ```
+
+## Root Scope Functions
+The root scope is an object that can be used to store and manage global state. The Root Scope Functions provide a way to manage and access the root scope of your application.
+
+* **setRootScope(rootScopeProperty, rootScopeValue)**
+    * Sets a value on the root scope.
+    * Passed arguments:
+        * **rootScopeProperty - String**
+        * **rootScopeValue - Any**
+    ```javascript
+    // Set root scope property 'fullName' to 'John Doe'
+    ARM.setRootScope('fullName', 'John Doe')
+    ```
+
+* **getRootScope(rootScopeProperty)**
+    * Retrieves a value from the root scope.
+    * Passed arguments:
+        * **rootScopeProperty - String**
+    ```javascript
+    // Returns value 'John Doe'
+    ARM.getRootScope('fullName')
+    ```
 ## Utility Functions
 Collection of utility functions that leverage Lodash for common data manipulation tasks.
 These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.
