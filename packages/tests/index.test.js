@@ -13,6 +13,7 @@ import execCreateTest from './units/create'
 import execRecordTest from './units/record'
 import execUtilsTest from './units/utils'
 import execInternalsTest from './units/internals'
+import execRootScopeTest from './units/root-scope'
 
 const ARM = new ApiResourceManager(['addresses', 'users'])
 
@@ -36,6 +37,7 @@ execCreateTest(ARM)
 execRecordTest(ARM)
 execUtilsTest(ARM)
 execInternalsTest(ARM)
+execRootScopeTest(ARM)
 
 afterEach(() => {
   server.shutdown()
