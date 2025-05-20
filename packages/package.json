@@ -1,9 +1,13 @@
 {
   "name": "arm-js-library",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist", "types", "DOCS.md"],
+  "files": [
+    "dist",
+    "types",
+    "DOCS.md"
+  ],
   "types": "types/index.d.ts",
   "exports": {
     ".": {

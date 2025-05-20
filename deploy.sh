@@ -90,8 +90,8 @@ prepare_release_files() {
   print_separator
 }
 
-# Function to publish the release version by creating a release branch, committing changes, pushing, merging into release, tagging, and rebasing main
-publish_release_version() {
+# Function to publish the release version branch by creating a release branch, committing changes, pushing, merging into release, tagging, and rebasing main
+publish_release_version_branch() {
   # Create a release branch, add changes, commit, and push
   git checkout -b "releases/$LATEST_VERSION" &&
   git add . &&
@@ -120,13 +120,10 @@ publish_release_version() {
   git pull origin main &&
   git rebase release &&
   git push -f origin main
-
-  # Publish the package to npm
-  cd packages && npm publish && cd ..
 }
 
-# Function to clean up the release version by rebasing develop, deleting the release branch, and fetching updates
-cleanup_release_version() {
+# Function to clean up the release version branch by rebasing develop, deleting the release branch, and fetching updates
+cleanup_release_version_branch() {
   # Rebase develop onto release and push
   git checkout develop &&
   git rebase -Xours release &&
@@ -144,6 +141,12 @@ cleanup_release_version() {
   git pull origin release &&
   git checkout main &&
   git pull origin main
+}
+
+# Function to publish the release version to npm
+publish_release_version_npm() {
+  # Publish the package to npm
+  cd packages && npm publish && cd ..
 }
 
 # Function to synchronize the repository by fetching updates and rebasing branches
@@ -255,14 +258,19 @@ print_separator
 # Prepare release files
 prepare_release_files
 
-# Publish the release version
-print_process "publishing:release-version"
-publish_release_version && print_status_done || print_status_failed
+# Publish the release version branch
+print_process "publishing:release-version-branch"
+publish_release_version_branch && print_status_done || print_status_failed
 print_separator
 
-# Clean up the release version
-print_process "cleaning:release-version"
-cleanup_release_version && print_status_done || print_status_failed
+# Clean up the release version branch
+print_process "cleaning:release-version-branch"
+cleanup_release_version_branch && print_status_done || print_status_failed
+print_separator
+
+# Print the release version
+print_process "publishing:release-version-npm"
+publish_release_version_npm && print_status_done || print_status_failed
 print_separator
 
 # Print the release version

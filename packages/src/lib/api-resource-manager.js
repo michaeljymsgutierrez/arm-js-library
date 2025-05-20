@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.0.3
+ * Version: 2.1.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -208,6 +208,12 @@ export default class ApiResourceManager {
     this.requestHashes = {}
 
     /**
+     * The root scope object.
+     * @type {Object}
+     */
+    this.rootScope = {}
+
+    /**
      * The reference key used for included data in request payloads. Defaults to 'type'.
      * @type {string}
      */
@@ -232,6 +238,7 @@ export default class ApiResourceManager {
       collections: observable,
       aliases: observable,
       requestHashes: observable,
+      rootScope: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
@@ -253,7 +260,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.0.3'
+      'ARM JS Library/2.1.0'
     )
   }
 
@@ -1871,6 +1878,24 @@ export default class ApiResourceManager {
     return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId,
     })
+  }
+
+  /**
+   * Sets a property on the root scope.
+   * @param {string} rootScopeProperty - The property name to set.
+   * @param {*} rootScopeValue - The value to set.
+   */
+  setRootScope(rootScopeProperty, rootScopeValue) {
+    setProperty(this.rootScope, rootScopeProperty, rootScopeValue)
+  }
+
+  /**
+   * Gets a property from the root scope.
+   * @param {string} rootScopeProperty - The property name to get.
+   * @returns {*} The value of the property.
+   */
+  getRootScope(rootScopeProperty) {
+    return getProperty(this.rootScope, rootScopeProperty)
   }
 
   /**

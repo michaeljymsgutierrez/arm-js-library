@@ -409,6 +409,12 @@ given <code>collectionName</code> and <code>collectionRecordId</code> from the <
 object of the <code>ApiResourceManager</code>. It does not make an API request;
 it only returns the locally stored record if found.</p>
 </dd>
+<dt><a href="#setRootScope">setRootScope(rootScopeProperty, rootScopeValue)</a></dt>
+<dd><p>Sets a property on the root scope.</p>
+</dd>
+<dt><a href="#getRootScope">getRootScope(rootScopeProperty)</a> ⇒ <code>*</code></dt>
+<dd><p>Gets a property from the root scope.</p>
+</dd>
 <dt><a href="#ajax">ajax([config])</a> ⇒ <code>Promise</code></dt>
 <dd><p>Makes an AJAX request using the axios library.</p>
 </dd>
@@ -1440,6 +1446,30 @@ it only returns the locally stored record if found.
 | --- | --- | --- |
 | collectionName | <code>string</code> | The name of the collection. |
 | collectionRecordId | <code>number</code> \| <code>string</code> | The ID of the record to find. |
+
+<a name="setRootScope"></a>
+
+## setRootScope(rootScopeProperty, rootScopeValue)
+Sets a property on the root scope.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootScopeProperty | <code>string</code> | The property name to set. |
+| rootScopeValue | <code>\*</code> | The value to set. |
+
+<a name="getRootScope"></a>
+
+## getRootScope(rootScopeProperty) ⇒ <code>\*</code>
+Gets a property from the root scope.
+
+**Kind**: global function  
+**Returns**: <code>\*</code> - The value of the property.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootScopeProperty | <code>string</code> | The property name to get. |
 
 <a name="ajax"></a>
 

@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.0.3-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.1.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -37,6 +37,7 @@
   * [Remove collection record functions](#remove-collection-record-functions)
   * [Push collection record function](#push-collection-record-function)
 * [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
+* [Root Scope: `Functions`](#root-scope-functions)
 * [Utility Functions](#utility-functions)
   * [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
   * [Data Validation and Comparison](#data-validation-and-comparison)
@@ -51,6 +52,7 @@
 * **Caching:** Optimizes performance by caching frequently accessed data, reducing API calls and improving response times.
 * **Request Management:** Tracks ongoing requests to prevent redundancy and manages their state.
 * **Utility Functions:** Offers helper functions for data manipulation, filtering, sorting, and other common operations.
+* **Root Scope:** An object that can be used to store and manage global state.
 
 ### Key Features
 * **Collections:** Stores fetched data in collections for efficient retrieval and management.
@@ -669,6 +671,28 @@ import { ARM } from '@components/arm-config-wrapper'
           </ul>
         )}
         ```
+
+## Root Scope Functions
+The root scope is an object that can be used to store and manage global state. The Root Scope Functions provide a way to manage and access it.
+
+* **setRootScope(rootScopeProperty, rootScopeValue)**
+    * Sets a value on the root scope.
+    * Passed arguments:
+        * **rootScopeProperty - String**
+        * **rootScopeValue - Any**
+    ```javascript
+    // Set root scope property 'fullName' to 'John Doe'
+    ARM.setRootScope('fullName', 'John Doe')
+    ```
+
+* **getRootScope(rootScopeProperty)**
+    * Retrieves a value from the root scope.
+    * Passed arguments:
+        * **rootScopeProperty - String**
+    ```javascript
+    // Returns value 'John Doe'
+    ARM.getRootScope('fullName')
+    ```
 ## Utility Functions
 Collection of utility functions that leverage Lodash for common data manipulation tasks.
 These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.

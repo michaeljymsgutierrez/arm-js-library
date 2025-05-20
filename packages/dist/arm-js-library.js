@@ -6,7 +6,7 @@ import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.0.3
+ * Version: 2.1.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -126,6 +126,7 @@ class ApiResourceManager {
     this.collections = {};
     this.aliases = {};
     this.requestHashes = {};
+    this.rootScope = {};
     this.payloadIncludedReference = "type";
     this._initializeCollections(collections);
     this._initializeAxiosConfig();
@@ -133,6 +134,7 @@ class ApiResourceManager {
       collections: observable,
       aliases: observable,
       requestHashes: observable,
+      rootScope: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
@@ -153,7 +155,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.0.3"
+      "ARM JS Library/2.1.0"
     );
   }
   /**
@@ -1520,6 +1522,22 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return find(getProperty(this.collections, collectionName), {
       id: collectionRecordId
     });
+  }
+  /**
+   * Sets a property on the root scope.
+   * @param {string} rootScopeProperty - The property name to set.
+   * @param {*} rootScopeValue - The value to set.
+   */
+  setRootScope(rootScopeProperty, rootScopeValue) {
+    setProperty(this.rootScope, rootScopeProperty, rootScopeValue);
+  }
+  /**
+   * Gets a property from the root scope.
+   * @param {string} rootScopeProperty - The property name to get.
+   * @returns {*} The value of the property.
+   */
+  getRootScope(rootScopeProperty) {
+    return getProperty(this.rootScope, rootScopeProperty);
   }
   /**
    * Makes an AJAX request using the axios library.

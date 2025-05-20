@@ -12,6 +12,7 @@ declare module "arm-js-library" {
         collections: {};
         aliases: {};
         requestHashes: {};
+        rootScope: {};
         payloadIncludedReference: string;
         /**
          * Initializes the Axios configuration with the base URL.
@@ -750,6 +751,18 @@ declare module "arm-js-library" {
          *                             in the local collection.
          */
         peekRecord(collectionName: string, collectionRecordId: number | string): any | undefined;
+        /**
+         * Sets a property on the root scope.
+         * @param {string} rootScopeProperty - The property name to set.
+         * @param {*} rootScopeValue - The value to set.
+         */
+        setRootScope(rootScopeProperty: string, rootScopeValue: any): void;
+        /**
+         * Gets a property from the root scope.
+         * @param {string} rootScopeProperty - The property name to get.
+         * @returns {*} The value of the property.
+         */
+        getRootScope(rootScopeProperty: string): any;
         /**
          * Makes an AJAX request using the axios library.
          *
