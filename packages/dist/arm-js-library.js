@@ -62,7 +62,8 @@ const {
   orderBy,
   uniqBy,
   groupBy,
-  pullAt
+  pullAt,
+  cloneDeep
 } = _;
 const defaultRequestArrayResponse = {
   isLoading: true,
@@ -138,7 +139,11 @@ class ApiResourceManager {
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
-      _addAlias: action
+      _addAlias: action,
+      _unloadCollection: action,
+      _unloadFromCollection: action,
+      _unloadFromRequestHashes: action,
+      _unloadFromAliases: action
     });
   }
   /**
@@ -478,8 +483,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   unloadRecord(currentRecord) {
     this._unloadFromCollection(currentRecord);
-    this._unloadFromRequestHashes(currentRecord);
     this._unloadFromAliases(currentRecord);
+    this._unloadFromRequestHashes(currentRecord);
   }
   /**
    * Saves a record to the server.
@@ -1030,16 +1035,35 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return getProperty(this.collections, collectionName) || observable([]);
   }
   /**
-   * Clears the contents of a specified collection.
+   * Unloads a collection by resetting it to an empty array.
+   *
+   * This method removes all records from the specified collection in the
+   * `collections` object of the `ApiResourceManager`.
+   *
+   * @private
+   * @param {string} collectionName - The name of the collection to unload.
+   */
+  _unloadCollection(collectionName) {
+    setProperty(this.collections, collectionName, []);
+  }
+  /**
+   * Clears the contents of a specified collection and unloads related data.
    *
    * This method removes all records from the collection with the given
-   * `collectionName` in the `collections` object of the
-   * `ApiResourceManager`.
+   * `collectionName` in the `collections` object of the `ApiResourceManager`.
+   * It also unloads the records from aliases and request hashes.
    *
    * @param {string} collectionName - The name of the collection to clear.
    */
   clearCollection(collectionName) {
-    setProperty(this.collections, collectionName, []);
+    const clonedCollectionRecords = cloneDeep(
+      getProperty(this.collections, collectionName)
+    );
+    this._unloadCollection(collectionName);
+    forEach(clonedCollectionRecords, (clonedCollectionRecord) => {
+      this._unloadFromAliases(clonedCollectionRecord);
+      this._unloadFromRequestHashes(clonedCollectionRecord);
+    });
   }
   /**
    * Retrieves an alias by its name, with optional fallback records.
