@@ -470,7 +470,7 @@ import { ARM } from '@components/arm-config-wrapper'
     ARM.unloadRecord(address)
     ```
 * **clearCollection(collectionName)**
-    * Remove all records from collection only.
+    * Clears a specified collection and unloads related records from aliases and request hashes.
     ```javascript
     ARM.clearCollection('addresses')
     ```
