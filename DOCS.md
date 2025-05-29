@@ -301,11 +301,16 @@ global scope and could potentially lead to naming conflicts.</p>
 from the <code>collections</code> object of the <code>ApiResourceManager</code>. If the
 collection does not exist, it returns an empty observable array.</p>
 </dd>
+<dt><a href="#_unloadCollection">_unloadCollection(collectionName)</a> ℗</dt>
+<dd><p>Unloads a collection by resetting it to an empty array.</p>
+<p>This method removes all records from the specified collection in the
+<code>collections</code> object of the <code>ApiResourceManager</code>.</p>
+</dd>
 <dt><a href="#clearCollection">clearCollection(collectionName)</a></dt>
-<dd><p>Clears the contents of a specified collection.</p>
+<dd><p>Clears the contents of a specified collection and unloads related data.</p>
 <p>This method removes all records from the collection with the given
-<code>collectionName</code> in the <code>collections</code> object of the
-<code>ApiResourceManager</code>.</p>
+<code>collectionName</code> in the <code>collections</code> object of the <code>ApiResourceManager</code>.
+It also unloads the records from aliases and request hashes.</p>
 </dd>
 <dt><a href="#getAlias">getAlias(aliasName, [fallbackRecords])</a> ⇒ <code>Array</code> | <code>Object</code></dt>
 <dd><p>Retrieves an alias by its name, with optional fallback records.</p>
@@ -1153,14 +1158,29 @@ collection does not exist, it returns an empty observable array.
 | --- | --- | --- |
 | collectionName | <code>string</code> | The name of the collection to retrieve. |
 
+<a name="_unloadCollection"></a>
+
+## \_unloadCollection(collectionName) ℗
+Unloads a collection by resetting it to an empty array.
+
+This method removes all records from the specified collection in the
+`collections` object of the `ApiResourceManager`.
+
+**Kind**: global function  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The name of the collection to unload. |
+
 <a name="clearCollection"></a>
 
 ## clearCollection(collectionName)
-Clears the contents of a specified collection.
+Clears the contents of a specified collection and unloads related data.
 
 This method removes all records from the collection with the given
-`collectionName` in the `collections` object of the
-`ApiResourceManager`.
+`collectionName` in the `collections` object of the `ApiResourceManager`.
+It also unloads the records from aliases and request hashes.
 
 **Kind**: global function  
 

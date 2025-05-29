@@ -509,11 +509,21 @@ declare module "arm-js-library" {
          */
         getCollection(collectionName: string): any[];
         /**
-         * Clears the contents of a specified collection.
+         * Unloads a collection by resetting it to an empty array.
+         *
+         * This method removes all records from the specified collection in the
+         * `collections` object of the `ApiResourceManager`.
+         *
+         * @private
+         * @param {string} collectionName - The name of the collection to unload.
+         */
+        private _unloadCollection;
+        /**
+         * Clears the contents of a specified collection and unloads related data.
          *
          * This method removes all records from the collection with the given
-         * `collectionName` in the `collections` object of the
-         * `ApiResourceManager`.
+         * `collectionName` in the `collections` object of the `ApiResourceManager`.
+         * It also unloads the records from aliases and request hashes.
          *
          * @param {string} collectionName - The name of the collection to clear.
          */
