@@ -762,6 +762,13 @@ declare module "arm-js-library" {
          */
         peekRecord(collectionName: string, collectionRecordId: number | string): any | undefined;
         /**
+         * Internal method to set a property on the root scope.
+         * @private
+         * @param {string} rootScopeProperty - The property name to set.
+         * @param {*} rootScopeValue - The value to set.
+         */
+        private _setRootScope;
+        /**
          * Sets a property on the root scope.
          * @param {string} rootScopeProperty - The property name to set.
          * @param {*} rootScopeValue - The value to set.

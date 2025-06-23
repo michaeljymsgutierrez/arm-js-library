@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.1.2
+ * Version: 2.1.3
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -248,6 +248,7 @@ export default class ApiResourceManager {
       _unloadFromCollection: action,
       _unloadFromRequestHashes: action,
       _unloadFromAliases: action,
+      _setRootScope: action,
     })
   }
 
@@ -265,7 +266,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.1.2'
+      'ARM JS Library/2.1.3'
     )
   }
 
@@ -1908,12 +1909,22 @@ export default class ApiResourceManager {
   }
 
   /**
+   * Internal method to set a property on the root scope.
+   * @private
+   * @param {string} rootScopeProperty - The property name to set.
+   * @param {*} rootScopeValue - The value to set.
+   */
+  _setRootScope(rootScopeProperty, rootScopeValue) {
+    setProperty(this.rootScope, rootScopeProperty, rootScopeValue)
+  }
+
+  /**
    * Sets a property on the root scope.
    * @param {string} rootScopeProperty - The property name to set.
    * @param {*} rootScopeValue - The value to set.
    */
   setRootScope(rootScopeProperty, rootScopeValue) {
-    setProperty(this.rootScope, rootScopeProperty, rootScopeValue)
+    this._setRootScope(rootScopeProperty, rootScopeValue)
   }
 
   /**

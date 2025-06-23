@@ -414,6 +414,9 @@ given <code>collectionName</code> and <code>collectionRecordId</code> from the <
 object of the <code>ApiResourceManager</code>. It does not make an API request;
 it only returns the locally stored record if found.</p>
 </dd>
+<dt><a href="#_setRootScope">_setRootScope(rootScopeProperty, rootScopeValue)</a> ℗</dt>
+<dd><p>Internal method to set a property on the root scope.</p>
+</dd>
 <dt><a href="#setRootScope">setRootScope(rootScopeProperty, rootScopeValue)</a></dt>
 <dd><p>Sets a property on the root scope.</p>
 </dd>
@@ -1466,6 +1469,19 @@ it only returns the locally stored record if found.
 | --- | --- | --- |
 | collectionName | <code>string</code> | The name of the collection. |
 | collectionRecordId | <code>number</code> \| <code>string</code> | The ID of the record to find. |
+
+<a name="_setRootScope"></a>
+
+## \_setRootScope(rootScopeProperty, rootScopeValue) ℗
+Internal method to set a property on the root scope.
+
+**Kind**: global function  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootScopeProperty | <code>string</code> | The property name to set. |
+| rootScopeValue | <code>\*</code> | The value to set. |
 
 <a name="setRootScope"></a>
 
