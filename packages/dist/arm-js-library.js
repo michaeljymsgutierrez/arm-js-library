@@ -143,7 +143,8 @@ class ApiResourceManager {
       _unloadCollection: action,
       _unloadFromCollection: action,
       _unloadFromRequestHashes: action,
-      _unloadFromAliases: action
+      _unloadFromAliases: action,
+      _setRootScope: action
     });
   }
   /**
@@ -1548,12 +1549,21 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     });
   }
   /**
+   * Internal method to set a property on the root scope.
+   * @private
+   * @param {string} rootScopeProperty - The property name to set.
+   * @param {*} rootScopeValue - The value to set.
+   */
+  _setRootScope(rootScopeProperty, rootScopeValue) {
+    setProperty(this.rootScope, rootScopeProperty, rootScopeValue);
+  }
+  /**
    * Sets a property on the root scope.
    * @param {string} rootScopeProperty - The property name to set.
    * @param {*} rootScopeValue - The value to set.
    */
   setRootScope(rootScopeProperty, rootScopeValue) {
-    setProperty(this.rootScope, rootScopeProperty, rootScopeValue);
+    this._setRootScope(rootScopeProperty, rootScopeValue);
   }
   /**
    * Gets a property from the root scope.
