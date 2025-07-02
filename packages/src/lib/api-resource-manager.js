@@ -249,6 +249,8 @@ export default class ApiResourceManager {
       _unloadFromRequestHashes: action,
       _unloadFromAliases: action,
       _setRootScope: action,
+      _setProperties: action,
+      createRecord: action,
     })
   }
 

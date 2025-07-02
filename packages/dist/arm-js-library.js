@@ -144,7 +144,9 @@ class ApiResourceManager {
       _unloadFromCollection: action,
       _unloadFromRequestHashes: action,
       _unloadFromAliases: action,
-      _setRootScope: action
+      _setRootScope: action,
+      _setProperties: action,
+      createRecord: action
     });
   }
   /**
