@@ -6,7 +6,7 @@ import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.1.3
+ * Version: 2.1.4
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -144,7 +144,9 @@ class ApiResourceManager {
       _unloadFromCollection: action,
       _unloadFromRequestHashes: action,
       _unloadFromAliases: action,
-      _setRootScope: action
+      _setRootScope: action,
+      _setProperties: action,
+      createRecord: action
     });
   }
   /**
@@ -161,7 +163,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.1.3"
+      "ARM JS Library/2.1.4"
     );
   }
   /**
