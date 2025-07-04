@@ -824,11 +824,7 @@ export default class ApiResourceManager {
       destroyRecord: (collectionConfig) =>
         this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (
-        collectionName,
-        collectionConfig,
-        collectionResourceConfig
-      ) =>
+      getCollection: (collectionName, collectionConfig) =>
         this._getCollectionRecord(
           collectionName,
           collectionConfig,

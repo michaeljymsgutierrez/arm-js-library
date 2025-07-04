@@ -671,7 +671,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       save: (collectionConfig) => this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) => this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (collectionName, collectionConfig, collectionResourceConfig) => this._getCollectionRecord(
+      getCollection: (collectionName, collectionConfig) => this._getCollectionRecord(
         collectionName,
         collectionConfig,
         collectionRecord
