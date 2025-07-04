@@ -630,7 +630,8 @@ import { ARM } from '@components/arm-config-wrapper'
         * Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
         * Passed arguments:
             * **collectionName - String**
-            * **collectionConfig -                 * **referenceKey - String**
+            * **collectionConfig - Object**                 
+                * **referenceKey - String**
                     * Collection record property mapping.
                 * **async - Boolean**
                     * Flag for invoking request function on resolving not yet loaded records on collection.
