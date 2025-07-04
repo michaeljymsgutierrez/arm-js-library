@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.1.4-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.2.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -630,7 +630,7 @@ import { ARM } from '@components/arm-config-wrapper'
         * Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
         * Passed arguments:
             * **collectionName - String**
-            * **collectionConfig - Object**
+            * **collectionConfig - Object**                 
                 * **referenceKey - String**
                     * Collection record property mapping.
                 * **async - Boolean**
@@ -639,6 +639,8 @@ import { ARM } from '@components/arm-config-wrapper'
                     * Filter return collection records based on passed filter properties.
                 * **sortBy - Array**
                     * Sort returned collection records based on passed array of sort criteria.
+                * **config - Object**
+                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
         ```javascript
         // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
@@ -663,6 +665,9 @@ import { ARM } from '@components/arm-config-wrapper'
                   attributes: {
                     'label': 'Test'
                   }
+                },
+                override: {
+                  namespace: 'api/v2',
                 }
               })
               .map((address, index) => (

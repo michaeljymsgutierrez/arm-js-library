@@ -605,7 +605,7 @@ declare module "arm-js-library" {
          * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
          * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
          * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
-         * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+         * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip, ignorePayload, override).
          *
          * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
          *

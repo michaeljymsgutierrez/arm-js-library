@@ -1284,7 +1284,7 @@ request caching, and asynchronous loading of related resources.
 | [requestConfig.resourceParams] | <code>Object</code> | Optional query parameters for the request. |
 | [requestConfig.resourcePayload] | <code>Object</code> | Optional payload data for POST/PUT requests. |
 | [requestConfig.resourceFallback] | <code>\*</code> | Optional fallback value to return if the request fails and no response data is available. |
-| [requestConfig.resourceConfig] | <code>Object</code> | Optional configuration overrides for the request (e.g., alias, autoResolve, skip). |
+| [requestConfig.resourceConfig] | <code>Object</code> | Optional configuration overrides for the request (e.g., alias, autoResolve, skip, ignorePayload, override). |
 
 <a name="_processRequestPayload"></a>
 

@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.1.4
+ * Version: 2.2.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -268,7 +268,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.1.4'
+      'ARM JS Library/2.2.0'
     )
   }
 
@@ -748,6 +748,12 @@ export default class ApiResourceManager {
     const isRecordsFromCurrentRecordObject = isPlainObject(
       recordsFromCurrentRecord
     )
+    const resourceConfig = omit(collectionConfig, [
+      'referenceKey',
+      'async',
+      'filterBy',
+      'sortBy',
+    ])
     const relatedRecords = isRecordsFromCurrentRecordObject
       ? [recordsFromCurrentRecord]
       : recordsFromCurrentRecord
@@ -776,7 +782,7 @@ export default class ApiResourceManager {
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: {},
+            resourceConfig: resourceConfig,
           }
           const responseObject = defaultRequestObjectResponse
 
@@ -1407,7 +1413,7 @@ export default class ApiResourceManager {
    * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
    * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
    * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip, ignorePayload, override).
    *
    * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
    *
