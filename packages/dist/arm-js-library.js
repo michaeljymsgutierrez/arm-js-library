@@ -596,9 +596,11 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    *                                        the records.
    * @param {Object|Array} currentRecord - The record containing potential
    *                                       related records.
+   * @param {Object} [collectionResourceConfig={}] - Additional configuration
+   *                                                 for the collection resource.
    * @returns {Object|Array} The retrieved records (single object or array).
    */
-  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
+  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord, collectionResourceConfig = {}) {
     const collectionReferenceKey = getProperty(collectionConfig, "referenceKey") || "";
     const collectionAsync = getProperty(collectionConfig, "async") || false;
     const collectionFilterBy = getProperty(collectionConfig, "filterBy") || {};
@@ -631,7 +633,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: {}
+            resourceConfig: collectionResourceConfig
           };
           const responseObject = defaultRequestObjectResponse;
           this._pushRequestHash(requestObject, responseObject);
@@ -665,10 +667,11 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       save: (collectionConfig) => this._saveRecord(collectionRecord, collectionConfig),
       destroyRecord: (collectionConfig) => this._deleteRecord(collectionRecord, collectionConfig),
       reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (collectionName, collectionConfig) => this._getCollectionRecord(
+      getCollection: (collectionName, collectionConfig, collectionResourceConfig) => this._getCollectionRecord(
         collectionName,
         collectionConfig,
-        collectionRecord
+        collectionRecord,
+        collectionResourceConfig
       )
     };
     const actionKeys = keysIn(actions);
@@ -1172,7 +1175,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @param {Object} [requestConfig.resourceParams] - Optional query parameters for the request.
    * @param {Object} [requestConfig.resourcePayload] - Optional payload data for POST/PUT requests.
    * @param {*} [requestConfig.resourceFallback] - Optional fallback value to return if the request fails and no response data is available.
-   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip).
+   * @param {Object} [requestConfig.resourceConfig] - Optional configuration overrides for the request (e.g., alias, autoResolve, skip, ignorePayload, override).
    *
    * @returns {Promise<*>} A Promise that resolves with the API response data or the request hash object (if autoResolve is true), or rejects with an error.
    *
