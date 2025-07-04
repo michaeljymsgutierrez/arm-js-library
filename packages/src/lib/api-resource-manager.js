@@ -735,16 +735,9 @@ export default class ApiResourceManager {
    *                                        the records.
    * @param {Object|Array} currentRecord - The record containing potential
    *                                       related records.
-   * @param {Object} [collectionResourceConfig={}] - Additional configuration
-   *                                                 for the collection resource.
    * @returns {Object|Array} The retrieved records (single object or array).
    */
-  _getCollectionRecord(
-    collectionName,
-    collectionConfig = {},
-    currentRecord,
-    collectionResourceConfig = {}
-  ) {
+  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey =
       getProperty(collectionConfig, 'referenceKey') || ''
     const collectionAsync = getProperty(collectionConfig, 'async') || false
@@ -755,6 +748,12 @@ export default class ApiResourceManager {
     const isRecordsFromCurrentRecordObject = isPlainObject(
       recordsFromCurrentRecord
     )
+    const resourceConfig = omit(collectionConfig, [
+      'referenceKey',
+      'async',
+      'filterBy',
+      'sortBy',
+    ])
     const relatedRecords = isRecordsFromCurrentRecordObject
       ? [recordsFromCurrentRecord]
       : recordsFromCurrentRecord
@@ -783,7 +782,7 @@ export default class ApiResourceManager {
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: collectionResourceConfig,
+            resourceConfig: resourceConfig,
           }
           const responseObject = defaultRequestObjectResponse
 
@@ -833,8 +832,7 @@ export default class ApiResourceManager {
         this._getCollectionRecord(
           collectionName,
           collectionConfig,
-          collectionRecord,
-          collectionResourceConfig
+          collectionRecord
         ),
     }
     const actionKeys = keysIn(actions)

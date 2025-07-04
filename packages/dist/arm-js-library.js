@@ -596,11 +596,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    *                                        the records.
    * @param {Object|Array} currentRecord - The record containing potential
    *                                       related records.
-   * @param {Object} [collectionResourceConfig={}] - Additional configuration
-   *                                                 for the collection resource.
    * @returns {Object|Array} The retrieved records (single object or array).
    */
-  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord, collectionResourceConfig = {}) {
+  _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey = getProperty(collectionConfig, "referenceKey") || "";
     const collectionAsync = getProperty(collectionConfig, "async") || false;
     const collectionFilterBy = getProperty(collectionConfig, "filterBy") || {};
@@ -609,6 +607,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     const isRecordsFromCurrentRecordObject = isPlainObject(
       recordsFromCurrentRecord
     );
+    const resourceConfig = omit(collectionConfig, [
+      "referenceKey",
+      "async",
+      "filterBy",
+      "sortBy"
+    ]);
     const relatedRecords = isRecordsFromCurrentRecordObject ? [recordsFromCurrentRecord] : recordsFromCurrentRecord;
     const collectionRecords = observable([]);
     forEach(relatedRecords, (relatedRecord) => {
@@ -633,7 +637,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             resourceParams: {},
             resourcePayload: null,
             resourceFallback: {},
-            resourceConfig: collectionResourceConfig
+            resourceConfig
           };
           const responseObject = defaultRequestObjectResponse;
           this._pushRequestHash(requestObject, responseObject);
@@ -670,8 +674,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       getCollection: (collectionName, collectionConfig, collectionResourceConfig) => this._getCollectionRecord(
         collectionName,
         collectionConfig,
-        collectionRecord,
-        collectionResourceConfig
+        collectionRecord
       )
     };
     const actionKeys = keysIn(actions);
