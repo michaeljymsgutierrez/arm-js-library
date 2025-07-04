@@ -630,8 +630,7 @@ import { ARM } from '@components/arm-config-wrapper'
         * Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
         * Passed arguments:
             * **collectionName - String**
-            * **collectionConfig - Object**
-                * **referenceKey - String**
+            * **collectionConfig -                 * **referenceKey - String**
                     * Collection record property mapping.
                 * **async - Boolean**
                     * Flag for invoking request function on resolving not yet loaded records on collection.
@@ -639,6 +638,8 @@ import { ARM } from '@components/arm-config-wrapper'
                     * Filter return collection records based on passed filter properties.
                 * **sortBy - Array**
                     * Sort returned collection records based on passed array of sort criteria.
+                * **config - Object**
+                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
         ```javascript
         // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
@@ -663,6 +664,9 @@ import { ARM } from '@components/arm-config-wrapper'
                   attributes: {
                     'label': 'Test'
                   }
+                },
+                override: {
+                  namespace: 'api/v2',
                 }
               })
               .map((address, index) => (
