@@ -1,6 +1,6 @@
 <p align="center" style="margin-bottom:10px;">
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://test140166510.wordpress.com/wp-content/uploads/2024/09/arm-js.png" alt="arm-js-logo" height="200" />
+    <img src="https://test140166510.wordpress.com/wp-content/uploads/2024/09/arm-js.png" alt="arm-js-logo"  style="max-width:100%; height:200px;" />
   </a>
 </p>
 
