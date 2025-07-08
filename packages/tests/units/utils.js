@@ -36,6 +36,13 @@ const execUtilsTest = (ARM) => {
         ])
       })
 
+      test('Verify uniq functionality', () => {
+        expect(ARM.uniq([1, 2, 3, 4, 1, 2, 3])).toEqual([1, 2, 3, 4])
+        expect(ARM.uniq(['hi', 'hello', 'hello', 'hi', 'hello world'])).toEqual(
+          ['hi', 'hello', 'hello world']
+        )
+      })
+
       test('Verify groupBy functionality', () => {
         expect(ARM.groupBy(addresses, 'attributes.kind')).toEqual({
           office: [
