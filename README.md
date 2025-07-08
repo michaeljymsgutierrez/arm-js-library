@@ -758,6 +758,12 @@ const addresses = [
     // Returns records with ids 1 and 2
     ARM.uniqBy(addresses, 'attributes.kind')
     ```
+* **uniq(values)**
+    * Removes **duplicate** values from an array.
+    ```javascript
+    // Returns array with 1,2,3
+    ARM.uniq([1, 2, 2, 3, 3, 3])
+    ```
 * **groupBy(objects, groupByProperty)**
     * **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property. 
     ```javascript
