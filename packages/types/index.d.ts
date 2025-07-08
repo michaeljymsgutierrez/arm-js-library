@@ -823,6 +823,13 @@ declare module "arm-js-library" {
          */
         uniqBy(objects: Array<any>, uniqByProperty: string): Array<any>;
         /**
+         * Creates a new array of unique primitive values.
+         *
+         * @param {Array<*>} values - The array of values to process.
+         * @returns {Array<*>} The array of unique values.
+         */
+        uniq(values: Array<any>): Array<any>;
+        /**
          * Groups objects into arrays based on a specified property.
          *
          * @param {Array<Object>} objects - The array of objects to group.

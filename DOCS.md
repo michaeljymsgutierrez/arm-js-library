@@ -439,6 +439,9 @@ specified properties.</p>
 <dt><a href="#uniqBy">uniqBy(objects, uniqByProperty)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Creates a new array of unique objects based on a specified property.</p>
 </dd>
+<dt><a href="#uniq">uniq(values)</a> ⇒ <code>Array.&lt;*&gt;</code></dt>
+<dd><p>Creates a new array of unique primitive values.</p>
+</dd>
 <dt><a href="#groupBy">groupBy(objects, groupByProperty)</a> ⇒ <code>Object</code></dt>
 <dd><p>Groups objects into arrays based on a specified property.</p>
 </dd>
@@ -1572,6 +1575,18 @@ Creates a new array of unique objects based on a specified property.
 | --- | --- | --- |
 | objects | <code>Array.&lt;Object&gt;</code> | The array of objects to process. |
 | uniqByProperty | <code>string</code> | The property to use for uniqueness                                 comparison. |
+
+<a name="uniq"></a>
+
+## uniq(values) ⇒ <code>Array.&lt;\*&gt;</code>
+Creates a new array of unique primitive values.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;\*&gt;</code> - The array of unique values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| values | <code>Array.&lt;\*&gt;</code> | The array of values to process. |
 
 <a name="groupBy"></a>
 

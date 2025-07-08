@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.2.0
+ * Version: 2.3.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -70,6 +70,7 @@ const {
   last,
   orderBy,
   uniqBy,
+  uniq,
   groupBy,
   pullAt,
   cloneDeep,
@@ -268,7 +269,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.2.0'
+      'ARM JS Library/2.3.0'
     )
   }
 
@@ -1999,6 +2000,16 @@ export default class ApiResourceManager {
    */
   uniqBy(objects, uniqByProperty) {
     return uniqBy(objects, uniqByProperty)
+  }
+
+  /**
+   * Creates a new array of unique primitive values.
+   *
+   * @param {Array<*>} values - The array of values to process.
+   * @returns {Array<*>} The array of unique values.
+   */
+  uniq(values) {
+    return uniq(values)
   }
 
   /**

@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.2.0-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.3.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -757,6 +757,12 @@ const addresses = [
     ```javascript
     // Returns records with ids 1 and 2
     ARM.uniqBy(addresses, 'attributes.kind')
+    ```
+* **uniq(values)**
+    * Removes **duplicate** values from an array.
+    ```javascript
+    // Returns array with 1,2,3
+    ARM.uniq([1, 2, 2, 3, 3, 3])
     ```
 * **groupBy(objects, groupByProperty)**
     * **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property. 

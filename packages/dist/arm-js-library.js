@@ -6,7 +6,7 @@ import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.2.0
+ * Version: 2.3.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -61,6 +61,7 @@ const {
   last,
   orderBy,
   uniqBy,
+  uniq,
   groupBy,
   pullAt,
   cloneDeep
@@ -163,7 +164,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.2.0"
+      "ARM JS Library/2.3.0"
     );
   }
   /**
@@ -1632,6 +1633,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   uniqBy(objects, uniqByProperty) {
     return uniqBy(objects, uniqByProperty);
+  }
+  /**
+   * Creates a new array of unique primitive values.
+   *
+   * @param {Array<*>} values - The array of values to process.
+   * @returns {Array<*>} The array of unique values.
+   */
+  uniq(values) {
+    return uniq(values);
   }
   /**
    * Groups objects into arrays based on a specified property.
