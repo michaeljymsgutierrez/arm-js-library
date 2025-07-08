@@ -1,6 +1,6 @@
 <p align="center" style="margin-bottom:10px;">
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://test140166510.wordpress.com/wp-content/uploads/2024/09/arm-js.png" alt="arm-js-logo"  style="max-width:100%; height:200px;" />
+    <img src="https://assets-omega-neon.vercel.app/images/arm-js-title-logo.png" alt="arm-js-logo" height="200" width="143.7" />
   </a>
 </p>
 
@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.3.0-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.3.1-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
