@@ -61,6 +61,7 @@ const {
   last,
   orderBy,
   uniqBy,
+  uniq,
   groupBy,
   pullAt,
   cloneDeep
@@ -1632,6 +1633,15 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   uniqBy(objects, uniqByProperty) {
     return uniqBy(objects, uniqByProperty);
+  }
+  /**
+   * Creates a new array of unique primitive values.
+   *
+   * @param {Array<*>} values - The array of values to process.
+   * @returns {Array<*>} The array of unique values.
+   */
+  uniq(values) {
+    return uniq(values);
   }
   /**
    * Groups objects into arrays based on a specified property.

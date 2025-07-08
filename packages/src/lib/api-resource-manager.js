@@ -70,6 +70,7 @@ const {
   last,
   orderBy,
   uniqBy,
+  uniq,
   groupBy,
   pullAt,
   cloneDeep,
@@ -1999,6 +2000,16 @@ export default class ApiResourceManager {
    */
   uniqBy(objects, uniqByProperty) {
     return uniqBy(objects, uniqByProperty)
+  }
+
+  /**
+   * Creates a new array of unique primitive values.
+   *
+   * @param {Array<*>} values - The array of values to process.
+   * @returns {Array<*>} The array of unique values.
+   */
+  uniq(values) {
+    return uniq(values)
   }
 
   /**
