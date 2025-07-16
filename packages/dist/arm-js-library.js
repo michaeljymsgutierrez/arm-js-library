@@ -686,6 +686,30 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
   }
   /**
+   * Injects actions into a request hash.
+   *
+   * This method adds a `reload` action to the specified request hash, allowing
+   * it to be reloaded using the `_reloadRequest` method.
+   *
+   * @private
+   * @param {Object} requestObject - The request object associated with the hash.
+   * @param {string} requestHashKey - The key of the request hash to inject actions into.
+   */
+  _injectRequestHashActions(requestObject, requestHashKey) {
+    const actions = {
+      reload: () => this._reloadRequest(requestObject, requestHashKey)
+    };
+    const actionKeys = keysIn(actions);
+    forEach(
+      actionKeys,
+      (actionKey) => setProperty(
+        this.requestHashes,
+        [requestHashKey, actionKey],
+        actions[actionKey]
+      )
+    );
+  }
+  /**
    * Injects reference keys into a collection record.
    *
    * This method adds essential reference keys to a `collectionRecord`,
@@ -942,7 +966,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * If a request hash with the same key already exists and the `responseObject`
    * is marked as `isNew`, it updates the existing hash's `isNew` flag to
    * `false`. Otherwise, it adds a new request hash with the given key and
-   * `responseObject`.
+   * `responseObject`. Additionally, it injects request hash actions using
+   * the `_injectRequestHashActions` method, enabling features like reload.
    *
    * @private
    * @param {Object} requestObject - The request object used to generate the
@@ -958,9 +983,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     } else {
       setProperty(this.requestHashes, requestHashKey, responseObject);
     }
-    setProperty(this.requestHashes, [requestHashKey, "reload"], () => {
-      this._reloadRequest(requestObject);
-    });
+    this._injectRequestHashActions(requestObject, requestHashKey);
     return getProperty(this.requestHashes, requestHashKey);
   }
   /**
@@ -1141,16 +1164,25 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * Reloads a request by updating its skip ID and re-executing the request.
    *
    * This method modifies the `requestObject` by generating a new skip ID
-   * using `uuidv1()` and then re-executes the request using the `_request`
-   * method.
+   * using `uuidv1()` and setting `autoResolve` to `false` and `autoResolveOrigin`
+   * to `'_internal'`. It then re-executes the request using the `_request`
+   * method. During the reload process, it sets the `isLoading` flag of the
+   * corresponding request hash to `true` and resets it to `false` after
+   * the request is completed.
    *
    * @private
    * @param {Object} requestObject - The request object to reload.
-   * @returns {Promise} A promise that resolves with the response of the reloaded request.
+   * @param {string} requestHashKey - The key of the request hash to update.
+   * @returns {Promise<void>} A promise that resolves when the request is reloaded.
    */
-  _reloadRequest(requestObject) {
+  async _reloadRequest(requestObject, requestHashKey) {
+    setProperty(this.requestHashes, [requestHashKey, "isLoading"], true);
     setProperty(requestObject, "resourceConfig.skipId", v1());
-    return this._request(requestObject);
+    setProperty(requestObject, "resourceConfig.autoResolve", false);
+    setProperty(requestObject, "resourceConfig.autoResolveOrigin", "_internal");
+    await this._request(requestObject);
+    setProperty(this.requestHashes, [requestHashKey, "isLoading"], false);
+    return getProperty(this.requestHashes, requestHashKey);
   }
   /**
    * Resolves the request based on configuration.
