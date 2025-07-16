@@ -251,6 +251,7 @@ export default class ApiResourceManager {
       _unloadFromAliases: action,
       _setRootScope: action,
       _setProperties: action,
+      _reloadRequest: action,
       createRecord: action,
     })
   }
@@ -1166,7 +1167,7 @@ export default class ApiResourceManager {
       setProperty(this.requestHashes, requestHashKey, responseObject)
     }
 
-    // console.log('requestHashKey', requestObject)
+    // Set reload function on requestHash
     setProperty(this.requestHashes, [requestHashKey, 'reload'], () => {
       this._reloadRequest(requestObject)
     })
