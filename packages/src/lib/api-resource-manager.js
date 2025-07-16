@@ -1370,6 +1370,17 @@ export default class ApiResourceManager {
     })
   }
 
+  /**
+   * Reloads a request by updating its skip ID and re-executing the request.
+   *
+   * This method modifies the `requestObject` by generating a new skip ID
+   * using `uuidv1()` and then re-executes the request using the `_request`
+   * method.
+   *
+   * @private
+   * @param {Object} requestObject - The request object to reload.
+   * @returns {Promise} A promise that resolves with the response of the reloaded request.
+   */
   _reloadRequest(requestObject) {
     setProperty(requestObject, 'resourceConfig.skipId', uuidv1())
     return this._request(requestObject)

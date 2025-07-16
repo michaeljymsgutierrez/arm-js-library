@@ -147,6 +147,7 @@ class ApiResourceManager {
       _unloadFromAliases: action,
       _setRootScope: action,
       _setProperties: action,
+      _reloadRequest: action,
       createRecord: action
     });
   }
@@ -957,6 +958,9 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     } else {
       setProperty(this.requestHashes, requestHashKey, responseObject);
     }
+    setProperty(this.requestHashes, [requestHashKey, "reload"], () => {
+      this._reloadRequest(requestObject);
+    });
     return getProperty(this.requestHashes, requestHashKey);
   }
   /**
@@ -1132,6 +1136,21 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return find(collection, {
       id: collectionRecordId
     });
+  }
+  /**
+   * Reloads a request by updating its skip ID and re-executing the request.
+   *
+   * This method modifies the `requestObject` by generating a new skip ID
+   * using `uuidv1()` and then re-executes the request using the `_request`
+   * method.
+   *
+   * @private
+   * @param {Object} requestObject - The request object to reload.
+   * @returns {Promise} A promise that resolves with the response of the reloaded request.
+   */
+  _reloadRequest(requestObject) {
+    setProperty(requestObject, "resourceConfig.skipId", v1());
+    return this._request(requestObject);
   }
   /**
    * Resolves the request based on configuration.
