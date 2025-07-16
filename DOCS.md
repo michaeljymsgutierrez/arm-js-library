@@ -170,6 +170,11 @@ These methods provide convenient ways to interact with the record,
 such as getting and setting properties, saving, deleting, reloading,
 and retrieving related collections.</p>
 </dd>
+<dt><a href="#_injectRequestHashActions">_injectRequestHashActions(requestObject, requestHashKey)</a> ℗</dt>
+<dd><p>Injects actions into a request hash.</p>
+<p>This method adds a <code>reload</code> action to the specified request hash, allowing
+it to be reloaded using the <code>_reloadRequest</code> method.</p>
+</dd>
 <dt><a href="#_injectCollectionReferenceKeys">_injectCollectionReferenceKeys(collectionName, collectionRecord, [collectionRecordHashId])</a> ℗</dt>
 <dd><p>Injects reference keys into a collection record.</p>
 <p>This method adds essential reference keys to a <code>collectionRecord</code>,
@@ -253,7 +258,8 @@ method based on the <code>requestObject</code>.</p>
 <p>If a request hash with the same key already exists and the <code>responseObject</code>
 is marked as <code>isNew</code>, it updates the existing hash&#39;s <code>isNew</code> flag to
 <code>false</code>. Otherwise, it adds a new request hash with the given key and
-<code>responseObject</code>.</p>
+<code>responseObject</code>. Additionally, it injects request hash actions using
+the <code>_injectRequestHashActions</code> method, enabling features like reload.</p>
 </dd>
 <dt><a href="#setHost">setHost(host)</a></dt>
 <dd><p>Sets the host URL for the client and initializes the Axios configuration.</p>
@@ -330,6 +336,15 @@ is true (default), a unique ID is generated for the record using
 <p>The method injects necessary reference keys and actions into the
 record using <code>_injectCollectionReferenceKeys</code> and
 <code>_injectCollectionActions</code>.</p>
+</dd>
+<dt><a href="#_reloadRequest">_reloadRequest(requestObject, requestHashKey)</a> ⇒ <code>Promise.&lt;void&gt;</code> ℗</dt>
+<dd><p>Reloads a request by updating its skip ID and re-executing the request.</p>
+<p>This method modifies the <code>requestObject</code> by generating a new skip ID
+using <code>uuidv1()</code> and setting <code>autoResolve</code> to <code>false</code> and <code>autoResolveOrigin</code>
+to <code>&#39;_internal&#39;</code>. It then re-executes the request using the <code>_request</code>
+method. During the reload process, it sets the <code>isLoading</code> flag of the
+corresponding request hash to <code>true</code> and resets it to <code>false</code> after
+the request is completed.</p>
 </dd>
 <dt><a href="#_resolveRequest">_resolveRequest(config, requestXHR, requestHashObject)</a> ⇒ <code>Promise</code> | <code>Object</code> ℗</dt>
 <dd><p>Resolves the request based on configuration.</p>
@@ -899,6 +914,22 @@ and retrieving related collections.
 | --- | --- | --- |
 | collectionRecord | <code>Object</code> | The collection record to inject                                   actions into. |
 
+<a name="_injectRequestHashActions"></a>
+
+## \_injectRequestHashActions(requestObject, requestHashKey) ℗
+Injects actions into a request hash.
+
+This method adds a `reload` action to the specified request hash, allowing
+it to be reloaded using the `_reloadRequest` method.
+
+**Kind**: global function  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| requestObject | <code>Object</code> | The request object associated with the hash. |
+| requestHashKey | <code>string</code> | The key of the request hash to inject actions into. |
+
 <a name="_injectCollectionReferenceKeys"></a>
 
 ## \_injectCollectionReferenceKeys(collectionName, collectionRecord, [collectionRecordHashId]) ℗
@@ -1055,7 +1086,8 @@ method based on the `requestObject`.
 If a request hash with the same key already exists and the `responseObject`
 is marked as `isNew`, it updates the existing hash's `isNew` flag to
 `false`. Otherwise, it adds a new request hash with the given key and
-`responseObject`.
+`responseObject`. Additionally, it injects request hash actions using
+the `_injectRequestHashActions` method, enabling features like reload.
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - The updated or created request hash object.  
@@ -1237,6 +1269,27 @@ record using `_injectCollectionReferenceKeys` and
 | collectionName | <code>string</code> |  | The name of the collection to create                                 the record in. |
 | [collectionRecord] | <code>Object</code> | <code>{}</code> | Optional initial data for the                                        record. |
 | [collectionRecordRandomId] | <code>boolean</code> | <code>true</code> | Whether to generate                                                    a random ID. |
+
+<a name="_reloadRequest"></a>
+
+## \_reloadRequest(requestObject, requestHashKey) ⇒ <code>Promise.&lt;void&gt;</code> ℗
+Reloads a request by updating its skip ID and re-executing the request.
+
+This method modifies the `requestObject` by generating a new skip ID
+using `uuidv1()` and setting `autoResolve` to `false` and `autoResolveOrigin`
+to `'_internal'`. It then re-executes the request using the `_request`
+method. During the reload process, it sets the `isLoading` flag of the
+corresponding request hash to `true` and resets it to `false` after
+the request is completed.
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;void&gt;</code> - A promise that resolves when the request is reloaded.  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| requestObject | <code>Object</code> | The request object to reload. |
+| requestHashKey | <code>string</code> | The key of the request hash to update. |
 
 <a name="_resolveRequest"></a>
 

@@ -6,7 +6,7 @@ import md5 from "md5";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.3.1
+ * Version: 2.4.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -147,6 +147,7 @@ class ApiResourceManager {
       _unloadFromAliases: action,
       _setRootScope: action,
       _setProperties: action,
+      _reloadRequest: action,
       createRecord: action
     });
   }
@@ -164,7 +165,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.3.1"
+      "ARM JS Library/2.4.0"
     );
   }
   /**
@@ -685,6 +686,30 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     );
   }
   /**
+   * Injects actions into a request hash.
+   *
+   * This method adds a `reload` action to the specified request hash, allowing
+   * it to be reloaded using the `_reloadRequest` method.
+   *
+   * @private
+   * @param {Object} requestObject - The request object associated with the hash.
+   * @param {string} requestHashKey - The key of the request hash to inject actions into.
+   */
+  _injectRequestHashActions(requestObject, requestHashKey) {
+    const actions = {
+      reload: () => this._reloadRequest(requestObject, requestHashKey)
+    };
+    const actionKeys = keysIn(actions);
+    forEach(
+      actionKeys,
+      (actionKey) => setProperty(
+        this.requestHashes,
+        [requestHashKey, actionKey],
+        actions[actionKey]
+      )
+    );
+  }
+  /**
    * Injects reference keys into a collection record.
    *
    * This method adds essential reference keys to a `collectionRecord`,
@@ -941,7 +966,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * If a request hash with the same key already exists and the `responseObject`
    * is marked as `isNew`, it updates the existing hash's `isNew` flag to
    * `false`. Otherwise, it adds a new request hash with the given key and
-   * `responseObject`.
+   * `responseObject`. Additionally, it injects request hash actions using
+   * the `_injectRequestHashActions` method, enabling features like reload.
    *
    * @private
    * @param {Object} requestObject - The request object used to generate the
@@ -957,6 +983,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     } else {
       setProperty(this.requestHashes, requestHashKey, responseObject);
     }
+    this._injectRequestHashActions(requestObject, requestHashKey);
     return getProperty(this.requestHashes, requestHashKey);
   }
   /**
@@ -1132,6 +1159,30 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return find(collection, {
       id: collectionRecordId
     });
+  }
+  /**
+   * Reloads a request by updating its skip ID and re-executing the request.
+   *
+   * This method modifies the `requestObject` by generating a new skip ID
+   * using `uuidv1()` and setting `autoResolve` to `false` and `autoResolveOrigin`
+   * to `'_internal'`. It then re-executes the request using the `_request`
+   * method. During the reload process, it sets the `isLoading` flag of the
+   * corresponding request hash to `true` and resets it to `false` after
+   * the request is completed.
+   *
+   * @private
+   * @param {Object} requestObject - The request object to reload.
+   * @param {string} requestHashKey - The key of the request hash to update.
+   * @returns {Promise<void>} A promise that resolves when the request is reloaded.
+   */
+  async _reloadRequest(requestObject, requestHashKey) {
+    setProperty(this.requestHashes, [requestHashKey, "isLoading"], true);
+    setProperty(requestObject, "resourceConfig.skipId", v1());
+    setProperty(requestObject, "resourceConfig.autoResolve", false);
+    setProperty(requestObject, "resourceConfig.autoResolveOrigin", "_internal");
+    await this._request(requestObject);
+    setProperty(this.requestHashes, [requestHashKey, "isLoading"], false);
+    return getProperty(this.requestHashes, requestHashKey);
   }
   /**
    * Resolves the request based on configuration.
