@@ -1166,6 +1166,11 @@ export default class ApiResourceManager {
       setProperty(this.requestHashes, requestHashKey, responseObject)
     }
 
+    // console.log('requestHashKey', requestObject)
+    setProperty(this.requestHashes, [requestHashKey, 'reload'], () => {
+      this._reloadRequest(requestObject)
+    })
+
     return getProperty(this.requestHashes, requestHashKey)
   }
 
@@ -1362,6 +1367,11 @@ export default class ApiResourceManager {
     return find(collection, {
       id: collectionRecordId,
     })
+  }
+
+  _reloadRequest(requestObject) {
+    setProperty(requestObject, 'resourceConfig.skipId', uuidv1())
+    return this._request(requestObject)
   }
 
   /**
