@@ -400,6 +400,7 @@ import { ARM } from '@components/arm-config-wrapper'
   error: null,
   included: [],
   meta: {},
+  reload: function
 }
 ```
 
