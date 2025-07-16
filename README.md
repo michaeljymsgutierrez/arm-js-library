@@ -387,6 +387,8 @@ import { ARM } from '@components/arm-config-wrapper'
 * **meta - Object**
     * Contains the request returned payload property **meta**.
     * Specifically for **JSON API**.
+* **reload - Function**
+    * Allows for **re-execution** of a request and automatic update of the **request hash object** and relevant **collections**.
 ```javascript
 // Returned object data properties are observable
 // It will automatically update once the request is already done
