@@ -665,19 +665,28 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    *                                   actions into.
    */
   _injectCollectionActions(collectionRecord) {
+    const armInstance = this;
     const actions = {
-      get: this._getRecordProperty,
-      set: this._setRecordProperty,
-      setProperties: this._setRecordProperties,
-      getARMContext: () => this,
-      save: (collectionConfig) => this._saveRecord(collectionRecord, collectionConfig),
-      destroyRecord: (collectionConfig) => this._deleteRecord(collectionRecord, collectionConfig),
-      reload: () => this._reloadRecord(collectionRecord),
-      getCollection: (collectionName, collectionConfig) => this._getCollectionRecord(
-        collectionName,
-        collectionConfig,
-        collectionRecord
-      )
+      get: armInstance._getRecordProperty,
+      set: armInstance._setRecordProperty,
+      setProperties: armInstance._setRecordProperties,
+      getARMContext: () => armInstance,
+      save: function(collectionConfig) {
+        return armInstance._saveRecord(this, collectionConfig);
+      },
+      destroyRecord: function(collectionConfig) {
+        return armInstance._deleteRecord(this, collectionConfig);
+      },
+      reload: function() {
+        return armInstance._reloadRecord(this);
+      },
+      getCollection: function(collectionName, collectionConfig) {
+        return armInstance._getCollectionRecord(
+          collectionName,
+          collectionConfig,
+          this
+        );
+      }
     };
     const actionKeys = keysIn(actions);
     forEach(
