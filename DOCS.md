@@ -165,10 +165,13 @@ fetch them.</p>
 </dd>
 <dt><a href="#_injectCollectionActions">_injectCollectionActions(collectionRecord)</a> ℗</dt>
 <dd><p>Injects action methods into a collection record.</p>
-<p>This method adds predefined action methods to a <code>collectionRecord</code>.
-These methods provide convenient ways to interact with the record,
-such as getting and setting properties, saving, deleting, reloading,
-and retrieving related collections.</p>
+<p>This method decorates a <code>collectionRecord</code> with predefined action methods,
+enabling convenient interactions with the record, including:</p>
+<ul>
+<li>Property access and modification</li>
+<li>Persistence operations (save, delete, reload)</li>
+<li>Retrieval of related collections</li>
+</ul>
 </dd>
 <dt><a href="#_injectRequestHashActions">_injectRequestHashActions(requestObject, requestHashKey)</a> ℗</dt>
 <dd><p>Injects actions into a request hash.</p>
@@ -902,17 +905,18 @@ fetch them.
 ## \_injectCollectionActions(collectionRecord) ℗
 Injects action methods into a collection record.
 
-This method adds predefined action methods to a `collectionRecord`.
-These methods provide convenient ways to interact with the record,
-such as getting and setting properties, saving, deleting, reloading,
-and retrieving related collections.
+This method decorates a `collectionRecord` with predefined action methods,
+enabling convenient interactions with the record, including:
+- Property access and modification
+- Persistence operations (save, delete, reload)
+- Retrieval of related collections
 
 **Kind**: global function  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| collectionRecord | <code>Object</code> | The collection record to inject                                   actions into. |
+| collectionRecord | <code>Object</code> | The collection record to inject actions into. |
 
 <a name="_injectRequestHashActions"></a>
 
