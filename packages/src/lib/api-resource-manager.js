@@ -806,14 +806,14 @@ export default class ApiResourceManager {
   /**
    * Injects action methods into a collection record.
    *
-   * This method adds predefined action methods to a `collectionRecord`.
-   * These methods provide convenient ways to interact with the record,
-   * such as getting and setting properties, saving, deleting, reloading,
-   * and retrieving related collections.
+   * This method decorates a `collectionRecord` with predefined action methods,
+   * enabling convenient interactions with the record, including:
+   * - Property access and modification
+   * - Persistence operations (save, delete, reload)
+   * - Retrieval of related collections
    *
    * @private
-   * @param {Object} collectionRecord - The collection record to inject
-   *                                   actions into.
+   * @param {Object} collectionRecord - The collection record to inject actions into.
    */
   _injectCollectionActions(collectionRecord) {
     const armInstance = this
@@ -839,24 +839,6 @@ export default class ApiResourceManager {
         )
       },
     }
-
-    // const actions = {
-    //   get: this._getRecordProperty,
-    //   set: this._setRecordProperty,
-    //   setProperties: this._setRecordProperties,
-    //   getARMContext: () => this,
-    //   save: (collectionConfig) =>
-    //     this._saveRecord(collectionRecord, collectionConfig),
-    //   destroyRecord: (collectionConfig) =>
-    //     this._deleteRecord(collectionRecord, collectionConfig),
-    //   reload: () => this._reloadRecord(collectionRecord),
-    //   getCollection: (collectionName, collectionConfig) =>
-    //     this._getCollectionRecord(
-    //       collectionName,
-    //       collectionConfig,
-    //       collectionRecord
-    //     ),
-    // }
 
     const actionKeys = keysIn(actions)
 
