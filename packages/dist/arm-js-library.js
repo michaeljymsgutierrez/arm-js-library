@@ -555,16 +555,14 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Reloads a record from the server.
    *
-   * This method reloads the `currentRecord` from the server by making
-   * a GET API request. It fetches the latest data for the record and
-   * updates the local copy.
+   * Fetches the latest data for the specified record and updates the local copy.
    *
    * @private
-   * @param {Object} currentRecord - The record to be reloaded.
-   * @returns {Promise} A Promise that resolves with the updated record
-   *                    or rejects with an error.
+   * @param {Object} currentRecord - The record to reload.
+   * @param {Object} [collectionConfig={}] - Optional configuration for the collection.
+   * @returns {Promise<Object>} A Promise resolving with the updated record or rejecting with an error.
    */
-  async _reloadRecord(currentRecord) {
+  async _reloadRecord(currentRecord, collectionConfig = {}) {
     return this._request({
       resourceMethod: "get",
       resourceName: getProperty(currentRecord, "collectionName"),
@@ -573,6 +571,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       resourcePayload: null,
       resourceFallback: {},
       resourceConfig: {
+        ...collectionConfig,
         skipId: v1(),
         autoResolveOrigin: "_internal"
       }
@@ -677,8 +676,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       destroyRecord: function(collectionConfig) {
         return armInstance._deleteRecord(this, collectionConfig);
       },
-      reload: function() {
-        return armInstance._reloadRecord(this);
+      reload: function(collectionConfig) {
+        return armInstance._reloadRecord(this, collectionConfig);
       },
       getCollection: function(collectionName, collectionConfig) {
         return armInstance._getCollectionRecord(
