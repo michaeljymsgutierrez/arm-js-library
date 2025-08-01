@@ -605,9 +605,18 @@ import { ARM } from '@components/arm-config-wrapper'
     * **reload()**
         * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/123456`
+        * Support collectionConfig. - **optional**
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
         // Returned promise
         address.reload()
+
+        // With collectionConfig
+        address.reload({ 
+           override: {
+               namespace: 'api/v2',
+           }
+        })
         ```
     * **destroyRecord(collectionConfig)**
         * Remove collection record permanently from server.
