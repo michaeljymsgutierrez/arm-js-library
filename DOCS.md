@@ -145,11 +145,9 @@ request.</p>
 a DELETE API request. The <code>collectionConfig</code> parameter can be used
 to provide additional configuration for the request.</p>
 </dd>
-<dt><a href="#_reloadRecord">_reloadRecord(currentRecord)</a> ⇒ <code>Promise</code> ℗</dt>
+<dt><a href="#_reloadRecord">_reloadRecord(currentRecord, [collectionConfig])</a> ⇒ <code>Promise.&lt;Object&gt;</code> ℗</dt>
 <dd><p>Reloads a record from the server.</p>
-<p>This method reloads the <code>currentRecord</code> from the server by making
-a GET API request. It fetches the latest data for the record and
-updates the local copy.</p>
+<p>Fetches the latest data for the specified record and updates the local copy.</p>
 </dd>
 <dt><a href="#_getCollectionRecord">_getCollectionRecord(collectionName, [collectionConfig], currentRecord)</a> ⇒ <code>Object</code> | <code>Array</code> ℗</dt>
 <dd><p>Retrieves records from a specified collection based on given criteria.</p>
@@ -858,21 +856,19 @@ to provide additional configuration for the request.
 
 <a name="_reloadRecord"></a>
 
-## \_reloadRecord(currentRecord) ⇒ <code>Promise</code> ℗
+## \_reloadRecord(currentRecord, [collectionConfig]) ⇒ <code>Promise.&lt;Object&gt;</code> ℗
 Reloads a record from the server.
 
-This method reloads the `currentRecord` from the server by making
-a GET API request. It fetches the latest data for the record and
-updates the local copy.
+Fetches the latest data for the specified record and updates the local copy.
 
 **Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise that resolves with the updated record
-                   or rejects with an error.  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - A Promise resolving with the updated record or rejecting with an error.  
 **Access**: private  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| currentRecord | <code>Object</code> | The record to be reloaded. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| currentRecord | <code>Object</code> |  | The record to reload. |
+| [collectionConfig] | <code>Object</code> | <code>{}</code> | Optional configuration for the collection. |
 
 <a name="_getCollectionRecord"></a>
 

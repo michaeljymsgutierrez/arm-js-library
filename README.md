@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.4.1-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.5.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -605,9 +605,18 @@ import { ARM } from '@components/arm-config-wrapper'
     * **reload()**
         * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/123456`
+        * Support collectionConfig. - **optional**
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
         // Returned promise
         address.reload()
+
+        // With collectionConfig
+        address.reload({ 
+           override: {
+               namespace: 'api/v2',
+           }
+        })
         ```
     * **destroyRecord(collectionConfig)**
         * Remove collection record permanently from server.
