@@ -3,11 +3,7 @@
   "version": "2.5.0",
   "description": "API Resource Manager",
   "type": "module",
-  "files": [
-    "dist",
-    "types",
-    "DOCS.md"
-  ],
+  "files": ["dist", "types", "DOCS.md"],
   "types": "types/index.d.ts",
   "exports": {
     ".": {
@@ -40,6 +36,9 @@
   },
   "author": "Michael Jyms Gutierrez",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@eslint/js": "^9.5.0",
