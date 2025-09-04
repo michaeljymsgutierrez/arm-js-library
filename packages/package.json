@@ -3,7 +3,11 @@
   "version": "2.5.0",
   "description": "API Resource Manager",
   "type": "module",
-  "files": ["dist", "types", "DOCS.md"],
+  "files": [
+    "dist",
+    "types",
+    "DOCS.md"
+  ],
   "types": "types/index.d.ts",
   "exports": {
     ".": {
@@ -55,7 +59,7 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
-    "axios": "^1.8.4",
+    "axios": "^1.11.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mobx": "^6.13.7",
