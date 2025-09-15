@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"],
-      "@arm-config-wrapper": ["./src/components/arm-config-wrapper"]
+      "@/*": ["./src/*"]
     }
   }
 }
