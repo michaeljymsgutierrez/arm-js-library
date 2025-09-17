@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "arm-js-library": "../../packages",
+    "mobx-react": "^9.2.0",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
