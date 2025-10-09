@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 
 const ARMConfigProvider = dynamic(
-  () => import('@components/providers/arm-config-provider'),
+  () => import('@/components/providers/arm-config-provider'),
   { ssr: false }
 )
 
