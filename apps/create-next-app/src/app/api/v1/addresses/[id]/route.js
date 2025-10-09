@@ -1,11 +1,11 @@
 /**
- * GET /api/v1/users/:id
+ * GET /api/v1/addresses/:id
  */
-import users from '@/data/users'
+import addresses from '@/data/addresses'
 
 export async function GET(request) {
   return Response.json(
-    { data: users[0] },
+    { data: addresses[0] },
     {
       status: 200,
       headers: {
