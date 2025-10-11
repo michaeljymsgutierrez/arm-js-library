@@ -28,22 +28,25 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Install dependencies
         working-directory: packages
-        run: npm install
+        run: yarn install
 
       - name: Build source
         working-directory: packages
-        run: npm run build
+        run: yarn build
 
       - name: Test
         working-directory: packages
-        run: npm run test
+        run: yarn test
 
       - name: Build types
         working-directory: packages
-        run: npm run build:dts
+        run: yarn build:dts
 
       - name: Build jsdocs
         working-directory: packages
-        run: npm run build:jsdocs
+        run: yarn build:jsdocs
