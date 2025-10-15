@@ -148,7 +148,31 @@ npm install mobx-react --save
     export default ARMConfigProvider
     ```
 2. Use `arm-config-provider` component on your application.<br/>
-     For `NextJS` project, wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.<br/>
+     For `NextJS` project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
+     It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.
+     ```javascript
+     'use client'
+
+     import dynamic from 'next/dynamic'
+
+     const ARMConfigProvider = dynamic(
+       () => import('@/components/providers/arm-config-provider'),
+       { ssr: false }
+     )
+
+     const ApplicationProviders = ({ children }) => {
+       return (
+         <>
+           <ARMConfigProvider>{children}</ARMConfigProvider>
+         </>
+       )
+     }
+
+     export default ApplicationProviders
+     ```
+
+
+    wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.<br/>
      See example [here](apps/create-next-app/src/app/layout.js)
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
