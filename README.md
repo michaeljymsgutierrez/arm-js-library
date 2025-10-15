@@ -131,21 +131,21 @@ npm install mobx-react --save
 #### Initialization
 
 1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
-    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/documentations/api-example-usage/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
-        ```javascript
-        'use client' // Omit this line if you are not using NextJS
+* See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/documentations/api-example-usage/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
+    ```javascript
+    'use client' // Omit this line if you are not using NextJS
 
-        import ApiResourceManager from 'arm-js-library'
+    import ApiResourceManager from 'arm-js-library'
 
-        const COLLECTIONS = ['addresses', 'users']
+    const COLLECTIONS = ['addresses', 'users']
 
-        export const ARM = new ApiResourceManager(COLLECTIONS)
+    export const ARM = new ApiResourceManager(COLLECTIONS)
 
-        const ARMConfigProvider = ({ children }) => {
-          return <>{children}</>
-        }
+    const ARMConfigProvider = ({ children }) => {
+      return <>{children}</>
+    }
 
-        export default ARMConfigProvider
+    export default ARMConfigProvider
     ```
 * For `NextJS` project, wrap root layout `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
     ```javascript
