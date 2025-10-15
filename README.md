@@ -172,7 +172,7 @@ npm install mobx-react --save
       )
     }
     ```
-    <br/>For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
+   For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
     import ReactDOM from 'react-dom/client'
