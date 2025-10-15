@@ -148,7 +148,7 @@ npm install mobx-react --save
     export default ARMConfigProvider
     ```
 2. Use `arm-config-provider` component on your application.<br/>
-    For `NextJS` project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
+    For **NextJS** project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
     It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.<br/>
     See example [here](apps/create-next-app/src/components/providers/application-providers/index.jsx)
      ```javascript
@@ -189,7 +189,7 @@ npm install mobx-react --save
     }
     ```
 
-   For non `NextJS` project, wrap root app `src/index.js` with `arm-config-provider` component.
+   For **Non NextJS** project, wrap root app `src/index.js` with `arm-config-provider` component.
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
     import ReactDOM from 'react-dom/client'
