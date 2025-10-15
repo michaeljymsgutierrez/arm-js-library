@@ -74,12 +74,12 @@ By centralizing data management and offering flexible access to it, ARM empowers
 
 ## Basic Usage
 ```javascript
-// Example usage in ReactJS
-
-import { observer } from 'mobx-react'
-import { ARM } from '@components/arm-config-wrapper'
+// Example usage in ReactJS/NextJS
+import { observer } from 'mobx-react-lite'
+import { ARM } from '@/components/providers/arm-config-provider'
 
 const App = observer(() => {
+  // GET /addresses/123456?include=user  
   const { isLoading, isError, data: address } = ARM.findRecord(
     'addresses',
     123456,
@@ -130,59 +130,62 @@ npm install mobx-react --save
 
 #### Initialization
 
-Create `arm-config-wrapper` component that will store the new `ARM` instance.<br/>
-
-* Store it on component wrapper `src/components/arm-config-wrapper/index.js` here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/arm-config-wrapper/index.js)
+1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
+    See example [here](apps/create-next-app/src/components/providers/arm-config-provider/index.js)
     ```javascript
-    // Tag component wrapper as client for NextJS specific only
-    'use client'
+    'use client' // Omit this line if you are not using NextJS
 
-    // Create a new instance of ARM
     import ApiResourceManager from 'arm-js-library'
 
-    // Create an array of collections to initialize
-    const collections = ['addresses', 'users']
+    const COLLECTIONS = ['addresses', 'users']
 
-    // Export new instance of ARM for later utilization
-    export const ARM = new ApiResourceManager(collections)
+    export const ARM = new ApiResourceManager(COLLECTIONS)
 
-    // Main config wrapper
-    const ARMConfigWrapper = ({ children }) => {
+    const ARMConfigProvider = ({ children }) => {
       return <>{children}</>
     }
 
-    export default ARMConfigWrapper
+    export default ARMConfigProvider
     ```
-* For `NextJS` project, wrap root layout `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
+2. Use `arm-config-provider` component on your application.<br/>
+     For `NextJS` project, wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.<br/>
+     See example [here](apps/create-next-app/src/app/layout.js)
     ```javascript
-    import dynamic from 'next/dynamic'
+    import ARMConfigProvider from '@/components/providers/arm-config-provider'
 
-    const ARMConfigWrapper = dynamic(
-      () => import('../components/arm-config-wrapper'),
-      { ssr: false }
-    )
+    // Use dynamic import if you are encountering issues with SSR
+    // import dynamic from 'next/dynamic'
+    //
+    // const ARMConfigProvider = dynamic(
+    //   () => import('@/components/providers/arm-config-provider'),
+    //   { ssr: false }
+    // )
 
     export default function RootLayout({ children }) {
       return (
         <html lang="en">
-          <body>
-            <ARMConfigWrapper>{children}</ARMConfigWrapper>
+          <body className='antialiased'>
+            {/* Wrap your application with arm-config-provider component */}
+            <ARMConfigProvider>{children}</ARMConfigProvider>
           </body>
         </html>
       )
     }
     ```
-* For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
+   For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
     ```javascript
-    import ARMConfigWrapper from '@components/arm-config-wrapper'
+    import ARMConfigProvider from '@/components/providers/arm-config-provider'
     import ReactDOM from 'react-dom/client'
     import App from './App'
 
     const root = ReactDOM.createRoot(document.getElementById('root'))
+
     root.render(
-      <ARMConfigWrapper>
+
+     {/* Wrap your application with arm-config-provider component */}
+      <ARMConfigProvider>
         <App />
-      </ARMConfigWrapper>
+      </ARMConfigProvider>
     )
     ```
 #### Configuration
