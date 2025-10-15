@@ -74,12 +74,12 @@ By centralizing data management and offering flexible access to it, ARM empowers
 
 ## Basic Usage
 ```javascript
-// Example usage in ReactJS
-
-import { observer } from 'mobx-react'
+// Example usage in ReactJS/NextJS
+import { observer } from 'mobx-react-lite'
 import { ARM } from '@components/arm-config-wrapper'
 
 const App = observer(() => {
+  // GET /addresses/123456?include=user  
   const { isLoading, isError, data: address } = ARM.findRecord(
     'addresses',
     123456,
