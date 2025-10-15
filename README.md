@@ -148,7 +148,7 @@ npm install mobx-react --save
     export default ARMConfigProvider
     ```
 2. Use `arm-config-provider` component on your application.
-* For `NextJS` project, wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.
+    * For `NextJS` project, wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
 
