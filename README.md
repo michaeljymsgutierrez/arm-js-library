@@ -172,7 +172,7 @@ npm install mobx-react --save
      export default ApplicationProviders
      ```
 
-    Wrap root layout `src/app/layout.tsx` with `application-providers` component.<br/>
+    Wrap root layout `src/app/layout.jsx` with `application-providers` component.<br/>
     See example [here](apps/create-next-app/src/app/layout.js)
     ```javascript
     import ApplicationProviders from '@/components/providers/application-providers'
