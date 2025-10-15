@@ -131,7 +131,7 @@ npm install mobx-react --save
 #### Initialization
 
 1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
-* See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/documentations/api-example-usage/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
+     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/documentations/api-example-usage/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
     ```javascript
     'use client' // Omit this line if you are not using NextJS
 
