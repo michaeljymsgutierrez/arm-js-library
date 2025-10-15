@@ -2,8 +2,23 @@
  * GET /api/v1/addresses/:id
  */
 import addresses from '@/data/addresses'
+import users from '@/data/users'
 
 export async function GET(request) {
+  const searchParams = request.nextUrl.searchParams
+  const include = searchParams.get('include')
+
+  if (include) {
+    return Response.json(
+      { data: addresses[0], included: users },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  }
   return Response.json(
     { data: addresses[0] },
     {
