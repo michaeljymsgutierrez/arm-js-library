@@ -237,7 +237,7 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
 ## Utilization
 To be able to use ARM features. You have to import the stored ARM instance from `arm-config-provider` component.
 ```javascript
-// Impoart ARM instance from arm-config-provider component
+// Import ARM instance from arm-config-provider component
 import { ARM } from '@/components/providers/arm-config-provider'
 ```
 
