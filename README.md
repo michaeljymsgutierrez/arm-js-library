@@ -131,7 +131,7 @@ npm install mobx-react --save
 #### Initialization
 
 1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
-    See example [here](apps/create-next-app/src/components/providers/arm-config-provider/index.js)
+    See example [here](apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
     ```javascript
     'use client' // Omit this line if you are not using NextJS
 
@@ -172,7 +172,7 @@ npm install mobx-react --save
       )
     }
     ```
-   For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
+   For non `NextJS` project, wrap root app `src/index.js` with `arm-config-provider` component.
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
     import ReactDOM from 'react-dom/client'
@@ -235,10 +235,10 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
     ARM.setPayloadIncludeReference('type')
     ```
 ## Utilization
-To be able to use ARM features. You have to import the stored ARM instance from `arm-config-wrapper` component.
+To be able to use ARM features. You have to import the stored ARM instance from `arm-config-provider` component.
 ```javascript
-// ARM instance is stored on src/components/arm-config-wrapper/index.js
-import { ARM } from '@components/arm-config-wrapper'
+// Impoart ARM instance from arm-config-provider component
+import { ARM } from '@/components/providers/arm-config-provider'
 ```
 
 #### Request functions from server
