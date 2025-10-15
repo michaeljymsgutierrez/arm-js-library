@@ -32,7 +32,7 @@ body {
   }
 
   table {
-    @apply w-fit border-collapse border border-gray-400 bg-white;
+    @apply w-full border-collapse border border-gray-400 bg-white;
   }
 
   thead th {
