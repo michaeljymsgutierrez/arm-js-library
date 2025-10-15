@@ -148,8 +148,9 @@ npm install mobx-react --save
     export default ARMConfigProvider
     ```
 2. Use `arm-config-provider` component on your application.<br/>
-     For `NextJS` project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
-     It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.
+    For `NextJS` project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
+    It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.<br/>
+    See example [here](apps/create-next-app/src/components/providers/application-providers/index.jsx)
      ```javascript
      'use client'
 
@@ -171,31 +172,23 @@ npm install mobx-react --save
      export default ApplicationProviders
      ```
 
-
-    wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.<br/>
-     See example [here](apps/create-next-app/src/app/layout.js)
+    Wrap root layout `src/app/layout.tsx` with `application-providers` component.<br/>
+    See example [here](apps/create-next-app/src/app/layout.js)
     ```javascript
-    import ARMConfigProvider from '@/components/providers/arm-config-provider'
-
-    // Use dynamic import if you are encountering issues with SSR
-    // import dynamic from 'next/dynamic'
-    //
-    // const ARMConfigProvider = dynamic(
-    //   () => import('@/components/providers/arm-config-provider'),
-    //   { ssr: false }
-    // )
+    import ApplicationProviders from '@/components/providers/application-providers'
 
     export default function RootLayout({ children }) {
       return (
         <html lang="en">
           <body className='antialiased'>
-            {/* Wrap your application with arm-config-provider component */}
-            <ARMConfigProvider>{children}</ARMConfigProvider>
+            {/* Wrap your application with application-providers component */}
+            <ApplicationProviders>{children}</ApplicationProviders>
           </body>
         </html>
       )
     }
     ```
+
    For non `NextJS` project, wrap root app `src/index.js` with `arm-config-provider` component.
     ```javascript
     import ARMConfigProvider from '@/components/providers/arm-config-provider'
