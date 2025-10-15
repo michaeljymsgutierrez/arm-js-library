@@ -1,5 +1,14 @@
 import { Geist, Geist_Mono } from 'next/font/google'
-import ApplicationProviders from '@/components/providers/application-providers'
+import ARMConfigProvider from '@/components/providers/arm-config-provider'
+
+// Use dynamic import if you are encountering issues with SSR
+// import dynamic from 'next/dynamic'
+//
+// const ARMConfigProvider = dynamic(
+//   () => import('@/components/providers/arm-config-provider'),
+//   { ssr: false }
+// )
+
 import './globals.css'
 
 const geistSans = Geist({
@@ -23,7 +32,8 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApplicationProviders>{children}</ApplicationProviders>
+        {/* Wrap your application with arm-config-provider component */}
+        <ARMConfigProvider>{children}</ARMConfigProvider>
       </body>
     </html>
   )

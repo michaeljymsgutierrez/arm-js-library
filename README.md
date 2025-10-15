@@ -147,20 +147,25 @@ npm install mobx-react --save
 
     export default ARMConfigProvider
     ```
-* For `NextJS` project, wrap root layout `src/app/layout.js` with `arm-config-wrapper` component here's an [example](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
+2. Use `arm-config-provider` component on your application.
+* For `NextJS` project, wrap root layout `src/app/layout.tsx` with `arm-config-provider` component.
     ```javascript
-    import dynamic from 'next/dynamic'
+    import ARMConfigProvider from '@/components/providers/arm-config-provider'
 
-    const ARMConfigWrapper = dynamic(
-      () => import('../components/arm-config-wrapper'),
-      { ssr: false }
-    )
+    // Use dynamic import if you are encountering issues with SSR
+    // import dynamic from 'next/dynamic'
+    //
+    // const ARMConfigProvider = dynamic(
+    //   () => import('@/components/providers/arm-config-provider'),
+    //   { ssr: false }
+    // )
 
     export default function RootLayout({ children }) {
       return (
         <html lang="en">
-          <body>
-            <ARMConfigWrapper>{children}</ARMConfigWrapper>
+          <body className='antialiased'>
+            {/* Wrap your application with arm-config-provider component */}
+            <ARMConfigProvider>{children}</ARMConfigProvider>
           </body>
         </html>
       )
@@ -168,15 +173,18 @@ npm install mobx-react --save
     ```
 * For non `NextJS` project, wrap root app `src/index.js` with `arm-config-wrapper` component.
     ```javascript
-    import ARMConfigWrapper from '@components/arm-config-wrapper'
+    import ARMConfigProvider from '@/components/providers/arm-config-provider'
     import ReactDOM from 'react-dom/client'
     import App from './App'
 
     const root = ReactDOM.createRoot(document.getElementById('root'))
+
     root.render(
-      <ARMConfigWrapper>
+
+     {/* Wrap your application with arm-config-provider component */}
+      <ARMConfigProvider>
         <App />
-      </ARMConfigWrapper>
+      </ARMConfigProvider>
     )
     ```
 #### Configuration
