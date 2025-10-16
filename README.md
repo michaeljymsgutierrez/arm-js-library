@@ -265,6 +265,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Querying multiple records from the server.
     * Support query params. - **required**
     * Support config. - **optional**
+    See exammple [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/chores/docs-to-demos/apps/create-next-app/src/app/demo/request-functions-from-server/query)
     ```javascript
     ARM.query(
       'addresses',
