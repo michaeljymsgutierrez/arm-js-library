@@ -386,6 +386,20 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/c
 #### Returned Object: `Request functions from server`
 ---
 
+```javascript
+// Returned object data properties are observable
+// It will automatically update once the request is already done
+{
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: [],
+  error: null,
+  included: [],
+  meta: {},
+  reload: function
+}
+```
 * **isLoading - Boolean**
     * Current loading state of the request.
     * By default set to **true**.
@@ -414,20 +428,6 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/c
     * Specifically for **JSON API**.
 * **reload - Function**
     * Allows for **re-execution** of a request and automatic update of the **request hash object** and relevant **collections**.
-```javascript
-// Returned object data properties are observable
-// It will automatically update once the request is already done
-{
-  isLoading: true,
-  isError: false,
-  isNew: true,
-  data: [],
-  error: null,
-  included: [],
-  meta: {},
-  reload: function
-}
-```
 
 #### Retrieve functions from collections
 ---
