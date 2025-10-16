@@ -131,7 +131,7 @@ npm install mobx-react --save
 #### Initialization
 
 1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
-    See example [here](apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/chores/docs-to-demos/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
     ```javascript
     'use client' // Omit this line if you are not using NextJS
 
@@ -150,7 +150,7 @@ npm install mobx-react --save
 2. Use `arm-config-provider` component on your application.<br/>
     For **NextJS** project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
     It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.<br/>
-    See example [here](apps/create-next-app/src/components/providers/application-providers/index.jsx)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/chores/docs-to-demos/apps/create-next-app/src/components/providers/application-providers/index.jsx)
      ```javascript
      'use client'
 
@@ -173,7 +173,7 @@ npm install mobx-react --save
      ```
 
     Wrap root layout `src/app/layout.jsx` with `application-providers` component.<br/>
-    See example [here](apps/create-next-app/src/app/layout.js)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/chores/docs-to-demos/apps/create-next-app/src/app/layout.js)
     ```javascript
     import ApplicationProviders from '@/components/providers/application-providers'
 
