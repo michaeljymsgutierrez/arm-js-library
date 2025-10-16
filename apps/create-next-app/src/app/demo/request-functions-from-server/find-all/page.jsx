@@ -34,7 +34,7 @@ const Page = observer(() => {
               <td>{address.get('attributes.address1')}</td>
               <td>{address.get('attributes.address2')}</td>
               <td>{address.get('attributes.city')}</td>
-              <td>{address.get('attributes.postCode')}</td>
+              <td>{address.get('attributes.post-code')}</td>
               <td>{address.get('attributes.landmark')}</td>
               <td>{address.get('attributes.kind')}</td>
               <td>{address.get('attributes.label')}</td>
