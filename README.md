@@ -400,6 +400,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/c
   reload: function
 }
 ```
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/chores/docs-to-demos/apps/create-next-app/src/app/demo/request-functions-from-server/returned-object)<br/>
 * **isLoading - Boolean**
     * Current loading state of the request.
     * By default set to **true**.
