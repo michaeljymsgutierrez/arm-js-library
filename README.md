@@ -131,7 +131,7 @@ npm install mobx-react --save
 #### Initialization
 
 1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
-    See example [here](apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
     ```javascript
     'use client' // Omit this line if you are not using NextJS
 
@@ -150,7 +150,7 @@ npm install mobx-react --save
 2. Use `arm-config-provider` component on your application.<br/>
     For **NextJS** project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
     It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.<br/>
-    See example [here](apps/create-next-app/src/components/providers/application-providers/index.jsx)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/application-providers/index.jsx)
      ```javascript
      'use client'
 
@@ -173,7 +173,7 @@ npm install mobx-react --save
      ```
 
     Wrap root layout `src/app/layout.jsx` with `application-providers` component.<br/>
-    See example [here](apps/create-next-app/src/app/layout.js)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
     ```javascript
     import ApplicationProviders from '@/components/providers/application-providers'
 
@@ -264,7 +264,8 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **query(resource, params, config)**
     * Querying multiple records from the server.
     * Support query params. - **required**
-    * Support config. - **optional**
+    * Support config. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
     ```javascript
     ARM.query(
       'addresses',
@@ -280,7 +281,8 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **queryRecord(resource, params, config)**
     * Querying for a single record from the server.
     * Support query params. - **required**
-    * Support config. - **optional**
+    * Support config. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
     ```javascript
     ARM.queryRecord(
       'addresses',
@@ -294,7 +296,8 @@ import { ARM } from '@/components/providers/arm-config-provider'
     ```
 * **findAll(resource, config)**
     * Retrieving multiple records from the server.
-    * Support config. - **optional**
+    * Support config. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
     ```javascript
     ARM.findAll('addresses', {
       alias: 'customerAddresses',
@@ -304,7 +307,8 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Retrieving single record from the server.
     * Params ID by default. - **required**
     * Support query params. - **required**
-    * Support config. - **optional**
+    * Support config. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-record)
     ```javascript
     ARM.findRecord(
       'addresses',
@@ -318,17 +322,18 @@ import { ARM } from '@/components/providers/arm-config-provider'
 #### Passed Arguments: `Request functions from server`
 ---
 ```javascript
-    // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
-    ARM.findRecord('addresses', 123456,
-      { 
-        include: 'user' 
-      },
-      {
-        skip: true,
-        alias: 'customerAddress',
-      }
-    )
+ // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
+ ARM.findRecord('addresses', 123456,
+   { 
+     include: 'user' 
+   },
+   {
+     skip: true,
+     alias: 'customerAddress',
+   }
+ )
 ```
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
 * **resource - String**
     * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
     * Endpoint resource name.
@@ -381,6 +386,21 @@ import { ARM } from '@/components/providers/arm-config-provider'
 #### Returned Object: `Request functions from server`
 ---
 
+```javascript
+// Returned object data properties are observable
+// It will automatically update once the request is already done
+{
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: [],
+  error: null,
+  included: [],
+  meta: {},
+  reload: function
+}
+```
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/returned-object)<br/>
 * **isLoading - Boolean**
     * Current loading state of the request.
     * By default set to **true**.
@@ -409,20 +429,6 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Specifically for **JSON API**.
 * **reload - Function**
     * Allows for **re-execution** of a request and automatic update of the **request hash object** and relevant **collections**.
-```javascript
-// Returned object data properties are observable
-// It will automatically update once the request is already done
-{
-  isLoading: true,
-  isError: false,
-  isNew: true,
-  data: [],
-  error: null,
-  included: [],
-  meta: {},
-  reload: function
-}
-```
 
 #### Retrieve functions from collections
 ---
