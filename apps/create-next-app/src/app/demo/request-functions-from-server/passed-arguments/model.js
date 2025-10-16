@@ -7,7 +7,7 @@ const Model = () => {
     // Resource serve as the resource name
     'addresses',
     // Identifier serve as the resource identifier
-    123456,
+    2519858,
     // Params serve as the request params
     { include: 'user' },
     // Config serve as the request config
