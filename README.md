@@ -322,16 +322,16 @@ import { ARM } from '@/components/providers/arm-config-provider'
 #### Passed Arguments: `Request functions from server`
 ---
 ```javascript
-    // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
-    ARM.findRecord('addresses', 123456,
-      { 
-        include: 'user' 
-      },
-      {
-        skip: true,
-        alias: 'customerAddress',
-      }
-    )
+ // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
+ ARM.findRecord('addresses', 123456,
+   { 
+     include: 'user' 
+   },
+   {
+     skip: true,
+     alias: 'customerAddress',
+   }
+ )
 ```
 See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/chores/docs-to-demos/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
 * **resource - String**
