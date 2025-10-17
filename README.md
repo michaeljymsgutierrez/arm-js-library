@@ -434,7 +434,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 ---
 
 * **peekAll(collectionName)**
-    * Retrieving multiple records from collection.
+    * Retrieving multiple records from collection.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
     ```javascript
     ARM.peekAll('addresses')
     ```
