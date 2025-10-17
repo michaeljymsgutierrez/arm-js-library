@@ -448,6 +448,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```
 * **getCollection(collectionName)**
     * Retrieving all records from collection.
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrive-functions-from-collections/get-collection)
     ```javascript
     ARM.getCollection('addresses')
     ```
