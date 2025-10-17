@@ -435,13 +435,14 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
 * **peekAll(collectionName)**
     * Retrieving multiple records from collection.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/peek-all)
     ```javascript
     ARM.peekAll('addresses')
     ```
 * **peekRecord(collectionName, collectionRecordId)**
     * Retrieving single record from collection.
-    * Params ID by default. - **required**
+    * Params ID by default. - **required**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/peek-record)
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
