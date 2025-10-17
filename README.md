@@ -434,24 +434,28 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 ---
 
 * **peekAll(collectionName)**
-    * Retrieving multiple records from collection.
+    * Retrieving multiple records from collection.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
     ```javascript
     ARM.peekAll('addresses')
     ```
 * **peekRecord(collectionName, collectionRecordId)**
     * Retrieving single record from collection.
-    * Params ID by default. - **required**
+    * Params ID by default. - **required**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
 * **getCollection(collectionName)**
-    * Retrieving all records from collection.
+    * Retrieving all records from collection.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     ARM.getCollection('addresses')
     ```
 * **getAlias(collectionName, collectionFallbackRecord)**
     * Retrieving records from aliased request results.
-    * Support collectionFallbackRecord. - **optional**
+    * Support collectionFallbackRecord. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     const addresses = ARM.getAlias('customerAddresses', [])
 
