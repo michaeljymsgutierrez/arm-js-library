@@ -447,7 +447,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ARM.peekRecord('addresses', 123456)
     ```
 * **getCollection(collectionName)**
-    * Retrieving all records from collection.
+    * Retrieving all records from collection.<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrive-functions-from-collections/get-collection)
     ```javascript
     ARM.getCollection('addresses')
