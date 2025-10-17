@@ -454,7 +454,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```
 * **getAlias(collectionName, collectionFallbackRecord)**
     * Retrieving records from aliased request results.
-    * Support collectionFallbackRecord. - **optional**
+    * Support collectionFallbackRecord. - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrive-functions-from-collections/get-collection)
     ```javascript
     const addresses = ARM.getAlias('customerAddresses', [])
 
