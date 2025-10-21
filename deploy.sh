@@ -60,22 +60,22 @@ prepare_release_files() {
   # Navigate to the packages directory and build the package
   cd packages &&
   print_process "building:package"
-  npm run build && print_status_done || print_status_failed
+  yarn build && print_status_done || print_status_failed
   print_separator
 
   # Generate jsdocs
   print_process "generating:docs"
-  npm run build:jsdocs && print_status_done || print_status_failed
+  yarn build:jsdocs && print_status_done || print_status_failed
   print_separator
 
   # Generate dts files
   print_process "generating:dts"
-  npm run build:dts && print_status_done || print_status_failed
+  yarn build:dts && print_status_done || print_status_failed
   print_separator
 
   # Run tests
   print_process "running:test"
-  npm run test && print_status_done || print_status_failed
+  yarn test && print_status_done || print_status_failed
   print_separator
 
   # Copy DOCS.md to the root directory
@@ -85,8 +85,8 @@ prepare_release_files() {
 
   # Update dependencies in apps and packages
   print_process "updating:apps-and-packages-dependencies"
-  cd .. && cd apps/create-next-app && npm install && print_status_done || print_status_failed
-  cd .. && cd .. && cd packages && npm install && cd .. && print_status_done || print_status_failed
+  cd .. && cd apps/create-next-app && yarn install && print_status_done || print_status_failed
+  cd .. && cd .. && cd packages && yarn install && cd .. && print_status_done || print_status_failed
   print_separator
 }
 
