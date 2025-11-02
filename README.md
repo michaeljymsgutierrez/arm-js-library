@@ -544,6 +544,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Current loading state of the record.
         * By default set to **false**.
         * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isLoading')
@@ -552,6 +553,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Current error state of the record.
         * By default set to **false**.
         * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isError')
@@ -560,6 +562,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Current pristine state of the record.
         * By default set to **true**.
         * Set to **false** if the record is modified and set to **true** once reverted.<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isPristine')
