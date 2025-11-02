@@ -577,6 +577,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Single property getter function.
         * Passed arguments:
             * **key - String**<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 123456
