@@ -568,6 +568,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Current dirty state of the record.
         * By default set to **false**.
         * Set to **true** if the record is modified and set to **false** once reverted.<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isDirty')
