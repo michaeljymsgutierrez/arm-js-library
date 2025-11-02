@@ -264,8 +264,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **query(resource, params, config)**
     * Querying multiple records from the server.
     * Support query params. - **required**
-    * Support config. - **optional**
-
+    * Support config. - **optional**<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
     ```javascript
     ARM.query(
@@ -282,8 +281,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **queryRecord(resource, params, config)**
     * Querying for a single record from the server.
     * Support query params. - **required**
-    * Support config. - **optional**
-
+    * Support config. - **optional**<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
     ```javascript
     ARM.queryRecord(
@@ -298,8 +296,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     ```
 * **findAll(resource, config)**
     * Retrieving multiple records from the server.
-    * Support config. - **optional**
-
+    * Support config. - **optional**<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
     ```javascript
     ARM.findAll('addresses', {
@@ -310,8 +307,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Retrieving single record from the server.
     * Params ID by default. - **required**
     * Support query params. - **required**
-    * Support config. - **optional**
-
+    * Support config. - **optional**<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-record)
     ```javascript
     ARM.findRecord(
