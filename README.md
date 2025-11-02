@@ -265,6 +265,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Querying multiple records from the server.
     * Support query params. - **required**
     * Support config. - **optional**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
     ```javascript
     ARM.query(
@@ -282,6 +283,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Querying for a single record from the server.
     * Support query params. - **required**
     * Support config. - **optional**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
     ```javascript
     ARM.queryRecord(
@@ -297,6 +299,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **findAll(resource, config)**
     * Retrieving multiple records from the server.
     * Support config. - **optional**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
     ```javascript
     ARM.findAll('addresses', {
@@ -308,6 +311,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     * Params ID by default. - **required**
     * Support query params. - **required**
     * Support config. - **optional**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-record)
     ```javascript
     ARM.findRecord(
@@ -435,6 +439,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
 * **peekAll(collectionName)**
     * Retrieving multiple records from collection.<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
     ```javascript
     ARM.peekAll('addresses')
@@ -442,12 +447,14 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 * **peekRecord(collectionName, collectionRecordId)**
     * Retrieving single record from collection.
     * Params ID by default. - **required**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
     ```javascript
     ARM.peekRecord('addresses', 123456)
     ```
 * **getCollection(collectionName)**
     * Retrieving all records from collection.<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     ARM.getCollection('addresses')
@@ -455,6 +462,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 * **getAlias(collectionName, collectionFallbackRecord)**
     * Retrieving records from aliased request results.
     * Support collectionFallbackRecord. - **optional**<br/>
+
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     const addresses = ARM.getAlias('customerAddresses', [])
