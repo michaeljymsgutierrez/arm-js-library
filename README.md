@@ -591,6 +591,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Passed arguments:
             * **key - String**
             * **value - Primitive**<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
@@ -606,6 +607,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Multiple properties setter function.
         * Passed arguments:
             * **value - Object**<br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
