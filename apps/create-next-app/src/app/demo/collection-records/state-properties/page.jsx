@@ -75,7 +75,7 @@ const Page = observer(() => {
                       address.set('attributes.landmark', 'New landmark')
                     }
                   >
-                    Modify
+                    Modify (Landmark)
                   </button>
                 </p>
               </td>
