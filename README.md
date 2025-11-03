@@ -493,7 +493,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 #### Remove collection record functions
 ---
 * **unloadRecord(collectionRecord)**
-    * Remove record from collection only.
+    * Remove record from collection only.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
     ```javascript
     // Collection record to be remove collection.
     const address = ARM.peekRecord('addresses', 123456)
