@@ -512,11 +512,11 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```
 * **clearCollection(collectionName)**
     * Clears a specified collection and unloads related records from aliases and request hashes.
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
-    <br/>
     ```javascript
     ARM.clearCollection('addresses')
     ```
+
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
 #### Push collection record function
 ---
 * **pushPayload(collectionName, collectionRecords)**
