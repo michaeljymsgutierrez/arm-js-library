@@ -493,7 +493,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 #### Remove collection record functions
 ---
 * **unloadRecord(collectionRecord)**
-    * Remove record from collection only.
+    * Remove record from collection only.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
     ```javascript
     // Collection record to be remove collection.
     const address = ARM.peekRecord('addresses', 123456)
@@ -503,7 +504,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ARM.unloadRecord(address)
     ```
 * **clearCollection(collectionName)**
-    * Clears a specified collection and unloads related records from aliases and request hashes.
+    * Clears a specified collection and unloads related records from aliases and request hashes.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
     ```javascript
     ARM.clearCollection('addresses')
     ```
@@ -543,28 +545,32 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **isLoading - Boolean**
         * Current loading state of the record.
         * By default set to **false**.
-        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isLoading')
         ```
     * **isError - Boolean**
         * Current error state of the record.
         * By default set to **false**.
-        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
+        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isError')
         ```
     * **isPristine - Boolean**
         * Current pristine state of the record.
         * By default set to **true**.
-        * Set to **false** if the record is modified and set to **true** once reverted.
+        * Set to **false** if the record is modified and set to **true** once reverted.<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isPristine')
         ```
     * **isDirty - Boolean**
         * Current dirty state of the record.
         * By default set to **false**.
-        * Set to **true** if the record is modified and set to **false** once reverted.
+        * Set to **true** if the record is modified and set to **false** once reverted.<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isDirty')
         ```
@@ -572,7 +578,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **get(key)**
         * Single property getter function.
         * Passed arguments:
-            * **key - String**
+            * **key - String**<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 123456
         address.get('id') 
@@ -584,7 +591,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Single property setter function.
         * Passed arguments:
             * **key - String**
-            * **value - Primitive**
+            * **value - Primitive**<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
         address.get('attributes.kind')
@@ -598,7 +606,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **setProperties(value)**
         * Multiple properties setter function.
         * Passed arguments:
-            * **value - Object**
+            * **value - Object**<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
         address.get('attributes.kind')
