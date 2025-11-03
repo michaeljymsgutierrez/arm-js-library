@@ -264,7 +264,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
 * **query(resource, params, config)**
     * Querying multiple records from the server.
     * Support query params. - **required**
-    * Support config. - **optional**<br/>
+    * Support config. - **optional**
 
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
     ```javascript
@@ -512,6 +512,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```
 * **clearCollection(collectionName)**
     * Clears a specified collection and unloads related records from aliases and request hashes.
+
     ```javascript
     ARM.clearCollection('addresses')
     ```
