@@ -511,7 +511,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ARM.unloadRecord(address)
     ```
 * **clearCollection(collectionName)**
-    * Clears a specified collection and unloads related records from aliases and request hashes.
+    * Clears a specified collection and unloads related records from aliases and request hashes.<br/>
+
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
     ```javascript
     ARM.clearCollection('addresses')
     ```
