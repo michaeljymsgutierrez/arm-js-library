@@ -693,7 +693,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
                 * **config - Object**
                     * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.<br/>
 
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
 
         ```javascript
         // Get user record from the server but don't preload addresses records.
