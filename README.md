@@ -632,8 +632,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/123456`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
-
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
         // Returned promise
         // Without collectionConfig
@@ -699,9 +698,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         const { isLoading, data: user } = ARM.findRecord(
           'users',
           123456,
-          {
-            // include: 'user'
-          },
+          {},
           { alias: 'currentUser' }
         )
 
