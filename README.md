@@ -632,7 +632,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/123456`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
 
         ```javascript
         // Returned promise
