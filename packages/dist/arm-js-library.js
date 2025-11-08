@@ -52,6 +52,7 @@ const {
   entries,
   forEach,
   filter,
+  defer,
   keysIn,
   concat,
   chunk,
@@ -641,8 +642,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
             resourceConfig
           };
           const responseObject = defaultRequestObjectResponse;
-          this._pushRequestHash(requestObject, responseObject);
-          this._request(requestObject);
+          defer(() => {
+            this._pushRequestHash(requestObject, responseObject);
+            this._request(requestObject);
+          });
         }
       }
     });

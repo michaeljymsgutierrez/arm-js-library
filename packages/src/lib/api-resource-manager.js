@@ -61,6 +61,7 @@ const {
   entries,
   forEach,
   filter,
+  defer,
   keysIn,
   concat,
   chunk,
@@ -787,9 +788,10 @@ export default class ApiResourceManager {
           }
           const responseObject = defaultRequestObjectResponse
 
-          this._pushRequestHash(requestObject, responseObject)
-
-          this._request(requestObject)
+          defer(() => {
+            this._pushRequestHash(requestObject, responseObject)
+            this._request(requestObject)
+          })
         }
       }
     })
