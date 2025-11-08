@@ -31,11 +31,11 @@ const Page = observer(() => {
             <td>
               <ul>
                 {user
-                  .getCollection('addresses', {
+                  ?.getCollection('addresses', {
                     referenceKey: 'relationships.addresses.data',
-                    async: false,
+                    async: true,
                   })
-                  .map((address) => (
+                  ?.map((address) => (
                     <li key={address.get('id')}>
                       {address.get('attributes.address1')},
                       {address.get('attributes.address2')}
