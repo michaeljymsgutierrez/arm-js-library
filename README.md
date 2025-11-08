@@ -692,7 +692,6 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
                     * Sort returned collection records based on passed array of sort criteria.
                 * **config - Object**
                     * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.<br/>
-
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
 
         ```javascript
