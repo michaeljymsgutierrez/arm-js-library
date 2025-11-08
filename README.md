@@ -335,14 +335,14 @@ import { ARM } from '@/components/providers/arm-config-provider'
 ```
 See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
 * **resource - String**
-    * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
+    * `https://www.test-demo.com/api/v1/` **addresses** `/2519858?include=user`
     * Endpoint resource name.
     * Serve as collection name defined on the collection intialization of ARM instance.
 * **id - Number**
-    * `https://www.test-demo.com/api/v1/addresses/` **1**`?include=user`
+    * `https://www.test-demo.com/api/v1/addresses/` **2519858**`?include=user`
     * Endpoint id parameter.
 * **params - Object**
-    * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
+    * `https://www.test-demo.com/api/v1/addresses/2519858?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
     * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
