@@ -27,6 +27,9 @@ import qs from "qs";
  *
  * md5 library for MD5 hashing.
  * @see https://www.npmjs.com/package/md5
+ *
+ * qs library for query string serialization.
+ * @see https://www.npmjs.com/package/qs
  */
 const { makeObservable, observable, action, toJS } = mobx;
 const {
