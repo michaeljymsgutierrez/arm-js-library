@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.5.3-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.5.4-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -79,10 +79,10 @@ import { observer } from 'mobx-react-lite'
 import { ARM } from '@/components/providers/arm-config-provider'
 
 const App = observer(() => {
-  // GET /addresses/123456?include=user  
+  // GET /addresses/2519858?include=user
   const { isLoading, isError, data: address } = ARM.findRecord(
     'addresses',
-    123456,
+    2519858,
     { include: 'user' },
     { alias: 'customerAddress' }
   )
@@ -287,7 +287,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     ARM.queryRecord(
       'addresses',
       {
-        id: 123456,
+        id: 2519858,
         sort: '-id',
         include: 'user',
       },
@@ -312,7 +312,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
     ```javascript
     ARM.findRecord(
       'addresses',
-      123456,
+      2519858,
       { include: 'user' },
       {
         alias: 'customerAddress',
@@ -323,7 +323,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
 ---
 ```javascript
  // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
- ARM.findRecord('addresses', 123456,
+ ARM.findRecord('addresses', 2519858,
    { 
      include: 'user' 
    },
@@ -335,14 +335,14 @@ import { ARM } from '@/components/providers/arm-config-provider'
 ```
 See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
 * **resource - String**
-    * `https://www.test-demo.com/api/v1/` **addresses** `/1?include=user`
+    * `https://www.test-demo.com/api/v1/` **addresses** `/2519858?include=user`
     * Endpoint resource name.
     * Serve as collection name defined on the collection intialization of ARM instance.
 * **id - Number**
-    * `https://www.test-demo.com/api/v1/addresses/` **1**`?include=user`
+    * `https://www.test-demo.com/api/v1/addresses/` **2519858**`?include=user`
     * Endpoint id parameter.
 * **params - Object**
-    * `https://www.test-demo.com/api/v1/addresses/1?` **include=user**
+    * `https://www.test-demo.com/api/v1/addresses/2519858?` **include=user**
     * Endpoint query string parameters.
 * **config - Object**
     * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
@@ -444,7 +444,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * Params ID by default. - **required**<br/>
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
     ```javascript
-    ARM.peekRecord('addresses', 123456)
+    ARM.peekRecord('addresses', 2519858)
     ```
 * **getCollection(collectionName)**
     * Retrieving all records from collection.<br/>
@@ -497,7 +497,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
     ```javascript
     // Collection record to be remove collection.
-    const address = ARM.peekRecord('addresses', 123456)
+    const address = ARM.peekRecord('addresses', 2519858)
 
     // This will remove the record from collection and will not
     // remove permanently from the server.
@@ -529,11 +529,11 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 // Example response data from API
 // See available properties, getter and  setter functions and request functions below.
 {
-  "id": 123456,
+  "id": 2519858,
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.5.3222",
+    "address2": "171872.5.4222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -581,7 +581,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
             * **key - String**<br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
-        // Returned value 123456
+        // Returned value 2519858
         address.get('id') 
 
         // Returned value 'office'
@@ -630,7 +630,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Create a new record to server  only if it doesn't already exist in the database.
             * Will call **POST** method: `POST /addresses`
         * Update existing record to server.
-            * Will call **PUT** method: `PUT /addresses/123456`
+            * Will call **PUT** method: `PUT /addresses/2519858`
         * Support collectionConfig. - **optional**
             * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
@@ -643,7 +643,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         ```
     * **reload()**
         * Refresh collection record changes from server.
-            * Will call **GET** method: `GET /addresses/123456`
+            * Will call **GET** method: `GET /addresses/2519858`
         * Support collectionConfig. - **optional**
             * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
@@ -659,7 +659,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         ```
     * **destroyRecord(collectionConfig)**
         * Remove collection record permanently from server.
-            * Will call **GET** method: `DELETE /addresses/123456`
+            * Will call **GET** method: `DELETE /addresses/2519858`
         * Support collectionConfig. - **optional**
             * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
         ```javascript
@@ -691,15 +691,16 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
                 * **sortBy - Array**
                     * Sort returned collection records based on passed array of sort criteria.
                 * **config - Object**
-                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
+                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.<br>
+
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
+
         ```javascript
         // Get user record from the server but don't preload addresses records.
         const { isLoading, data: user } = ARM.findRecord(
           'users',
-          123456,
-          {
-            // include: 'user'
-          },
+          12980860,
+          {},
           { alias: 'currentUser' }
         )
 

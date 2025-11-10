@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.5.3
+ * Version: 2.5.4
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -61,6 +61,7 @@ const {
   entries,
   forEach,
   filter,
+  defer,
   keysIn,
   concat,
   chunk,
@@ -270,7 +271,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.5.3'
+      'ARM JS Library/2.5.4'
     )
   }
 
@@ -787,9 +788,10 @@ export default class ApiResourceManager {
           }
           const responseObject = defaultRequestObjectResponse
 
-          this._pushRequestHash(requestObject, responseObject)
-
-          this._request(requestObject)
+          defer(() => {
+            this._pushRequestHash(requestObject, responseObject)
+            this._request(requestObject)
+          })
         }
       }
     })
