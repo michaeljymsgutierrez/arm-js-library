@@ -3,6 +3,7 @@ import _ from "lodash";
 import * as mobx from "mobx";
 import { v1, NIL } from "uuid";
 import md5 from "md5";
+import qs from "qs";
 /**
  * ARM JavaScript Library
  *
@@ -1258,7 +1259,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   }) {
     const requestOptions = {
       method: resourceMethod,
-      url: resourceName
+      url: resourceName,
+      paramsSerializer: {
+        serialize: function(params) {
+          return qs.stringify(params, { arrayFormat: "brackets" });
+        }
+      }
     };
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
