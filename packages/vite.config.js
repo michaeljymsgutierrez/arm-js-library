@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['axios', 'lodash', 'mobx', 'uuid', 'md5'],
+      external: ['axios', 'lodash', 'mobx', 'uuid', 'md5', 'qs'],
       output: {
         globals: {
           axios: 'axios',
@@ -22,6 +22,7 @@ export default defineConfig({
           mobx: 'mobx',
           uuid: 'uuid',
           md5: 'md5',
+          qs: 'qs',
         },
       },
     },
