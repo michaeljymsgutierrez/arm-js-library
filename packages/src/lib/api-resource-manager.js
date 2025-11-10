@@ -28,6 +28,7 @@ import _ from 'lodash'
 import * as mobx from 'mobx'
 import { v1 as uuidv1, NIL as NIL_UUID } from 'uuid'
 import md5 from 'md5'
+import qs from 'qs'
 
 /**
  * Destructured MobX functions.
@@ -1498,6 +1499,11 @@ export default class ApiResourceManager {
     const requestOptions = {
       method: resourceMethod,
       url: resourceName,
+      paramsSerializer: {
+        serialize: function (params) {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        },
+      },
     }
 
     // Determine the HTTP method for conditional logic later
