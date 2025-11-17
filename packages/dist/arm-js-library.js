@@ -3,6 +3,7 @@ import _ from "lodash";
 import * as mobx from "mobx";
 import { v1, NIL } from "uuid";
 import md5 from "md5";
+import qs from "qs";
 /**
  * ARM JavaScript Library
  *
@@ -26,6 +27,9 @@ import md5 from "md5";
  *
  * md5 library for MD5 hashing.
  * @see https://www.npmjs.com/package/md5
+ *
+ * qs library for query string serialization.
+ * @see https://www.npmjs.com/package/qs
  */
 const { makeObservable, observable, action, toJS } = mobx;
 const {
@@ -1258,7 +1262,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   }) {
     const requestOptions = {
       method: resourceMethod,
-      url: resourceName
+      url: resourceName,
+      paramsSerializer: {
+        serialize: function(params) {
+          return qs.stringify(params, { arrayFormat: "brackets" });
+        }
+      }
     };
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
