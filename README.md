@@ -869,12 +869,12 @@ const addresses = [
 * **sumBy(objects, sumByProperty)**
     * Sums the values of an array of objects, extracting a specific property from each object.
     ```javascript
-    // Return 270
+    // Return 600
     ARM.sumBy([
-      { subject: 'Math', score: 100 },
-      { subject: 'English', score: 80 },
-      { subject: 'Science', score: 90 },
-    ], 'score')
+      {id: 1, name: 'Banana', price: 100},
+      {id: 2, name: 'Apple', price: 200},
+      {id: 3, name: 'Orange', price: 300},
+    ], 'price')
     ```
 * **ajax(config)**
     * Axios instance under the hood with default ARM config.
