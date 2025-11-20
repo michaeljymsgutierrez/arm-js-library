@@ -98,6 +98,23 @@ const execUtilsTest = (ARM) => {
       test('Verify sortBy functionality', () => {
         expect(ARM.sortBy(addresses, ['id:desc'])).toEqual(addresses.reverse())
       })
+
+      test('Verify sum functionality', () => {
+        expect(ARM.sum([100, 200, 300])).toBe(600)
+      })
+
+      test('Verify sumBy functionality', () => {
+        expect(
+          ARM.sumBy(
+            [
+              { id: 1, name: 'Banana', price: 100 },
+              { id: 2, name: 'Apple', price: 200 },
+              { id: 3, name: 'Orange', price: 300 },
+            ],
+            'price'
+          )
+        ).toBe(600)
+      })
     })
 
     describe('Data Validation and Comparison', () => {
