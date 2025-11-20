@@ -68,6 +68,8 @@ const {
   uniqBy,
   uniq,
   groupBy,
+  sum,
+  sumBy,
   pullAt,
   cloneDeep
 } = _;
@@ -1784,6 +1786,26 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   sortBy(objects, sortProperties) {
     return this._sortRecordsBy(objects, sortProperties);
+  }
+  /**
+   * Sums the values of an array of objects.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @returns {number} The sum of the values.
+   */
+  sum(objects) {
+    return sum(objects);
+  }
+  /**
+   * Sums the values of an array of objects, extracting a specific property from each object.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @param {string} sumByProperty - The property to extract from each object.
+   * @returns {number} The sum of the extracted values.
+   */
+  sumBy(objects, sumByProperty) {
+    const total = sumBy(objects, sumByProperty);
+    return isNumber(total) ? total : 0;
   }
   /**
    * Checks if a value is empty.
