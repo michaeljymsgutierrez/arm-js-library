@@ -864,7 +864,7 @@ const addresses = [
     * Sums the values of an array of objects.
     ```javascript
     // Return 600
-    ARM.sortBy([100, 200, 300])
+    ARM.sum([100, 200, 300])
     ```
 * **sumBy(objects, sumByProperty)**
     * Sums the values of an array of objects, extracting a specific property from each object.
