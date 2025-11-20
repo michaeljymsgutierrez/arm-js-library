@@ -913,6 +913,21 @@ declare module "arm-js-library" {
          */
         sortBy(objects: Array<any>, sortProperties: Array<string>): Array<any>;
         /**
+         * Sums the values of an array of objects.
+         *
+         * @param {Array<Object>} objects - The array of objects to sum.
+         * @returns {number} The sum of the values.
+         */
+        sum(objects: Array<any>): number;
+        /**
+         * Sums the values of an array of objects, extracting a specific property from each object.
+         *
+         * @param {Array<Object>} objects - The array of objects to sum.
+         * @param {string} sumByProperty - The property to extract from each object.
+         * @returns {number} The sum of the extracted values.
+         */
+        sumBy(objects: Array<any>, sumByProperty: string): number;
+        /**
          * Checks if a value is empty.
          *
          * @param {*} value - The value to check.

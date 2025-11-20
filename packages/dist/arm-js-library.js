@@ -3,10 +3,11 @@ import _ from "lodash";
 import * as mobx from "mobx";
 import { v1, NIL } from "uuid";
 import md5 from "md5";
+import qs from "qs";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.5.4
+ * Version: 2.6.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -26,6 +27,9 @@ import md5 from "md5";
  *
  * md5 library for MD5 hashing.
  * @see https://www.npmjs.com/package/md5
+ *
+ * qs library for query string serialization.
+ * @see https://www.npmjs.com/package/qs
  */
 const { makeObservable, observable, action, toJS } = mobx;
 const {
@@ -64,6 +68,8 @@ const {
   uniqBy,
   uniq,
   groupBy,
+  sum,
+  sumBy,
   pullAt,
   cloneDeep
 } = _;
@@ -166,7 +172,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.5.4"
+      "ARM JS Library/2.6.0"
     );
   }
   /**
@@ -1258,7 +1264,12 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   }) {
     const requestOptions = {
       method: resourceMethod,
-      url: resourceName
+      url: resourceName,
+      paramsSerializer: {
+        serialize: function(params) {
+          return qs.stringify(params, { arrayFormat: "brackets" });
+        }
+      }
     };
     const isResourceMethodGet = isEqual(resourceMethod, "get");
     const isResourceMethodDelete = isEqual(resourceMethod, "delete");
@@ -1775,6 +1786,26 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    */
   sortBy(objects, sortProperties) {
     return this._sortRecordsBy(objects, sortProperties);
+  }
+  /**
+   * Sums the values of an array of objects.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @returns {number} The sum of the values.
+   */
+  sum(objects) {
+    return sum(objects);
+  }
+  /**
+   * Sums the values of an array of objects, extracting a specific property from each object.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @param {string} sumByProperty - The property to extract from each object.
+   * @returns {number} The sum of the extracted values.
+   */
+  sumBy(objects, sumByProperty) {
+    const total = sumBy(objects, sumByProperty);
+    return isNumber(total) ? total : 0;
   }
   /**
    * Checks if a value is empty.

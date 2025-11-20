@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.5.4
+ * Version: 2.6.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -21,6 +21,9 @@
  *
  * md5 library for MD5 hashing.
  * @see https://www.npmjs.com/package/md5
+ *
+ * qs library for query string serialization.
+ * @see https://www.npmjs.com/package/qs
  */
 
 import axios from 'axios'
@@ -28,6 +31,7 @@ import _ from 'lodash'
 import * as mobx from 'mobx'
 import { v1 as uuidv1, NIL as NIL_UUID } from 'uuid'
 import md5 from 'md5'
+import qs from 'qs'
 
 /**
  * Destructured MobX functions.
@@ -73,6 +77,8 @@ const {
   uniqBy,
   uniq,
   groupBy,
+  sum,
+  sumBy,
   pullAt,
   cloneDeep,
 } = _
@@ -271,7 +277,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.5.4'
+      'ARM JS Library/2.6.0'
     )
   }
 
@@ -1498,6 +1504,11 @@ export default class ApiResourceManager {
     const requestOptions = {
       method: resourceMethod,
       url: resourceName,
+      paramsSerializer: {
+        serialize: function (params) {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        },
+      },
     }
 
     // Determine the HTTP method for conditional logic later
@@ -2153,6 +2164,28 @@ export default class ApiResourceManager {
    */
   sortBy(objects, sortProperties) {
     return this._sortRecordsBy(objects, sortProperties)
+  }
+
+  /**
+   * Sums the values of an array of objects.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @returns {number} The sum of the values.
+   */
+  sum(objects) {
+    return sum(objects)
+  }
+
+  /**
+   * Sums the values of an array of objects, extracting a specific property from each object.
+   *
+   * @param {Array<Object>} objects - The array of objects to sum.
+   * @param {string} sumByProperty - The property to extract from each object.
+   * @returns {number} The sum of the extracted values.
+   */
+  sumBy(objects, sumByProperty) {
+    const total = sumBy(objects, sumByProperty)
+    return isNumber(total) ? total : 0
   }
 
   /**

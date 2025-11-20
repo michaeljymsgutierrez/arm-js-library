@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.5.4-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.6.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -533,7 +533,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.5.4222",
+    "address2": "171872.6.0222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -859,6 +859,22 @@ const addresses = [
 
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
+    ```
+* **sum(objects)**
+    * Sums the values of an array of objects.
+    ```javascript
+    // Return 600
+    ARM.sum([100, 200, 300])
+    ```
+* **sumBy(objects, sumByProperty)**
+    * Sums the values of an array of objects, extracting a specific property from each object.
+    ```javascript
+    // Return 600
+    ARM.sumBy([
+      {id: 1, name: 'Banana', price: 100},
+      {id: 2, name: 'Apple', price: 200},
+      {id: 3, name: 'Orange', price: 300},
+    ], 'price')
     ```
 * **ajax(config)**
     * Axios instance under the hood with default ARM config.

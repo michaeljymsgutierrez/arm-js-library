@@ -1,6 +1,6 @@
 {
   "name": "arm-js-library",
-  "version": "2.5.4",
+  "version": "2.6.0",
   "description": "API Resource Manager",
   "type": "module",
   "files": [
@@ -63,6 +63,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mobx": "^6.15.0",
+    "qs": "^6.14.0",
     "uuid": "11.1.0"
   }
 }

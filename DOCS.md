@@ -479,6 +479,12 @@ specified properties.</p>
 <dt><a href="#sortBy">sortBy(objects, sortProperties)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Sorts an array of objects based on specified properties and sort orders.</p>
 </dd>
+<dt><a href="#sum">sum(objects)</a> ⇒ <code>number</code></dt>
+<dd><p>Sums the values of an array of objects.</p>
+</dd>
+<dt><a href="#sumBy">sumBy(objects, sumByProperty)</a> ⇒ <code>number</code></dt>
+<dd><p>Sums the values of an array of objects, extracting a specific property from each object.</p>
+</dd>
 <dt><a href="#isEmpty">isEmpty(value)</a> ⇒ <code>boolean</code></dt>
 <dd><p>Checks if a value is empty.</p>
 </dd>
@@ -1732,6 +1738,31 @@ Sorts an array of objects based on specified properties and sort orders.
 | --- | --- | --- |
 | objects | <code>Array.&lt;Object&gt;</code> | The array of objects to sort. |
 | sortProperties | <code>Array.&lt;string&gt;</code> | An array of sort properties in                                       the format of 'property:order'. |
+
+<a name="sum"></a>
+
+## sum(objects) ⇒ <code>number</code>
+Sums the values of an array of objects.
+
+**Kind**: global function  
+**Returns**: <code>number</code> - The sum of the values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array of objects to sum. |
+
+<a name="sumBy"></a>
+
+## sumBy(objects, sumByProperty) ⇒ <code>number</code>
+Sums the values of an array of objects, extracting a specific property from each object.
+
+**Kind**: global function  
+**Returns**: <code>number</code> - The sum of the extracted values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array of objects to sum. |
+| sumByProperty | <code>string</code> | The property to extract from each object. |
 
 <a name="isEmpty"></a>
 
