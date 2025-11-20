@@ -860,6 +860,22 @@ const addresses = [
     // Returns records order by ids 3,2,1
     ARM.sortBy(addresses, ['id:desc'])
     ```
+* **sum(objects)**
+    * Sums the values of an array of objects.
+    ```javascript
+    // Return 600
+    ARM.sortBy([100, 200, 300])
+    ```
+* **sumBy(objects, sumByProperty)**
+    * Sums the values of an array of objects, extracting a specific property from each object.
+    ```javascript
+    // Return 270
+    ARM.sumBy([
+      { subject: 'Math', score: 100 },
+      { subject: 'English', score: 80 },
+      { subject: 'Science', score: 90 },
+    ], 'score')
+    ```
 * **ajax(config)**
     * Axios instance under the hood with default ARM config.
     * Config accepts all properties that can be passed on **axios.request** config.
