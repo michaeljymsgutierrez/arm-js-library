@@ -1,0 +1,27 @@
+'use client'
+
+import { ARM } from '@/components/providers/arm-config-provider'
+
+const Controller = () => {
+  const address = ARM.createRecord(
+    'addresses',
+    {
+      attributes: {
+        address1: 'Paseo de Roxas, Makati, Metro Manila, Philippines',
+        address2: null,
+        city: 'Makati',
+        'post-code': null,
+        landmark: null,
+        kind: 'home',
+        label: 'Zuellig Building',
+        latitude: '14.557843',
+        longitude: '121.026661',
+      },
+    },
+    false
+  )
+
+  return { address }
+}
+
+export default Controller
