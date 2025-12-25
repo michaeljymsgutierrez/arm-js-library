@@ -7,7 +7,7 @@ const Page = observer(() => {
   const controller = Controller()
 
   return (
-    <form>
+    <form onSubmit={(event) => event.preventDefault()}>
       <div className="form-control">
         <label htmlFor="address1">Address1</label>
         <input
@@ -117,7 +117,9 @@ const Page = observer(() => {
       </div>
 
       <div className="form-control">
-        <button className="blue-btn">Save</button>
+        <button className="blue-btn" onClick={controller.onSave}>
+          {controller.address.get('isLoading') ? 'Saving' : 'Save'}
+        </button>
       </div>
     </form>
   )

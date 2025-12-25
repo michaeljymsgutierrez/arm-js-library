@@ -21,7 +21,11 @@ const Controller = () => {
     false
   )
 
-  return { address }
+  const onSave = () => {
+    address.save()
+  }
+
+  return { address, onSave }
 }
 
 export default Controller
