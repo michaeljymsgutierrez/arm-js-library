@@ -472,7 +472,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 * **createRecord(collectionName, collectionRecord, collectionRecordRandomId)**
     * Create new collection record.
     * By default collectionRecord params is set to empty object if omitted - **required**
-    * By default collectionRecordRandomId params is set to true - **optional**
+    * By default collectionRecordRandomId params is set to true - **optional**<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/create-collection-record-function/create-record)
     ```javascript
     // Usage #1
     // Can ommit collectionRecord on createRecord initialization
