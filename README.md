@@ -513,7 +513,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 #### Push collection record function
 ---
 * **pushPayload(collectionName, collectionRecords)**
-    * Push raw collection record/records to respective collections.
+    * Push raw collection record/records to respective collections.<br/>
+    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/push-collection-record-function/push-payload)
     ```javascript
     // Retrieve raw data with barebone ajax/fetch function.
     ARM.ajax({
