@@ -634,7 +634,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
+        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
         ```javascript
         // Returned promise
         // Without collectionConfig
