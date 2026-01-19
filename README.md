@@ -580,9 +580,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **get(key)**
         * Single property getter function.
         * Passed arguments:
-            * **key - String**
-        <br/><br/>
-
+            * **key - String**<br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 2519858
@@ -595,9 +593,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Single property setter function.
         * Passed arguments:
             * **key - String**
-            * **value - Primitive**
-        <br/><br/>
-
+            * **value - Primitive**<br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
@@ -612,9 +608,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **setProperties(value)**
         * Multiple properties setter function.
         * Passed arguments:
-            * **value - Object**
-        <br/><br/>
-
+            * **value - Object**<br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
@@ -640,9 +634,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-        <br/><br/>
-
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/><br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
         ```javascript
         // Returned promise
@@ -656,9 +648,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-        <br/><br/>
-
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/reload)
         ```javascript
         // Returned promise
