@@ -634,8 +634,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
-        <br/>
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+        <br/><br/>
 
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
         ```javascript
@@ -650,7 +650,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+        <br/><br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/reload)
         ```javascript
         // Returned promise
