@@ -248,12 +248,15 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
     ARM.setHeadersCommon('X-Client-Platform', 'Web')
     ```
 - **setNamespace(value)**
-  `javascript
-// Set namespace for API endpoint host URL
-// By default namespace is set to 'api/v1'
-ARM.setNamespace('api/v1')
-`
-  **Optional configurations**
+
+    ```javascript
+    // Set namespace for API endpoint host URL
+    // By default namespace is set to 'api/v1'
+    ARM.setNamespace('api/v1')
+    ```
+
+**Optional configurations**
+
 - **setGlobal(value)**
     ```javascript
     // Set ARM instace to global
