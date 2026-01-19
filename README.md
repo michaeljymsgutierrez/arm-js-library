@@ -1046,4 +1046,4 @@ const addresses = [
 
 ## Credits
 
-- **Axl (skipclass):** Special thanks to [John Axl Asuncion](https://www.linkedin.com/in/john-axl-asuncion-4944a41aa/) for his contributions logo and design.
+- **Axl (skipclass):** Special thanks to [John Axl Asuncion](https://www.facebook.com/skpcls) for his contributions logo and design.
