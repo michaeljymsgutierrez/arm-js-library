@@ -80,8 +80,8 @@ By centralizing data management and offering flexible access to it, ARM empowers
 
 ```javascript
 // Example usage in ReactJS/NextJS
-import { observer } from "mobx-react-lite";
-import { ARM } from "@/components/providers/arm-config-provider";
+import { observer } from 'mobx-react-lite'
+import { ARM } from '@/components/providers/arm-config-provider'
 
 const App = observer(() => {
   // GET /addresses/2519858?include=user
@@ -90,11 +90,11 @@ const App = observer(() => {
     isError,
     data: address,
   } = ARM.findRecord(
-    "addresses",
+    'addresses',
     2519858,
-    { include: "user" },
-    { alias: "customerAddress" },
-  );
+    { include: 'user' },
+    { alias: 'customerAddress' },
+  )
 
   return (
     <div className="App">
@@ -103,9 +103,9 @@ const App = observer(() => {
         <div className="form">
           <label>Address1 </label>
           <input
-            value={address.get("attributes.address1")}
+            value={address.get('attributes.address1')}
             onChange={(event) =>
-              address.set("attributes.address1", event.target.value)
+              address.set('attributes.address1', event.target.value)
             }
           />
           &nbsp;
@@ -114,18 +114,17 @@ const App = observer(() => {
               address
                 .save()
                 .then((result) => console.log(result))
-                .catch((error) => console.log(error));
-            }}
-          >
-            {address.get("isLoading") ? "Saving" : "Save"}
+                .catch((error) => console.log(error))
+            }}>
+            {address.get('isLoading') ? 'Saving' : 'Save'}
           </button>
         </div>
       )}
     </div>
-  );
-});
+  )
+})
 
-export default App;
+export default App
 ```
 
 ## Installation
@@ -148,19 +147,19 @@ npm install mobx-react --save
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
 
    ```javascript
-   "use client"; // Omit this line if you are not using NextJS
+   'use client' // Omit this line if you are not using NextJS
 
-   import ApiResourceManager from "arm-js-library";
+   import ApiResourceManager from 'arm-js-library'
 
-   const COLLECTIONS = ["addresses", "users"];
+   const COLLECTIONS = ['addresses', 'users']
 
-   export const ARM = new ApiResourceManager(COLLECTIONS);
+   export const ARM = new ApiResourceManager(COLLECTIONS)
 
    const ARMConfigProvider = ({ children }) => {
-     return <>{children}</>;
-   };
+     return <>{children}</>
+   }
 
-   export default ARMConfigProvider;
+   export default ARMConfigProvider
    ```
 
 2. Use `arm-config-provider` component on your application.<br/>
@@ -169,31 +168,31 @@ npm install mobx-react --save
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/application-providers/index.jsx)
 
    ```javascript
-   "use client";
+   'use client'
 
-   import dynamic from "next/dynamic";
+   import dynamic from 'next/dynamic'
 
    const ARMConfigProvider = dynamic(
-     () => import("@/components/providers/arm-config-provider"),
+     () => import('@/components/providers/arm-config-provider'),
      { ssr: false },
-   );
+   )
 
    const ApplicationProviders = ({ children }) => {
      return (
        <>
          <ARMConfigProvider>{children}</ARMConfigProvider>
        </>
-     );
-   };
+     )
+   }
 
-   export default ApplicationProviders;
+   export default ApplicationProviders
    ```
 
    Wrap root layout `src/app/layout.jsx` with `application-providers` component.<br/>
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
 
    ```javascript
-   import ApplicationProviders from "@/components/providers/application-providers";
+   import ApplicationProviders from '@/components/providers/application-providers'
 
    export default function RootLayout({ children }) {
      return (
@@ -203,7 +202,7 @@ npm install mobx-react --save
            <ApplicationProviders>{children}</ApplicationProviders>
          </body>
        </html>
-     );
+     )
    }
    ```
 
@@ -235,22 +234,22 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
   ```javascript
   // Set API endpoint host URL
   // By default host is set to window.location.origin
-  ARM.setHost("https://www.test-demo.com");
+  ARM.setHost('https://www.test-demo.com')
   ```
 - **setHeadersCommon(key, value)**
   ```javascript
   // Set common request headers required on calling API endpoints
   // ie. Authoization, Content-Type, etc.
-  ARM.setHeadersCommon("Authorization", `${token}`);
-  ARM.setHeadersCommon("Content-Type", "application/vnd.api+json");
-  ARM.setHeadersCommon("X-Client-Platform", "Web");
+  ARM.setHeadersCommon('Authorization', `${token}`)
+  ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+  ARM.setHeadersCommon('X-Client-Platform', 'Web')
   ```
 - **setNamespace(value)**
 
   ```javascript
   // Set namespace for API endpoint host URL
   // By default namespace is set to 'api/v1'
-  ARM.setNamespace("api/v1");
+  ARM.setNamespace('api/v1')
   ```
 
 **Optional configurations**
@@ -261,7 +260,7 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
   // This will make ARM instance available on browser window object via window.ARM
   // Example:
   //  console.log(window.ARM)
-  ARM.setGlobal();
+  ARM.setGlobal()
   ```
 - **setPayloadIncludeReference(value)**
   ```javascript
@@ -273,7 +272,7 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
   //    data: [...],
   //    included: [ { id: 1, type: 'addresses' } ]
   //  }
-  ARM.setPayloadIncludeReference("type");
+  ARM.setPayloadIncludeReference('type')
   ```
 
 ## Utilization
@@ -282,7 +281,7 @@ To be able to use ARM features. You have to import the stored ARM instance from 
 
 ```javascript
 // Import ARM instance from arm-config-provider component
-import { ARM } from "@/components/providers/arm-config-provider";
+import { ARM } from '@/components/providers/arm-config-provider'
 ```
 
 #### Request functions from server
@@ -296,15 +295,15 @@ import { ARM } from "@/components/providers/arm-config-provider";
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
   ```javascript
   ARM.query(
-    "addresses",
+    'addresses',
     {
-      sort: "-id",
-      include: "user",
+      sort: '-id',
+      include: 'user',
     },
     {
-      alias: "customerAddresses",
+      alias: 'customerAddresses',
     },
-  );
+  )
   ```
 - **queryRecord(resource, params, config)**
   - Querying for a single record from the server.
@@ -313,23 +312,23 @@ import { ARM } from "@/components/providers/arm-config-provider";
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
   ```javascript
   ARM.queryRecord(
-    "addresses",
+    'addresses',
     {
       id: 2519858,
-      sort: "-id",
-      include: "user",
+      sort: '-id',
+      include: 'user',
     },
-    { alias: "customerAddress" },
-  );
+    { alias: 'customerAddress' },
+  )
   ```
 - **findAll(resource, config)**
   - Retrieving multiple records from the server.
   - Support config. - **optional**
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
   ```javascript
-  ARM.findAll("addresses", {
-    alias: "customerAddresses",
-  });
+  ARM.findAll('addresses', {
+    alias: 'customerAddresses',
+  })
   ```
 - **findRecord(resource, id, params, config)**
   - Retrieving single record from the server.
@@ -339,13 +338,13 @@ import { ARM } from "@/components/providers/arm-config-provider";
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-record)
   ```javascript
   ARM.findRecord(
-    "addresses",
+    'addresses',
     2519858,
-    { include: "user" },
+    { include: 'user' },
     {
-      alias: "customerAddress",
+      alias: 'customerAddress',
     },
-  );
+  )
   ```
 
 #### Passed Arguments: `Request functions from server`
@@ -355,16 +354,16 @@ import { ARM } from "@/components/providers/arm-config-provider";
 ```javascript
 // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
 ARM.findRecord(
-  "addresses",
+  'addresses',
   2519858,
   {
-    include: "user",
+    include: 'user',
   },
   {
     skip: true,
-    alias: "customerAddress",
+    alias: 'customerAddress',
   },
-);
+)
 ```
 
 See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
@@ -478,20 +477,20 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   - Retrieving multiple records from collection.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
   ```javascript
-  ARM.peekAll("addresses");
+  ARM.peekAll('addresses')
   ```
 - **peekRecord(collectionName, collectionRecordId)**
   - Retrieving single record from collection.
   - Params ID by default. - **required**
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
   ```javascript
-  ARM.peekRecord("addresses", 2519858);
+  ARM.peekRecord('addresses', 2519858)
   ```
 - **getCollection(collectionName)**
   - Retrieving all records from collection.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
   ```javascript
-  ARM.getCollection("addresses");
+  ARM.getCollection('addresses')
   ```
 - **getAlias(collectionName, collectionFallbackRecord)**
   - Retrieving records from aliased request results.
@@ -523,19 +522,19 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   ```javascript
   // Usage #1
   // Can ommit collectionRecord on createRecord initialization
-  const newAddress = ARM.createRecord("addresses");
-  newAddress.set("attributes.kind", "school");
-  newAddress.set("attributes.label", "My school");
+  const newAddress = ARM.createRecord('addresses')
+  newAddress.set('attributes.kind', 'school')
+  newAddress.set('attributes.label', 'My school')
 
   // Usage #2
   // Can ommit collectionRecord on createRecord initialization
-  const newAddress = ARM.createRecord("addresses", {
-    attributes: { kind: "school", label: "My school" },
-  });
+  const newAddress = ARM.createRecord('addresses', {
+    attributes: { kind: 'school', label: 'My school' },
+  })
 
   // Persist collection record to server.
   // Will call POST /addresses
-  newAddress.save();
+  newAddress.save()
   ```
 
 #### Remove collection record functions
@@ -548,18 +547,18 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
   ```javascript
   // Collection record to be remove collection.
-  const address = ARM.peekRecord("addresses", 2519858);
+  const address = ARM.peekRecord('addresses', 2519858)
 
   // This will remove the record from collection and will not
   // remove permanently from the server.
-  ARM.unloadRecord(address);
+  ARM.unloadRecord(address)
   ```
 
 - **clearCollection(collectionName)**
   - Clears a specified collection and unloads related records from aliases and request hashes.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
   ```javascript
-  ARM.clearCollection("addresses");
+  ARM.clearCollection('addresses')
   ```
 
 #### Push collection record function
@@ -572,12 +571,12 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   ```javascript
   // Retrieve raw data with barebone ajax/fetch function.
   ARM.ajax({
-    method: "get",
-    url: "addresses/12345",
+    method: 'get',
+    url: 'addresses/12345',
   }).then((results) => {
     // Will add/update collection records.
-    ARM.pushPayload("addresses", results.data.data);
-  });
+    ARM.pushPayload('addresses', results.data.data)
+  })
   ```
 
 #### Collection Records: `Properties and Functions`
@@ -608,7 +607,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     - Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
     - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
     ```javascript
-    address.get("isLoading");
+    address.get('isLoading')
     ```
   - **isError - Boolean**
     - Current error state of the record.
@@ -616,7 +615,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     - Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
     - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
     ```javascript
-    address.get("isError");
+    address.get('isError')
     ```
   - **isPristine - Boolean**
     - Current pristine state of the record.
@@ -624,7 +623,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     - Set to **false** if the record is modified and set to **true** once reverted.
     - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
     ```javascript
-    address.get("isPristine");
+    address.get('isPristine')
     ```
   - **isDirty - Boolean**
     - Current dirty state of the record.
@@ -632,7 +631,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     - Set to **true** if the record is modified and set to **false** once reverted.
     - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
     ```javascript
-    address.get("isDirty");
+    address.get('isDirty')
     ```
 - **Getter and Setter Functions**
   - **get(key)**
@@ -643,10 +642,10 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
     ```javascript
     // Returned value 2519858
-    address.get("id");
+    address.get('id')
 
     // Returned value 'office'
-    address.get("attributes.label");
+    address.get('attributes.label')
     ```
 
   - **set(key, value)**
@@ -658,13 +657,13 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
     ```javascript
     // Returned value 'office'
-    address.get("attributes.kind");
+    address.get('attributes.kind')
 
     // Set property label of attributes
-    address.set("attributes.kind", "school");
+    address.set('attributes.kind', 'school')
 
     // Returned value 'office'
-    address.get("attributes.kind");
+    address.get('attributes.kind')
     ```
 
   - **setProperties(value)**
@@ -675,19 +674,19 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
     ```javascript
     // Returned value 'office'
-    address.get("attributes.kind");
+    address.get('attributes.kind')
     // Returned value 'Anabu Hills'
-    address.get("attributes.label");
+    address.get('attributes.label')
 
     // Set properties label and kind of attributes
     address.setProperties({
-      attributes: { kind: "school", label: "My School" },
-    });
+      attributes: { kind: 'school', label: 'My School' },
+    })
 
     // Returned value 'school'
-    address.get("attributes.kind");
+    address.get('attributes.kind')
     // Returned value 'My School'
-    address.get("attributes.label");
+    address.get('attributes.label')
     ```
 
 - **Request Functions**
@@ -704,10 +703,10 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```javascript
     // Returned promise
     // Without collectionConfig
-    address.save();
+    address.save()
 
     // With collectionConfig
-    address.save({ ignorePayload: ["attributes.address2"] });
+    address.save({ ignorePayload: ['attributes.address2'] })
     ```
 
   - **reload()**
@@ -719,14 +718,14 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
     ```javascript
     // Returned promise
-    address.reload();
+    address.reload()
 
     // With collectionConfig
     address.reload({
       override: {
-        namespace: "api/v2",
+        namespace: 'api/v2',
       },
-    });
+    })
     ```
 
   - **destroyRecord(collectionConfig)**
@@ -738,16 +737,16 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```javascript
     // Returned promise
     // Without collectionConfig
-    address.destroyRecord();
+    address.destroyRecord()
 
     // With collectionConfig
     address.destroyRecord({
       override: {
-        host: "https://ww7.test-demo.com",
-        namespace: "api/v2",
-        path: `destroy-addresses/${address.get("id")}`,
+        host: 'https://ww7.test-demo.com',
+        namespace: 'api/v2',
+        path: `destroy-addresses/${address.get('id')}`,
       },
-    });
+    })
     ```
 
   - **getCollection(collectionName, collectionConfig)**
@@ -771,11 +770,11 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ```javascript
     // Get user record from the server but don't preload addresses records.
     const { isLoading, data: user } = ARM.findRecord(
-      "users",
+      'users',
       12980860,
       {},
-      { alias: "currentUser" },
-    );
+      { alias: 'currentUser' },
+    )
 
     // The getCollection function will populate records from collection
     // and server depending on passed collectionConfig.
@@ -783,24 +782,24 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
       !isLoading && (
         <ul>
           {user
-            .getCollection("addresses", {
-              referenceKey: "relationships.addresses.data",
+            .getCollection('addresses', {
+              referenceKey: 'relationships.addresses.data',
               async: true,
-              sortBy: ["id:desc"],
+              sortBy: ['id:desc'],
               filterBy: {
                 attributes: {
-                  label: "Test",
+                  label: 'Test',
                 },
               },
               override: {
-                namespace: "api/v2",
+                namespace: 'api/v2',
               },
             })
             .map((address, index) => (
-              <li key={index}>{address.get("id")}</li>
+              <li key={index}>{address.get('id')}</li>
             ))}
         </ul>
-      );
+      )
     }
     ```
 
@@ -816,7 +815,7 @@ The root scope is an object that can be used to store and manage global state. T
 
   ```javascript
   // Set root scope property 'fullName' to 'John Doe'
-  ARM.setRootScope("fullName", "John Doe");
+  ARM.setRootScope('fullName', 'John Doe')
   ```
 
 - **getRootScope(rootScopeProperty)**
@@ -825,7 +824,7 @@ The root scope is an object that can be used to store and manage global state. T
     - **rootScopeProperty - String**
   ```javascript
   // Returns value 'John Doe'
-  ARM.getRootScope("fullName");
+  ARM.getRootScope('fullName')
   ```
 
 ## Utility Functions
@@ -843,113 +842,113 @@ const addresses = [
   {
     id: 1,
     attributes: {
-      kind: "office",
-      label: "My Office",
+      kind: 'office',
+      label: 'My Office',
     },
   },
   {
     id: 2,
     attributes: {
-      kind: "school",
-      label: "My School",
+      kind: 'school',
+      label: 'My School',
     },
   },
   {
     id: 3,
     attributes: {
-      kind: "school",
+      kind: 'school',
       label: "My Brother's School",
     },
   },
-];
+]
 ```
 
 - **findBy(objects, findProperties)**
   - Finds the first element in the given array of objects that satisfies the provided find properties.
   ```javascript
   // Return record with id 1
-  ARM.findBy(addresses, { id: 1 });
+  ARM.findBy(addresses, { id: 1 })
   ```
 - **findIndexBy(objects, findIndexProperties)**
   - Returns the index of the first element in the given array of objects that satisfies the provided find properties.
   ```javascript
   // Return index number of record with id 1
   ARM.findIndexBy(addresses, {
-    attributes: { kind: "office" },
-  });
+    attributes: { kind: 'office' },
+  })
   ```
 - **filterBy(objects, filterProperties)**
   - Creates a new array with all elements from the given array of objects that pass the filter test implemented by the provided filter properties.
   ```javascript
   // Returns records with ids 2 and 3
   ARM.filterBy(addresses, {
-    attributes: { kind: "school" },
-  });
+    attributes: { kind: 'school' },
+  })
   ```
 - **uniqBy(objects, uniqByProperty)**
   - Removes **duplicate** objects from an array based on a unique property.
   ```javascript
   // Returns records with ids 1 and 2
-  ARM.uniqBy(addresses, "attributes.kind");
+  ARM.uniqBy(addresses, 'attributes.kind')
   ```
 - **uniq(values)**
   - Removes **duplicate** values from an array.
   ```javascript
   // Returns array with 1,2,3
-  ARM.uniq([1, 2, 2, 3, 3, 3]);
+  ARM.uniq([1, 2, 2, 3, 3, 3])
   ```
 - **groupBy(objects, groupByProperty)**
   - **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property.
   ```javascript
   // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]}
-  ARM.groupBy(addresses, "attributes.kind");
+  ARM.groupBy(addresses, 'attributes.kind')
   ```
 - **mapBy(objects, mapByProperty)**
   - **Maps** an array of objects, extracting a specific property from each.
 
   ```javascript
   // Returns ['office', 'school', 'school']
-  ARM.mapBy(addresses, "attributes.kind");
+  ARM.mapBy(addresses, 'attributes.kind')
   ```
 
 - **firstObject(objects)**
   - Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**.
   ```javascript
   // Return record with id 1
-  ARM.firstObject(addresses);
+  ARM.firstObject(addresses)
   ```
 - **lastObject(objects)**
   - Returns the **last element** from the given array of objects. If the array is empty, it returns **undefined**.
   ```javascript
   // Return record with id 3
-  ARM.lastObject(addresses);
+  ARM.lastObject(addresses)
   ```
 - **mergeObjects(objects, otherObjects)**
   - Combines two arrays of objects into one, removing duplicates.
   ```javascript
-  ARM.mergeObjects(addresses, otherAddresses);
+  ARM.mergeObjects(addresses, otherAddresses)
   ```
 - **chunkObjects(objects, chunkSize)**
   - Splits an array of objects into smaller arrays of a given **size**.
   ```javascript
-  ARM.chunkObjects(addresses, 2);
+  ARM.chunkObjects(addresses, 2)
   ```
 - **sortBy(objects, sortProperties)**
   - Sorts the given array of objects by the specified sort properties.
 
   ```javascript
   // Returns records order by ids 1,2,3
-  ARM.sortBy(addresses, ["id:asc"]);
+  ARM.sortBy(addresses, ['id:asc'])
 
   // Returns records order by ids 3,2,1
-  ARM.sortBy(addresses, ["id:desc"]);
+  ARM.sortBy(addresses, ['id:desc'])
   ```
 
 - **sum(objects)**
   - Sums the values of an array of objects.
   ```javascript
   // Return 600
-  ARM.sum([100, 200, 300]);
+  ARM.sum([100, 200, 300])
   ```
 - **sumBy(objects, sumByProperty)**
   - Sums the values of an array of objects, extracting a specific property from each object.
@@ -957,12 +956,12 @@ const addresses = [
   // Return 600
   ARM.sumBy(
     [
-      { id: 1, name: "Banana", price: 100 },
-      { id: 2, name: "Apple", price: 200 },
-      { id: 3, name: "Orange", price: 300 },
+      { id: 1, name: 'Banana', price: 100 },
+      { id: 2, name: 'Apple', price: 200 },
+      { id: 3, name: 'Orange', price: 300 },
     ],
-    "price",
-  );
+    'price',
+  )
   ```
 - **ajax(config)**
   - Axios instance under the hood with default ARM config.
@@ -970,12 +969,12 @@ const addresses = [
   ```javascript
   // Return promise
   ARM.ajax({
-    method: "get",
-    baseURL: "https://other-api.test-demo.com",
-    url: "/api/v1/addresses",
+    method: 'get',
+    baseURL: 'https://other-api.test-demo.com',
+    url: '/api/v1/addresses',
   })
     .then((results) => console.log(results))
-    .catch((errors) => console.log(errors));
+    .catch((errors) => console.log(errors))
   ```
 
 #### Data Validation and Comparison
@@ -984,61 +983,61 @@ const addresses = [
   - Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**.
   ```javascript
   // Return boolean value
-  ARM.isEmpty(value);
+  ARM.isEmpty(value)
   ```
 - **isPresent(value)**
   - Returns the opposite of isEmpty.
   ```javascript
   // Return boolean value
-  ARM.isPresent(value);
+  ARM.isPresent(value)
   ```
 - **isEqual(value, other)**
   - Performs a deep comparison between two values to determine if they are equal.
   ```javascript
   // Return boolean value
-  ARM.isEqual(value, other);
+  ARM.isEqual(value, other)
   ```
 - **isNumber(value)**
   - Checks if a value is a **number**.
   ```javascript
   // Return boolean value
-  ARM.isNumber(value);
+  ARM.isNumber(value)
   ```
 - **isNil(value)**
   - Checks if a value is **null** or **undefined**.
   ```javascript
   // Return boolean value
-  ARM.isNil(value);
+  ARM.isNil(value)
   ```
 - **isNull(value)**
   - Checks if a value is **null**.
   ```javascript
   // Return boolean value
-  ARM.isNull(value);
+  ARM.isNull(value)
   ```
 - **isGte(value, other)**
   - Checks if the first value is **greater than or equal** to the second value.
   ```javascript
   // Return boolean value
-  ARM.isGte(value, other);
+  ARM.isGte(value, other)
   ```
 - **isGt(value, other)**
   - Checks if the first value is **greater than** the second value.
   ```javascript
   // Return boolean value
-  ARM.isGt(value, other);
+  ARM.isGt(value, other)
   ```
 - **isLte(value, other)**
   - Checks if the first value is **less than or equal** to the second value.
   ```javascript
   // Return boolean value
-  ARM.isLte(value, other);
+  ARM.isLte(value, other)
   ```
 - **isLt(value, other)**
   - Checks if the first value is **less than** the second value.
   ```javascript
   // Return boolean value
-  ARM.isLt(value, other);
+  ARM.isLt(value, other)
   ```
 
 ## Credits
