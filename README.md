@@ -434,28 +434,28 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 ---
 
 * **peekAll(collectionName)**
-    * Retrieving multiple records from collection.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
+    * Retrieving multiple records from collection.
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
     ```javascript
     ARM.peekAll('addresses')
     ```
 * **peekRecord(collectionName, collectionRecordId)**
     * Retrieving single record from collection.
-    * Params ID by default. - **required**<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
+    * Params ID by default. - **required**
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
     ```javascript
     ARM.peekRecord('addresses', 2519858)
     ```
 * **getCollection(collectionName)**
-    * Retrieving all records from collection.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
+    * Retrieving all records from collection.
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     ARM.getCollection('addresses')
     ```
 * **getAlias(collectionName, collectionFallbackRecord)**
     * Retrieving records from aliased request results.
-    * Support collectionFallbackRecord. - **optional**<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
+    * Support collectionFallbackRecord. - **optional**
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
     ```javascript
     const addresses = ARM.getAlias('customerAddresses', [])
 
@@ -472,8 +472,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 * **createRecord(collectionName, collectionRecord, collectionRecordRandomId)**
     * Create new collection record.
     * By default collectionRecord params is set to empty object if omitted - **required**
-    * By default collectionRecordRandomId params is set to true - **optional**<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/create-collection-record-function/create-record)
+    * By default collectionRecordRandomId params is set to true - **optional**
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/create-collection-record-function/create-record)
     ```javascript
     // Usage #1
     // Can ommit collectionRecord on createRecord initialization
@@ -494,8 +494,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 #### Remove collection record functions
 ---
 * **unloadRecord(collectionRecord)**
-    * Remove record from collection only.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
+    * Remove record from collection only.
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
     ```javascript
     // Collection record to be remove collection.
     const address = ARM.peekRecord('addresses', 2519858)
@@ -505,16 +505,16 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     ARM.unloadRecord(address)
     ```
 * **clearCollection(collectionName)**
-    * Clears a specified collection and unloads related records from aliases and request hashes.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
+    * Clears a specified collection and unloads related records from aliases and request hashes.
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
     ```javascript
     ARM.clearCollection('addresses')
     ```
 #### Push collection record function
 ---
 * **pushPayload(collectionName, collectionRecords)**
-    * Push raw collection record/records to respective collections.<br/>
-    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/push-collection-record-function/push-payload)
+    * Push raw collection record/records to respective collections.
+    * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/push-collection-record-function/push-payload)
     ```javascript
     // Retrieve raw data with barebone ajax/fetch function.
     ARM.ajax({
@@ -547,32 +547,32 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **isLoading - Boolean**
         * Current loading state of the record.
         * By default set to **false**.
-        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
+        * Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isLoading')
         ```
     * **isError - Boolean**
         * Current error state of the record.
         * By default set to **false**.
-        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
+        * Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isError')
         ```
     * **isPristine - Boolean**
         * Current pristine state of the record.
         * By default set to **true**.
-        * Set to **false** if the record is modified and set to **true** once reverted.<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
+        * Set to **false** if the record is modified and set to **true** once reverted.
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isPristine')
         ```
     * **isDirty - Boolean**
         * Current dirty state of the record.
         * By default set to **false**.
-        * Set to **true** if the record is modified and set to **false** once reverted.<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
+        * Set to **true** if the record is modified and set to **false** once reverted.
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
         ```javascript
         address.get('isDirty')
         ```
@@ -580,8 +580,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **get(key)**
         * Single property getter function.
         * Passed arguments:
-            * **key - String**<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+            * **key - String**
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 2519858
         address.get('id') 
@@ -593,8 +593,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Single property setter function.
         * Passed arguments:
             * **key - String**
-            * **value - Primitive**<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+            * **value - Primitive**
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
         address.get('attributes.kind')
@@ -608,8 +608,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **setProperties(value)**
         * Multiple properties setter function.
         * Passed arguments:
-            * **value - Object**<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+            * **value - Object**
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
         address.get('attributes.kind')
@@ -634,8 +634,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Update existing record to server.
             * Will call **PUT** method: `PUT /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/><br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
         ```javascript
         // Returned promise
         // Without collectionConfig
@@ -648,8 +648,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Refresh collection record changes from server.
             * Will call **GET** method: `GET /addresses/2519858`
         * Support collectionConfig. - **optional**
-            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`<br/>
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/reload)
+            * Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/reload)
         ```javascript
         // Returned promise
         address.reload()
@@ -695,9 +695,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
                 * **sortBy - Array**
                     * Sort returned collection records based on passed array of sort criteria.
                 * **config - Object**
-                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.<br>
-
-        See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
+                    * Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
+        * See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
 
         ```javascript
         // Get user record from the server but don't preload addresses records.
