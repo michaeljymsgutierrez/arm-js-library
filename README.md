@@ -41,6 +41,7 @@
 - [Utility Functions](#utility-functions)
     - [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
     - [Data Validation and Comparison](#data-validation-and-comparison)
+- [Credits](#credits)
 
 ## Overview
 
@@ -1042,3 +1043,7 @@ const addresses = [
     // Return boolean value
     ARM.isLt(value, other)
     ```
+
+## Credits
+
+- **Axl (skipclass):** Special thanks to [John Axl Asuncion](https://www.linkedin.com/in/john-axl-asuncion-4944a41aa/) for his contributions logo and design.
