@@ -580,7 +580,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **get(key)**
         * Single property getter function.
         * Passed arguments:
-            * **key - String**<br/>
+            * **key - String**
+        <br/><br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 2519858
@@ -593,7 +595,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
         * Single property setter function.
         * Passed arguments:
             * **key - String**
-            * **value - Primitive**<br/>
+            * **value - Primitive**
+        <br/><br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
@@ -608,7 +612,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     * **setProperties(value)**
         * Multiple properties setter function.
         * Passed arguments:
-            * **value - Object**<br/>
+            * **value - Object**
+        <br/><br/>
+
         See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
         ```javascript
         // Returned value 'office'
