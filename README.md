@@ -733,6 +733,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
       - Will call **GET** method: `DELETE /addresses/2519858`
     - Support collectionConfig. - **optional**
       - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/destroy-record)
 
     ```javascript
     // Returned promise
