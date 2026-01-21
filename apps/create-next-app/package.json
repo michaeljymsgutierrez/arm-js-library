@@ -11,16 +11,16 @@
   "dependencies": {
     "arm-js-library": "file:../../packages",
     "mobx-react": "^9.2.0",
-    "next": "15.5.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "next": "^16.1.4",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/react": "19.1.13",
     "eslint": "^9",
-    "eslint-config-next": "15.5.3",
+    "eslint-config-next": "^16.1.4",
     "tailwindcss": "^4",
     "typescript": "5.9.3"
   }
