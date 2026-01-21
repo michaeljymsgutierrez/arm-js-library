@@ -1,4 +1,4 @@
 {
-  "transformIgnorePatterns": ["node_modules/(?!(@toolz\\/allow|uuid))\\/"],
+  "transformIgnorePatterns": ["node_modules/(?!uuid)"],
   "testEnvironment": "jsdom"
 }
