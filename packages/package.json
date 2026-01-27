@@ -44,13 +44,13 @@
     "node": ">=20.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.5.0",
-    "eslint": "^9.5.0",
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
     "jsdoc-to-markdown": "^8.0.3",
     "jsdom": "^27.4.0",
     "miragejs": "^0.1.48",
     "typescript": "^5.5.4",
-    "vite": "^5.4.10",
+    "vite": "^7.3.1",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^4.0.18"
   },
