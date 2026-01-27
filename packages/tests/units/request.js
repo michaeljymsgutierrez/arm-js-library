@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid'
-import { killConsole } from '../helpers'
 
 const execRequestTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Request functions from server', () => {
@@ -23,7 +21,7 @@ const execRequestTest = (ARM) => {
         {
           filter: { id: 2519858 },
         },
-        { autoResolve: false, skipId: uuidv1() }
+        { autoResolve: false, skipId: uuidv1() },
       )
       expect(ARM.getCollection('addresses')).toHaveLength(1)
     })

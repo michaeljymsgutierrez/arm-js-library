@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid'
-import { killConsole, reviveConsole } from '../helpers'
 
 const execRecordTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Collection Records: Properties and Functions', () => {
@@ -50,13 +48,13 @@ const execRecordTest = (ARM) => {
 
         record.set(
           'attributes.address1',
-          'Paseo de Roxas, Makati, Metro Manila, Philippines Modified'
+          'Paseo de Roxas, Makati, Metro Manila, Philippines Modified',
         )
         expect(record.get('isError')).toBe(false)
 
         try {
           await record.save()
-        } catch (err) {
+        } catch {
           expect(record.get('isError')).toBe(true)
         }
       })
@@ -184,7 +182,7 @@ const execRecordTest = (ARM) => {
           {
             include: 'users',
           },
-          { autoResolve: false, skipId: uuidv1() }
+          { autoResolve: false, skipId: uuidv1() },
         )
         const record = ARM.peekRecord('addresses', 2518368)
         const user = record.getCollection('users', {

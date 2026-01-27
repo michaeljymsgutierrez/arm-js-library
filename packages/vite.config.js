@@ -1,9 +1,12 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
 import eslintPlugin from 'vite-plugin-eslint'
 
 export default defineConfig({
   plugins: [eslintPlugin()],
+  esbuild: {
+    legalComments: 'inline',
+  },
   build: {
     emptyOutDir: false,
     minify: false,
@@ -26,5 +29,10 @@ export default defineConfig({
         },
       },
     },
+  },
+  test: {
+    globals: true,
+    silent: true,
+    environment: 'jsdom',
   },
 })

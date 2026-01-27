@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid'
-import { killConsole } from '../helpers'
 
 const execRetrieveTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Retrieve functions from collections', () => {
@@ -23,7 +21,7 @@ const execRetrieveTest = (ARM) => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
-        { autoResolve: false, skipId: uuidv1() }
+        { autoResolve: false, skipId: uuidv1() },
       )
       expect(ARM.getCollection('addresses')).toHaveLength(5)
     })
@@ -35,7 +33,7 @@ const execRetrieveTest = (ARM) => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
-        { autoResolve: false, alias: 'customerAddresses', skipId: uuidv1() }
+        { autoResolve: false, alias: 'customerAddresses', skipId: uuidv1() },
       )
       expect(ARM.getAlias('customerAddresses')).toHaveLength(5)
     })

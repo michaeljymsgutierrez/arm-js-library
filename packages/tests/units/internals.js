@@ -1,7 +1,4 @@
-import { killConsole, reviveConsole } from '../helpers'
-
 const execInternalsTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Internal functions', () => {

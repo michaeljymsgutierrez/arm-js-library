@@ -20,7 +20,7 @@ const execInitTest = (ARM) => {
 
     test('Verify common headers setter', () => {
       expect(axios.defaults.headers.common['X-Client-Platform']).toBe(
-        'sailfish-os'
+        'sailfish-os',
       )
     })
   })

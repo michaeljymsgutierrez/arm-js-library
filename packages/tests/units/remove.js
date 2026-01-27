@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid'
-import { killConsole, reviveConsole } from '../helpers'
 
 const execRemoveTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Remove collection record functions', () => {

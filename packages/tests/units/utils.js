@@ -11,7 +11,7 @@ const execUtilsTest = (ARM) => {
         expect(
           ARM.findIndexBy(addresses, {
             attributes: { kind: 'office' },
-          })
+          }),
         ).toEqual(0)
       })
 
@@ -19,7 +19,7 @@ const execUtilsTest = (ARM) => {
         expect(
           ARM.filterBy(addresses, {
             attributes: { kind: 'school' },
-          })
+          }),
         ).toEqual([
           { id: 2, attributes: { kind: 'school', label: 'My School' } },
           {
@@ -39,7 +39,7 @@ const execUtilsTest = (ARM) => {
       test('Verify uniq functionality', () => {
         expect(ARM.uniq([1, 2, 3, 4, 1, 2, 3])).toEqual([1, 2, 3, 4])
         expect(ARM.uniq(['hi', 'hello', 'hello', 'hi', 'hello world'])).toEqual(
-          ['hi', 'hello', 'hello world']
+          ['hi', 'hello', 'hello world'],
         )
       })
 
@@ -76,7 +76,7 @@ const execUtilsTest = (ARM) => {
 
       test('Verify mergeObjects functionality', () => {
         expect(
-          ARM.mergeObjects([addresses[0], addresses[1]], [addresses[2]])
+          ARM.mergeObjects([addresses[0], addresses[1]], [addresses[2]]),
         ).toEqual(addresses)
       })
 
@@ -111,8 +111,8 @@ const execUtilsTest = (ARM) => {
               { id: 2, name: 'Apple', price: 200 },
               { id: 3, name: 'Orange', price: 300 },
             ],
-            'price'
-          )
+            'price',
+          ),
         ).toBe(600)
       })
     })
@@ -140,7 +140,7 @@ const execUtilsTest = (ARM) => {
         expect(ARM.isEqual(1, '1')).toBe(false)
         expect(ARM.isEqual(true, 'true')).toBe(false)
         expect(ARM.isEqual({ message: 'Hello' }, { message: 'Hello' })).toBe(
-          true
+          true,
         )
         expect(ARM.isEqual([1, 2, 3], [1, 2, 3])).toBe(true)
         expect(ARM.isEqual([1, 2, 3], [3, 2, 1])).toBe(false)

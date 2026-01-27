@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid'
-import { killConsole } from '../helpers'
 
 const execPushTest = (ARM) => {
-  killConsole()
   ARM.setNamespace('api/v1')
 
   describe('Push collection record function', () => {

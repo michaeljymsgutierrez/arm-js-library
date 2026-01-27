@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import startMirage from './mirage'
 import ApiResourceManager from '../src'
 import execInitTest from './units/init'
