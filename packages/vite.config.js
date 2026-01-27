@@ -4,6 +4,9 @@ import eslintPlugin from 'vite-plugin-eslint'
 
 export default defineConfig({
   plugins: [eslintPlugin()],
+  esbuild: {
+    legalComments: 'inline',
+  },
   build: {
     emptyOutDir: false,
     minify: false,
