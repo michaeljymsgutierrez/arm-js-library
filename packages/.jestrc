@@ -1,4 +1,0 @@
-{
-  "transformIgnorePatterns": ["node_modules/(?!uuid)"],
-  "testEnvironment": "jsdom"
-}
