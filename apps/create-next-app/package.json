@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "arm-js-library": "file:../../packages",
-    "mobx-react": "^9.2.0",
+    "mobx-react": "^9.2.1",
     "next": "^16.1.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
