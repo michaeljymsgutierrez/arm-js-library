@@ -1040,7 +1040,10 @@ const addresses = [
 ## Credits
 
 <a href="https://www.facebook.com/skpcls">
-  <img src="https://assets-omega-neon.vercel.app/images/axl.png" alt="Axl Asuncion" height="100" width="100" title="Axl Asuncion - Logo and Design" />
+  <img 
+    src="https://assets-omega-neon.vercel.app/images/axl.png" 
+    target="_blank" 
+    alt="Axl Asuncion" 
+    height="60" width="60" 
+    title="Axl Asuncion - Original logo/design creator" />
 </a>
-- **Axl (skipclass):** Special thanks to [John Axl Asuncion](https://www.facebook.com/skpcls) for his contributions logo and design.
-https://github.com/luigircruz
