@@ -259,14 +259,14 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
   ARM.setGlobal()
   ```
 - **setPayloadIncludeReference(value)**
+  - Set payload included reference key.
+  - Payload `included` reference key serve as mapper to determine what collection the data received belongs to.
   ```javascript
-  // Set payload included reference key
-  // Payload included reference key serve as mapper to determine what collection
-  // the data received belongs to
   // Example:
   //  {
   //    data: [...],
   //    included: [ { id: 1, type: 'addresses' } ]
+  //    meta: {...}
   //  }
   ARM.setPayloadIncludeReference('type')
   ```
