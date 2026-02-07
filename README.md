@@ -1043,12 +1043,12 @@ const addresses = [
   <img 
     src="https://assets-omega-neon.vercel.app/images/axl.png" 
     alt="Axl Asuncion" 
-    height="60" width="60" />
+    height="50" width="50" />
 </a>
 
 <a href="https://github.com/luigircruz" title="Luigi Cruz (Developer) - Features and bugs feedback" >
   <img 
     src="https://assets-omega-neon.vercel.app/images/luigi.png" 
     alt="Luigi Cruz"
-    height="60" width="60" />
+    height="50" width="50" />
 </a>
