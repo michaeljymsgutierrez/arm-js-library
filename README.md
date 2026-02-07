@@ -1052,3 +1052,10 @@ const addresses = [
     alt="Luigi Cruz"
     height="40" width="40" />
 </a>
+
+<a href="https://github.com/DicksonPal" title="Dickson Palomeras (Developer) - Features and bugs feedback" >
+  <img 
+    src="https://assets-omega-neon.vercel.app/images/dickson.png" 
+    alt="Dickson Palomeras"
+    height="40" width="40" />
+</a>
