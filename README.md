@@ -1039,10 +1039,9 @@ const addresses = [
 
 ## Credits
 
-<a href="https://www.facebook.com/skpcls">
+<a href="https://www.facebook.com/skpcls" target="_blank">
   <img 
     src="https://assets-omega-neon.vercel.app/images/axl.png" 
-    target="_blank" 
     alt="Axl Asuncion" 
     height="60" width="60" 
     title="Axl Asuncion - Original logo/design creator" />
