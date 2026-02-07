@@ -1044,13 +1044,13 @@ const addresses = [
     src="https://assets-omega-neon.vercel.app/images/axl.png" 
     alt="Axl Asuncion" 
     height="60" width="60" 
-    title="Axl Asuncion - Original logo/design creator" />
+    title="Axl Asuncion (Graphic Artist) - Original logo/design creator" />
 </a>
 
-<a href="https://www.facebook.com/skpcls">
+<a href="https://github.com/luigircruz">
   <img 
-    src="https://assets-omega-neon.vercel.app/images/axl.png" 
-    alt="Axl Asuncion" 
+    src="https://assets-omega-neon.vercel.app/images/luigi.png" 
+    alt="Luigi Cruz"
     height="60" width="60" 
-    title="Axl Asuncion - Original logo/design creator" />
+    title="Luigi Cruz (Developer) - Features and bugs feedback" />
 </a>
