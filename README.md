@@ -231,35 +231,31 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
 **Required configurations**
 
 - **setHost(value)**
-  - Set API endpoint host URL
-  - By default host is set to `window.location.origin`
+  - Set API endpoint host URL.
+  - By default host is set to `window.location.origin`.
   ```javascript
   ARM.setHost('https://www.test-demo.com')
   ```
 - **setHeadersCommon(key, value)**
+  - Set common request headers required on calling API endpoints.
   ```javascript
-  // Set common request headers required on calling API endpoints
-  // ie. Authoization, Content-Type, etc.
   ARM.setHeadersCommon('Authorization', `${token}`)
   ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
   ARM.setHeadersCommon('X-Client-Platform', 'Web')
   ```
 - **setNamespace(value)**
-
+  - Set API endpoint namespace.
+  - By default namespace is set to `'api/v1'`.
   ```javascript
-  // Set namespace for API endpoint host URL
-  // By default namespace is set to 'api/v1'
   ARM.setNamespace('api/v1')
   ```
 
 **Optional configurations**
 
 - **setGlobal(value)**
+  - Set ARM instace to global.
+  - This will make ARM instance available on browser window object via `window.ARM`.
   ```javascript
-  // Set ARM instace to global
-  // This will make ARM instance available on browser window object via window.ARM
-  // Example:
-  //  console.log(window.ARM)
   ARM.setGlobal()
   ```
 - **setPayloadIncludeReference(value)**
