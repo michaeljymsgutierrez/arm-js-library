@@ -231,9 +231,9 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
 **Required configurations**
 
 - **setHost(value)**
+  - Set API endpoint host URL
+  - By default host is set to `window.location.origin`
   ```javascript
-  // Set API endpoint host URL
-  // By default host is set to window.location.origin
   ARM.setHost('https://www.test-demo.com')
   ```
 - **setHeadersCommon(key, value)**
