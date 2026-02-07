@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.6.1-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.6.2-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -231,46 +231,42 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
 **Required configurations**
 
 - **setHost(value)**
+  - Set API endpoint host URL.
+  - By default host is set to `window.location.origin`.
   ```javascript
-  // Set API endpoint host URL
-  // By default host is set to window.location.origin
   ARM.setHost('https://www.test-demo.com')
   ```
 - **setHeadersCommon(key, value)**
+  - Set common request headers required on calling API endpoints.
   ```javascript
-  // Set common request headers required on calling API endpoints
-  // ie. Authoization, Content-Type, etc.
   ARM.setHeadersCommon('Authorization', `${token}`)
   ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
   ARM.setHeadersCommon('X-Client-Platform', 'Web')
   ```
 - **setNamespace(value)**
-
+  - Set API endpoint namespace.
+  - By default namespace is set to `'api/v1'`.
   ```javascript
-  // Set namespace for API endpoint host URL
-  // By default namespace is set to 'api/v1'
   ARM.setNamespace('api/v1')
   ```
 
 **Optional configurations**
 
 - **setGlobal(value)**
+  - Set ARM instace to global.
+  - This will make ARM instance available on browser window object via `window.ARM`.
   ```javascript
-  // Set ARM instace to global
-  // This will make ARM instance available on browser window object via window.ARM
-  // Example:
-  //  console.log(window.ARM)
   ARM.setGlobal()
   ```
 - **setPayloadIncludeReference(value)**
+  - Set payload included reference key.
+  - Payload `included` reference key serve as mapper to determine what collection the data received belongs to.
   ```javascript
-  // Set payload included reference key
-  // Payload included reference key serve as mapper to determine what collection
-  // the data received belongs to
   // Example:
   //  {
   //    data: [...],
   //    included: [ { id: 1, type: 'addresses' } ]
+  //    meta: {...}
   //  }
   ARM.setPayloadIncludeReference('type')
   ```
@@ -591,7 +587,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.6.1222",
+    "address2": "171872.6.2222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -1043,4 +1039,23 @@ const addresses = [
 
 ## Credits
 
-- **Axl (skipclass):** Special thanks to [John Axl Asuncion](https://www.facebook.com/skpcls) for his contributions logo and design.
+<a href="https://www.facebook.com/skpcls" title="Axl Asuncion (Graphic Artist) - Original logo/design creator">
+  <img 
+    src="https://assets-omega-neon.vercel.app/images/axl.png" 
+    alt="Axl Asuncion" 
+    height="40" width="40" />
+</a>
+
+<a href="https://github.com/luigircruz" title="Luigi Cruz (Developer) - Features and bugs feedback" >
+  <img 
+    src="https://assets-omega-neon.vercel.app/images/luigi.png" 
+    alt="Luigi Cruz"
+    height="40" width="40" />
+</a>
+
+<a href="https://github.com/DicksonPal" title="Dickson Palomeras (Developer) - Features and bugs feedback" >
+  <img 
+    src="https://assets-omega-neon.vercel.app/images/dickson.png" 
+    alt="Dickson Palomeras"
+    height="40" width="40" />
+</a>

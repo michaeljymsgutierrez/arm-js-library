@@ -8,7 +8,7 @@ declare module "arm-js-library" {
          */
         constructor(collections?: any[]);
         namespace: string;
-        host: string;
+        host: any;
         collections: {};
         aliases: {};
         requestHashes: {};

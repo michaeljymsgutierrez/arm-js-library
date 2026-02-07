@@ -1,6 +1,6 @@
 {
   "name": "arm-js-library",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "API Resource Manager",
   "type": "module",
   "files": [
@@ -60,6 +60,6 @@
     "md5": "^2.3.0",
     "mobx": "^6.15.0",
     "qs": "^6.14.1",
-    "uuid": "11.1.0"
+    "uuid": "^13.0.0"
   }
 }
