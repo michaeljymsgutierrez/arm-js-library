@@ -1039,7 +1039,7 @@ const addresses = [
 
 ## Credits
 
-<a href="https://www.facebook.com/skpcls">
+<a href="https://www.facebook.com/skpcls" style="margin-right: 10px;">
   <img 
     src="https://assets-omega-neon.vercel.app/images/axl.png" 
     alt="Axl Asuncion" 
