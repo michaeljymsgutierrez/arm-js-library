@@ -1039,18 +1039,16 @@ const addresses = [
 
 ## Credits
 
-<a href="https://www.facebook.com/skpcls" style="margin-right: 10px;">
+<a href="https://www.facebook.com/skpcls" title="Axl Asuncion (Graphic Artist) - Original logo/design creator">
   <img 
     src="https://assets-omega-neon.vercel.app/images/axl.png" 
     alt="Axl Asuncion" 
-    height="60" width="60" 
-    title="Axl Asuncion (Graphic Artist) - Original logo/design creator" />
+    height="60" width="60" />
 </a>
 
-<a href="https://github.com/luigircruz">
+<a href="https://github.com/luigircruz" title="Luigi Cruz (Developer) - Features and bugs feedback" >
   <img 
     src="https://assets-omega-neon.vercel.app/images/luigi.png" 
     alt="Luigi Cruz"
-    height="60" width="60" 
-    title="Luigi Cruz (Developer) - Features and bugs feedback" />
+    height="60" width="60" />
 </a>
