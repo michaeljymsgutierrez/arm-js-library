@@ -8,8 +8,8 @@ const COLLECTIONS = ['addresses', 'users']
 
 export const ARM = new ApiResourceManager(COLLECTIONS)
 
-ARM.setHost('http://localhost:3001')
-ARM.setNamespace('api/v1')
+ARM.setHost(process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001')
+ARM.setNamespace(process.env.NEXT_PUBLIC_API_NAMESPACE || 'api/v1')
 ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
 ARM.setHeadersCommon('X-Client-Platform', 'Web')
 ARM.setGlobal()
