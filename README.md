@@ -42,6 +42,7 @@
   - [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
   - [Data Validation and Comparison](#data-validation-and-comparison)
 - [Credits](#credits)
+- [License](#license)
 
 ## Overview
 
@@ -1059,3 +1060,7 @@ const addresses = [
     alt="Dickson Palomeras"
     height="40" width="40" />
 </a>
+
+## License
+
+This project is licensed under the MIT License.
