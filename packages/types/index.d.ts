@@ -297,14 +297,14 @@ declare module "arm-js-library" {
          */
         private _injectCollectionActions;
         /**
-         * Injects actions into a request hash.
-         *
-         * This method adds a `reload` action to the specified request hash, allowing
-         * it to be reloaded using the `_reloadRequest` method.
+         * Decorates the response object with actionable methods.
+         * * Attaches a `reload` method to the `responseObject` that, when invoked,
+         * triggers a re-fetch of the original request using the stored hash key.
          *
          * @private
-         * @param {Object} requestObject - The request object associated with the hash.
-         * @param {string} requestHashKey - The key of the request hash to inject actions into.
+         * @param {Object} requestObject - The original request configuration.
+         * @param {Object} responseObject - The object to be decorated with actions.
+         * @param {string} requestHashKey - The unique identifier for the request in the store.
          */
         private _injectRequestHashActions;
         /**
@@ -426,24 +426,17 @@ declare module "arm-js-library" {
          */
         pushPayload(collectionName: string, collectionRecords: any[] | any): any[] | any;
         /**
-         * Pushes a request and its corresponding response to the request hash store.
-         *
-         * This method adds or updates a request hash in the `requestHashes` object.
-         * It generates a unique `requestHashKey` using the `_generateHashId`
-         * method based on the `requestObject`.
-         *
-         * If a request hash with the same key already exists and the `responseObject`
-         * is marked as `isNew`, it updates the existing hash's `isNew` flag to
-         * `false`. Otherwise, it adds a new request hash with the given key and
-         * `responseObject`. Additionally, it injects request hash actions using
-         * the `_injectRequestHashActions` method, enabling features like reload.
+         * Caches a request/response pair in the internal hash store.
+         * * Generates a unique key based on the request and performs one of two actions:
+         * 1. If the key exists and the new response is marked `isNew`, it toggles the
+         * existing entry's `isNew` flag to `false`.
+         * 2. Otherwise, it stores the new response object under that key.
+         * * Also injects contextual actions (e.g., reload) into the response object.
          *
          * @private
-         * @param {Object} requestObject - The request object used to generate the
-         *                                 hash key.
-         * @param {Object} responseObject - The response object associated with
-         *                                  the request.
-         * @returns {Object} The updated or created request hash object.
+         * @param {Object} requestObject - The source object used to generate the hash key.
+         * @param {Object} responseObject - The data/state to be stored.
+         * @returns {Object} The stored request hash entry.
          */
         private _pushRequestHash;
         /**

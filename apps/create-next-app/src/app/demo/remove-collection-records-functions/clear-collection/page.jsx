@@ -48,8 +48,7 @@ const Page = observer(() => {
             <td colSpan="9">
               <button
                 className="blue-btn"
-                onClick={() => ARM.clearCollection('addresses')}
-              >
+                onClick={() => ARM.clearCollection('addresses')}>
                 Clear Collection
               </button>
             </td>

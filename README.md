@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.6.2-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.6.3-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -42,6 +42,7 @@
   - [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
   - [Data Validation and Comparison](#data-validation-and-comparison)
 - [Credits](#credits)
+- [License](#license)
 
 ## Overview
 
@@ -587,7 +588,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.6.2222",
+    "address2": "171872.6.3222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -1059,3 +1060,7 @@ const addresses = [
     alt="Dickson Palomeras"
     height="40" width="40" />
 </a>
+
+## License
+
+This project is licensed under the MIT License.

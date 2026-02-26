@@ -32,7 +32,7 @@ export async function PUT(request) {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   )
 }
 
@@ -47,6 +47,6 @@ export async function DELETE(request) {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   )
 }

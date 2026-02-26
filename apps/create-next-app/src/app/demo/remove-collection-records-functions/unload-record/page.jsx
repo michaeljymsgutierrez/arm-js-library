@@ -44,8 +44,7 @@ const Page = observer(() => {
               <td>
                 <button
                   className="blue-btn"
-                  onClick={() => ARM.unloadRecord(address)}
-                >
+                  onClick={() => ARM.unloadRecord(address)}>
                   Unload
                 </button>
               </td>

@@ -171,10 +171,12 @@ enabling convenient interactions with the record, including:</p>
 <li>Retrieval of related collections</li>
 </ul>
 </dd>
-<dt><a href="#_injectRequestHashActions">_injectRequestHashActions(requestObject, requestHashKey)</a> ℗</dt>
-<dd><p>Injects actions into a request hash.</p>
-<p>This method adds a <code>reload</code> action to the specified request hash, allowing
-it to be reloaded using the <code>_reloadRequest</code> method.</p>
+<dt><a href="#_injectRequestHashActions">_injectRequestHashActions(requestObject, responseObject, requestHashKey)</a> ℗</dt>
+<dd><p>Decorates the response object with actionable methods.</p>
+<ul>
+<li>Attaches a <code>reload</code> method to the <code>responseObject</code> that, when invoked,
+triggers a re-fetch of the original request using the stored hash key.</li>
+</ul>
 </dd>
 <dt><a href="#_injectCollectionReferenceKeys">_injectCollectionReferenceKeys(collectionName, collectionRecord, [collectionRecordHashId])</a> ℗</dt>
 <dd><p>Injects reference keys into a collection record.</p>
@@ -252,15 +254,18 @@ a single object) and performs the following actions:</p>
 </ol>
 </dd>
 <dt><a href="#_pushRequestHash">_pushRequestHash(requestObject, responseObject)</a> ⇒ <code>Object</code> ℗</dt>
-<dd><p>Pushes a request and its corresponding response to the request hash store.</p>
-<p>This method adds or updates a request hash in the <code>requestHashes</code> object.
-It generates a unique <code>requestHashKey</code> using the <code>_generateHashId</code>
-method based on the <code>requestObject</code>.</p>
-<p>If a request hash with the same key already exists and the <code>responseObject</code>
-is marked as <code>isNew</code>, it updates the existing hash&#39;s <code>isNew</code> flag to
-<code>false</code>. Otherwise, it adds a new request hash with the given key and
-<code>responseObject</code>. Additionally, it injects request hash actions using
-the <code>_injectRequestHashActions</code> method, enabling features like reload.</p>
+<dd><p>Caches a request/response pair in the internal hash store.</p>
+<ul>
+<li>Generates a unique key based on the request and performs one of two actions:</li>
+</ul>
+<ol>
+<li>If the key exists and the new response is marked <code>isNew</code>, it toggles the
+existing entry&#39;s <code>isNew</code> flag to <code>false</code>.</li>
+<li>Otherwise, it stores the new response object under that key.</li>
+</ol>
+<ul>
+<li>Also injects contextual actions (e.g., reload) into the response object.</li>
+</ul>
 </dd>
 <dt><a href="#setHost">setHost(host)</a></dt>
 <dd><p>Sets the host URL for the client and initializes the Axios configuration.</p>
@@ -922,19 +927,19 @@ enabling convenient interactions with the record, including:
 
 <a name="_injectRequestHashActions"></a>
 
-## \_injectRequestHashActions(requestObject, requestHashKey) ℗
-Injects actions into a request hash.
-
-This method adds a `reload` action to the specified request hash, allowing
-it to be reloaded using the `_reloadRequest` method.
+## \_injectRequestHashActions(requestObject, responseObject, requestHashKey) ℗
+Decorates the response object with actionable methods.
+* Attaches a `reload` method to the `responseObject` that, when invoked,
+triggers a re-fetch of the original request using the stored hash key.
 
 **Kind**: global function  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| requestObject | <code>Object</code> | The request object associated with the hash. |
-| requestHashKey | <code>string</code> | The key of the request hash to inject actions into. |
+| requestObject | <code>Object</code> | The original request configuration. |
+| responseObject | <code>Object</code> | The object to be decorated with actions. |
+| requestHashKey | <code>string</code> | The unique identifier for the request in the store. |
 
 <a name="_injectCollectionReferenceKeys"></a>
 
@@ -1083,26 +1088,21 @@ a single object) and performs the following actions:
 <a name="_pushRequestHash"></a>
 
 ## \_pushRequestHash(requestObject, responseObject) ⇒ <code>Object</code> ℗
-Pushes a request and its corresponding response to the request hash store.
-
-This method adds or updates a request hash in the `requestHashes` object.
-It generates a unique `requestHashKey` using the `_generateHashId`
-method based on the `requestObject`.
-
-If a request hash with the same key already exists and the `responseObject`
-is marked as `isNew`, it updates the existing hash's `isNew` flag to
-`false`. Otherwise, it adds a new request hash with the given key and
-`responseObject`. Additionally, it injects request hash actions using
-the `_injectRequestHashActions` method, enabling features like reload.
+Caches a request/response pair in the internal hash store.
+* Generates a unique key based on the request and performs one of two actions:
+1. If the key exists and the new response is marked `isNew`, it toggles the
+existing entry's `isNew` flag to `false`.
+2. Otherwise, it stores the new response object under that key.
+* Also injects contextual actions (e.g., reload) into the response object.
 
 **Kind**: global function  
-**Returns**: <code>Object</code> - The updated or created request hash object.  
+**Returns**: <code>Object</code> - The stored request hash entry.  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| requestObject | <code>Object</code> | The request object used to generate the                                 hash key. |
-| responseObject | <code>Object</code> | The response object associated with                                  the request. |
+| requestObject | <code>Object</code> | The source object used to generate the hash key. |
+| responseObject | <code>Object</code> | The data/state to be stored. |
 
 <a name="setHost"></a>
 
