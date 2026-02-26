@@ -73,8 +73,7 @@ const Page = observer(() => {
                     className="blue-btn"
                     onClick={() => {
                       alert(address.get('attributes.address1'))
-                    }}
-                  >
+                    }}>
                     Get (Address1)
                   </button>
 
@@ -82,8 +81,7 @@ const Page = observer(() => {
                     className="blue-btn"
                     onClick={() =>
                       address.set('attributes.landmark', 'New landmark')
-                    }
-                  >
+                    }>
                     Set (Landmark)
                   </button>
 
@@ -96,8 +94,7 @@ const Page = observer(() => {
                           'post-code': '1226',
                         },
                       })
-                    }
-                  >
+                    }>
                     Set Properties (Landmark and Post Code)
                   </button>
                 </p>

@@ -18,7 +18,7 @@ const Controller = () => {
         longitude: '121.026661',
       },
     },
-    false
+    false,
   )
 
   const onSave = () => {

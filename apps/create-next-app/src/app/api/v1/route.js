@@ -10,6 +10,6 @@ export async function GET(request) {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   )
 }

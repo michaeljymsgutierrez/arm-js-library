@@ -73,8 +73,7 @@ const Page = observer(() => {
                     className="blue-btn"
                     onClick={() =>
                       address.set('attributes.landmark', 'New landmark')
-                    }
-                  >
+                    }>
                     Modify (Landmark)
                   </button>
                 </p>

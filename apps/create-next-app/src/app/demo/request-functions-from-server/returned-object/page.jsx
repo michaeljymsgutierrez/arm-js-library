@@ -55,8 +55,7 @@ const Page = observer(() => {
                 className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => {
                   model.reload()
-                }}
-              >
+                }}>
                 Reload
               </button>
             </td>
