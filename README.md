@@ -81,7 +81,7 @@ By centralizing data management and offering flexible access to it, ARM empowers
 
 ```javascript
 // Example usage in ReactJS/NextJS
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 import { ARM } from '@/components/providers/arm-config-provider'
 
 const App = observer(() => {
