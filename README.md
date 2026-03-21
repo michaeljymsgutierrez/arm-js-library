@@ -506,6 +506,21 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   </ul>
   ```
 
+- **getRequestAlias(aliasName)**
+  - Retrieving the [returned object](#returned-object-request-functions-from-server) from the request functions.
+
+  ```javascript
+  const addresses = ARM.getRequestAlias('customerAddresses')
+
+  ARM.findAll('addresses', { alias: 'customerAddresses' })
+
+  <ul>
+    {addresses.data.map((address, index) => (
+      <li key={index}>{address.get('id')}</li>
+    ))}
+  </ul>
+  ```
+
 #### Create collection record function
 
 ---
@@ -1063,4 +1078,4 @@ const addresses = [
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/LICENSE.md) License.
