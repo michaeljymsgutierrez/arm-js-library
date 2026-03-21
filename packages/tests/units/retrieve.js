@@ -37,6 +37,18 @@ const execRetrieveTest = (ARM) => {
       )
       expect(ARM.getAlias('customerAddresses')).toHaveLength(5)
     })
+
+    test('Verify getRequestAlias functionality', async () => {
+      ARM.clearCollection('addresses')
+      expect(ARM.getCollection('addresses')).toHaveLength(0)
+
+      await ARM.query(
+        'addresses',
+        { page: { size: 5 } },
+        { autoResolve: false, alias: 'customerAddresses', skipId: uuidv1() },
+      )
+      expect(ARM.getRequestAlias('customerAddresses')?.data).toHaveLength(5)
+    })
   })
 }
 
