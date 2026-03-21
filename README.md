@@ -508,6 +508,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
 - **getRequestAlias(aliasName)**
   - Retrieving the [returned object](#returned-object-request-functions-from-server) from the request functions.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias)
 
   ```javascript
   const addresses = ARM.getRequestAlias('customerAddresses')
