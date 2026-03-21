@@ -40,6 +40,7 @@ const DemoPage = () => {
     '/demo/request-functions-from-server/query',
     '/demo/request-functions-from-server/returned-object',
     '/demo/retrieve-functions-from-collections/get-alias',
+    '/demo/retrieve-functions-from-collections/get-request-alias',
     '/demo/retrieve-functions-from-collections/get-collection',
     '/demo/retrieve-functions-from-collections/peek-all',
     '/demo/retrieve-functions-from-collections/peek-record',
@@ -54,10 +55,18 @@ const DemoPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-5">
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
-        <h1 className="text-3xl font-bold text-center mb-8">Demo Links</h1>
+        <a href="https://www.npmjs.com/package/arm-js-library">
+          <img
+            src="https://assets-omega-neon.vercel.app/images/arm-js-title-logo.png"
+            alt="arm-js-logo"
+            height="200"
+            width="143.7"
+            className="my-8 mx-auto"
+          />
+        </a>
         <input
           type="text"
-          placeholder="Search demos..."
+          placeholder="Search demo links..."
           className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
