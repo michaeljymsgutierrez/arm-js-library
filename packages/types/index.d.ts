@@ -11,6 +11,7 @@ declare module "arm-js-library" {
         host: any;
         collections: {};
         aliases: {};
+        requestAliases: {};
         requestHashes: {};
         rootScope: {};
         payloadIncludedReference: string;
@@ -85,6 +86,18 @@ declare module "arm-js-library" {
          * @param {Array|Object} aliasRecords - The records to be aliased.
          */
         private _addAlias;
+        /**
+         * Adds a request alias to the request aliases object.
+         *
+         * This method maps a specific `aliasName` to a `requestHashKey` in the
+         * `requestAliases` dictionary. This allows the system to reference a
+         * specific request context using a human-readable alias.
+         *
+         * @private
+         * @param {string} aliasName - The name of the alias for the request.
+         * @param {string} requestHashKey - The unique hash key identifying the request.
+         */
+        private _addRequestAlias;
         /**
          * Generates a hash ID based on the provided object.
          *
@@ -549,6 +562,17 @@ declare module "arm-js-library" {
          */
         getAlias(aliasName: string, fallbackRecords?: any[] | any): any[] | any;
         /**
+         * Retrieves the request data by resolving a readable alias to its latest request hash.
+         *
+         * The `requestAliases` property acts as a reference map, linking a human-readable
+         * alias to the hash of the most recent request. This method performs a lookup
+         * on that hash to return the actual request data.
+         *
+         * @param {string} aliasName - The readable alias name to resolve.
+         * @returns {Object|null} The request data object if found; otherwise, null.
+         */
+        getRequestAlias(aliasName: string): any | null;
+        /**
          * Creates a new record in a specified collection.
          *
          * This method creates a new record in the collection with the given
@@ -656,12 +680,19 @@ declare module "arm-js-library" {
          */
         _processRequestURL(resourceName: string, resourceId: string | number, requestOptions: any): void;
         /**
-         * Processes an alias for a request, adding it to the aliases store.
+         * Processes an alias for a request, mapping both the records and the request hash.
          *
-         * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
-         * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+         * This method extracts the alias name from the request configuration and:
+         * 1. Maps the alias name to the provided collection records in the aliases store.
+         * 2. Maps the alias name to the generated request hash key in the request aliases store.
+         *
+         * @private
+         * @param {Object} requestObject - The full request object used to generate the hash ID
+         * and containing the resource configuration.
+         * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array
+         * or a single object.
          */
-        _processRequestAlias(resourceConfig: any, collectionRecords: any[] | any): void;
+        private _processRequestAlias;
         /**
          * Processes request overrides based on the provided configuration.
          *

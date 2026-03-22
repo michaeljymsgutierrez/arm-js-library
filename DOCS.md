@@ -55,6 +55,12 @@ single record object.</p>
 if <code>aliasRecords</code> is falsy). If it&#39;s a plain object, it&#39;s used directly
 (or an empty object if <code>aliasRecords</code> is falsy).</p>
 </dd>
+<dt><a href="#_addRequestAlias">_addRequestAlias(aliasName, requestHashKey)</a> ℗</dt>
+<dd><p>Adds a request alias to the request aliases object.</p>
+<p>This method maps a specific <code>aliasName</code> to a <code>requestHashKey</code> in the
+<code>requestAliases</code> dictionary. This allows the system to reference a
+specific request context using a human-readable alias.</p>
+</dd>
 <dt><a href="#_generateHashId">_generateHashId([object])</a> ⇒ <code>string</code> ℗</dt>
 <dd><p>Generates a hash ID based on the provided object.</p>
 <p>This method generates a unique hash ID by stringifying the given
@@ -332,6 +338,12 @@ not exist, it returns the provided <code>fallbackRecords</code> (if any).</p>
 <p>If <code>fallbackRecords</code> is a plain object, the method injects collection
 actions into it using <code>_injectCollectionActions</code> before returning it.</p>
 </dd>
+<dt><a href="#getRequestAlias">getRequestAlias(aliasName)</a> ⇒ <code>Object</code> | <code>null</code></dt>
+<dd><p>Retrieves the request data by resolving a readable alias to its latest request hash.</p>
+<p>The <code>requestAliases</code> property acts as a reference map, linking a human-readable
+alias to the hash of the most recent request. This method performs a lookup
+on that hash to return the actual request data.</p>
+</dd>
 <dt><a href="#createRecord">createRecord(collectionName, [collectionRecord], [collectionRecordRandomId])</a> ⇒ <code>Object</code></dt>
 <dd><p>Creates a new record in a specified collection.</p>
 <p>This method creates a new record in the collection with the given
@@ -376,8 +388,13 @@ request caching, and asynchronous loading of related resources.</p>
 <dt><a href="#_processRequestURL">_processRequestURL(requestOptions, resourceName, resourceId)</a></dt>
 <dd><p>Processes the URL for a request, constructing it from the resource name and ID.</p>
 </dd>
-<dt><a href="#_processRequestAlias">_processRequestAlias(resourceConfig, collectionRecords)</a></dt>
-<dd><p>Processes an alias for a request, adding it to the aliases store.</p>
+<dt><a href="#_processRequestAlias">_processRequestAlias(requestObject, collectionRecords)</a> ℗</dt>
+<dd><p>Processes an alias for a request, mapping both the records and the request hash.</p>
+<p>This method extracts the alias name from the request configuration and:</p>
+<ol>
+<li>Maps the alias name to the provided collection records in the aliases store.</li>
+<li>Maps the alias name to the generated request hash key in the request aliases store.</li>
+</ol>
 </dd>
 <dt><a href="#_processRequestOverride">_processRequestOverride(resourceConfig, requestOptions)</a></dt>
 <dd><p>Processes request overrides based on the provided configuration.</p>
@@ -645,6 +662,23 @@ if `aliasRecords` is falsy). If it's a plain object, it's used directly
 | --- | --- | --- |
 | aliasName | <code>string</code> | The name of the alias. |
 | aliasRecords | <code>Array</code> \| <code>Object</code> | The records to be aliased. |
+
+<a name="_addRequestAlias"></a>
+
+## \_addRequestAlias(aliasName, requestHashKey) ℗
+Adds a request alias to the request aliases object.
+
+This method maps a specific `aliasName` to a `requestHashKey` in the
+`requestAliases` dictionary. This allows the system to reference a
+specific request context using a human-readable alias.
+
+**Kind**: global function  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| aliasName | <code>string</code> | The name of the alias for the request. |
+| requestHashKey | <code>string</code> | The unique hash key identifying the request. |
 
 <a name="_generateHashId"></a>
 
@@ -1252,6 +1286,22 @@ actions into it using `_injectCollectionActions` before returning it.
 | aliasName | <code>string</code> | The name of the alias to retrieve. |
 | [fallbackRecords] | <code>Array</code> \| <code>Object</code> | Optional fallback records                                           to return if the alias                                           is not found. |
 
+<a name="getRequestAlias"></a>
+
+## getRequestAlias(aliasName) ⇒ <code>Object</code> \| <code>null</code>
+Retrieves the request data by resolving a readable alias to its latest request hash.
+
+The `requestAliases` property acts as a reference map, linking a human-readable
+alias to the hash of the most recent request. This method performs a lookup
+on that hash to return the actual request data.
+
+**Kind**: global function  
+**Returns**: <code>Object</code> \| <code>null</code> - The request data object if found; otherwise, null.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| aliasName | <code>string</code> | The readable alias name to resolve. |
+
 <a name="createRecord"></a>
 
 ## createRecord(collectionName, [collectionRecord], [collectionRecordRandomId]) ⇒ <code>Object</code>
@@ -1376,15 +1426,20 @@ Processes the URL for a request, constructing it from the resource name and ID.
 
 <a name="_processRequestAlias"></a>
 
-## \_processRequestAlias(resourceConfig, collectionRecords)
-Processes an alias for a request, adding it to the aliases store.
+## \_processRequestAlias(requestObject, collectionRecords) ℗
+Processes an alias for a request, mapping both the records and the request hash.
+
+This method extracts the alias name from the request configuration and:
+1. Maps the alias name to the provided collection records in the aliases store.
+2. Maps the alias name to the generated request hash key in the request aliases store.
 
 **Kind**: global function  
+**Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| resourceConfig | <code>Object</code> | The configuration object for the resource request, containing the alias information. |
-| collectionRecords | <code>Array</code> \| <code>Object</code> | The records to be aliased. Can be an array or an object. |
+| requestObject | <code>Object</code> | The full request object used to generate the hash ID and containing the resource configuration. |
+| collectionRecords | <code>Array</code> \| <code>Object</code> | The records to be aliased. Can be an array or a single object. |
 
 <a name="_processRequestOverride"></a>
 

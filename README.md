@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.6.3-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.7.0-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -81,7 +81,7 @@ By centralizing data management and offering flexible access to it, ARM empowers
 
 ```javascript
 // Example usage in ReactJS/NextJS
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 import { ARM } from '@/components/providers/arm-config-provider'
 
 const App = observer(() => {
@@ -506,6 +506,22 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   </ul>
   ```
 
+- **getRequestAlias(aliasName)**
+  - Retrieving the [returned object](#returned-object-request-functions-from-server) from the request functions.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias)
+
+  ```javascript
+  const addresses = ARM.getRequestAlias('customerAddresses')
+
+  ARM.findAll('addresses', { alias: 'customerAddresses' })
+
+  <ul>
+    {addresses.data.map((address, index) => (
+      <li key={index}>{address.get('id')}</li>
+    ))}
+  </ul>
+  ```
+
 #### Create collection record function
 
 ---
@@ -588,7 +604,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.6.3222",
+    "address2": "171872.7.0222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -1063,4 +1079,4 @@ const addresses = [
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/LICENSE.md) License.

@@ -1,5 +1,3 @@
-import { v1 as uuidv1 } from 'uuid'
-
 const execPushTest = (ARM) => {
   ARM.setNamespace('api/v1')
 

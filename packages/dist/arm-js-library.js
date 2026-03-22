@@ -7,7 +7,7 @@ import qs from "qs";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.6.3
+ * Version: 2.7.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -31,7 +31,7 @@ import qs from "qs";
  * qs library for query string serialization.
  * @see https://www.npmjs.com/package/qs
  */
-const { makeObservable, observable, action, toJS } = mobx;
+const { makeObservable, observable, action, runInAction, toJS } = mobx;
 const {
   get: getProperty,
   set: setProperty,
@@ -134,6 +134,7 @@ class ApiResourceManager {
     this.host = typeof window !== "undefined" ? window.location.origin : "";
     this.collections = {};
     this.aliases = {};
+    this.requestAliases = {};
     this.requestHashes = {};
     this.rootScope = {};
     this.payloadIncludedReference = "type";
@@ -142,12 +143,14 @@ class ApiResourceManager {
     makeObservable(this, {
       collections: observable,
       aliases: observable,
+      requestAliases: observable,
       requestHashes: observable,
       rootScope: observable,
       _pushPayload: action,
       _pushRequestHash: action,
       _addCollection: action,
       _addAlias: action,
+      _addRequestAlias: action,
       _unloadCollection: action,
       _unloadFromCollection: action,
       _unloadFromRequestHashes: action,
@@ -172,7 +175,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.6.3"
+      "ARM JS Library/2.7.0"
     );
   }
   /**
@@ -250,6 +253,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     if (isArray(aliasRecords)) aliasCollectionRecords = aliasRecords || [];
     if (isPlainObject(aliasRecords)) aliasCollectionRecords = aliasRecords || {};
     setProperty(this.aliases, aliasName, aliasCollectionRecords);
+  }
+  /**
+   * Adds a request alias to the request aliases object.
+   *
+   * This method maps a specific `aliasName` to a `requestHashKey` in the
+   * `requestAliases` dictionary. This allows the system to reference a
+   * specific request context using a human-readable alias.
+   *
+   * @private
+   * @param {string} aliasName - The name of the alias for the request.
+   * @param {string} requestHashKey - The unique hash key identifying the request.
+   */
+  _addRequestAlias(aliasName, requestHashKey) {
+    setProperty(this.requestAliases, aliasName, requestHashKey);
   }
   /**
    * Generates a hash ID based on the provided object.
@@ -1137,6 +1154,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return getProperty(this.aliases, aliasName) || observable(fallbackRecords);
   }
   /**
+   * Retrieves the request data by resolving a readable alias to its latest request hash.
+   *
+   * The `requestAliases` property acts as a reference map, linking a human-readable
+   * alias to the hash of the most recent request. This method performs a lookup
+   * on that hash to return the actual request data.
+   *
+   * @param {string} aliasName - The readable alias name to resolve.
+   * @returns {Object|null} The request data object if found; otherwise, null.
+   */
+  getRequestAlias(aliasName) {
+    const requestHashKey = getProperty(this.requestAliases, aliasName);
+    return getProperty(this.requestHashes, requestHashKey) || null;
+  }
+  /**
    * Creates a new record in a specified collection.
    *
    * This method creates a new record in the collection with the given
@@ -1189,12 +1220,20 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    * @returns {Promise<void>} A promise that resolves when the request is reloaded.
    */
   async _reloadRequest(requestObject, requestHashKey) {
-    setProperty(this.requestHashes, [requestHashKey, "isLoading"], true);
-    setProperty(requestObject, "resourceConfig.skipId", v1());
-    setProperty(requestObject, "resourceConfig.autoResolve", false);
-    setProperty(requestObject, "resourceConfig.autoResolveOrigin", "_internal");
+    runInAction(() => {
+      setProperty(this.requestHashes, [requestHashKey, "isLoading"], true);
+      setProperty(requestObject, "resourceConfig.skipId", v1());
+      setProperty(requestObject, "resourceConfig.autoResolve", false);
+      setProperty(
+        requestObject,
+        "resourceConfig.autoResolveOrigin",
+        "_internal"
+      );
+    });
     await this._request(requestObject);
-    setProperty(this.requestHashes, [requestHashKey, "isLoading"], false);
+    runInAction(() => {
+      setProperty(this.requestHashes, [requestHashKey, "isLoading"], false);
+    });
     return getProperty(this.requestHashes, requestHashKey);
   }
   /**
@@ -1357,7 +1396,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
         resourceResults
       );
       if (hasResourceAlias)
-        this._processRequestAlias(resourceConfig, updatedDataCollectionRecords);
+        this._processRequestAlias(arguments[0], updatedDataCollectionRecords);
       if (isResourceMethodPost) this.unloadRecord(resourcePayloadRecord);
       if (isResourceMethodDelete)
         this.unloadRecord(updatedDataCollectionRecords);
@@ -1423,13 +1462,23 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     setProperty(requestOptions, "url", `${resourceName}/${resourceId}`);
   }
   /**
-   * Processes an alias for a request, adding it to the aliases store.
+   * Processes an alias for a request, mapping both the records and the request hash.
    *
-   * @param {Object} resourceConfig - The configuration object for the resource request, containing the alias information.
-   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array or an object.
+   * This method extracts the alias name from the request configuration and:
+   * 1. Maps the alias name to the provided collection records in the aliases store.
+   * 2. Maps the alias name to the generated request hash key in the request aliases store.
+   *
+   * @private
+   * @param {Object} requestObject - The full request object used to generate the hash ID
+   * and containing the resource configuration.
+   * @param {Array|Object} collectionRecords - The records to be aliased. Can be an array
+   * or a single object.
    */
-  _processRequestAlias(resourceConfig, collectionRecords) {
-    this._addAlias(getProperty(resourceConfig, "alias"), collectionRecords);
+  _processRequestAlias(requestObject, collectionRecords) {
+    const requestHashKey = this._generateHashId(requestObject);
+    const requestAliasName = getProperty(requestObject, "resourceConfig.alias");
+    this._addAlias(requestAliasName, collectionRecords);
+    this._addRequestAlias(requestAliasName, requestHashKey);
   }
   /**
    * Processes request overrides based on the provided configuration.
