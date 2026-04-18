@@ -1056,9 +1056,9 @@ const addresses = [
 
 ## Credits
 
-- **Axl Asuncion** - Original logo/design creator
-- **Luigi Cruz** - Features and bugs feedback
-- **Dickson Palomeras** - Features and bugs feedback
+- **[Axl Asuncion](https://www.facebook.com/skpcls)** - Original logo/design creator
+- **[Luigi Cruz](https://github.com/luigircruz)** - Features and bugs feedback
+- **[Dickson Palomeras](https://github.com/DicksonPal)** - Features and bugs feedback
 
 ## License
 
