@@ -24,10 +24,11 @@ const highlightMatch = (text, searchTerm) => {
 const DemoPage = () => {
   const links = [
     '/demo/collection-records/getter-setter-functions',
-    '/demo/collection-records/request-functions/destroy-record',
-    '/demo/collection-records/request-functions/get-collection',
-    '/demo/collection-records/request-functions/reload',
-    '/demo/collection-records/request-functions/save',
+    '/demo/collection-records/request-retrieve-functions/destroy-record',
+    '/demo/collection-records/request-retrieve-functions/get-collection',
+    '/demo/collection-records/request-retrieve-functions/reload',
+    '/demo/collection-records/request-retrieve-functions/rollback-attributes',
+    '/demo/collection-records/request-retrieve-functions/save',
     '/demo/collection-records/state-properties',
     '/demo/create-collection-record-function/create-record',
     '/demo/push-collection-record-function/push-payload',

@@ -702,7 +702,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     address.get('attributes.label')
     ```
 
-- **Request Functions**
+- **Request and Retrieve Functions**
   - **save(collectionConfig)**
     - Persist collection record changes to server.
     - Create a new record to server only if it doesn't already exist in the database.
@@ -711,7 +711,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
       - Will call **PUT** method: `PUT /addresses/2519858`
     - Support collectionConfig. - **optional**
       - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/save)
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/save)
 
     ```javascript
     // Returned promise
@@ -727,7 +727,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
       - Will call **GET** method: `GET /addresses/2519858`
     - Support collectionConfig. - **optional**
       - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/reload)
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/reload)
 
     ```javascript
     // Returned promise
@@ -741,12 +741,20 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     })
     ```
 
+  - **rollbackAttributes()**
+    - Rollback record attributes to their original state without triggering a request.
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/rollback-attributes)
+
+    ```javascript
+    address.rollbackAttributes()
+    ```
+
   - **destroyRecord(collectionConfig)**
     - Remove collection record permanently from server.
       - Will call **GET** method: `DELETE /addresses/2519858`
     - Support collectionConfig. - **optional**
       - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/destroy-record)
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/destroy-record)
 
     ```javascript
     // Returned promise
@@ -779,7 +787,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
           - Sort returned collection records based on passed array of sort criteria.
         - **config - Object**
           - Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-functions/get-collection)
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/get-collection)
 
     ```javascript
     // Get user record from the server but don't preload addresses records.
@@ -1056,26 +1064,9 @@ const addresses = [
 
 ## Credits
 
-<a href="https://www.facebook.com/skpcls" title="Axl Asuncion (Graphic Artist) - Original logo/design creator">
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/axl.png" 
-    alt="Axl Asuncion" 
-    height="40" width="40" />
-</a>
-
-<a href="https://github.com/luigircruz" title="Luigi Cruz (Developer) - Features and bugs feedback" >
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/luigi.png" 
-    alt="Luigi Cruz"
-    height="40" width="40" />
-</a>
-
-<a href="https://github.com/DicksonPal" title="Dickson Palomeras (Developer) - Features and bugs feedback" >
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/dickson.png" 
-    alt="Dickson Palomeras"
-    height="40" width="40" />
-</a>
+- **[Axl Asuncion](https://www.facebook.com/skpcls)** - Original logo/design creator
+- **[Luigi Cruz](https://github.com/luigircruz)** - Features and bugs feedback
+- **[Dickson Palomeras](https://github.com/DicksonPal)** - Features and bugs feedback
 
 ## License
 
