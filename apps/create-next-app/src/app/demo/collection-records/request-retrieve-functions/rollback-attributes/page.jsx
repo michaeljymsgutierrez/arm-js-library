@@ -122,7 +122,7 @@ const Page = observer(() => {
         <button
           className="blue-btn"
           onClick={() => address.rollbackAttributes()}>
-          Rollback
+          Rollback Attributes
         </button>
       </div>
     </form>
