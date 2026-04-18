@@ -1056,26 +1056,9 @@ const addresses = [
 
 ## Credits
 
-<a href="https://www.facebook.com/skpcls" title="Axl Asuncion (Graphic Artist) - Original logo/design creator">
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/axl.png" 
-    alt="Axl Asuncion" 
-    height="40" width="40" />
-</a>
-
-<a href="https://github.com/luigircruz" title="Luigi Cruz (Developer) - Features and bugs feedback" >
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/luigi.png" 
-    alt="Luigi Cruz"
-    height="40" width="40" />
-</a>
-
-<a href="https://github.com/DicksonPal" title="Dickson Palomeras (Developer) - Features and bugs feedback" >
-  <img 
-    src="https://assets-omega-neon.vercel.app/images/dickson.png" 
-    alt="Dickson Palomeras"
-    height="40" width="40" />
-</a>
+- **Axl Asuncion** - Original logo/design creator
+- **Luigi Cruz** - Features and bugs feedback
+- **Dickson Palomeras** - Features and bugs feedback
 
 ## License
 
