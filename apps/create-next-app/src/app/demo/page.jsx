@@ -27,6 +27,7 @@ const DemoPage = () => {
     '/demo/collection-records/request-retrieve-functions/destroy-record',
     '/demo/collection-records/request-retrieve-functions/get-collection',
     '/demo/collection-records/request-retrieve-functions/reload',
+    '/demo/collection-records/request-retrieve-functions/rollback-attributes',
     '/demo/collection-records/request-retrieve-functions/save',
     '/demo/collection-records/state-properties',
     '/demo/create-collection-record-function/create-record',
