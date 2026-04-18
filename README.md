@@ -741,6 +741,14 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
     })
     ```
 
+  - **rollbackAttributes()**
+    - Rollback record attributes to their original state without triggering a request.
+    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/rollback-attributes)
+
+    ```javascript
+    address.rollbackAttributes()
+    ```
+
   - **destroyRecord(collectionConfig)**
     - Remove collection record permanently from server.
       - Will call **GET** method: `DELETE /addresses/2519858`
