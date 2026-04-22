@@ -274,6 +274,17 @@ declare module "arm-js-library" {
          */
         private _reloadRecord;
         /**
+         * Reverts the record's attributes to their original state.
+         *
+         * This method retrieves the stored `originalRecord` (excluding internal
+         * ARM properties), applies those values back to the current record instance,
+         * and resets the `isDirty` and `isPristine` state flags.
+         *
+         * @private
+         * @returns {void}
+         */
+        private _rollbackRecordAttributes;
+        /**
          * Retrieves records from a specified collection based on given criteria.
          *
          * This method retrieves records from the collection with the specified

@@ -155,6 +155,12 @@ to provide additional configuration for the request.</p>
 <dd><p>Reloads a record from the server.</p>
 <p>Fetches the latest data for the specified record and updates the local copy.</p>
 </dd>
+<dt><a href="#_rollbackRecordAttributes">_rollbackRecordAttributes()</a> ⇒ <code>void</code> ℗</dt>
+<dd><p>Reverts the record&#39;s attributes to their original state.</p>
+<p>This method retrieves the stored <code>originalRecord</code> (excluding internal
+ARM properties), applies those values back to the current record instance,
+and resets the <code>isDirty</code> and <code>isPristine</code> state flags.</p>
+</dd>
 <dt><a href="#_getCollectionRecord">_getCollectionRecord(collectionName, [collectionConfig], currentRecord)</a> ⇒ <code>Object</code> | <code>Array</code> ℗</dt>
 <dd><p>Retrieves records from a specified collection based on given criteria.</p>
 <p>This method retrieves records from the collection with the specified
@@ -915,6 +921,17 @@ Fetches the latest data for the specified record and updates the local copy.
 | currentRecord | <code>Object</code> |  | The record to reload. |
 | [collectionConfig] | <code>Object</code> | <code>{}</code> | Optional configuration for the collection. |
 
+<a name="_rollbackRecordAttributes"></a>
+
+## \_rollbackRecordAttributes() ⇒ <code>void</code> ℗
+Reverts the record's attributes to their original state.
+
+This method retrieves the stored `originalRecord` (excluding internal
+ARM properties), applies those values back to the current record instance,
+and resets the `isDirty` and `isPristine` state flags.
+
+**Kind**: global function  
+**Access**: private  
 <a name="_getCollectionRecord"></a>
 
 ## \_getCollectionRecord(collectionName, [collectionConfig], currentRecord) ⇒ <code>Object</code> \| <code>Array</code> ℗

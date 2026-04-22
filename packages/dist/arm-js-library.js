@@ -7,7 +7,7 @@ import qs from "qs";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.7.0
+ * Version: 2.8.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -175,7 +175,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.7.0"
+      "ARM JS Library/2.8.0"
     );
   }
   /**
@@ -602,6 +602,27 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     });
   }
   /**
+   * Reverts the record's attributes to their original state.
+   *
+   * This method retrieves the stored `originalRecord` (excluding internal
+   * ARM properties), applies those values back to the current record instance,
+   * and resets the `isDirty` and `isPristine` state flags.
+   *
+   * @private
+   * @returns {void}
+   */
+  _rollbackRecordAttributes() {
+    const originalRecord = omit(
+      toJS(this.originalRecord),
+      keysToBeOmittedOnDeepCheck
+    );
+    this.getARMContext()._setProperties(this, {
+      ...originalRecord,
+      isDirty: false,
+      isPristine: true
+    });
+  }
+  /**
    * Retrieves records from a specified collection based on given criteria.
    *
    * This method retrieves records from the collection with the specified
@@ -695,6 +716,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       get: armInstance._getRecordProperty,
       set: armInstance._setRecordProperty,
       setProperties: armInstance._setRecordProperties,
+      rollbackAttributes: armInstance._rollbackRecordAttributes,
       getARMContext: () => armInstance,
       save: function(collectionConfig) {
         return armInstance._saveRecord(this, collectionConfig);
