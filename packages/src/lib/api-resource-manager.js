@@ -770,26 +770,23 @@ export default class ApiResourceManager {
   }
 
   /**
-   * Retrieves records from a specified collection based on given criteria.
+   * Retrieves and synchronizes records from a specific local collection based on a parent record's references.
    *
-   * This method retrieves records from the collection with the specified
-   * `collectionName`, potentially fetching them asynchronously if needed.
-   * It uses the `collectionConfig` to determine how to filter, sort,
-   * and retrieve the records.
-   *
-   * The `currentRecord` is used to extract related records based on the
-   * `referenceKey` provided in the `collectionConfig`. If the related
-   * records are not already in the local collection and `async` is true
-   * in the `collectionConfig`, it initiates an asynchronous request to
-   * fetch them.
+   * This method resolves related data by looking up records in the local state using a generated
+   * hash ID. If a record is missing from the local collection and the `async` flag is enabled,
+   * it schedules an asynchronous fetch request.
    *
    * @private
-   * @param {string} collectionName - The name of the collection.
-   * @param {Object} [collectionConfig={}] - Configuration for retrieving
-   *                                        the records.
-   * @param {Object|Array} currentRecord - The record containing potential
-   *                                       related records.
-   * @returns {Object|Array} The retrieved records (single object or array).
+   * @param {string} collectionName - The name of the target collection to retrieve records from.
+   * @param {Object} [collectionConfig={}] - Configuration for data resolution.
+   * @param {string} [collectionConfig.referenceKey] - The property name on `currentRecord` that contains the related IDs/objects.
+   * @param {boolean} [collectionConfig.async=false] - Whether to fetch missing records from the API.
+   * @param {Object} [collectionConfig.filterBy={}] - Criteria used to filter the resulting array of records.
+   * @param {Array} [collectionConfig.sortBy=[]] - Order definitions for sorting the resulting records.
+   * @param {Object|Array} currentRecord - The source record (or array of records) containing the reference data.
+   * @returns {Object|Array|null} Returns a single observable record if the input was an object,
+   *                              an observable array of filtered/sorted records if the input was an array,
+   *                              or `null` if no references exist.
    */
   _getCollectionRecord(collectionName, collectionConfig = {}, currentRecord) {
     const collectionReferenceKey =
@@ -797,11 +794,14 @@ export default class ApiResourceManager {
     const collectionAsync = getProperty(collectionConfig, 'async') || false
     const collectionFilterBy = getProperty(collectionConfig, 'filterBy') || {}
     const collectionSortBy = getProperty(collectionConfig, 'sortBy') || []
-    const recordsFromCurrentRecord =
-      getProperty(currentRecord, collectionReferenceKey) || []
+    const recordsFromCurrentRecord = getProperty(
+      currentRecord,
+      collectionReferenceKey,
+    )
     const isRecordsFromCurrentRecordObject = isPlainObject(
       recordsFromCurrentRecord,
     )
+    const isRecordsFromCurrentRecordEmpty = isNil(recordsFromCurrentRecord)
     const resourceConfig = omit(collectionConfig, [
       'referenceKey',
       'async',
@@ -812,6 +812,8 @@ export default class ApiResourceManager {
       ? [recordsFromCurrentRecord]
       : recordsFromCurrentRecord
     const collectionRecords = observable([])
+
+    if (isRecordsFromCurrentRecordEmpty) return observable(null)
 
     forEach(relatedRecords, (relatedRecord) => {
       const relatedRecordId = getProperty(relatedRecord, 'id')
