@@ -29,7 +29,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import * as mobx from 'mobx'
-import { v1 as uuidv1, NIL as NIL_UUID } from 'uuid'
+import { v1 as uuidv1, validate as uuidValidate, NIL as NIL_UUID } from 'uuid'
 import md5 from 'md5'
 import qs from 'qs'
 
@@ -681,7 +681,10 @@ export default class ApiResourceManager {
       },
     )
     const collectionRecordId = getProperty(collectionRecord, 'id')
-    const isCollectionRecordIdValid = isNumber(collectionRecordId)
+    const isCollectionRecordIdValid = isEqual(
+      uuidValidate(collectionRecordId),
+      false,
+    )
 
     return this._request({
       resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',
@@ -2019,6 +2022,7 @@ export default class ApiResourceManager {
    *                          configuration in `config`.
    */
   findRecord(resource, id, params = {}, config = {}) {
+    console.log('findRecord', resource, id, params, config)
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
