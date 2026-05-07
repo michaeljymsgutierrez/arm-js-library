@@ -1,7 +1,7 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.8.0
+ * Version: 2.9.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -29,7 +29,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import * as mobx from 'mobx'
-import { v1 as uuidv1, NIL as NIL_UUID } from 'uuid'
+import { v1 as uuidv1, validate as uuidValidate, NIL as NIL_UUID } from 'uuid'
 import md5 from 'md5'
 import qs from 'qs'
 
@@ -285,7 +285,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.8.0',
+      'ARM JS Library/2.9.0',
     )
   }
 
@@ -681,7 +681,10 @@ export default class ApiResourceManager {
       },
     )
     const collectionRecordId = getProperty(collectionRecord, 'id')
-    const isCollectionRecordIdValid = isNumber(collectionRecordId)
+    const isCollectionRecordIdValid = isEqual(
+      uuidValidate(collectionRecordId),
+      false,
+    )
 
     return this._request({
       resourceMethod: isCollectionRecordIdValid ? 'put' : 'post',

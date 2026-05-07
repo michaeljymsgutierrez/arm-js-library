@@ -1,13 +1,13 @@
 import axios from "axios";
 import _ from "lodash";
 import * as mobx from "mobx";
-import { v1, NIL } from "uuid";
+import { v1, validate, NIL } from "uuid";
 import md5 from "md5";
 import qs from "qs";
 /**
  * ARM JavaScript Library
  *
- * Version: 2.8.0
+ * Version: 2.9.0
  * Date: 2024-05-09 2:19PM GMT+8
  *
  * @author Michael Jyms Gutierrez
@@ -175,7 +175,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.8.0"
+      "ARM JS Library/2.9.0"
     );
   }
   /**
@@ -540,7 +540,10 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
       }
     );
     const collectionRecordId = getProperty(collectionRecord, "id");
-    const isCollectionRecordIdValid = isNumber(collectionRecordId);
+    const isCollectionRecordIdValid = isEqual(
+      validate(collectionRecordId),
+      false
+    );
     return this._request({
       resourceMethod: isCollectionRecordIdValid ? "put" : "post",
       resourceName: collectionName,
