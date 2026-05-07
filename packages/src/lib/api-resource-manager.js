@@ -2022,7 +2022,6 @@ export default class ApiResourceManager {
    *                          configuration in `config`.
    */
   findRecord(resource, id, params = {}, config = {}) {
-    console.log('findRecord', resource, id, params, config)
     const requestObject = {
       resourceMethod: 'get',
       resourceName: resource,
