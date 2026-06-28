@@ -12,6 +12,7 @@ Thank you for your interest in contributing! Please read through this guide befo
 - [Development Workflow](#development-workflow)
 - [Testing](#testing)
 - [Pull Request Process](#pull-request-process)
+- [Labels](#labels)
 - [Code Standards](#code-standards)
 
 ---
@@ -144,6 +145,26 @@ yarn test:watch
 - Link any related GitHub issues
 - Assign the appropriate reviewers
 - Ensure CI checks pass before requesting review
+
+---
+
+## Labels
+
+Apply the appropriate label(s) when creating a PR or issue:
+
+| Label | When to use |
+|---|---|
+| `feat` | New feature additions |
+| `fix` | Bug fixes and patches |
+| `chore` | Maintenance tasks, configs, and cleanups |
+| `docs` | Documentation additions or improvements |
+| `refactor` | Code restructuring with no behavior change |
+| `deps` | Dependency updates and version bumps |
+| `release` | Release preparation and versioning |
+| `bug` | Confirmed bugs and reported issues |
+| `experimental` | Experimental or exploratory changes |
+| `javascript` | JavaScript code changes |
+| `hacktoberfest-accepted` | Accepted Hacktoberfest contributions |
 
 ---
 
