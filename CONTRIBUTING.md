@@ -7,6 +7,8 @@ Thank you for your interest in contributing! Please read through this guide befo
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Branch Purposes](#branch-purposes)
+- [Branch Flow](#branch-flow)
 - [Branch Naming Convention](#branch-naming-convention)
 - [Commit Message Convention](#commit-message-convention)
 - [Development Workflow](#development-workflow)
@@ -41,6 +43,62 @@ yarn test
 # Build the library
 yarn build
 ```
+
+---
+
+## Branch Purposes
+
+These are the permanent staple branches of this repository. They are never deleted.
+
+| Branch | Purpose |
+| --------- | ------- |
+| `main` | Branch containing stable source code. The `release` branch is merged to `main` once released. |
+| `release` | Branch for releasing code changes. The `develop` branch merges to `release` for releases. |
+| `develop` | Branch for staging code changes. Base branch for new features, enhancements, fixes, and documentation. |
+| `canary` | Experimental branch for code changes. Can be merged to `develop` once tested. |
+
+---
+
+## Branch Flow
+
+```mermaid
+flowchart TD
+    subgraph Developing["Developing Phase"]
+        WB["feat/ · fix/ · chore/ · docs/ · refactor/ · test/"]
+    end
+
+    subgraph Releasing["Releasing Phase"]
+        RV["release/vX.X.X\n(update version files)"]
+    end
+
+    develop(develop)
+    release(release)
+    main(main)
+    canary(canary)
+
+    WB -->|merge| develop
+    develop -->|checkout| RV
+    RV -->|merge| release
+    release -->|rebase| main
+    release -->|rebase| canary
+    release -->|rebase| develop
+```
+
+### Developing Phase
+
+Work branches are created from `develop` and merged back into `develop` when ready.
+
+### Releasing Phase
+
+`develop` is checked out into a versioned `release/vX.X.X` branch. Before merging to `release`, update the version in:
+
+- `README.md`
+- `packages/package.json`
+- `packages/src/lib/api-resource-manager.js`
+
+### Stabilizing Phase
+
+Once `release` is verified, it is rebased into `main`, `canary`, and `develop` to keep all staple branches in sync.
 
 ---
 
@@ -110,11 +168,11 @@ type(scope): description
 ## Development Workflow
 
 1. Fork the repository
-2. Create a branch following the [Branch Naming Convention](#branch-naming-convention)
+2. Create a branch from `develop` following the [Branch Naming Convention](#branch-naming-convention)
 3. Make your changes in `packages/src/lib/api-resource-manager.js`
 4. Write or update tests in `packages/tests/`
 5. Run the test suite and ensure all tests pass
-6. Submit a pull request pointing to `develop`
+6. Submit a pull request targeting `develop`
 
 ---
 
