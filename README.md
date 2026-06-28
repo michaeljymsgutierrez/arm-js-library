@@ -43,6 +43,7 @@
   - [Data Validation and Comparison](#data-validation-and-comparison)
 - [Credits](#credits)
 - [License](#license)
+- [Contributing](#contributing)
 
 ## Overview
 
@@ -1071,3 +1072,7 @@ const addresses = [
 ## License
 
 This project is licensed under the [MIT](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/LICENSE.md) License.
+
+## Contributing
+
+Contributions are welcome! Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) guide before submitting any changes.
