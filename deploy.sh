@@ -360,7 +360,7 @@ print_separator
 
 # Prepare the release version
 print_process "preparing:release-version"
-prepare_release_version $VERSION_TYPE && print_status_done || print_status_failed
+prepare_release_version "$VERSION_TYPE" && print_status_done || print_status_failed
 print_separator
 
 # Prepare release files
