@@ -213,6 +213,20 @@ sync_repository() {
   fi
 }
 
+# Function to check that all required tools are installed before running
+check_dependencies() {
+  local missing=0
+  for tool in jq npm yarn git awk; do
+    if ! command -v "$tool" &>/dev/null; then
+      echo "Missing required tool: $tool"
+      missing=1
+    fi
+  done
+  if [ "$missing" -eq 1 ]; then
+    echo "Install missing tools before running deploy.sh" && exit 1
+  fi
+}
+
 # Function to validate the input arguments
 validate_input() {
   # Validate the deployment type
@@ -294,6 +308,11 @@ fi
 print_separator
 print_process "validating:input"
 validate_input && print_status_done || print_status_failed
+print_separator
+
+# Check that all required tools are installed
+print_process "checking:dependencies"
+check_dependencies && print_status_done || print_status_failed
 print_separator
 
 # Synchronize the repository
