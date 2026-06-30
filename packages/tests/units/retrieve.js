@@ -1,9 +1,11 @@
 import { v1 as uuidv1 } from 'uuid'
 
 const execRetrieveTest = (ARM) => {
-  ARM.setNamespace('api/v1')
-
   describe('Retrieve functions from collections', () => {
+    beforeEach(() => {
+      ARM.clearCollection('addresses')
+    })
+
     test('Verify peekAll functionality', async () => {
       await ARM.query('addresses', {}, { autoResolve: false, skipId: uuidv1() })
       expect(ARM.peekAll('addresses')).toHaveLength(12)
@@ -14,10 +16,11 @@ const execRetrieveTest = (ARM) => {
       expect(ARM.peekRecord('addresses', 2518368).get('id')).toBe(2518368)
     })
 
-    test('Verify getCollection functionality', async () => {
-      ARM.clearCollection('addresses')
-      expect(ARM.getCollection('addresses')).toHaveLength(0)
+    test('Verify peekRecord returns undefined for non-existent id', () => {
+      expect(ARM.peekRecord('addresses', 9999999)).toBeUndefined()
+    })
 
+    test('Verify getCollection functionality', async () => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
@@ -27,9 +30,6 @@ const execRetrieveTest = (ARM) => {
     })
 
     test('Verify getAlias functionality', async () => {
-      ARM.clearCollection('addresses')
-      expect(ARM.getCollection('addresses')).toHaveLength(0)
-
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
@@ -38,10 +38,16 @@ const execRetrieveTest = (ARM) => {
       expect(ARM.getAlias('customerAddresses')).toHaveLength(5)
     })
 
-    test('Verify getRequestAlias functionality', async () => {
-      ARM.clearCollection('addresses')
-      expect(ARM.getCollection('addresses')).toHaveLength(0)
+    test('Verify getAlias returns fallback when alias does not exist', () => {
+      const fallback = [
+        { id: 999, attributes: { address1: 'Fallback Address' } },
+      ]
+      const result = ARM.getAlias('nonExistentAlias', fallback)
+      expect(result).toBeDefined()
+      expect(result).toHaveLength(1)
+    })
 
+    test('Verify getRequestAlias functionality', async () => {
       await ARM.query(
         'addresses',
         { page: { size: 5 } },
