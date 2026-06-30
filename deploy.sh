@@ -223,10 +223,10 @@ sync_repository() {
 check_git_auth() {
   local current_user
   current_user=$(git config user.name 2>/dev/null) || {
-    echo "Git user not configured. Run: git config user.name" && exit 1
+    echo "Git user not configured. Run: git config user.name" && return 1
   }
   if [ "$current_user" != "$GIT_OWNER" ]; then
-    echo "Git user '$current_user' is not authorized to deploy (expected: $GIT_OWNER)" && exit 1
+    echo "Git user '$current_user' is not authorized to deploy (expected: $GIT_OWNER)" && return 1
   fi
 }
 
@@ -234,10 +234,10 @@ check_git_auth() {
 check_npm_auth() {
   local current_user
   current_user=$(npm whoami 2>/dev/null) || {
-    echo "Not logged in to npm. Run: npm login" && exit 1
+    echo "Not logged in to npm. Run: npm login" && return 1
   }
   if [ "$current_user" != "$NPM_OWNER" ]; then
-    echo "npm user '$current_user' is not authorized to publish this package (expected: $NPM_OWNER)" && exit 1
+    echo "npm user '$current_user' is not authorized to publish this package (expected: $NPM_OWNER)" && return 1
   fi
 }
 
@@ -251,7 +251,7 @@ check_dependencies() {
     fi
   done
   if [ "$missing" -eq 1 ]; then
-    echo "Install missing tools before running deploy.sh" && exit 1
+    echo "Install missing tools before running deploy.sh" && return 1
   fi
 }
 
