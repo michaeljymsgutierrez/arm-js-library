@@ -1,14 +1,13 @@
 import { v1 as uuidv1 } from 'uuid'
 
 const execRecordTest = (ARM) => {
-  ARM.setNamespace('api/v1')
-
   describe('Collection Records: Properties and Functions', () => {
+    beforeEach(() => {
+      ARM.clearCollection('addresses')
+    })
+
     describe('State Properties', () => {
       test('Verify isLoading functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -22,9 +21,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify isDirty functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -40,9 +36,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify isError functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findAll('addresses', { autoResolve: false, skipId: uuidv1() })
         const record = ARM.peekRecord('addresses', 2519858)
 
@@ -60,9 +53,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify isPristine functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -80,9 +70,6 @@ const execRecordTest = (ARM) => {
 
     describe('Getter and Setter Functions', () => {
       test('Verify get functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -92,9 +79,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify set functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -105,9 +89,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify setProperties functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -126,9 +107,6 @@ const execRecordTest = (ARM) => {
 
     describe('Request Functions', () => {
       test('Verify save functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -141,10 +119,32 @@ const execRecordTest = (ARM) => {
         expect(record.get('attributes.address1')).toBe('Anabu Hills Modified')
       })
 
-      test('Verify reload functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
+      test('Verify save functionality for new record uses POST', async () => {
+        const record = ARM.createRecord('addresses', {
+          attributes: { address1: 'New Address', kind: 'office', label: 'My New Office' },
+        })
+        const result = await record.save()
+        expect(result).toBeDefined()
+      })
 
+      test('Verify save with string collection record id uses PUT', async () => {
+        ARM.pushPayload('addresses', [
+          {
+            id: 'string-record-id',
+            type: 'addresses',
+            attributes: { address1: 'String ID Test', kind: 'office' },
+          },
+        ])
+        const record = ARM.peekRecord('addresses', 'string-record-id')
+        expect(record).toBeDefined()
+
+        record.set('attributes.address1', 'String ID Test Modified')
+        const result = await record.save()
+        expect(result).toBeDefined()
+        expect(record.get('attributes.address1')).toBe('String ID Test Modified')
+      })
+
+      test('Verify reload functionality', async () => {
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -159,9 +159,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify rollbackAttributes functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -175,10 +172,27 @@ const execRecordTest = (ARM) => {
         expect(record.get('attributes.address1')).toBe('Anabu Hills Test 4')
       })
 
-      test('Verify destroyRecord functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
+      test('Verify rollbackAttributes after setProperties', async () => {
+        await ARM.findRecord('addresses', 2518368, null, {
+          autoResolve: false,
+          skipId: uuidv1(),
+        })
+        const record = ARM.peekRecord('addresses', 2518368)
 
+        record.setProperties({
+          attributes: {
+            address1: 'New address1 changes',
+            address2: 'New address2 changes',
+          },
+        })
+        expect(record.get('isPristine')).toBe(false)
+
+        record.rollbackAttributes()
+        expect(record.get('isPristine')).toBe(true)
+        expect(record.get('attributes.address1')).toBe('Anabu Hills Test 4')
+      })
+
+      test('Verify destroyRecord functionality', async () => {
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
           skipId: uuidv1(),
@@ -191,9 +205,6 @@ const execRecordTest = (ARM) => {
       })
 
       test('Verify getCollection functionality', async () => {
-        ARM.clearCollection('addresses')
-        expect(ARM.getCollection('addresses')).toHaveLength(0)
-
         await ARM.query(
           'addresses',
           {
