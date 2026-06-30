@@ -99,6 +99,30 @@ const execUtilsTest = (ARM) => {
         expect(ARM.sortBy(addresses, ['id:desc'])).toEqual(addresses.reverse())
       })
 
+      test('Verify sortBy with asc direction', () => {
+        const items = [{ id: 3 }, { id: 1 }, { id: 2 }]
+        const sorted = ARM.sortBy(items, ['id:asc'])
+        expect(sorted[0].id).toBe(1)
+        expect(sorted[1].id).toBe(2)
+        expect(sorted[2].id).toBe(3)
+      })
+
+      test('Verify findBy returns undefined when no match', () => {
+        expect(ARM.findBy(addresses, { id: 999 })).toBeUndefined()
+      })
+
+      test('Verify filterBy returns empty array when no match', () => {
+        expect(
+          ARM.filterBy(addresses, { attributes: { kind: 'warehouse' } }),
+        ).toEqual([])
+      })
+
+      test('Verify mergeObjects deduplicates overlapping records', () => {
+        const a = { id: 1, name: 'test' }
+        const merged = ARM.mergeObjects([a], [a, { id: 2, name: 'other' }])
+        expect(merged).toHaveLength(2)
+      })
+
       test('Verify sum functionality', () => {
         expect(ARM.sum([100, 200, 300])).toBe(600)
       })

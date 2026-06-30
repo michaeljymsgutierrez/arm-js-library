@@ -1,6 +1,4 @@
 const execInternalsTest = (ARM) => {
-  ARM.setNamespace('api/v1')
-
   describe('Internal functions', () => {
     test('Verify _initializeCollections functionality', () => {
       ARM._initializeCollections(['shops'])
@@ -8,6 +6,8 @@ const execInternalsTest = (ARM) => {
     })
 
     test('Verify _getBaseURL functionality', () => {
+      // ARM is frozen via setGlobal() after setHost/setNamespace('api/v2') was called.
+      // namespace is a plain (non-observable) property, so it cannot change post-freeze.
       expect(ARM._getBaseURL()).toBe('https://api.arm-js-library.com/api/v2')
     })
 
@@ -66,6 +66,18 @@ const execInternalsTest = (ARM) => {
       expect(user).toHaveProperty('isPristine')
       expect(user).toHaveProperty('isDirty')
       expect(user).toHaveProperty('originalRecord')
+    })
+
+    test('Verify _injectCollectionReferenceKeys sets correct default values', () => {
+      let record = { id: 42 }
+      ARM._injectCollectionReferenceKeys('addresses', record)
+
+      expect(record.collectionName).toBe('addresses')
+      expect(record.isLoading).toBe(false)
+      expect(record.isError).toBe(false)
+      expect(record.isPristine).toBe(true)
+      expect(record.isDirty).toBe(false)
+      expect(record.originalRecord).toBeDefined()
     })
   })
 }
