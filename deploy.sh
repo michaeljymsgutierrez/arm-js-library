@@ -13,6 +13,9 @@ TERM=xterm-256color
 # Capture the absolute path of the project root
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
+# Expected npm username - must match the logged-in npm user before publishing
+NPM_OWNER="chaelgutierrez"
+
 # Dry-run flag - when true, destructive commands are printed but not executed
 DRY_RUN=false
 
@@ -213,6 +216,17 @@ sync_repository() {
   fi
 }
 
+# Function to verify the logged-in npm user matches the expected package owner
+check_npm_auth() {
+  local current_user
+  current_user=$(npm whoami 2>/dev/null) || {
+    echo "Not logged in to npm. Run: npm login" && exit 1
+  }
+  if [ "$current_user" != "$NPM_OWNER" ]; then
+    echo "npm user '$current_user' is not authorized to publish this package (expected: $NPM_OWNER)" && exit 1
+  fi
+}
+
 # Function to check that all required tools are installed before running
 check_dependencies() {
   local missing=0
@@ -313,6 +327,11 @@ print_separator
 # Check that all required tools are installed
 print_process "checking:dependencies"
 check_dependencies && print_status_done || print_status_failed
+print_separator
+
+# Verify the logged-in npm user is authorized to publish
+print_process "checking:npm-auth"
+check_npm_auth && print_status_done || print_status_failed
 print_separator
 
 # Synchronize the repository
