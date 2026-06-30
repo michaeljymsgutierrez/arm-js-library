@@ -149,7 +149,7 @@ publish_release_version_branch() {
       --format='- [%h][%an]: %s - %ad' \
       --date=format:'%Y-%m-%d %H:%M:%S' \
       --no-merges \
-      | grep -v ": release/v")
+      | grep -v ": release/v" || true)
     MERGE_COMMIT_HEADER_AND_MESSAGES=$(echo -e "release/$LATEST_VERSION\n${MERGE_COMMIT_MESSAGES}")
   fi
 
@@ -259,12 +259,12 @@ check_dependencies() {
 validate_input() {
   # Validate the deployment type
   if ! [[ "$DEPLOYMENT_TYPE" =~ ^(stable|hotfix)$ ]]; then
-    echo "Unknown deployment type for ${DEPLOYMENT_TYPE}" && exit 1
+    echo "Unknown deployment type for ${DEPLOYMENT_TYPE}" && return 1
   fi
 
   # Validate the version type
   if ! [[ "$VERSION_TYPE" =~ ^(major|minor|patch)$ ]]; then
-    echo "Unknown version type for ${VERSION_TYPE}" && exit 1
+    echo "Unknown version type for ${VERSION_TYPE}" && return 1
   fi
 
   # Output the deployment and version types
