@@ -32,6 +32,10 @@ export default function () {
         return addresses
       })
 
+      this.post('/addresses', (schema, request) => {
+        return JSON.parse(request.requestBody)
+      })
+
       this.get('/addresses/:id', () => {
         return { data: addresses.data[1] }
       })

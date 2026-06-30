@@ -9,7 +9,7 @@
     <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
   </a>
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://img.shields.io/badge/npm_version-2.9.0-blue" alt="npm-badge-logo" />
+    <img src="https://img.shields.io/badge/npm_version-2.9.1-blue" alt="npm-badge-logo" />
   </a>
   <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
@@ -43,6 +43,7 @@
   - [Data Validation and Comparison](#data-validation-and-comparison)
 - [Credits](#credits)
 - [License](#license)
+- [Contributing](#contributing)
 
 ## Overview
 
@@ -604,7 +605,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   "type": "addresses",
   "attributes": {
     "address1": "Test Address 1",
-    "address2": "171872.9.0222",
+    "address2": "171872.9.1222",
     "kind": "office",
     "label": "Anabu Hills",
     "latitude": "14.394261",
@@ -1071,3 +1072,7 @@ const addresses = [
 ## License
 
 This project is licensed under the [MIT](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/LICENSE.md) License.
+
+## Contributing
+
+Contributions are welcome! Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) guide before submitting any changes.
