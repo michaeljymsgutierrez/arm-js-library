@@ -1,14 +1,31 @@
 #!/bin/bash
-# Usage: ./deploy.sh deployment-type:version-type
+set -euo pipefail
+
+# Usage: ./deploy.sh [--dry-run|-d] deployment-type:version-type
 # deployment-type: stable | hotfix
 # version-type: major | minor | patch
 # ie: ./deploy.sh stable:minor
+# ie: ./deploy.sh --dry-run stable:minor
 
 # Set the terminal type for colored output
 TERM=xterm-256color
 
-# Store the deployment target (e.g., stable:minor) from the command-line argument
-DEPLOYMENT_TARGET="$1"
+# Capture the absolute path of the project root
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
+
+# Dry-run flag - when true, destructive commands are printed but not executed
+DRY_RUN=false
+
+# Deployment target extracted from arguments (e.g. stable:minor)
+DEPLOYMENT_TARGET=""
+
+# Parse all arguments - flags and positional
+for arg in "$@"; do
+  case $arg in
+    -d|--dry-run) DRY_RUN=true ;;
+    *) DEPLOYMENT_TARGET="$arg" ;;
+  esac
+done
 
 # Extract the deployment type (stable or hotfix) using cut
 DEPLOYMENT_TYPE=$(echo "$DEPLOYMENT_TARGET" | cut -d ':' -f 1)
@@ -22,29 +39,48 @@ LATEST_VERSION=""
 COMMIT_MESSAGE=""
 TARGET_BRANCH=""
 
+# Helper: print and skip destructive commands when in dry-run mode
+run_cmd() {
+  if [ "$DRY_RUN" = true ]; then
+    echo "[dry-run] $*"
+  else
+    "$@"
+  fi
+}
+
 # Function to prepare the release version by updating package.json and related files
 prepare_release_version() {
-  # Navigate to the 'packages' directory
-  cd packages
-
   # Get the current version from package.json using jq
-  CURRENT_VERSION+=$(jq -r '.version' package.json)
+  CURRENT_VERSION+=$(jq -r '.version' "$PROJECT_ROOT/packages/package.json")
   CURRENT_VERSION_NUMBER=${CURRENT_VERSION#v}
 
   # Increment the version using npm version and store the latest version
-  LATEST_VERSION=$(echo "npm version $1 --no-git-tag-version" | bash)
+  if [ "$DRY_RUN" = true ]; then
+    echo "[dry-run] npm version $1 --no-git-tag-version (in $PROJECT_ROOT/packages)"
+    LATEST_VERSION="v0.0.0-dry-run"
+  else
+    LATEST_VERSION=$(cd "$PROJECT_ROOT/packages" && npm version $1 --no-git-tag-version)
+  fi
   LATEST_VERSION_NUMBER=${LATEST_VERSION#v}
 
   # Create the commit message
   COMMIT_MESSAGE="Updated release version from $CURRENT_VERSION to $LATEST_VERSION"
 
-  # Navigate to the api-resource-manager.js file and update the version number
-  cd src/lib &&
-  awk -v old="$CURRENT_VERSION_NUMBER" -v new="$LATEST_VERSION_NUMBER" '{gsub(old, new)} 1' api-resource-manager.js > temp.txt && mv temp.txt api-resource-manager.js
+  # Update the version number in api-resource-manager.js and README.md
+  if [ "$DRY_RUN" = true ]; then
+    echo "[dry-run] update version in api-resource-manager.js: $CURRENT_VERSION_NUMBER -> $LATEST_VERSION_NUMBER"
+    echo "[dry-run] update version in README.md: $CURRENT_VERSION_NUMBER -> $LATEST_VERSION_NUMBER"
+  else
+    awk -v old="$CURRENT_VERSION_NUMBER" -v new="$LATEST_VERSION_NUMBER" '{gsub(old, new)} 1' \
+      "$PROJECT_ROOT/packages/src/lib/api-resource-manager.js" \
+      > "$PROJECT_ROOT/packages/src/lib/temp.txt" \
+      && mv "$PROJECT_ROOT/packages/src/lib/temp.txt" "$PROJECT_ROOT/packages/src/lib/api-resource-manager.js"
 
-  # Navigate back to the root directory and update the version number in README.md
-  cd .. && cd .. && cd .. &&
-  awk -v old="$CURRENT_VERSION_NUMBER" -v new="$LATEST_VERSION_NUMBER" '{gsub(old, new)} 1' README.md > temp.txt && mv temp.txt README.md
+    awk -v old="$CURRENT_VERSION_NUMBER" -v new="$LATEST_VERSION_NUMBER" '{gsub(old, new)} 1' \
+      "$PROJECT_ROOT/README.md" \
+      > "$PROJECT_ROOT/temp.txt" \
+      && mv "$PROJECT_ROOT/temp.txt" "$PROJECT_ROOT/README.md"
+  fi
 
   # Output the latest version
   echo "VERSION: $LATEST_VERSION"
@@ -54,118 +90,126 @@ prepare_release_version() {
 prepare_release_files() {
   # Copy README.md to the packages directory
   print_process "copying:readme"
-  cp -v README.md packages/README.md && print_status_done || print_status_failed
+  run_cmd cp -v "$PROJECT_ROOT/README.md" "$PROJECT_ROOT/packages/README.md" && print_status_done || print_status_failed
   print_separator
 
-  # Navigate to the packages directory and build the package
-  cd packages &&
+  # Build the package
   print_process "building:package"
-  yarn build && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/packages" && yarn build) && print_status_done || print_status_failed
   print_separator
 
   # Generate jsdocs
   print_process "generating:docs"
-  yarn build:jsdocs && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/packages" && yarn build:jsdocs) && print_status_done || print_status_failed
   print_separator
 
   # Generate dts files
   print_process "generating:dts"
-  yarn build:dts && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/packages" && yarn build:dts) && print_status_done || print_status_failed
   print_separator
 
   # Run tests
   print_process "running:test"
-  yarn test && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/packages" && yarn test) && print_status_done || print_status_failed
   print_separator
 
   # Copy DOCS.md to the root directory
   print_process "copying:docs"
-  cp -v DOCS.md .. && print_status_done || print_status_failed
+  run_cmd cp -v "$PROJECT_ROOT/packages/DOCS.md" "$PROJECT_ROOT/DOCS.md" && print_status_done || print_status_failed
   print_separator
 
   # Update dependencies in apps and packages
   print_process "updating:apps-and-packages-dependencies"
-  cd .. && cd apps/create-next-app && yarn install && print_status_done || print_status_failed
-  cd .. && cd .. && cd packages && yarn install && cd .. && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/apps/create-next-app" && yarn install) && print_status_done || print_status_failed
+  (cd "$PROJECT_ROOT/packages" && yarn install) && print_status_done || print_status_failed
   print_separator
 }
 
 # Function to publish the release version branch by creating a release branch, committing changes, pushing, merging into release, tagging, and rebasing main
 publish_release_version_branch() {
   # Create a release branch, add changes, commit, and push
-  git checkout -b "releases/$LATEST_VERSION" &&
-  git add . &&
-  git commit -m "$COMMIT_MESSAGE" &&
-  git push origin "releases/$LATEST_VERSION"
+  run_cmd git checkout -b "release/$LATEST_VERSION" &&
+  run_cmd git add . &&
+  run_cmd git commit -m "$COMMIT_MESSAGE" &&
+  run_cmd git push origin "release/$LATEST_VERSION"
 
   # Generate merge commit messages
-  MERGE_COMMIT_MESSAGES=$(git log $TARGET_BRANCH..releases/$LATEST_VERSION \
-    --format='- [%h][%an]: %s - %ad' \
-    --date=format:'%Y-%m-%d %H:%M:%S' \
-    --no-merges \
-    | grep -v ": releases/v")
-  MERGE_COMMIT_HEADER_AND_MESSAGES=$(echo -e "releases/$LATEST_VERSION\n${MERGE_COMMIT_MESSAGES}")
+  if [ "$DRY_RUN" = true ]; then
+    echo "[dry-run] git log $TARGET_BRANCH..release/$LATEST_VERSION (generate merge commit messages)"
+    MERGE_COMMIT_MESSAGES="[dry-run]"
+    MERGE_COMMIT_HEADER_AND_MESSAGES="[dry-run] release/$LATEST_VERSION"
+  else
+    MERGE_COMMIT_MESSAGES=$(git log $TARGET_BRANCH..release/$LATEST_VERSION \
+      --format='- [%h][%an]: %s - %ad' \
+      --date=format:'%Y-%m-%d %H:%M:%S' \
+      --no-merges \
+      | grep -v ": release/v")
+    MERGE_COMMIT_HEADER_AND_MESSAGES=$(echo -e "release/$LATEST_VERSION\n${MERGE_COMMIT_MESSAGES}")
+  fi
 
   # Merge the release branch into release, tag, and push
-  git checkout release &&
-  git pull origin release &&
-  git merge --squash "releases/$LATEST_VERSION" &&
-  git commit -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
-  git push origin release &&
-  git tag -a "$LATEST_VERSION" -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
-  git push origin "$LATEST_VERSION" &&
+  run_cmd git checkout release &&
+  run_cmd git pull origin release &&
+  run_cmd git merge --squash "release/$LATEST_VERSION" &&
+  run_cmd git commit -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
+  run_cmd git push origin release &&
+  run_cmd git tag -a "$LATEST_VERSION" -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
+  run_cmd git push origin "$LATEST_VERSION" &&
 
   # Rebase main onto release and push
-  git checkout main &&
-  git pull origin main &&
-  git rebase release &&
-  git push -f origin main
+  run_cmd git checkout main &&
+  run_cmd git pull origin main &&
+  run_cmd git rebase release &&
+  run_cmd git push -f origin main
 }
 
-# Function to clean up the release version branch by rebasing develop, deleting the release branch, and fetching updates
+# Function to clean up the release version branch by rebasing develop and canary, deleting the release branch, and fetching updates
 cleanup_release_version_branch() {
   # Rebase develop onto release and push
-  git checkout develop &&
-  git rebase -Xours release &&
-  git push -f origin develop &&
+  run_cmd git checkout develop &&
+  run_cmd git rebase -Xours release &&
+  run_cmd git push -f origin develop &&
+
+  # Rebase canary onto release and push
+  run_cmd git checkout canary &&
+  run_cmd git rebase -Xours release &&
+  run_cmd git push -f origin canary &&
 
   # Delete the release branch both locally and remotely
-  git branch -D "releases/$LATEST_VERSION" &&
-  git push origin --delete "releases/$LATEST_VERSION" &&
+  run_cmd git branch -D "release/$LATEST_VERSION" &&
+  run_cmd git push origin --delete "release/$LATEST_VERSION" &&
 
-  # Fetch and prune remote branches, and pull updates for develop, release, and main
+  # Fetch and prune remote branches, and pull updates for develop, release, main, and canary
   git fetch origin --prune --verbose
-  git checkout develop &&
-  git pull origin develop &&
-  git checkout release &&
-  git pull origin release &&
-  git checkout main &&
-  git pull origin main
+  run_cmd git checkout develop && git pull origin develop
+  run_cmd git checkout release && git pull origin release
+  run_cmd git checkout main && git pull origin main
+  run_cmd git checkout canary && git pull origin canary
 }
 
 # Function to publish the release version to npm
 publish_release_version_npm() {
-  # Publish the package to npm
-  cd packages && npm publish && cd ..
+  cd "$PROJECT_ROOT/packages" && run_cmd npm publish && cd "$PROJECT_ROOT"
 }
 
 # Function to synchronize the repository by fetching updates and rebasing branches
 sync_repository() {
-  # Fetch updates and prune remote branches, then rebase develop, release, and main
+  # Fetch updates and prune remote branches, then rebase develop, release, main, and canary
   git fetch origin --prune --verbose &&
-  git checkout develop && git pull --rebase origin develop &&
-  git checkout release && git pull --rebase origin release &&
-  git checkout main && git pull --rebase origin main
+  run_cmd git checkout develop && git pull --rebase origin develop &&
+  run_cmd git checkout release && git pull --rebase origin release &&
+  run_cmd git checkout main && git pull --rebase origin main &&
+  run_cmd git checkout canary && git pull --rebase origin canary
 
   # Set the target branch based on the deployment type
   if [ "$DEPLOYMENT_TYPE" == "stable" ]; then
     TARGET_BRANCH="release"
-    git checkout develop
+    run_cmd git checkout develop
   fi
 
   if [ "$DEPLOYMENT_TYPE" == "hotfix" ]; then
     TARGET_BRANCH="main"
-    git checkout release
+    run_cmd git checkout release
   fi
 }
 
@@ -186,7 +230,7 @@ validate_input() {
   echo "VERSION_TYPE: $VERSION_TYPE"
 
   # Confirm with the user before proceeding
-  read -p "Are you sure? (y/n) " -n 1 -r
+  read -p "Are you sure? (y/n) " -n 1 -r || true
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo " Confirmed"
   else
@@ -197,12 +241,13 @@ validate_input() {
 
 # Function to display usage instructions
 usage() {
-  echo "# Usage: sh deploy.sh deployment-type:version-type"
+  echo "# Usage: sh deploy.sh [--dry-run|-d] deployment-type:version-type"
   echo "# "
   echo "# deployment-type: stable | hotfix"
   echo "# version-type: major | minor | patch"
   echo "# "
   echo "# ie: sh deploy.sh stable:minor"
+  echo "# ie: sh deploy.sh --dry-run stable:minor"
   exit 0
 }
 
@@ -234,9 +279,15 @@ print_status_failed() {
 # Clear the terminal
 clear
 
-# If the first argument is "-h", display usage instructions
-if [ "$1" == "-h" ]; then
+# If the argument is "-h", display usage instructions
+if [ "$DEPLOYMENT_TARGET" == "-h" ]; then
   usage
+fi
+
+# Show dry-run banner if active
+if [ "$DRY_RUN" = true ]; then
+  echo -e "\033[33m[DRY RUN] No changes will be made.\033[0m"
+  print_separator
 fi
 
 # Validate the input arguments
@@ -268,7 +319,7 @@ print_process "cleaning:release-version-branch"
 cleanup_release_version_branch && print_status_done || print_status_failed
 print_separator
 
-# Print the release version
+# Publish the release version to npm
 print_process "publishing:release-version-npm"
 publish_release_version_npm && print_status_done || print_status_failed
 print_separator
