@@ -134,29 +134,29 @@ prepare_release_files() {
 # Function to publish the release version branch by creating a release branch, committing changes, pushing, merging into release, tagging, and rebasing main
 publish_release_version_branch() {
   # Create a release branch, add changes, commit, and push
-  run_cmd git checkout -b "release/$LATEST_VERSION" &&
+  run_cmd git checkout -b "releases/$LATEST_VERSION" &&
   run_cmd git add . &&
   run_cmd git commit -m "$COMMIT_MESSAGE" &&
-  run_cmd git push origin "release/$LATEST_VERSION"
+  run_cmd git push origin "releases/$LATEST_VERSION"
 
   # Generate merge commit messages
   if [ "$DRY_RUN" = true ]; then
-    echo "[dry-run] git log $TARGET_BRANCH..release/$LATEST_VERSION (generate merge commit messages)"
+    echo "[dry-run] git log $TARGET_BRANCH..releases/$LATEST_VERSION (generate merge commit messages)"
     MERGE_COMMIT_MESSAGES="[dry-run]"
-    MERGE_COMMIT_HEADER_AND_MESSAGES="[dry-run] release/$LATEST_VERSION"
+    MERGE_COMMIT_HEADER_AND_MESSAGES="[dry-run] releases/$LATEST_VERSION"
   else
-    MERGE_COMMIT_MESSAGES=$(git log $TARGET_BRANCH..release/$LATEST_VERSION \
+    MERGE_COMMIT_MESSAGES=$(git log $TARGET_BRANCH..releases/$LATEST_VERSION \
       --format='- [%h][%an]: %s - %ad' \
       --date=format:'%Y-%m-%d %H:%M:%S' \
       --no-merges \
-      | grep -v ": release/v" || true)
-    MERGE_COMMIT_HEADER_AND_MESSAGES=$(echo -e "release/$LATEST_VERSION\n${MERGE_COMMIT_MESSAGES}")
+      | grep -v ": releases/v" || true)
+    MERGE_COMMIT_HEADER_AND_MESSAGES=$(echo -e "releases/$LATEST_VERSION\n${MERGE_COMMIT_MESSAGES}")
   fi
 
   # Merge the release branch into release, tag, and push
   run_cmd git checkout release &&
   run_cmd git pull origin release &&
-  run_cmd git merge --squash "release/$LATEST_VERSION" &&
+  run_cmd git merge --squash "releases/$LATEST_VERSION" &&
   run_cmd git commit -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
   run_cmd git push origin release &&
   run_cmd git tag -a "$LATEST_VERSION" -m "$MERGE_COMMIT_HEADER_AND_MESSAGES" &&
@@ -182,8 +182,8 @@ cleanup_release_version_branch() {
   run_cmd git push -f origin canary &&
 
   # Delete the release branch both locally and remotely
-  run_cmd git branch -D "release/$LATEST_VERSION" &&
-  run_cmd git push origin --delete "release/$LATEST_VERSION" &&
+  run_cmd git branch -D "releases/$LATEST_VERSION" &&
+  run_cmd git push origin --delete "releases/$LATEST_VERSION" &&
 
   # Fetch and prune remote branches, and pull updates for develop, release, main, and canary
   git fetch origin --prune --verbose

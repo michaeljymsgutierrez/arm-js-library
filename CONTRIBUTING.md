@@ -68,7 +68,7 @@ flowchart TD
     end
 
     subgraph Releasing["Releasing Phase"]
-        RV["release/vX.X.X\n(update version files)"]
+        RV["releases/vX.X.X\n(update version files)"]
     end
 
     develop(develop)
@@ -90,7 +90,7 @@ Work branches are created from `develop` and merged back into `develop` when rea
 
 ### Releasing Phase
 
-`develop` is checked out into a versioned `release/vX.X.X` branch. Before merging to `release`, update the version in:
+`develop` is checked out into a versioned `releases/vX.X.X` branch. Before merging to `release`, update the version in:
 
 - `README.md`
 - `packages/package.json`
@@ -119,7 +119,7 @@ type/short-description
 | `refactor/` | Code restructuring, no behavior change    |
 | `test/`     | Adding or updating tests                  |
 | `hotfix/`   | Urgent fix for production issues          |
-| `release/`  | Release preparation                       |
+| `releases/` | Release preparation                       |
 
 **Examples:**
 
@@ -130,7 +130,7 @@ type/short-description
 - `refactor/collection-manager`
 - `test/query-record-coverage`
 - `hotfix/save-method-crash`
-- `release/v2.10.0`
+- `releases/v2.10.0`
 
 ---
 
