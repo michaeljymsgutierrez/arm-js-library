@@ -13,6 +13,9 @@ TERM=xterm-256color
 # Capture the absolute path of the project root
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
+# Expected git username - only this user is authorized to run the deploy script
+GIT_OWNER="michaeljymsgutierrez"
+
 # Expected npm username - must match the logged-in npm user before publishing
 NPM_OWNER="chaelgutierrez"
 
@@ -216,6 +219,17 @@ sync_repository() {
   fi
 }
 
+# Function to verify the current git user is authorized to run the deploy script
+check_git_auth() {
+  local current_user
+  current_user=$(git config user.name 2>/dev/null) || {
+    echo "Git user not configured. Run: git config user.name" && exit 1
+  }
+  if [ "$current_user" != "$GIT_OWNER" ]; then
+    echo "Git user '$current_user' is not authorized to deploy (expected: $GIT_OWNER)" && exit 1
+  fi
+}
+
 # Function to verify the logged-in npm user matches the expected package owner
 check_npm_auth() {
   local current_user
@@ -327,6 +341,11 @@ print_separator
 # Check that all required tools are installed
 print_process "checking:dependencies"
 check_dependencies && print_status_done || print_status_failed
+print_separator
+
+# Verify the current git user is authorized to deploy
+print_process "checking:git-auth"
+check_git_auth && print_status_done || print_status_failed
 print_separator
 
 # Verify the logged-in npm user is authorized to publish
