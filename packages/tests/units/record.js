@@ -158,6 +158,22 @@ const execRecordTest = (ARM) => {
         expect(record.get('attributes.address1')).toBe('Anabu Hills Test 4')
       })
 
+      test('Verify reload with string collection record id', async () => {
+        ARM.pushPayload('addresses', [
+          {
+            id: 'JO-26181S4VPU65',
+            type: 'addresses',
+            attributes: { address1: 'String ID Address', kind: 'office' },
+          },
+        ])
+        const record = ARM.peekRecord('addresses', 'JO-26181S4VPU65')
+        expect(record).toBeDefined()
+
+        const result = await record.reload()
+        expect(result).toBeDefined()
+        expect(record.get('isError')).toBe(false)
+      })
+
       test('Verify rollbackAttributes functionality', async () => {
         await ARM.findRecord('addresses', 2518368, null, {
           autoResolve: false,
@@ -202,6 +218,22 @@ const execRecordTest = (ARM) => {
 
         expect(result).toBeDefined()
         expect(ARM.peekRecord('addresses', 2518368)).toBeUndefined()
+      })
+
+      test('Verify destroyRecord with string collection record id', async () => {
+        ARM.pushPayload('addresses', [
+          {
+            id: 'JO-26181S4VPU65',
+            type: 'addresses',
+            attributes: { address1: 'String ID Address', kind: 'office' },
+          },
+        ])
+        const record = ARM.peekRecord('addresses', 'JO-26181S4VPU65')
+        expect(record).toBeDefined()
+
+        const result = await record.destroyRecord()
+        expect(result).toBeDefined()
+        expect(ARM.peekRecord('addresses', 'JO-26181S4VPU65')).toBeUndefined()
       })
 
       test('Verify getCollection functionality', async () => {

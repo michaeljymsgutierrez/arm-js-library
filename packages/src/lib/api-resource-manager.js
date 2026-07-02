@@ -715,7 +715,7 @@ export default class ApiResourceManager {
     return this._request({
       resourceMethod: 'delete',
       resourceName: getProperty(currentRecord, 'collectionName'),
-      resourceId: Number(getProperty(currentRecord, 'id')),
+      resourceId: getProperty(currentRecord, 'id'),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -737,7 +737,7 @@ export default class ApiResourceManager {
     return this._request({
       resourceMethod: 'get',
       resourceName: getProperty(currentRecord, 'collectionName'),
-      resourceId: Number(getProperty(currentRecord, 'id')),
+      resourceId: getProperty(currentRecord, 'id'),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},

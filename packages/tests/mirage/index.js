@@ -46,8 +46,11 @@ export default function () {
           : request.requestBody
       })
 
-      this.delete('/addresses/:id', () => {
-        return { data: addresses.data[1] }
+      this.delete('/addresses/:id', (schema, request) => {
+        const { id } = request.params
+        return isNaN(Number(id))
+          ? { data: { id, type: 'addresses', attributes: {} } }
+          : { data: addresses.data[1] }
       })
     },
   })
