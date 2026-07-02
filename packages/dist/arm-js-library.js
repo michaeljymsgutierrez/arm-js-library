@@ -572,7 +572,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return this._request({
       resourceMethod: "delete",
       resourceName: getProperty(currentRecord, "collectionName"),
-      resourceId: Number(getProperty(currentRecord, "id")),
+      resourceId: getProperty(currentRecord, "id"),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
@@ -593,7 +593,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
     return this._request({
       resourceMethod: "get",
       resourceName: getProperty(currentRecord, "collectionName"),
-      resourceId: Number(getProperty(currentRecord, "id")),
+      resourceId: getProperty(currentRecord, "id"),
       resourceParams: {},
       resourcePayload: null,
       resourceFallback: {},
