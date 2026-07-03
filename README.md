@@ -22,22 +22,26 @@
   - [Core Functionalities](#core-functionalities)
   - [Key Features](#key-features)
   - [Benefits](#benefits)
+- [Quick Reference](#quick-reference)
 - [Basic Usage](#basic-usage)
 - [Installation](#installation)
 - [Dependency Packages](#dependency-packages)
-  - [Initialization and Configuration](#initialization-and-configuration)
-    - [Initialization](#initialization)
-    - [Configuration](#configuration)
+- [Initialization and Configuration](#initialization-and-configuration)
+  - [Initialization](#initialization)
+  - [Configuration](#configuration)
 - [Utilization](#utilization)
-  - [Request functions from server](#request-functions-from-server)
-    - [Passed Arguments: `Request functions from server`](#passed-arguments-request-functions-from-server)
-    - [Returned Object: `Request functions from server`](#returned-object-request-functions-from-server)
-  - [Retrieve functions from collections](#retrieve-functions-from-collections)
-  - [Create collection record function](#create-collection-record-function)
-  - [Remove collection record functions](#remove-collection-record-functions)
-  - [Push collection record function](#push-collection-record-function)
-- [Collection Records: `Properties and Functions`](#collection-records-properties-and-functions)
-- [Root Scope: `Functions`](#root-scope-functions)
+  - [Request Functions from Server](#request-functions-from-server)
+  - [Passed Arguments](#passed-arguments)
+  - [Returned Object](#returned-object)
+  - [Retrieve Functions from Collections](#retrieve-functions-from-collections)
+  - [Create Collection Record Function](#create-collection-record-function)
+  - [Remove Collection Record Functions](#remove-collection-record-functions)
+  - [Push Collection Record Function](#push-collection-record-function)
+- [Collection Records](#collection-records)
+  - [State Properties](#state-properties)
+  - [Getter and Setter Functions](#getter-and-setter-functions)
+  - [Request and Retrieve Functions](#request-and-retrieve-functions)
+- [Root Scope Functions](#root-scope-functions)
 - [Utility Functions](#utility-functions)
   - [Data Retrieval and Manipulation](#data-retrieval-and-manipulation)
   - [Data Validation and Comparison](#data-validation-and-comparison)
@@ -62,7 +66,7 @@
 
 - **Collections:** Stores fetched data in collections for efficient retrieval and management.
 - **Record Management:** Provides methods to create, update, delete, and retrieve individual records within collections.
-- **Reactive Data:** Employs observable patterns (likely through a library like Mobx) to enable real-time updates and dependency tracking.
+- **Reactive Data:** Employs observable patterns (through MobX) to enable real-time updates and dependency tracking.
 - **Asynchronous Operations:** Handles API interactions asynchronously using Promises for non-blocking operations.
 - **Error Handling:** Manages errors gracefully and provides informative feedback.
 - **Configurability:** Allows customization of API endpoints, headers, and request behavior.
@@ -77,6 +81,32 @@
 - **Maintainability:** Promotes code organization and reduces potential inconsistencies.
 
 By centralizing data management and offering flexible access to it, ARM empowers developers to build more efficient, scalable, and maintainable applications.
+
+## Quick Reference
+
+| Method | Description |
+| --- | --- |
+| `query(resource, params, config)` | Fetch multiple records from server |
+| `queryRecord(resource, params, config)` | Fetch a single record from server |
+| `findAll(resource, config)` | Fetch all records from server |
+| `findRecord(resource, id, params, config)` | Fetch a single record by ID from server |
+| `peekAll(collectionName)` | Read all records from local collection |
+| `peekRecord(collectionName, id)` | Read a single record from local collection |
+| `getCollection(collectionName)` | Get all records in a collection |
+| `getAlias(aliasName, fallbackRecords)` | Get records stored under an alias |
+| `getRequestAlias(aliasName)` | Get the request hash object for an alias |
+| `createRecord(collectionName, record, randomId)` | Create a new local record |
+| `pushPayload(collectionName, records)` | Push raw records into a collection |
+| `unloadRecord(record)` | Remove a record from local collection |
+| `clearCollection(collectionName)` | Clear all records from a collection |
+| `setHost(host)` | Set the API base host URL |
+| `setNamespace(namespace)` | Set the API namespace |
+| `setHeadersCommon(key, value)` | Set a common request header |
+| `setPayloadIncludeReference(key)` | Set the included payload reference key |
+| `setGlobal()` | Attach ARM instance to `window.ARM` |
+| `setRootScope(property, value)` | Set a global state value |
+| `getRootScope(property)` | Get a global state value |
+| `ajax(config)` | Make a raw Axios request with ARM config |
 
 ## Basic Usage
 
@@ -143,9 +173,9 @@ npm install mobx-react --save
 
 ## Initialization and Configuration
 
-#### Initialization
+### Initialization
 
-1. Create `arm-config-provider` component that will store the new `ARM` instance.<br/>
+1. Create an `arm-config-provider` component to hold the ARM instance.<br/>
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/arm-config-provider/index.jsx)
 
    ```javascript
@@ -164,9 +194,8 @@ npm install mobx-react --save
    export default ARMConfigProvider
    ```
 
-2. Use `arm-config-provider` component on your application.<br/>
-   For **NextJS** project, `arm-config-provider` component should be imported to a centralized client component providers `application-providers`.<br>
-   It is optional but **recommended** so that, `NextJS` will not throw an error related to `SSR`.<br/>
+2. Use the `arm-config-provider` component in your application.<br/>
+   For **NextJS** projects, wrap it in a centralized client component (`application-providers`) to prevent SSR-related errors.<br/>
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/components/providers/application-providers/index.jsx)
 
    ```javascript
@@ -190,7 +219,7 @@ npm install mobx-react --save
    export default ApplicationProviders
    ```
 
-   Wrap root layout `src/app/layout.jsx` with `application-providers` component.<br/>
+   Wrap the root layout `src/app/layout.jsx` with the `application-providers` component.<br/>
    See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/create-next-app/src/app/layout.js)
 
    ```javascript
@@ -208,7 +237,7 @@ npm install mobx-react --save
    }
    ```
 
-   For **Non NextJS** project, you can wrap root app `src/index.js` with `arm-config-provider` component directly.
+   For **non-NextJS** projects, wrap the root app `src/index.js` directly with `arm-config-provider`.
 
    ```javascript
    import ARMConfigProvider from '@/components/providers/arm-config-provider'
@@ -218,53 +247,52 @@ npm install mobx-react --save
    const root = ReactDOM.createRoot(document.getElementById('root'))
 
    root.render(
-
-    {/* Wrap your application with arm-config-provider component */}
      <ARMConfigProvider>
        <App />
      </ARMConfigProvider>
    )
    ```
 
-#### Configuration
+### Configuration
 
-Configure stored ARM instance from where you stored it, to be able to use it on your application.
+Configure the ARM instance from wherever it is stored before using it in your application.
 
 **Required configurations**
 
 - **setHost(value)**
-  - Set API endpoint host URL.
-  - By default host is set to `window.location.origin`.
+  - Set the API endpoint host URL.
+  - By default, host is set to `window.location.origin`.
   ```javascript
   ARM.setHost('https://www.test-demo.com')
   ```
+
 - **setHeadersCommon(key, value)**
-  - Set common request headers required on calling API endpoints.
+  - Set common request headers required for API calls.
   ```javascript
   ARM.setHeadersCommon('Authorization', `${token}`)
   ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
   ARM.setHeadersCommon('X-Client-Platform', 'Web')
   ```
+
 - **setNamespace(value)**
-  - Set API endpoint namespace.
-  - By default namespace is set to `'api/v1'`.
+  - Set the API endpoint namespace.
+  - By default, namespace is set to `'api/v1'`.
   ```javascript
   ARM.setNamespace('api/v1')
   ```
 
 **Optional configurations**
 
-- **setGlobal(value)**
-  - Set ARM instace to global.
-  - This will make ARM instance available on browser window object via `window.ARM`.
+- **setGlobal()**
+  - Attaches the ARM instance to the global browser `window` object as `window.ARM`.
   ```javascript
   ARM.setGlobal()
   ```
+
 - **setPayloadIncludeReference(value)**
-  - Set payload included reference key.
-  - Payload `included` reference key serve as mapper to determine what collection the data received belongs to.
+  - Set the reference key used to map `included` payload data to their collections.
   ```javascript
-  // Example:
+  // Example payload:
   //  {
   //    data: [...],
   //    included: [ { id: 1, type: 'addresses' } ]
@@ -275,22 +303,18 @@ Configure stored ARM instance from where you stored it, to be able to use it on 
 
 ## Utilization
 
-To be able to use ARM features. You have to import the stored ARM instance from `arm-config-provider` component.
+Import the stored ARM instance from `arm-config-provider` to use ARM features.
 
 ```javascript
-// Import ARM instance from arm-config-provider component
 import { ARM } from '@/components/providers/arm-config-provider'
 ```
 
-#### Request functions from server
-
----
+### Request Functions from Server
 
 - **query(resource, params, config)**
-  - Querying multiple records from the server.
-  - Support query params. - **required**
-  - Support config. - **optional**
+  - Fetch multiple records from the server.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query)
+  - `params` - **required** | `config` - **optional**
   ```javascript
   ARM.query(
     'addresses',
@@ -303,11 +327,11 @@ import { ARM } from '@/components/providers/arm-config-provider'
     },
   )
   ```
+
 - **queryRecord(resource, params, config)**
-  - Querying for a single record from the server.
-  - Support query params. - **required**
-  - Support config. - **optional**
+  - Fetch a single record from the server.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
+  - `params` - **optional** | `config` - **optional**
   ```javascript
   ARM.queryRecord(
     'addresses',
@@ -319,21 +343,21 @@ import { ARM } from '@/components/providers/arm-config-provider'
     { alias: 'customerAddress' },
   )
   ```
+
 - **findAll(resource, config)**
-  - Retrieving multiple records from the server.
-  - Support config. - **optional**
+  - Fetch all records from the server.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-all)
+  - `config` - **optional**
   ```javascript
   ARM.findAll('addresses', {
     alias: 'customerAddresses',
   })
   ```
+
 - **findRecord(resource, id, params, config)**
-  - Retrieving single record from the server.
-  - Params ID by default. - **required**
-  - Support query params. - **required**
-  - Support config. - **optional**
+  - Fetch a single record by ID from the server.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/find-record)
+  - `id` - **required** | `params` - **optional** | `config` - **optional**
   ```javascript
   ARM.findRecord(
     'addresses',
@@ -345,9 +369,9 @@ import { ARM } from '@/components/providers/arm-config-provider'
   )
   ```
 
-#### Passed Arguments: `Request functions from server`
+### Passed Arguments
 
----
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)
 
 ```javascript
 // Example: https://www.test-demo.com/api/v1/addresses/1?include=user
@@ -364,66 +388,60 @@ ARM.findRecord(
 )
 ```
 
-See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/passed-arguments)<br/>
-
 - **resource - String**
   - `https://www.test-demo.com/api/v1/` **addresses** `/2519858?include=user`
-  - Endpoint resource name.
-  - Serve as collection name defined on the collection intialization of ARM instance.
-- **id - Number**
-  - `https://www.test-demo.com/api/v1/addresses/` **2519858**`?include=user`
-  - Endpoint id parameter.
+  - Endpoint resource name. Also serves as the collection name defined during ARM initialization.
+
+- **id - Number | String**
+  - `https://www.test-demo.com/api/v1/addresses/` **2519858** `?include=user`
+  - Endpoint ID parameter. Accepts both numeric and string IDs.
+
 - **params - Object**
   - `https://www.test-demo.com/api/v1/addresses/2519858?` **include=user**
   - Endpoint query string parameters.
+
 - **config - Object**
-  - Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
+  - Contains request configuration options: `skip`, `alias`, `autoResolve`, `ignorePayload`, `override`.
 
   ```javascript
-    {
-      // Skip serve as request go signal to proceed
-      // if Request B has dependency on Request A
-      skip: true,
+  {
+    // Serve as a request go-signal. Useful when Request B depends on Request A.
+    skip: true,
 
-      // Alias serve as identifier for the records obtain from the server.
-      // Can be used anywhere in your application through ARM.getAlias('customerAddress')
-      alias: 'customerAddress' ,
+    // A human-readable identifier for the records returned from the server.
+    // Can be accessed anywhere via ARM.getAlias('customerAddress').
+    alias: 'customerAddress',
 
-      // Auto resolve serve as flag if the request functions will return
-      // 1. Promise Function
-      //  - To handle success and errors on manual resolve) if autoResolve is set to false
-      // 2. Observable/Reactive Data
-      //  - To handle success and errors on auto resolve) if autoResolve is set to true
-      // Note: autoResolve is only available on query, queryRecord, findAll, findRecord functions.
-      // By default autoResolve is set to true.
-      autoResolve: false,
+    // Controls whether the request function returns:
+    //   false - a Promise (manual resolve, gives access to raw response)
+    //   true  - Observable/Reactive data (auto-resolves, default behavior)
+    // Note: only available on query, queryRecord, findAll, findRecord.
+    autoResolve: false,
 
-      // Ignore payload serve as list of keys to be omitted on request payload.
-      ignorePayload: ['attributes.address2', 'attributes.address1'],
+    // List of payload keys to omit from the request body.
+    ignorePayload: ['attributes.address2', 'attributes.address1'],
 
-      // Override serve as request override for the default configuration of axios current request.
-      // Currently support host, namespace, path and headers for the meantime.
-      // Example:
-      // Before override: https://www.test-demo.com/api/v1/users/1
-      // After override: https://www.another-test-demo.com/api/v2/update-users/1
-      override: {
-        host: 'https://www.another-test-demo.com',
-        namespace: 'api/v2',
-        path: `update-users/${user.get('id')}`,
-        headers: {
-          'X-Client-Platform': 'Symbian',
-        }
+    // Override the default Axios request configuration.
+    // Supports host, namespace, path, and headers.
+    // Before: https://www.test-demo.com/api/v1/users/1
+    // After:  https://www.another-test-demo.com/api/v2/update-users/1
+    override: {
+      host: 'https://www.another-test-demo.com',
+      namespace: 'api/v2',
+      path: `update-users/${user.get('id')}`,
+      headers: {
+        'X-Client-Platform': 'Symbian',
       }
     }
+  }
   ```
 
-#### Returned Object: `Request functions from server`
+### Returned Object
 
----
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/returned-object)
 
 ```javascript
-// Returned object data properties are observable
-// It will automatically update once the request is already done
+// All properties are observable and update automatically when the request completes.
 {
   isLoading: true,
   isError: false,
@@ -436,65 +454,60 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 }
 ```
 
-See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/returned-object)<br/>
-
 - **isLoading - Boolean**
   - Current loading state of the request.
-  - By default set to **true**.
-  - Set to **true** once the request is initiated and set to **false** once request is done.
+  - Starts as `true` when the request is initiated, resets to `false` when complete.
+
 - **isError - Boolean**
   - Current error state of the request.
-  - By default set to **false**.
-  - Set to **true** if the request received/encountered an error and set to **false** if none.
+  - Set to `true` if the request encounters an error, `false` otherwise.
+
 - **isNew - Boolean**
-  - Identifier if the request is newly created.
-  - By default set to **true**.
-  - Set to **true** if the request is already initiated once and set to **false** once it is already intiated before.
-    Request functions are built with optimization, it does not repeatedly executing API request.
-    Since it is optimized, it can be **override** using **skip** from request configuration.
-- **data - Array || Object**
-  - Contains the request returned payload.
-  - By default has value of an empty **array** or **object** depending on the request function used.
-- **error - Object || String**
-  - Contains the request returned error.
-  - By default has value of a **null**.
+  - Indicates whether this is the first time the request has been made.
+  - Starts as `true`. Set to `false` on subsequent calls since ARM caches and deduplicates requests by default. Use `skip` in the config to force a re-fetch.
+
+- **data - Array | Object**
+  - Contains the response payload. Defaults to an empty array or object depending on the request function used.
+
+- **error - Object | String**
+  - Contains the error returned by the request. Defaults to `null`.
+
 - **included - Array**
-  - Contains the request returned payload property **included**.
-  - Specifically for **JSON API**.
+  - Contains the `included` property from the response payload (JSON API).
+
 - **meta - Object**
-  - Contains the request returned payload property **meta**.
-  - Specifically for **JSON API**.
+  - Contains the `meta` property from the response payload (JSON API).
+
 - **reload - Function**
-  - Allows for **re-execution** of a request and automatic update of the **request hash object** and relevant **collections**.
+  - Re-executes the original request and automatically updates the request hash and relevant collections.
 
-#### Retrieve functions from collections
-
----
+### Retrieve Functions from Collections
 
 - **peekAll(collectionName)**
-  - Retrieving multiple records from collection.
+  - Read all records from a local collection without triggering an API request.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-all)
   ```javascript
   ARM.peekAll('addresses')
   ```
+
 - **peekRecord(collectionName, collectionRecordId)**
-  - Retrieving single record from collection.
-  - Params ID by default. - **required**
+  - Read a single record from a local collection without triggering an API request.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/peek-record)
   ```javascript
   ARM.peekRecord('addresses', 2519858)
   ```
+
 - **getCollection(collectionName)**
-  - Retrieving all records from collection.
+  - Retrieve all records currently stored in a collection.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
   ```javascript
   ARM.getCollection('addresses')
   ```
-- **getAlias(collectionName, collectionFallbackRecord)**
-  - Retrieving records from aliased request results.
-  - Support collectionFallbackRecord. - **optional**
-  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
 
+- **getAlias(aliasName, fallbackRecords)**
+  - Retrieve records stored under an alias from a previous request.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-alias)
+  - `fallbackRecords` - **optional**
   ```javascript
   const addresses = ARM.getAlias('customerAddresses', [])
 
@@ -508,9 +521,8 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   ```
 
 - **getRequestAlias(aliasName)**
-  - Retrieving the [returned object](#returned-object-request-functions-from-server) from the request functions.
-  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias)
-
+  - Retrieve the full [returned object](#returned-object) (including `isLoading`, `data`, `meta`, etc.) for a previously aliased request.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias/)
   ```javascript
   const addresses = ARM.getRequestAlias('customerAddresses')
 
@@ -523,83 +535,67 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   </ul>
   ```
 
-#### Create collection record function
-
----
+### Create Collection Record Function
 
 - **createRecord(collectionName, collectionRecord, collectionRecordRandomId)**
-  - Create new collection record.
-  - By default collectionRecord params is set to empty object if omitted - **required**
-  - By default collectionRecordRandomId params is set to true - **optional**
+  - Create a new record in a local collection.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/create-collection-record-function/create-record)
-
+  - `collectionRecord` defaults to `{}` - **optional** | `collectionRecordRandomId` defaults to `true` - **optional**
   ```javascript
-  // Usage #1
-  // Can ommit collectionRecord on createRecord initialization
+  // Usage #1 - set attributes after creation
   const newAddress = ARM.createRecord('addresses')
   newAddress.set('attributes.kind', 'school')
   newAddress.set('attributes.label', 'My school')
 
-  // Usage #2
-  // Can ommit collectionRecord on createRecord initialization
+  // Usage #2 - pass initial attributes
   const newAddress = ARM.createRecord('addresses', {
     attributes: { kind: 'school', label: 'My school' },
   })
 
-  // Persist collection record to server.
-  // Will call POST /addresses
+  // Persist the record to the server via POST /addresses
   newAddress.save()
   ```
 
-#### Remove collection record functions
-
----
+### Remove Collection Record Functions
 
 - **unloadRecord(collectionRecord)**
-  - Remove record from collection only.
+  - Remove a record from the local collection without deleting it from the server.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/unload-record)
-
   ```javascript
-  // Collection record to be remove collection.
   const address = ARM.peekRecord('addresses', 2519858)
 
-  // This will remove the record from collection and will not
-  // remove permanently from the server.
+  // Removes the record locally only - does not call the server.
   ARM.unloadRecord(address)
   ```
 
 - **clearCollection(collectionName)**
-  - Clears a specified collection and unloads related records from aliases and request hashes.
+  - Remove all records from a collection and unload them from any related aliases and request hashes.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/remove-collection-records-functions/clear-collection)
   ```javascript
   ARM.clearCollection('addresses')
   ```
 
-#### Push collection record function
-
----
+### Push Collection Record Function
 
 - **pushPayload(collectionName, collectionRecords)**
-  - Push raw collection record/records to respective collections.
+  - Push raw records directly into a collection. Useful when fetching data outside of ARM's standard request functions.
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/push-collection-record-function/push-payload)
   ```javascript
-  // Retrieve raw data with barebone ajax/fetch function.
   ARM.ajax({
     method: 'get',
     url: 'addresses/12345',
   }).then((results) => {
-    // Will add/update collection records.
+    // Adds or updates records in the collection.
     ARM.pushPayload('addresses', results.data.data)
   })
   ```
 
-#### Collection Records: `Properties and Functions`
+## Collection Records
 
----
+Collection records are the individual objects stored inside ARM collections. Each record is automatically decorated with state properties, getter/setter functions, and request functions when it enters a collection.
 
 ```javascript
-// Example response data from API
-// See available properties, getter and  setter functions and request functions below.
+// Example record shape returned from the API
 {
   "id": 2519858,
   "type": "addresses",
@@ -614,369 +610,302 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 }
 ```
 
-- **State Properties**
-  - **isLoading - Boolean**
-    - Current loading state of the record.
-    - By default set to **false**.
-    - Set to **true** once request functions **(save, reload, destroyRecord)** are initiated and set to **false** once done.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
-    ```javascript
-    address.get('isLoading')
-    ```
-  - **isError - Boolean**
-    - Current error state of the record.
-    - By default set to **false**.
-    - Set to **true** once request functions **(save, reload, destroyRecord)** received an error and set to **false** if none.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
-    ```javascript
-    address.get('isError')
-    ```
-  - **isPristine - Boolean**
-    - Current pristine state of the record.
-    - By default set to **true**.
-    - Set to **false** if the record is modified and set to **true** once reverted.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
-    ```javascript
-    address.get('isPristine')
-    ```
-  - **isDirty - Boolean**
-    - Current dirty state of the record.
-    - By default set to **false**.
-    - Set to **true** if the record is modified and set to **false** once reverted.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
-    ```javascript
-    address.get('isDirty')
-    ```
-- **Getter and Setter Functions**
-  - **get(key)**
-    - Single property getter function.
-    - Passed arguments:
-      - **key - String**
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+### State Properties
 
-    ```javascript
-    // Returned value 2519858
-    address.get('id')
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/state-properties)
 
-    // Returned value 'office'
-    address.get('attributes.label')
-    ```
+- **isLoading - Boolean**
+  - Current loading state of the record. Defaults to `false`.
+  - Set to `true` when `save`, `reload`, or `destroyRecord` is initiated; reset to `false` when complete.
+  ```javascript
+  address.get('isLoading')
+  ```
 
-  - **set(key, value)**
-    - Single property setter function.
-    - Passed arguments:
-      - **key - String**
-      - **value - Primitive**
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+- **isError - Boolean**
+  - Current error state of the record. Defaults to `false`.
+  - Set to `true` if `save`, `reload`, or `destroyRecord` receives an error.
+  ```javascript
+  address.get('isError')
+  ```
 
-    ```javascript
-    // Returned value 'office'
-    address.get('attributes.kind')
+- **isPristine - Boolean**
+  - Indicates whether the record has unsaved local changes. Defaults to `true`.
+  - Set to `false` when the record is modified; restored to `true` after a successful save or rollback.
+  ```javascript
+  address.get('isPristine')
+  ```
 
-    // Set property label of attributes
-    address.set('attributes.kind', 'school')
+- **isDirty - Boolean**
+  - The inverse of `isPristine`. Defaults to `false`.
+  - Set to `true` when the record has unsaved local changes.
+  ```javascript
+  address.get('isDirty')
+  ```
 
-    // Returned value 'office'
-    address.get('attributes.kind')
-    ```
+### Getter and Setter Functions
 
-  - **setProperties(value)**
-    - Multiple properties setter function.
-    - Passed arguments:
-      - **value - Object**
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
+See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/getter-setter-functions)
 
-    ```javascript
-    // Returned value 'office'
-    address.get('attributes.kind')
-    // Returned value 'Anabu Hills'
-    address.get('attributes.label')
+- **get(key)**
+  - Read a single property from the record using dot-notation.
+  ```javascript
+  address.get('id')                  // Returns 2519858
+  address.get('attributes.label')    // Returns 'Anabu Hills'
+  ```
 
-    // Set properties label and kind of attributes
-    address.setProperties({
-      attributes: { kind: 'school', label: 'My School' },
-    })
+- **set(key, value)**
+  - Set a single property on the record. Updates `isDirty` and `isPristine` flags automatically.
+  ```javascript
+  address.get('attributes.kind')             // Returns 'office'
+  address.set('attributes.kind', 'school')
+  address.get('attributes.kind')             // Returns 'school'
+  ```
 
-    // Returned value 'school'
-    address.get('attributes.kind')
-    // Returned value 'My School'
-    address.get('attributes.label')
-    ```
+- **setProperties(values)**
+  - Set multiple properties on the record at once.
+  ```javascript
+  address.setProperties({
+    attributes: { kind: 'school', label: 'My School' },
+  })
 
-- **Request and Retrieve Functions**
-  - **save(collectionConfig)**
-    - Persist collection record changes to server.
-    - Create a new record to server only if it doesn't already exist in the database.
-      - Will call **POST** method: `POST /addresses`
-    - Update existing record to server.
-      - Will call **PUT** method: `PUT /addresses/2519858`
-    - Support collectionConfig. - **optional**
-      - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/save)
+  address.get('attributes.kind')    // Returns 'school'
+  address.get('attributes.label')   // Returns 'My School'
+  ```
 
-    ```javascript
-    // Returned promise
-    // Without collectionConfig
-    address.save()
+### Request and Retrieve Functions
 
-    // With collectionConfig
-    address.save({ ignorePayload: ['attributes.address2'] })
-    ```
+- **save(collectionConfig)**
+  - Persist record changes to the server.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/save)
+  - Calls `POST /addresses` for new records, `PUT /addresses/2519858` for existing ones.
+  - `collectionConfig` - **optional** | supports `skip`, `alias`, `autoResolve`, `ignorePayload`, `override`
+  ```javascript
+  address.save()
 
-  - **reload()**
-    - Refresh collection record changes from server.
-      - Will call **GET** method: `GET /addresses/2519858`
-    - Support collectionConfig. - **optional**
-      - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/reload)
+  // With config
+  address.save({ ignorePayload: ['attributes.address2'] })
+  ```
 
-    ```javascript
-    // Returned promise
-    address.reload()
+- **reload()**
+  - Re-fetch the record from the server and update the local copy.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/reload)
+  - Calls `GET /addresses/2519858`.
+  - `collectionConfig` - **optional** | supports `skip`, `alias`, `autoResolve`, `ignorePayload`, `override`
+  ```javascript
+  address.reload()
 
-    // With collectionConfig
-    address.reload({
-      override: {
-        namespace: 'api/v2',
-      },
-    })
-    ```
+  // With config
+  address.reload({
+    override: {
+      namespace: 'api/v2',
+    },
+  })
+  ```
 
-  - **rollbackAttributes()**
-    - Rollback record attributes to their original state without triggering a request.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/rollback-attributes)
+- **rollbackAttributes()**
+  - Revert the record's attributes to their last saved state without making an API request.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/rollback-attributes)
+  ```javascript
+  address.rollbackAttributes()
+  ```
 
-    ```javascript
-    address.rollbackAttributes()
-    ```
+- **destroyRecord(collectionConfig)**
+  - Permanently delete the record from the server and remove it from the local collection.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/destroy-record)
+  - Calls `DELETE /addresses/2519858`.
+  - `collectionConfig` - **optional** | supports `skip`, `alias`, `autoResolve`, `ignorePayload`, `override`
+  ```javascript
+  address.destroyRecord()
 
-  - **destroyRecord(collectionConfig)**
-    - Remove collection record permanently from server.
-      - Will call **GET** method: `DELETE /addresses/2519858`
-    - Support collectionConfig. - **optional**
-      - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/destroy-record)
+  // With config
+  address.destroyRecord({
+    override: {
+      host: 'https://ww7.test-demo.com',
+      namespace: 'api/v2',
+      path: `destroy-addresses/${address.get('id')}`,
+    },
+  })
+  ```
 
-    ```javascript
-    // Returned promise
-    // Without collectionConfig
-    address.destroyRecord()
+- **getCollection(collectionName, collectionConfig)**
+  - Retrieve related records from another collection based on relationship data on the current record.
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/get-collection)
+  - When `async: true`, fetches missing records from the server automatically.
+  - When `async: false`, returns only records already present in the local collection.
 
-    // With collectionConfig
-    address.destroyRecord({
-      override: {
-        host: 'https://ww7.test-demo.com',
-        namespace: 'api/v2',
-        path: `destroy-addresses/${address.get('id')}`,
-      },
-    })
-    ```
+  | Option | Type | Description |
+  | --- | --- | --- |
+  | `referenceKey` | String | Dot-notation path to the relationship data on the record |
+  | `async` | Boolean | Whether to fetch missing related records from the server |
+  | `filterBy` | Object | Filter the returned records by property values |
+  | `sortBy` | Array | Sort criteria in `'property:direction'` format |
+  | `override` | Object | Override the default request config (host, namespace, path, headers) |
 
-  - **getCollection(collectionName, collectionConfig)**
-    - Retrieve records from server automatically if **async** option value is set to true **true** on **collectionConfig**.
-    - Retrieve records that are already loaded on collection if **async** option value is set to **false** on **collectionConfig**.
-    - Passed arguments:
-      - **collectionName - String**
-      - **collectionConfig - Object**
-        - **referenceKey - String**
-          - Collection record property mapping.
-        - **async - Boolean**
-          - Flag for invoking request function on resolving not yet loaded records on collection.
-        - **filterBy - Object**
-          - Filter return collection records based on passed filter properties.
-        - **sortBy - Array**
-          - Sort returned collection records based on passed array of sort criteria.
-        - **config - Object**
-          - Contains request config such as `(skip, alias, autoResolve, ignorePayload, override)` which are currently available.
-    - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/get-collection)
+  ```javascript
+  const { isLoading, data: user } = ARM.findRecord(
+    'users',
+    12980860,
+    {},
+    { alias: 'currentUser' },
+  )
 
-    ```javascript
-    // Get user record from the server but don't preload addresses records.
-    const { isLoading, data: user } = ARM.findRecord(
-      'users',
-      12980860,
-      {},
-      { alias: 'currentUser' },
+  {
+    !isLoading && (
+      <ul>
+        {user
+          .getCollection('addresses', {
+            referenceKey: 'relationships.addresses.data',
+            async: true,
+            sortBy: ['id:desc'],
+            filterBy: {
+              attributes: {
+                label: 'Test',
+              },
+            },
+            override: {
+              namespace: 'api/v2',
+            },
+          })
+          .map((address, index) => (
+            <li key={index}>{address.get('id')}</li>
+          ))}
+      </ul>
     )
-
-    // The getCollection function will populate records from collection
-    // and server depending on passed collectionConfig.
-    {
-      !isLoading && (
-        <ul>
-          {user
-            .getCollection('addresses', {
-              referenceKey: 'relationships.addresses.data',
-              async: true,
-              sortBy: ['id:desc'],
-              filterBy: {
-                attributes: {
-                  label: 'Test',
-                },
-              },
-              override: {
-                namespace: 'api/v2',
-              },
-            })
-            .map((address, index) => (
-              <li key={index}>{address.get('id')}</li>
-            ))}
-        </ul>
-      )
-    }
-    ```
+  }
+  ```
 
 ## Root Scope Functions
 
-The root scope is an object that can be used to store and manage global state. The Root Scope Functions provide a way to manage and access it.
+The root scope is a globally accessible object for storing and sharing state across your application.
 
 - **setRootScope(rootScopeProperty, rootScopeValue)**
-  - Sets a value on the root scope.
-  - Passed arguments:
-    - **rootScopeProperty - String**
-    - **rootScopeValue - Any**
-
+  - Set a value on the root scope.
   ```javascript
-  // Set root scope property 'fullName' to 'John Doe'
   ARM.setRootScope('fullName', 'John Doe')
   ```
 
 - **getRootScope(rootScopeProperty)**
-  - Retrieves a value from the root scope.
-  - Passed arguments:
-    - **rootScopeProperty - String**
+  - Retrieve a value from the root scope.
   ```javascript
-  // Returns value 'John Doe'
-  ARM.getRootScope('fullName')
+  ARM.getRootScope('fullName')  // Returns 'John Doe'
   ```
 
 ## Utility Functions
 
-Collection of utility functions that leverage Lodash for common data manipulation tasks.
-These functions primarily focus on searching, filtering, sorting, and validating data within objects or arrays.
+A collection of utility functions built on Lodash for common data manipulation and validation tasks.
 
-#### Data Retrieval and Manipulation
-
----
+### Data Retrieval and Manipulation
 
 ```javascript
-// Example response data from API
+// Sample data used in examples below
 const addresses = [
   {
     id: 1,
-    attributes: {
-      kind: 'office',
-      label: 'My Office',
-    },
+    attributes: { kind: 'office', label: 'My Office' },
   },
   {
     id: 2,
-    attributes: {
-      kind: 'school',
-      label: 'My School',
-    },
+    attributes: { kind: 'school', label: 'My School' },
   },
   {
     id: 3,
-    attributes: {
-      kind: 'school',
-      label: "My Brother's School",
-    },
+    attributes: { kind: 'school', label: "My Brother's School" },
   },
 ]
 ```
 
 - **findBy(objects, findProperties)**
-  - Finds the first element in the given array of objects that satisfies the provided find properties.
+  - Returns the first element matching the given properties.
   ```javascript
-  // Return record with id 1
   ARM.findBy(addresses, { id: 1 })
+  // Returns the record with id 1
   ```
-- **findIndexBy(objects, findIndexProperties)**
-  - Returns the index of the first element in the given array of objects that satisfies the provided find properties.
-  ```javascript
-  // Return index number of record with id 1
-  ARM.findIndexBy(addresses, {
-    attributes: { kind: 'office' },
-  })
-  ```
-- **filterBy(objects, filterProperties)**
-  - Creates a new array with all elements from the given array of objects that pass the filter test implemented by the provided filter properties.
-  ```javascript
-  // Returns records with ids 2 and 3
-  ARM.filterBy(addresses, {
-    attributes: { kind: 'school' },
-  })
-  ```
-- **uniqBy(objects, uniqByProperty)**
-  - Removes **duplicate** objects from an array based on a unique property.
-  ```javascript
-  // Returns records with ids 1 and 2
-  ARM.uniqBy(addresses, 'attributes.kind')
-  ```
-- **uniq(values)**
-  - Removes **duplicate** values from an array.
-  ```javascript
-  // Returns array with 1,2,3
-  ARM.uniq([1, 2, 2, 3, 3, 3])
-  ```
-- **groupBy(objects, groupByProperty)**
-  - **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property.
-  ```javascript
-  // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]}
-  ARM.groupBy(addresses, 'attributes.kind')
-  ```
-- **mapBy(objects, mapByProperty)**
-  - **Maps** an array of objects, extracting a specific property from each.
 
+- **findIndexBy(objects, findIndexProperties)**
+  - Returns the index of the first element matching the given properties.
   ```javascript
-  // Returns ['office', 'school', 'school']
+  ARM.findIndexBy(addresses, { attributes: { kind: 'office' } })
+  // Returns 0
+  ```
+
+- **filterBy(objects, filterProperties)**
+  - Returns all elements matching the given properties.
+  ```javascript
+  ARM.filterBy(addresses, { attributes: { kind: 'school' } })
+  // Returns records with ids 2 and 3
+  ```
+
+- **uniqBy(objects, uniqByProperty)**
+  - Returns a new array with duplicates removed based on a specific property.
+  ```javascript
+  ARM.uniqBy(addresses, 'attributes.kind')
+  // Returns records with ids 1 and 2
+  ```
+
+- **uniq(values)**
+  - Returns a new array with duplicate primitive values removed.
+  ```javascript
+  ARM.uniq([1, 2, 2, 3, 3, 3])
+  // Returns [1, 2, 3]
+  ```
+
+- **groupBy(objects, groupByProperty)**
+  - Groups objects into arrays keyed by the specified property.
+  ```javascript
+  ARM.groupBy(addresses, 'attributes.kind')
+  // Returns { office: [{ id: 1 }], school: [{ id: 2 }, { id: 3 }] }
+  ```
+
+- **mapBy(objects, mapByProperty)**
+  - Returns a new array containing only the specified property from each object.
+  ```javascript
   ARM.mapBy(addresses, 'attributes.kind')
+  // Returns ['office', 'school', 'school']
   ```
 
 - **firstObject(objects)**
-  - Returns the **first element** from the given array of objects. If the array is empty, it returns **undefined**.
+  - Returns the first element of the array, or `undefined` if empty.
   ```javascript
-  // Return record with id 1
   ARM.firstObject(addresses)
+  // Returns the record with id 1
   ```
+
 - **lastObject(objects)**
-  - Returns the **last element** from the given array of objects. If the array is empty, it returns **undefined**.
+  - Returns the last element of the array, or `undefined` if empty.
   ```javascript
-  // Return record with id 3
   ARM.lastObject(addresses)
+  // Returns the record with id 3
   ```
+
 - **mergeObjects(objects, otherObjects)**
-  - Combines two arrays of objects into one, removing duplicates.
+  - Combines two arrays into one, removing duplicate entries.
   ```javascript
   ARM.mergeObjects(addresses, otherAddresses)
   ```
+
 - **chunkObjects(objects, chunkSize)**
-  - Splits an array of objects into smaller arrays of a given **size**.
+  - Splits an array into smaller arrays of the specified size.
   ```javascript
   ARM.chunkObjects(addresses, 2)
   ```
+
 - **sortBy(objects, sortProperties)**
-  - Sorts the given array of objects by the specified sort properties.
-
+  - Sorts an array by the specified properties and directions.
   ```javascript
-  // Returns records order by ids 1,2,3
-  ARM.sortBy(addresses, ['id:asc'])
-
-  // Returns records order by ids 3,2,1
-  ARM.sortBy(addresses, ['id:desc'])
+  ARM.sortBy(addresses, ['id:asc'])   // Returns records ordered 1, 2, 3
+  ARM.sortBy(addresses, ['id:desc'])  // Returns records ordered 3, 2, 1
   ```
 
 - **sum(objects)**
-  - Sums the values of an array of objects.
+  - Returns the sum of an array of numbers.
   ```javascript
-  // Return 600
   ARM.sum([100, 200, 300])
+  // Returns 600
   ```
+
 - **sumBy(objects, sumByProperty)**
-  - Sums the values of an array of objects, extracting a specific property from each object.
+  - Returns the sum of a specific numeric property across an array of objects.
   ```javascript
-  // Return 600
   ARM.sumBy(
     [
       { id: 1, name: 'Banana', price: 100 },
@@ -985,12 +914,12 @@ const addresses = [
     ],
     'price',
   )
+  // Returns 600
   ```
+
 - **ajax(config)**
-  - Axios instance under the hood with default ARM config.
-  - Config accepts all properties that can be passed on **axios.request** config.
+  - Make a raw Axios request using the ARM base configuration. Accepts all standard `axios.request` config options.
   ```javascript
-  // Return promise
   ARM.ajax({
     method: 'get',
     baseURL: 'https://other-api.test-demo.com',
@@ -1000,66 +929,65 @@ const addresses = [
     .catch((errors) => console.log(errors))
   ```
 
-#### Data Validation and Comparison
+### Data Validation and Comparison
 
 - **isEmpty(value)**
-  - Checks if a value is considered empty **(null, undefined, empty string, empty array, or empty object)**.
+  - Returns `true` if the value is `null`, `undefined`, an empty string, empty array, or empty object.
   ```javascript
-  // Return boolean value
   ARM.isEmpty(value)
   ```
+
 - **isPresent(value)**
-  - Returns the opposite of isEmpty.
+  - Returns the opposite of `isEmpty`.
   ```javascript
-  // Return boolean value
   ARM.isPresent(value)
   ```
+
 - **isEqual(value, other)**
-  - Performs a deep comparison between two values to determine if they are equal.
+  - Performs a deep comparison between two values.
   ```javascript
-  // Return boolean value
   ARM.isEqual(value, other)
   ```
+
 - **isNumber(value)**
-  - Checks if a value is a **number**.
+  - Returns `true` if the value is a number.
   ```javascript
-  // Return boolean value
   ARM.isNumber(value)
   ```
+
 - **isNil(value)**
-  - Checks if a value is **null** or **undefined**.
+  - Returns `true` if the value is `null` or `undefined`.
   ```javascript
-  // Return boolean value
   ARM.isNil(value)
   ```
+
 - **isNull(value)**
-  - Checks if a value is **null**.
+  - Returns `true` if the value is `null`.
   ```javascript
-  // Return boolean value
   ARM.isNull(value)
   ```
+
 - **isGte(value, other)**
-  - Checks if the first value is **greater than or equal** to the second value.
+  - Returns `true` if `value` is greater than or equal to `other`.
   ```javascript
-  // Return boolean value
   ARM.isGte(value, other)
   ```
+
 - **isGt(value, other)**
-  - Checks if the first value is **greater than** the second value.
+  - Returns `true` if `value` is greater than `other`.
   ```javascript
-  // Return boolean value
   ARM.isGt(value, other)
   ```
+
 - **isLte(value, other)**
-  - Checks if the first value is **less than or equal** to the second value.
+  - Returns `true` if `value` is less than or equal to `other`.
   ```javascript
-  // Return boolean value
   ARM.isLte(value, other)
   ```
+
 - **isLt(value, other)**
-  - Checks if the first value is **less than** the second value.
+  - Returns `true` if `value` is less than `other`.
   ```javascript
-  // Return boolean value
   ARM.isLt(value, other)
   ```
 
