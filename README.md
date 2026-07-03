@@ -305,7 +305,7 @@ import { ARM } from '@/components/providers/arm-config-provider'
   ```
 - **queryRecord(resource, params, config)**
   - Querying for a single record from the server.
-  - Support query params. - **required**
+  - Support query params. - **optional**
   - Support config. - **optional**
   - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/request-functions-from-server/query-record)
   ```javascript
@@ -370,9 +370,9 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   - `https://www.test-demo.com/api/v1/` **addresses** `/2519858?include=user`
   - Endpoint resource name.
   - Serve as collection name defined on the collection intialization of ARM instance.
-- **id - Number**
+- **id - Number | String**
   - `https://www.test-demo.com/api/v1/addresses/` **2519858**`?include=user`
-  - Endpoint id parameter.
+  - Endpoint id parameter. Accepts both numeric and string IDs.
 - **params - Object**
   - `https://www.test-demo.com/api/v1/addresses/2519858?` **include=user**
   - Endpoint query string parameters.
@@ -490,10 +490,10 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
   ```javascript
   ARM.getCollection('addresses')
   ```
-- **getAlias(collectionName, collectionFallbackRecord)**
+- **getAlias(aliasName, fallbackRecords)**
   - Retrieving records from aliased request results.
-  - Support collectionFallbackRecord. - **optional**
-  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-collection)
+  - Support fallbackRecords. - **optional**
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-alias)
 
   ```javascript
   const addresses = ARM.getAlias('customerAddresses', [])
@@ -509,7 +509,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
 - **getRequestAlias(aliasName)**
   - Retrieving the [returned object](#returned-object-request-functions-from-server) from the request functions.
-  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias)
+  - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/retrieve-functions-from-collections/get-request-alias/)
 
   ```javascript
   const addresses = ARM.getRequestAlias('customerAddresses')
@@ -752,7 +752,7 @@ See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/m
 
   - **destroyRecord(collectionConfig)**
     - Remove collection record permanently from server.
-      - Will call **GET** method: `DELETE /addresses/2519858`
+      - Will call **DELETE** method: `DELETE /addresses/2519858`
     - Support collectionConfig. - **optional**
       - Available collectionConfig `(skip, alias, autoResolve, ignorePayload, override)`
     - See example [here](https://github.com/michaeljymsgutierrez/arm-js-library/tree/main/apps/create-next-app/src/app/demo/collection-records/request-retrieve-functions/destroy-record)
@@ -921,7 +921,7 @@ const addresses = [
   ARM.uniq([1, 2, 2, 3, 3, 3])
   ```
 - **groupBy(objects, groupByProperty)**
-  - **Incorrectly** uses **uniqBy** instead of grouping objects by the specified property.
+  - Groups objects into arrays keyed by the specified property.
   ```javascript
   // Returns { school: [{ id: 2 }, { id: 3 }], office: [{ id: 1 }]}
   ARM.groupBy(addresses, 'attributes.kind')
