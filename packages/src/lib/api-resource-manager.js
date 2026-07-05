@@ -2315,8 +2315,8 @@ export default class ApiResourceManager {
   /**
    * Returns a new array with duplicate primitive values removed.
    *
-   * @param {*[]} values - The source array of primitive values.
-   * @returns {*[]} Array with duplicates removed.
+   * @param {Array.<*>} values - The source array of primitive values.
+   * @returns {Array.<*>} Array with duplicates removed.
    *
    * @example
    * ARM.uniq([1, 2, 2, 3]) // [1, 2, 3]
@@ -2346,7 +2346,7 @@ export default class ApiResourceManager {
    *
    * @param {Object[]} objects       - The array to map over.
    * @param {string}   mapByProperty - Dot-notation path to the property to extract.
-   * @returns {*[]} A new array of the extracted values.
+   * @returns {Array.<*>} A new array of the extracted values.
    *
    * @example
    * const ids = ARM.mapBy(addresses, 'id')
