@@ -219,58 +219,60 @@ declare module "arm-js-library" {
          */
         private _unloadFromAliases;
         /**
-         * Unloads a record from the collection, request hashes, and aliases.
+         * Removes a record from all local data stores: its collection, any aliases, and any
+         * request hashes that reference it.
          *
-         * This method removes a `currentRecord` from all relevant data stores
-         * within the `ApiResourceManager`:
-         *  - The main collection where the record belongs.
-         *  - Any request hashes where the record might be present.
-         *  - Any aliases that refer to the record.
+         * This is called automatically after a successful `destroyRecord`. You can also call
+         * it manually to remove a record from local state without hitting the server.
          *
-         * @param {Object} currentRecord - The record to be unloaded.
+         * @param {CollectionRecord} currentRecord - The record to remove.
+         *
+         * @example
+         * const record = ARM.peekRecord('addresses', 123)
+         * ARM.unloadRecord(record)
+         * // record is now gone from the collection and any aliases/request hashes
          */
-        unloadRecord(currentRecord: any): void;
+        unloadRecord(currentRecord: CollectionRecord): void;
         /**
          * Saves a record to the server.
          *
-         * This method saves the `currentRecord` to the server by making an API
-         * request. It determines whether to use a PUT (update) or POST (create)
-         * request based on the validity of the record's `id`. The `collectionConfig`
-         * parameter can be used to provide additional configuration for the
-         * request.
+         * Determines the HTTP method based on the record's `id`:
+         * - **POST** when `id` is a UUID (i.e. a record created locally via `createRecord` that
+         *   has never been persisted). After a successful POST, the temporary local record is
+         *   unloaded and replaced with the server response.
+         * - **PUT** when `id` is any non-UUID value (numeric or string) - meaning the record
+         *   already exists on the server.
          *
          * @private
-         * @param {Object} currentRecord - The record to be saved.
-         * @param {Object} [collectionConfig={}] - Optional configuration for the
-         *                                        save request.
-         * @returns {Promise} A Promise that resolves when the save is successful
-         *                    or rejects with an error.
+         * @param {CollectionRecord} currentRecord    - The record to be saved.
+         * @param {RequestConfig}    [collectionConfig={}] - Optional request configuration.
+         * @returns {Promise<CollectionRecord>} Resolves with the updated record on success.
          */
         private _saveRecord;
         /**
          * Deletes a record from the server.
          *
-         * This method deletes the `currentRecord` from the server by making
-         * a DELETE API request. The `collectionConfig` parameter can be used
-         * to provide additional configuration for the request.
+         * Sends a DELETE request using the record's `collectionName` and `id`. On success,
+         * the record is automatically unloaded from the local collection, aliases, and
+         * request hashes.
          *
          * @private
-         * @param {Object} currentRecord - The record to be deleted.
-         * @param {Object} [collectionConfig={}] - Optional configuration for the
-         *                                        delete request.
-         * @returns {Promise} A Promise that resolves when the deletion is
-         *                    successful or rejects with an error.
+         * @param {CollectionRecord} currentRecord    - The record to delete.
+         * @param {RequestConfig}    [collectionConfig={}] - Optional request configuration.
+         * @returns {Promise<CollectionRecord>} Resolves with the server response record on success.
          */
         private _deleteRecord;
         /**
          * Reloads a record from the server.
          *
-         * Fetches the latest data for the specified record and updates the local copy.
+         * Sends a GET request using the record's `collectionName` and `id`, then merges the
+         * server response back into the local record. A unique `skipId` is added automatically
+         * so the cache is always bypassed and the latest data is fetched.
          *
          * @private
-         * @param {Object} currentRecord - The record to reload.
-         * @param {Object} [collectionConfig={}] - Optional configuration for the collection.
-         * @returns {Promise<Object>} A Promise resolving with the updated record or rejecting with an error.
+         * @param {CollectionRecord} currentRecord    - The record to reload.
+         * @param {RequestConfig}    [collectionConfig={}] - Optional request configuration.
+         * @returns {Promise<CollectionRecord>} Resolves with the refreshed record on success.
          */
         private _reloadRecord;
         /**
@@ -310,14 +312,17 @@ declare module "arm-js-library" {
         /**
          * Injects action methods into a collection record.
          *
-         * This method decorates a `collectionRecord` with predefined action methods,
-         * enabling convenient interactions with the record, including:
-         * - Property access and modification
-         * - Persistence operations (save, delete, reload)
-         * - Retrieval of related collections
+         * Decorates `collectionRecord` with the full record-level API defined in {@link CollectionRecord}:
+         * - `get(key)` / `set(key, value)` / `setProperties(values)` - reactive property access
+         * - `rollbackAttributes()` - revert unsaved changes
+         * - `save(config)` - POST (new) or PUT (existing)
+         * - `reload(config)` - re-fetch from server
+         * - `destroyRecord(config)` - DELETE and unload
+         * - `getCollection(collectionName, config)` - resolve related records from a local collection
+         * - `getARMContext()` - returns the ARM instance that owns this record
          *
          * @private
-         * @param {Object} collectionRecord - The collection record to inject actions into.
+         * @param {Object} collectionRecord - The collection record to decorate.
          */
         private _injectCollectionActions;
         /**
@@ -432,23 +437,28 @@ declare module "arm-js-library" {
          */
         private _pushPayload;
         /**
-         * Pushes records to a collection, aliases, and request hashes.
+         * Injects ARM reference keys into raw record objects and pushes them into the named collection.
          *
-         * This method orchestrates the process of adding or updating records
-         * in various data stores within the `ApiResourceManager`. It takes a
-         * `collectionName` and `collectionRecords` (which can be an array or
-         * a single object) and performs the following actions:
+         * Unlike the internal `_pushPayload`, this public method first stamps each record with ARM's
+         * internal metadata (`hashId`, `collectionName`, `isLoading`, `isError`, `isPristine`,
+         * `isDirty`, `originalRecord`) before pushing. Use this to load records into a collection
+         * from sources other than an API request (e.g. server-side props, local fixtures).
          *
-         * 1. Checks if the specified collection exists.
-         * 2. Pushes the records to the collection using `_pushToCollection`.
-         * 3. Updates any relevant aliases using `_pushToAliases`.
-         * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
+         * @param {string}         collectionName    - The collection to push records into.
+         * @param {Object|Object[]} collectionRecords - A single record object or an array of records.
+         * @throws {Error} If `collectionName` was not registered during ARM initialization.
          *
-         * @param {string} collectionName - The name of the collection.
-         * @param {Array|Object} collectionRecords - The records to be pushed.
-         * @returns {Array|Object} The updated collection records.
+         * @example
+         * ARM.pushPayload('addresses', [
+         *   { id: 1, type: 'addresses', attributes: { address1: '123 Main St' } },
+         *   { id: 2, type: 'addresses', attributes: { address1: '456 Oak Ave' } },
+         * ])
+         *
+         * @example
+         * // Single record
+         * ARM.pushPayload('addresses', { id: 'ABC-001', type: 'addresses', attributes: { address1: 'HQ' } })
          */
-        pushPayload(collectionName: string, collectionRecords: any[] | any): any[] | any;
+        pushPayload(collectionName: string, collectionRecords: any | any[]): void;
         /**
          * Caches a request/response pair in the internal hash store.
          * * Generates a unique key based on the request and performs one of two actions:
@@ -464,77 +474,83 @@ declare module "arm-js-library" {
          */
         private _pushRequestHash;
         /**
-         * Sets the host URL for the client and initializes the Axios configuration.
+         * Sets the API base host URL and updates the Axios `baseURL` immediately.
          *
-         * This method sets the `host` property of the `ApiResourceManager` instance
-         * to the provided `host` URL. It then calls the `_initializeAxiosConfig`
-         * method to update the Axios configuration with the new host, ensuring
-         * that subsequent API requests use the correct base URL.
+         * @param {string} host - The base URL of the API server (no trailing slash).
          *
-         * @param {string} host - The base URL of the API server.
+         * @example
+         * ARM.setHost('https://api.example.com')
          */
         setHost(host: string): void;
         /**
-         * Sets the namespace for the client.
+         * Sets the API namespace used as the path prefix in every request URL.
          *
-         * This method sets the `namespace` property of the `ApiResourceManager`
-         * instance to the provided `namespace`. The namespace is typically used
-         * as a path prefix in the base URL for API requests, allowing you to
-         * version your API or organize it into different sections. For example,
-         * a namespace of "api/v2" would result in a base URL like
-         * "https://example.com/api/v2".
+         * Combined with `host`, this forms the Axios `baseURL`: `{host}/{namespace}`.
+         * Defaults to `'api/v1'`.
          *
-         * @param {string} namespace - The namespace for API requests.
+         * @param {string} namespace - The namespace (e.g. `'api/v2'`).
+         *
+         * @example
+         * ARM.setNamespace('api/v2')
+         * // All subsequent requests go to https://api.example.com/api/v2/...
          */
         setNamespace(namespace: string): void;
         /**
-         * Sets a common header for all Axios requests.
+         * Sets a header that is sent on every Axios request made by ARM.
          *
-         * This method sets a common header that will be included in all
-         * Axios requests made by the `ApiResourceManager`. The `key` parameter
-         * specifies the header name, and the `value` parameter specifies the
-         * header value.
+         * @param {string}                key   - Header name (e.g. `'Authorization'`, `'Content-Type'`).
+         * @param {string|number|boolean} value - Header value.
          *
-         * @param {string} key - The header key (e.g., 'Authorization', 'Content-Type').
-         * @param {string|number|boolean} value - The header value.
+         * @example
+         * ARM.setHeadersCommon('Authorization', `Bearer ${token}`)
+         * ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+         * ARM.setHeadersCommon('X-Client-Platform', 'Web')
          */
         setHeadersCommon(key: string, value: string | number | boolean): void;
         /**
-         * Sets the reference key used for included data in request payloads.
+         * Sets the key ARM reads from each `included` item to determine which collection it belongs to.
          *
-         * This method sets the `payloadIncludedReference` property of the
-         * `ApiResourceManager` instance. This property determines the key used
-         * to identify the type of included data in API request payloads.
-         * For example, if the payload includes related resources, this key
-         * might be used to specify the type of each included resource.
+         * Defaults to `'type'`, matching the JSON:API convention where `included[].type` names
+         * the resource type. Override this if your API uses a different field name.
          *
-         * @param {string} key - The new reference key for included data.
+         * @param {string} key - The property name to read from each included record (default: `'type'`).
+         *
+         * @example
+         * // JSON:API default - included items have a `type` field
+         * ARM.setPayloadIncludeReference('type')
+         *
+         * @example
+         * // Custom API that uses `resource_type` instead
+         * ARM.setPayloadIncludeReference('resource_type')
          */
         setPayloadIncludeReference(key: string): void;
         /**
-         * Makes the instance accessible globally in a browser environment.
+         * Attaches this ARM instance to `window.ARM` in browser environments.
          *
-         * This method attaches the `ApiResourceManager` instance to the `window`
-         * object in a browser environment, making it globally accessible as
-         * `window.ARM`. The instance is frozen using `Object.freeze()` to prevent
-         * accidental modifications.
+         * The instance is frozen with `Object.freeze()` to prevent accidental mutation.
+         * This is a convenience for debugging and for accessing ARM from outside a React
+         * component tree. No-op in non-browser (SSR) environments.
          *
-         * Caution: This method should be used with care as it modifies the
-         * global scope and could potentially lead to naming conflicts.
-         *
+         * @example
+         * ARM.setGlobal()
+         * // Now accessible anywhere in the browser as window.ARM
          */
         setGlobal(): void;
         /**
-         * Retrieves a collection by its name.
+         * Returns all records in a collection as a MobX observable array.
          *
-         * This method retrieves the collection with the specified `collectionName`
-         * from the `collections` object of the `ApiResourceManager`. If the
-         * collection does not exist, it returns an empty observable array.
+         * Returns an empty observable array if the collection has no records yet.
+         * Unlike `peekAll`, this always returns an observable so components can
+         * react to future changes.
          *
-         * @param {string} collectionName - The name of the collection to retrieve.
-         * @returns {Array} The collection data as an observable array.
+         * @param {string} collectionName - The registered collection name.
+         * @returns {CollectionRecord[]} Observable array of all records in the collection.
+         *
+         * @example
+         * const addresses = ARM.getCollection('addresses')
+         * // addresses is a live observable array - updates when records are added/removed
          */
-        getCollection(collectionName: string): any[];
+        getCollection(collectionName: string): CollectionRecord[];
         /**
          * Unloads a collection by resetting it to an empty array.
          *
@@ -546,65 +562,84 @@ declare module "arm-js-library" {
          */
         private _unloadCollection;
         /**
-         * Clears the contents of a specified collection and unloads related data.
+         * Removes all records from a collection and cleans up any references to those
+         * records in aliases and request hashes.
          *
-         * This method removes all records from the collection with the given
-         * `collectionName` in the `collections` object of the `ApiResourceManager`.
-         * It also unloads the records from aliases and request hashes.
+         * @param {string} collectionName - The registered collection name to clear.
          *
-         * @param {string} collectionName - The name of the collection to clear.
+         * @example
+         * ARM.clearCollection('addresses')
+         * // All address records are removed from local state
          */
         clearCollection(collectionName: string): void;
         /**
-         * Retrieves an alias by its name, with optional fallback records.
+         * Returns the records stored under an alias, or `fallbackRecords` if the alias is not yet set.
          *
-         * This method retrieves the alias with the specified `aliasName` from
-         * the `aliases` object of the `ApiResourceManager`. If the alias does
-         * not exist, it returns the provided `fallbackRecords` (if any).
+         * Aliases are populated when a request is made with `{ alias: 'myAlias' }` in the config.
+         * If `fallbackRecords` is a plain object, ARM injects the record-level action methods into
+         * it so it can be used as a placeholder record before the real data arrives.
          *
-         * If `fallbackRecords` is a plain object, the method injects collection
-         * actions into it using `_injectCollectionActions` before returning it.
+         * @param {string}           aliasName       - The alias name to look up.
+         * @param {Object|Object[]}  [fallbackRecords] - Returned as an observable if the alias is empty.
+         * @returns {CollectionRecord|CollectionRecord[]} The aliased records or the fallback.
          *
-         * @param {string} aliasName - The name of the alias to retrieve.
-         * @param {Array|Object} [fallbackRecords] - Optional fallback records
-         *                                           to return if the alias
-         *                                           is not found.
-         * @returns {Array|Object} The alias data or the fallback records.
+         * @example
+         * // Populate the alias via a request
+         * ARM.findRecord('addresses', 123, null, { alias: 'currentAddress' })
+         *
+         * // Read it back (returns fallback object until the request resolves)
+         * const address = ARM.getAlias('currentAddress', {})
+         *
+         * @example
+         * // Array alias
+         * ARM.findAll('addresses', { alias: 'allAddresses' })
+         * const addresses = ARM.getAlias('allAddresses', [])
          */
-        getAlias(aliasName: string, fallbackRecords?: any[] | any): any[] | any;
+        getAlias(aliasName: string, fallbackRecords?: any | any[]): CollectionRecord | CollectionRecord[];
         /**
-         * Retrieves the request data by resolving a readable alias to its latest request hash.
+         * Returns the request hash object for a named alias.
          *
-         * The `requestAliases` property acts as a reference map, linking a human-readable
-         * alias to the hash of the most recent request. This method performs a lookup
-         * on that hash to return the actual request data.
+         * The request hash contains the full request state (`isLoading`, `isError`, `data`,
+         * `error`, `included`, `meta`, and a `reload()` method) for the most recent request
+         * that used the given `alias`. Returns `null` if no request has used that alias yet.
          *
-         * @param {string} aliasName - The readable alias name to resolve.
-         * @returns {Object|null} The request data object if found; otherwise, null.
+         * @param {string} aliasName - The alias name to resolve.
+         * @returns {Object|null} The request hash object, or `null` if not found.
+         *
+         * @example
+         * ARM.findAll('addresses', { alias: 'allAddresses' })
+         *
+         * const requestState = ARM.getRequestAlias('allAddresses')
+         * console.log(requestState.isLoading) // true while fetching
+         * console.log(requestState.meta)      // pagination metadata, etc.
+         * requestState.reload()               // re-trigger the original request
          */
         getRequestAlias(aliasName: string): any | null;
         /**
-         * Creates a new record in a specified collection.
+         * Creates a new local record in the named collection without making a network request.
          *
-         * This method creates a new record in the collection with the given
-         * `collectionName`. The `collectionRecord` parameter can be used to
-         * provide initial data for the record. If `collectionRecordRandomId`
-         * is true (default), a unique ID is generated for the record using
-         * `uuidv1()`. Otherwise, a NIL UUID is used.
+         * The record is pushed into the collection immediately as an observable object with
+         * the full ARM record API injected (`get`, `set`, `save`, `reload`, etc.).
          *
-         * The method injects necessary reference keys and actions into the
-         * record using `_injectCollectionReferenceKeys` and
-         * `_injectCollectionActions`.
+         * By default, ARM assigns a UUID v1 as the record's `id`. This UUID signals to
+         * `record.save()` that the record is new and should be sent as a POST request.
+         * Pass `collectionRecordRandomId = false` to assign the nil UUID instead (useful
+         * when you need a known placeholder ID).
          *
-         * @param {string} collectionName - The name of the collection to create
-         *                                 the record in.
-         * @param {Object} [collectionRecord={}] - Optional initial data for the
-         *                                        record.
-         * @param {boolean} [collectionRecordRandomId=true] - Whether to generate
-         *                                                    a random ID.
-         * @returns {Object} The created record.
+         * @param {string}  collectionName           - The registered collection to create the record in.
+         * @param {Object}  [collectionRecord={}]    - Initial attribute data for the record.
+         * @param {boolean} [collectionRecordRandomId=true] - `true` to assign a random UUID; `false` for nil UUID.
+         * @returns {CollectionRecord} The newly created observable record.
+         *
+         * @example
+         * const newAddress = ARM.createRecord('addresses', {
+         *   attributes: { address1: '123 Main St', kind: 'home' },
+         * })
+         *
+         * // Persist to the server (sends POST /addresses)
+         * await newAddress.save()
          */
-        createRecord(collectionName: string, collectionRecord?: any, collectionRecordRandomId?: boolean): any;
+        createRecord(collectionName: string, collectionRecord?: any, collectionRecordRandomId?: boolean): CollectionRecord;
         /**
          * Reloads a request by updating its skip ID and re-executing the request.
          *
@@ -727,318 +762,454 @@ declare module "arm-js-library" {
             };
         }, requestOptions: any): void;
         /**
-         * Queries a resource with specified parameters and configuration.
+         * Fetches multiple records from the server (`GET /{resource}`).
          *
-         * This method sends a GET request to the specified `resource` with the
-         * given `params` (query parameters) and `config` (request configuration).
-         * It uses the `_request` method to handle the API request and the
-         * `_resolveRequest` method to determine how to resolve the request
-         * (either with cached data or the raw Axios Promise).
+         * By default returns a reactive request hash object immediately (before the request
+         * resolves) so it can be bound directly in a component. Set `config.autoResolve: false`
+         * to receive a Promise instead.
          *
-         * @param {string} resource - The name of the API resource to query.
-         * @param {Object} [params={}] - Optional query parameters for the request.
-         * @param {Object} [config={}] - Optional configuration for the request.
-         * @returns {Object|Promise} The resolved value based on the `autoResolve`
-         *                          configuration in `config`.
+         * @param {string}        resource    - The resource name / collection name (e.g. `'addresses'`).
+         * @param {Object}        [params={}] - Query parameters appended to the request URL.
+         * @param {RequestConfig} [config={}] - Request configuration options.
+         * @returns {Object|Promise} Reactive request hash (default) or Axios Promise when `autoResolve: false`.
+         * @throws {Error} If `resource` is not a registered collection.
+         *
+         * @example
+         * // Reactive (default) - bind directly in a component
+         * const result = ARM.query('addresses', { 'filter[kind]': 'home' }, { alias: 'homeAddresses' })
+         * result.isLoading // true while fetching
+         * result.data      // array of CollectionRecord
+         *
+         * @example
+         * // Awaitable - full control over loading state
+         * const result = await ARM.query('addresses', { include: 'users' }, { autoResolve: false })
          */
-        query(resource: string, params?: any, config?: any): any | Promise<any>;
+        query(resource: string, params?: any, config?: RequestConfig): any | Promise<any>;
         /**
-         * Queries a single record from a specified resource.
+         * Fetches a single record from the server without an ID (`GET /{resource}`).
          *
-         * This method sends a GET request to the specified `resource` to
-         * retrieve a single record. The `params` (query parameters) and
-         * `config` (request configuration) can be used to customize the
-         * request. It uses the `_request` method to handle the API request
-         * and the `_resolveRequest` method to determine how to resolve the
-         * request (either with cached data or the raw Axios Promise).
+         * Unlike `findRecord`, no ID is appended to the URL - the server is expected to
+         * return a single object (e.g. the current user's profile, a singleton resource).
          *
-         * @param {string} resource - The name of the API resource to query.
-         * @param {Object} [params={}] - Optional query parameters for the request.
-         * @param {Object} [config={}] - Optional configuration for the request.
-         * @returns {Object|Promise} The resolved value based on the `autoResolve`
-         *                          configuration in `config`.
+         * @param {string}        resource    - The resource name / collection name.
+         * @param {Object}        [params={}] - Query parameters appended to the request URL.
+         * @param {RequestConfig} [config={}] - Request configuration options.
+         * @returns {Object|Promise} Reactive request hash (default) or Axios Promise when `autoResolve: false`.
+         * @throws {Error} If `resource` is not a registered collection.
+         *
+         * @example
+         * // Reactive
+         * const result = ARM.queryRecord('addresses', { 'filter[id]': 123 }, { alias: 'currentAddress' })
+         * result.isLoading // true while fetching
+         * result.data      // CollectionRecord once resolved
+         *
+         * @example
+         * // Awaitable
+         * await ARM.queryRecord('profile', {}, { autoResolve: false })
          */
-        queryRecord(resource: string, params?: any, config?: any): any | Promise<any>;
+        queryRecord(resource: string, params?: any, config?: RequestConfig): any | Promise<any>;
         /**
-         * Fetches a collection of records from a specified resource.
+         * Fetches all records from the server without query parameters (`GET /{resource}`).
          *
-         * This method sends a GET request to the specified `resource` to
-         * retrieve all records. The `config` (request configuration) can be
-         * used to customize the request. It uses the `_request` method to
-         * handle the API request and the `_resolveRequest` method to determine
-         * how to resolve the request (either with cached data or the raw
-         * Axios Promise).
+         * Equivalent to `query(resource, {}, config)` but signals intent more clearly when
+         * no filtering is needed.
          *
-         * @param {string} resource - The name of the API resource to query.
-         * @param {Object} [config={}] - Optional configuration for the request.
-         * @returns {Object|Promise} The resolved value based on the `autoResolve`
-         *                          configuration in `config`.
+         * @param {string}        resource    - The resource name / collection name.
+         * @param {RequestConfig} [config={}] - Request configuration options.
+         * @returns {Object|Promise} Reactive request hash (default) or Axios Promise when `autoResolve: false`.
+         * @throws {Error} If `resource` is not a registered collection.
+         *
+         * @example
+         * // Reactive
+         * const result = ARM.findAll('addresses', { alias: 'allAddresses' })
+         * result.isLoading // true while fetching
+         * result.data      // CollectionRecord[] once resolved
+         *
+         * @example
+         * // Awaitable
+         * await ARM.findAll('addresses', { autoResolve: false })
          */
-        findAll(resource: string, config?: any): any | Promise<any>;
+        findAll(resource: string, config?: RequestConfig): any | Promise<any>;
         /**
-         * Finds a specific record by ID from a given resource.
+         * Fetches a single record by ID from the server (`GET /{resource}/{id}`).
          *
-         * This method sends a GET request to the specified `resource` to
-         * retrieve a single record with the given `id`. The `params`
-         * (query parameters) and `config` (request configuration) can be used
-         * to customize the request. It uses the `_request` method to handle
-         * the API request and the `_resolveRequest` method to determine how
-         * to resolve the request (either with cached data or the raw Axios
-         * Promise).
+         * Accepts both numeric and string IDs (string ID support added in v2.9.0).
          *
-         * @param {string} resource - The name of the API resource to query.
-         * @param {number|string} id - The ID of the record to find.
-         * @param {Object} [params={}] - Optional query parameters for the request.
-         * @param {Object} [config={}] - Optional configuration for the request.
-         * @returns {Object|Promise} The resolved value based on the `autoResolve`
-         *                          configuration in `config`.
+         * @param {string}        resource    - The resource name / collection name.
+         * @param {number|string} id          - The record ID to fetch.
+         * @param {Object}        [params={}] - Query parameters appended to the request URL.
+         * @param {RequestConfig} [config={}] - Request configuration options.
+         * @returns {Object|Promise} Reactive request hash (default) or Axios Promise when `autoResolve: false`.
+         * @throws {Error} If `resource` is not a registered collection.
+         *
+         * @example
+         * // Reactive - numeric ID
+         * const result = ARM.findRecord('addresses', 123, null, { alias: 'currentAddress' })
+         * result.isLoading // true while fetching
+         * result.data      // CollectionRecord once resolved
+         *
+         * @example
+         * // String ID
+         * ARM.findRecord('addresses', 'JO-26181S4VPU65', null, { alias: 'currentAddress' })
+         *
+         * @example
+         * // Awaitable with query params
+         * await ARM.findRecord('addresses', 123, { include: 'user' }, { autoResolve: false })
          */
-        findRecord(resource: string, id: number | string, params?: any, config?: any): any | Promise<any>;
+        findRecord(resource: string, id: number | string, params?: any, config?: RequestConfig): any | Promise<any>;
         /**
-         * Peeks at all records in a specified collection without triggering
-         * a request.
+         * Returns all locally cached records in a collection without making a network request.
          *
-         * This method retrieves all records from the collection with the
-         * specified `collectionName` from the `collections` object of the
-         * `ApiResourceManager`. It does not make an API request to fetch
-         * the data; it only returns the locally stored records.
+         * @param {string} collectionName - The registered collection name.
+         * @returns {CollectionRecord[]|undefined} The array of cached records, or `undefined`
+         *   if the collection has not been initialized.
          *
-         * @param {string} collectionName - The name of the collection to peek at.
-         * @returns {Array|undefined} The collection records, or undefined if
-         *                           the collection is not found.
+         * @example
+         * const addresses = ARM.peekAll('addresses')
+         * // Returns whatever is currently in the local collection (may be empty)
          */
-        peekAll(collectionName: string): any[] | undefined;
+        peekAll(collectionName: string): CollectionRecord[] | undefined;
         /**
-         * Peeks at a specific record in a collection without triggering a request.
+         * Returns a single locally cached record by ID without making a network request.
          *
-         * This method retrieves a specific record from the collection with the
-         * given `collectionName` and `collectionRecordId` from the `collections`
-         * object of the `ApiResourceManager`. It does not make an API request;
-         * it only returns the locally stored record if found.
+         * Accepts both numeric and string IDs (string ID support added in v2.9.0).
          *
-         * @param {string} collectionName - The name of the collection.
-         * @param {number|string} collectionRecordId - The ID of the record to find.
-         * @returns {Object|undefined} The found record, or undefined if not found
-         *                             in the local collection.
+         * @param {string}        collectionName    - The registered collection name.
+         * @param {number|string} collectionRecordId - The record ID to look up.
+         * @returns {CollectionRecord|undefined} The matching record, or `undefined` if not in the local cache.
+         *
+         * @example
+         * // Numeric ID
+         * const address = ARM.peekRecord('addresses', 123)
+         *
+         * @example
+         * // String ID
+         * const address = ARM.peekRecord('addresses', 'JO-26181S4VPU65')
          */
-        peekRecord(collectionName: string, collectionRecordId: number | string): any | undefined;
+        peekRecord(collectionName: string, collectionRecordId: number | string): CollectionRecord | undefined;
         /**
-         * Internal method to set a property on the root scope.
          * @private
-         * @param {string} rootScopeProperty - The property name to set.
-         * @param {*} rootScopeValue - The value to set.
+         * @param {string} rootScopeProperty - Property name.
+         * @param {*}      rootScopeValue    - Value to set.
          */
         private _setRootScope;
         /**
-         * Sets a property on the root scope.
-         * @param {string} rootScopeProperty - The property name to set.
-         * @param {*} rootScopeValue - The value to set.
+         * Stores a value in the shared reactive root scope.
+         *
+         * The root scope is a MobX observable object that lives on the ARM instance,
+         * making it a lightweight global state store accessible from any component
+         * that has access to ARM.
+         *
+         * @param {string} rootScopeProperty - The property name to set (supports dot notation).
+         * @param {*}      rootScopeValue    - The value to store.
+         *
+         * @example
+         * ARM.setRootScope('currentUser', { id: 1, name: 'Alice' })
+         * ARM.setRootScope('ui.sidebarOpen', true)
          */
         setRootScope(rootScopeProperty: string, rootScopeValue: any): void;
         /**
-         * Gets a property from the root scope.
-         * @param {string} rootScopeProperty - The property name to get.
-         * @returns {*} The value of the property.
+         * Reads a value from the shared reactive root scope.
+         *
+         * @param {string} rootScopeProperty - The property name to read (supports dot notation).
+         * @returns {*} The stored value, or `undefined` if not set.
+         *
+         * @example
+         * const user = ARM.getRootScope('currentUser')
+         * const isOpen = ARM.getRootScope('ui.sidebarOpen')
          */
         getRootScope(rootScopeProperty: string): any;
         /**
-         * Makes an AJAX request using the axios library.
+         * Makes a raw Axios request using the ARM instance's configured headers and base URL.
          *
-         * @param {Object} [config={}] - Configuration object for the axios request.
-         * @returns {Promise} A Promise that resolves with the Axios response or
-         *                    rejects with an error.
+         * Use this for one-off requests that don't map to a collection (e.g. file uploads,
+         * action endpoints, or any API call where you don't need record management).
+         *
+         * @param {Object} [config={}] - Any valid Axios request config object.
+         * @returns {Promise} Resolves with the Axios response or rejects with an error.
+         *
+         * @example
+         * const response = await ARM.ajax({
+         *   method: 'post',
+         *   url: '/addresses/bulk-delete',
+         *   data: { ids: [1, 2, 3] },
+         * })
          */
         ajax(config?: any): Promise<any>;
         /**
-         * Finds the first object in an array that matches the specified properties.
+         * Returns the first object in an array that matches the given properties.
          *
-         * @param {Array<Object>} objects - The array of objects to search.
-         * @param {Object} [findProperties={}] - The properties to match.
-         * @returns {Object|undefined} The found object, or undefined if not found.
-         */
-        findBy(objects: Array<any>, findProperties?: any): any | undefined;
-        /**
-         * Finds the index of the first object in an array that matches the
-         * specified properties.
+         * @param {Object[]} objects              - The array to search.
+         * @param {Object}   [findProperties={}] - Key-value pairs to match against.
+         * @returns {Object|undefined} The first matching object, or `undefined`.
          *
-         * @param {Array<Object>} objects - The array of objects to search.
-         * @param {Object} [findIndexProperties={}] - The properties to match.
-         * @returns {number} The index of the found object, or -1 if not found.
+         * @example
+         * const home = ARM.findBy(addresses, { attributes: { kind: 'home' } })
          */
-        findIndexBy(objects: Array<any>, findIndexProperties?: any): number;
+        findBy(objects: any[], findProperties?: any): any | undefined;
         /**
-         * Filters an array of objects based on the specified properties.
+         * Returns the index of the first object in an array that matches the given properties.
          *
-         * @param {Array<Object>} objects - The array of objects to filter.
-         * @param {Object} [filterProperties={}] - The filter criteria.
-         * @returns {Array<Object>} The filtered array of objects.
-         */
-        filterBy(objects: Array<any>, filterProperties?: any): Array<any>;
-        /**
-         * Creates a new array of unique objects based on a specified property.
+         * @param {Object[]} objects                   - The array to search.
+         * @param {Object}   [findIndexProperties={}]  - Key-value pairs to match against.
+         * @returns {number} The index of the first match, or `-1` if not found.
          *
-         * @param {Array<Object>} objects - The array of objects to process.
-         * @param {string} uniqByProperty - The property to use for uniqueness
-         *                                 comparison.
-         * @returns {Array<Object>} The array of unique objects.
+         * @example
+         * const idx = ARM.findIndexBy(addresses, { id: 123 })
          */
-        uniqBy(objects: Array<any>, uniqByProperty: string): Array<any>;
+        findIndexBy(objects: any[], findIndexProperties?: any): number;
         /**
-         * Creates a new array of unique primitive values.
+         * Returns all objects in an array that match the given properties.
          *
-         * @param {Array<*>} values - The array of values to process.
-         * @returns {Array<*>} The array of unique values.
-         */
-        uniq(values: Array<any>): Array<any>;
-        /**
-         * Groups objects into arrays based on a specified property.
+         * @param {Object[]} objects               - The array to filter.
+         * @param {Object}   [filterProperties={}] - Key-value pairs to match against.
+         * @returns {Object[]} Array of matching objects (empty array if none match).
          *
-         * @param {Array<Object>} objects - The array of objects to group.
-         * @param {string} groupByProperty - The property to group by.
-         * @returns {Object} An object where keys are group values and values
-         *                   are arrays of objects.
+         * @example
+         * const homeAddresses = ARM.filterBy(addresses, { attributes: { kind: 'home' } })
          */
-        groupBy(objects: Array<any>, groupByProperty: string): any;
+        filterBy(objects: any[], filterProperties?: any): any[];
         /**
-         * Maps an array of objects to a new array of values, extracting a specific property from each object.
-         * @param {Array<Object>} objects - The array of objects to map.
-         * @param {string} mapByProperty - The property to extract from each object.
-         * @returns {Array<*>} A new array containing the extracted values.
-         */
-        mapBy(objects: Array<any>, mapByProperty: string): Array<any>;
-        /**
-         * Returns the first object in an array.
+         * Returns a new array with duplicate objects removed, comparing by a given property.
          *
-         * @param {Array<Object>} [objects=[]] - The array of objects.
-         * @returns {Object|undefined} The first object, or undefined if the
-         *                             array is empty.
-         */
-        firstObject(objects?: Array<any>): any | undefined;
-        /**
-         * Returns the last object in an array.
+         * @param {Object[]} objects        - The source array.
+         * @param {string}   uniqByProperty - The property to determine uniqueness by.
+         * @returns {Object[]} Array with duplicates (by property) removed.
          *
-         * @param {Array<Object>} [objects=[]] - The array of objects.
-         * @returns {Object|undefined} The last object, or undefined if the
-         *                             array is empty.
+         * @example
+         * const unique = ARM.uniqBy(addresses, 'attributes.city')
          */
-        lastObject(objects?: Array<any>): any | undefined;
+        uniqBy(objects: any[], uniqByProperty: string): any[];
         /**
-         * Merges two arrays of objects into a single array, removing duplicates.
+         * Returns a new array with duplicate primitive values removed.
          *
-         * @param {Array<Object>} [objects=[]] - The first array of objects.
-         * @param {Array<Object>} [otherObjects=[]] - The second array of objects.
-         * @returns {Array<Object>} The merged array of objects without duplicates.
-         */
-        mergeObjects(objects?: Array<any>, otherObjects?: Array<any>): Array<any>;
-        /**
-         * Splits an array of objects into chunks of a specified size.
+         * @param {*[]} values - The source array of primitive values.
+         * @returns {*[]} Array with duplicates removed.
          *
-         * @param {Array<Object>} [objects=[]] - The array of objects to chunk.
-         * @param {number} [chunkSize=1] - The size of each chunk.
-         * @returns {Array<Array<Object>>} An array of chunks.
+         * @example
+         * ARM.uniq([1, 2, 2, 3]) // [1, 2, 3]
          */
-        chunkObjects(objects?: Array<any>, chunkSize?: number): Array<Array<any>>;
+        uniq(values: any[]): any[];
         /**
-         * Sorts an array of objects based on specified properties and sort orders.
+         * Groups objects into arrays keyed by the value of a specified property.
          *
-         * @param {Array<Object>} objects - The array of objects to sort.
-         * @param {Array<string>} sortProperties - An array of sort properties in
-         *                                       the format of 'property:order'.
-         * @returns {Array<Object>} The sorted array of objects.
-         */
-        sortBy(objects: Array<any>, sortProperties: Array<string>): Array<any>;
-        /**
-         * Sums the values of an array of objects.
+         * @param {Object[]} objects          - The array to group.
+         * @param {string}   groupByProperty  - The property whose value becomes the group key.
+         * @returns {Object} An object where each key is a distinct property value and each
+         *   value is an array of matching objects.
          *
-         * @param {Array<Object>} objects - The array of objects to sum.
-         * @returns {number} The sum of the values.
+         * @example
+         * const byKind = ARM.groupBy(addresses, 'attributes.kind')
+         * // { home: [...], office: [...] }
          */
-        sum(objects: Array<any>): number;
+        groupBy(objects: any[], groupByProperty: string): any;
         /**
-         * Sums the values of an array of objects, extracting a specific property from each object.
+         * Extracts a single property from every object in an array.
          *
-         * @param {Array<Object>} objects - The array of objects to sum.
-         * @param {string} sumByProperty - The property to extract from each object.
-         * @returns {number} The sum of the extracted values.
+         * @param {Object[]} objects       - The array to map over.
+         * @param {string}   mapByProperty - Dot-notation path to the property to extract.
+         * @returns {*[]} A new array of the extracted values.
+         *
+         * @example
+         * const ids = ARM.mapBy(addresses, 'id')
+         * const cities = ARM.mapBy(addresses, 'attributes.city')
          */
-        sumBy(objects: Array<any>, sumByProperty: string): number;
+        mapBy(objects: any[], mapByProperty: string): any[];
         /**
-         * Checks if a value is empty.
+         * Returns the first element of an array.
+         *
+         * @param {Object[]} [objects=[]] - The source array.
+         * @returns {Object|undefined} The first element, or `undefined` if the array is empty.
+         *
+         * @example
+         * const first = ARM.firstObject(addresses)
+         */
+        firstObject(objects?: any[]): any | undefined;
+        /**
+         * Returns the last element of an array.
+         *
+         * @param {Object[]} [objects=[]] - The source array.
+         * @returns {Object|undefined} The last element, or `undefined` if the array is empty.
+         *
+         * @example
+         * const last = ARM.lastObject(addresses)
+         */
+        lastObject(objects?: any[]): any | undefined;
+        /**
+         * Concatenates two arrays and removes duplicate objects (deep equality check).
+         *
+         * @param {Object[]} [objects=[]]      - The first array.
+         * @param {Object[]} [otherObjects=[]] - The second array to merge in.
+         * @returns {Object[]} A new array with all unique objects from both inputs.
+         *
+         * @example
+         * const merged = ARM.mergeObjects(localAddresses, serverAddresses)
+         */
+        mergeObjects(objects?: any[], otherObjects?: any[]): any[];
+        /**
+         * Splits an array into smaller arrays (chunks) of a given size.
+         *
+         * @param {Object[]} [objects=[]]  - The array to split.
+         * @param {number}   [chunkSize=1] - Maximum number of elements per chunk.
+         * @returns {Object[][]} Array of chunk arrays.
+         *
+         * @example
+         * ARM.chunkObjects(addresses, 10)
+         * // [[...10 items...], [...10 items...], ...]
+         */
+        chunkObjects(objects?: any[], chunkSize?: number): any[][];
+        /**
+         * Sorts an array of objects by one or more properties.
+         *
+         * Each entry in `sortProperties` is a string in the format `'property:order'`
+         * where `order` is `'asc'` or `'desc'`. Supports dot-notation for nested properties.
+         *
+         * @param {Object[]} objects         - The array to sort.
+         * @param {string[]} sortProperties  - Sort descriptors in `'property:order'` format.
+         * @returns {Object[]} A new sorted array.
+         *
+         * @example
+         * ARM.sortBy(addresses, ['attributes.city:asc', 'id:desc'])
+         */
+        sortBy(objects: any[], sortProperties: string[]): any[];
+        /**
+         * Returns the sum of all values in an array of numbers.
+         *
+         * @param {number[]} objects - The array of numbers to sum.
+         * @returns {number} The total sum.
+         *
+         * @example
+         * ARM.sum([10, 20, 30]) // 60
+         */
+        sum(objects: number[]): number;
+        /**
+         * Sums the value of a specific numeric property across all objects in an array.
+         *
+         * Returns `0` if the result is not a number (guards against `NaN` from missing properties).
+         *
+         * @param {Object[]} objects       - The array of objects.
+         * @param {string}   sumByProperty - Dot-notation path to the numeric property.
+         * @returns {number} The total sum, or `0` if the result is not a valid number.
+         *
+         * @example
+         * ARM.sumBy(orderItems, 'attributes.quantity')
+         */
+        sumBy(objects: any[], sumByProperty: string): number;
+        /**
+         * Returns `true` if the value is empty (empty string, array, object, `null`, or `undefined`).
          *
          * @param {*} value - The value to check.
-         * @returns {boolean} True if the value is empty, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isEmpty([])    // true
+         * ARM.isEmpty('')    // true
+         * ARM.isEmpty(null)  // true
+         * ARM.isEmpty([1])   // false
          */
         isEmpty(value: any): boolean;
         /**
-         * Checks if a value is present (not empty).
+         * Returns `true` if the value is not empty. Inverse of `isEmpty`.
          *
          * @param {*} value - The value to check.
-         * @returns {boolean} True if the value is present, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isPresent([1])  // true
+         * ARM.isPresent([])   // false
          */
         isPresent(value: any): boolean;
         /**
-         * Checks if two values are equal.
+         * Returns `true` if two values are deeply equal.
          *
          * @param {*} value - The first value.
          * @param {*} other - The second value.
-         * @returns {boolean} True if the values are equal, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isEqual({ a: 1 }, { a: 1 }) // true
          */
         isEqual(value: any, other: any): boolean;
         /**
-         * Checks if a value is a number.
+         * Returns `true` if the value is a number (including `NaN` and `Infinity`).
          *
          * @param {*} value - The value to check.
-         * @returns {boolean} True if the value is a number, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isNumber(42)    // true
+         * ARM.isNumber('42')  // false
          */
         isNumber(value: any): boolean;
         /**
-         * Checks if a value is null or undefined.
+         * Returns `true` if the value is `null` or `undefined`.
          *
          * @param {*} value - The value to check.
-         * @returns {boolean} True if the value is null or undefined, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isNil(null)      // true
+         * ARM.isNil(undefined) // true
+         * ARM.isNil(0)         // false
          */
         isNil(value: any): boolean;
         /**
-         * Checks if a value is null.
+         * Returns `true` if the value is strictly `null`.
          *
          * @param {*} value - The value to check.
-         * @returns {boolean} True if the value is null, false otherwise.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isNull(null)      // true
+         * ARM.isNull(undefined) // false
          */
         isNull(value: any): boolean;
         /**
-         * Checks if a value is greater than or equal to another value.
+         * Returns `true` if `value >= other`.
          *
-         * @param {number} value - The first value.
-         * @param {number} other - The second value.
-         * @returns {boolean} True if the first value is greater than or equal
-         *                   to the second value, false otherwise.
+         * @param {number} value - The value to compare.
+         * @param {number} other - The threshold.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isGte(5, 5) // true
+         * ARM.isGte(4, 5) // false
          */
         isGte(value: number, other: number): boolean;
         /**
-         * Checks if a value is greater than another value.
+         * Returns `true` if `value > other`.
          *
-         * @param {number} value - The first value.
-         * @param {number} other - The second value.
-         * @returns {boolean} True if the first value is greater than the second
-         *                   value, false otherwise.
+         * @param {number} value - The value to compare.
+         * @param {number} other - The threshold.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isGt(6, 5) // true
+         * ARM.isGt(5, 5) // false
          */
         isGt(value: number, other: number): boolean;
         /**
-         * Checks if a value is less than or equal to another value.
+         * Returns `true` if `value <= other`.
          *
-         * @param {number} value - The first value.
-         * @param {number} other - The second value.
-         * @returns {boolean} True if the first value is less than or equal to
-         *                   the second value, false otherwise.
+         * @param {number} value - The value to compare.
+         * @param {number} other - The threshold.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isLte(5, 5) // true
+         * ARM.isLte(6, 5) // false
          */
         isLte(value: number, other: number): boolean;
         /**
-         * Checks if a value is less than another value.
+         * Returns `true` if `value < other`.
          *
-         * @param {number} value - The first value.
-         * @param {number} other - The second value.
-         * @returns {boolean} True if the first value is less than the second
-         *                   value, false otherwise.
+         * @param {number} value - The value to compare.
+         * @param {number} other - The threshold.
+         * @returns {boolean}
+         *
+         * @example
+         * ARM.isLt(4, 5) // true
+         * ARM.isLt(5, 5) // false
          */
         isLt(value: number, other: number): boolean;
     }
