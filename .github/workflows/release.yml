@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org
 
       - name: Install Yarn
         run: npm install -g yarn
@@ -67,9 +66,13 @@ jobs:
         if: steps.notes-failure.outputs.matched == 'true'
         working-directory: packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
+          # Scoped to this step only - setup-node's registry-url would otherwise
+          # export NPM_CONFIG_USERCONFIG for the whole job and break the normal
+          # Release step's own (unrelated) npm auth, which expects NPM_TOKEN directly.
+          npm config set //registry.npmjs.org/:_authToken "${NPM_TOKEN}"
           VERSION=$(node -p "require('./package.json').version")
           TAG="v${VERSION}"
           echo "Publishing ${TAG} to npm and creating the GitHub release..."
