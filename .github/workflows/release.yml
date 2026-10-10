@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: https://registry.npmjs.org
 
       - name: Install Yarn
         run: npm install -g yarn
@@ -35,7 +36,42 @@ jobs:
         run: yarn test
 
       - name: Release
+        id: release
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx -p semantic-release -p @semantic-release/git -p @semantic-release/exec semantic-release
+        run: |
+          set -o pipefail
+          npx -p semantic-release -p @semantic-release/git -p @semantic-release/exec semantic-release 2>&1 | tee release-output.log
+
+      # semantic-release's git-notes push (refs/notes/semantic-release-*) is unconditional,
+      # core behavior with no config to disable it - see semantic-release/semantic-release#1762.
+      # It runs before the npm/GitHub publish steps, so when the remote rejects it, the real
+      # publish never happens even though the version bump, build, commit, and tag already
+      # landed. This repo only ever releases from one branch, so the notes (used for
+      # multi-channel tracking) aren't needed - finish the release manually in that one case.
+      - name: Detect known git-notes push failure
+        id: notes-failure
+        if: steps.release.outcome == 'failure'
+        run: |
+          if grep -q "refs/notes/semantic-release" release-output.log; then
+            echo "Release step failed on the known git-notes push issue - falling back to a manual publish."
+            echo "matched=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Release step failed for a different reason - not falling back."
+            exit 1
+          fi
+
+      - name: Fallback publish (after known git-notes push failure)
+        if: steps.notes-failure.outputs.matched == 'true'
+        working-directory: packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v${VERSION}"
+          echo "Publishing ${TAG} to npm and creating the GitHub release..."
+          npm publish
+          gh release create "$TAG" --title "$TAG" --generate-notes
