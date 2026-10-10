@@ -48,14 +48,7 @@ yarn build
 
 ## Branch Purposes
 
-These are the permanent staple branches of this repository. They are never deleted.
-
-| Branch | Purpose |
-| --------- | ------- |
-| `main` | Branch containing stable source code. The `release` branch is merged to `main` once released. |
-| `release` | Branch for releasing code changes. The `develop` branch merges to `release` for releases. |
-| `develop` | Branch for staging code changes. Base branch for new features, enhancements, fixes, and documentation. |
-| `canary` | Experimental branch for code changes. Can be merged to `develop` once tested. |
+`main` is the only permanent branch of this repository (trunk-based). It is never deleted, and every change - features, fixes, and hotfixes alike - reaches it the same way: a reviewed, squash-merged pull request. `main` is never force-pushed or rebased; it only ever moves forward.
 
 ---
 
@@ -64,41 +57,26 @@ These are the permanent staple branches of this repository. They are never delet
 ```mermaid
 flowchart TD
     subgraph Developing["Developing Phase"]
-        WB["feat/ · fix/ · chore/ · docs/ · refactor/ · test/"]
+        WB["feat/ - fix/ - chore/ - docs/ - refactor/ - test/ - hotfix/"]
     end
 
-    subgraph Releasing["Releasing Phase"]
-        RV["releases/vX.X.X\n(update version files)"]
-    end
-
-    develop(develop)
-    release(release)
     main(main)
-    canary(canary)
+    RW["Release workflow\n(manual workflow_dispatch trigger)"]
 
-    WB -->|merge| develop
-    develop -->|checkout| RV
-    RV -->|merge| release
-    release -->|rebase| main
-    release -->|rebase| canary
-    release -->|rebase| develop
+    WB -->|squash merge| main
+    main -->|promote, when ready| RW
+    RW -->|version bump, npm publish,\ngit tag, GitHub release| main
 ```
 
 ### Developing Phase
 
-Work branches are created from `develop` and merged back into `develop` when ready.
+All work branches - including hotfixes - are created from `main` and merged back into `main` via a squash-merged pull request. There is no separate base branch for hotfixes; an urgent fix follows the same path, just promoted sooner.
 
-### Releasing Phase
+### Promoting Phase
 
-`develop` is checked out into a versioned `releases/vX.X.X` branch. Before merging to `release`, update the version in:
+`main` can collect several merged PRs before anyone promotes a release - merging does not publish anything by itself. When ready to ship, a maintainer manually triggers the `Release` GitHub Actions workflow (`workflow_dispatch`), which runs [`semantic-release`](https://semantic-release.gitbook.io/): it inspects the Conventional Commits made since the last release to decide the version bump, rebuilds `dist/`, `DOCS.md`, and `types/`, publishes to npm, tags the release, and commits the version bump back to `main`.
 
-- `README.md`
-- `packages/package.json`
-- `packages/src/lib/api-resource-manager.js`
-
-### Stabilizing Phase
-
-Once `release` is verified, it is rebased into `main`, `canary`, and `develop` to keep all staple branches in sync.
+No file needs manual version edits - `packages/package.json` is the single source of truth, and everything else (the npm badge, the library's own `X-Powered-By` header) derives from it automatically.
 
 ---
 
@@ -119,7 +97,6 @@ type/short-description
 | `refactor/` | Code restructuring, no behavior change    |
 | `test/`     | Adding or updating tests                  |
 | `hotfix/`   | Urgent fix for production issues          |
-| `releases/` | Release preparation                       |
 
 **Examples:**
 
@@ -130,7 +107,6 @@ type/short-description
 - `refactor/collection-manager`
 - `test/query-record-coverage`
 - `hotfix/save-method-crash`
-- `releases/v2.10.0`
 
 ---
 
@@ -168,11 +144,11 @@ type(scope): description
 ## Development Workflow
 
 1. Fork the repository
-2. Create a branch from `develop` following the [Branch Naming Convention](#branch-naming-convention)
+2. Create a branch from `main` following the [Branch Naming Convention](#branch-naming-convention)
 3. Make your changes in `packages/src/lib/api-resource-manager.js`
 4. Write or update tests in `packages/tests/`
 5. Run the test suite and ensure all tests pass
-6. Submit a pull request targeting `develop`
+6. Submit a pull request targeting `main`
 
 ---
 
@@ -198,11 +174,12 @@ yarn test:watch
 
 ## Pull Request Process
 
-- Target branch: `develop`
+- Target branch: `main`
 - Use the existing PR template (`.github/PULL_REQUEST_TEMPLATE.md`)
 - Link any related GitHub issues
 - Assign the appropriate reviewers
 - Ensure CI checks pass before requesting review
+- PRs are squash-merged only - keep the PR title a valid Conventional Commit, since it becomes the commit message on `main`
 
 ---
 
