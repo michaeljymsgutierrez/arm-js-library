@@ -66,7 +66,18 @@
   "resolutions": {
     "vite": "7.3.5",
     "form-data": "4.0.6",
-    "markdown-it": "14.2.0"
+    "markdown-it": "14.3.1",
+    "handlebars": "4.7.10",
+    "js-yaml": "4.3.2",
+    "brace-expansion": "1.1.21",
+    "@humanfs/node": "0.16.8",
+    "linkify-it": "5.0.2",
+    "ws": "8.21.0",
+    "flatted": "3.4.2",
+    "vite-plugin-eslint/@rollup/pluginutils/picomatch": "2.3.2",
+    "source-map-js": "1.2.2",
+    "miragejs/lodash": "4.18.1",
+    "jsdoc-to-markdown/**/lodash": "4.18.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
