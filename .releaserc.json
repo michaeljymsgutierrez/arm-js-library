@@ -11,9 +11,20 @@
       }
     ],
     [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "cp README.md packages/README.md && cp LICENSE.md packages/LICENSE.md && cd packages && yarn build && yarn build:jsdocs && yarn build:dts && cd .. && cp packages/DOCS.md DOCS.md"
+      }
+    ],
+    [
       "@semantic-release/git",
       {
-        "assets": ["packages/package.json"],
+        "assets": [
+          "packages/package.json",
+          "packages/dist/arm-js-library.js",
+          "packages/types/index.d.ts",
+          "DOCS.md"
+        ],
         "message": "chore(release): ${nextRelease.version} [skip ci]"
       }
     ],
