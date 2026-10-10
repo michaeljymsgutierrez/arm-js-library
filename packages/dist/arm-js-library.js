@@ -4,10 +4,12 @@ import * as mobx from "mobx";
 import { v1, validate, NIL } from "uuid";
 import md5 from "md5";
 import qs from "qs";
+const version = "2.9.3";
+const pkg = {
+  version
+};
 /**
  * ARM JavaScript Library
- *
- * Version: 2.9.2
  *
  * @author Michael Jyms Gutierrez
  * @license MIT
@@ -174,7 +176,7 @@ class ApiResourceManager {
     setProperty(
       axios,
       ["defaults", "headers", "common", "X-Powered-By"],
-      "ARM JS Library/2.9.2"
+      `ARM JS Library/${pkg.version}`
     );
   }
   /**
@@ -1876,8 +1878,8 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
   /**
    * Returns a new array with duplicate primitive values removed.
    *
-   * @param {*[]} values - The source array of primitive values.
-   * @returns {*[]} Array with duplicates removed.
+   * @param {Array.<*>} values - The source array of primitive values.
+   * @returns {Array.<*>} Array with duplicates removed.
    *
    * @example
    * ARM.uniq([1, 2, 2, 3]) // [1, 2, 3]
@@ -1905,7 +1907,7 @@ Fix: Try adding ${collectionName} on your ARM config initialization.`;
    *
    * @param {Object[]} objects       - The array to map over.
    * @param {string}   mapByProperty - Dot-notation path to the property to extract.
-   * @returns {*[]} A new array of the extracted values.
+   * @returns {Array.<*>} A new array of the extracted values.
    *
    * @example
    * const ids = ARM.mapBy(addresses, 'id')

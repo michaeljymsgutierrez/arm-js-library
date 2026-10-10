@@ -983,13 +983,13 @@ declare module "arm-js-library" {
         /**
          * Returns a new array with duplicate primitive values removed.
          *
-         * @param {*[]} values - The source array of primitive values.
-         * @returns {*[]} Array with duplicates removed.
+         * @param {Array.<*>} values - The source array of primitive values.
+         * @returns {Array.<*>} Array with duplicates removed.
          *
          * @example
          * ARM.uniq([1, 2, 2, 3]) // [1, 2, 3]
          */
-        uniq(values: any[]): any[];
+        uniq(values: Array<any>): Array<any>;
         /**
          * Groups objects into arrays keyed by the value of a specified property.
          *
@@ -1008,13 +1008,13 @@ declare module "arm-js-library" {
          *
          * @param {Object[]} objects       - The array to map over.
          * @param {string}   mapByProperty - Dot-notation path to the property to extract.
-         * @returns {*[]} A new array of the extracted values.
+         * @returns {Array.<*>} A new array of the extracted values.
          *
          * @example
          * const ids = ARM.mapBy(addresses, 'id')
          * const cities = ARM.mapBy(addresses, 'attributes.city')
          */
-        mapBy(objects: any[], mapByProperty: string): any[];
+        mapBy(objects: any[], mapByProperty: string): Array<any>;
         /**
          * Returns the first element of an array.
          *
