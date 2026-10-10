@@ -29,10 +29,6 @@ jobs:
         working-directory: packages
         run: yarn install
 
-      - name: Build source
-        working-directory: packages
-        run: yarn build
-
       - name: Test
         working-directory: packages
         run: yarn test
@@ -41,4 +37,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx -p semantic-release -p @semantic-release/git semantic-release
+        run: npx -p semantic-release -p @semantic-release/git -p @semantic-release/exec semantic-release

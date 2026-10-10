@@ -6,7 +6,8 @@
   "files": [
     "dist",
     "types",
-    "DOCS.md"
+    "DOCS.md",
+    "LICENSE.md"
   ],
   "types": "types/index.d.ts",
   "exports": {

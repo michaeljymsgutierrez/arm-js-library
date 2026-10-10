@@ -1,8 +1,6 @@
 /**
  * ARM JavaScript Library
  *
- * Version: 2.9.2
- *
  * @author Michael Jyms Gutierrez
  * @license MIT
  *
@@ -31,6 +29,7 @@ import * as mobx from 'mobx'
 import { v1 as uuidv1, validate as uuidValidate, NIL as NIL_UUID } from 'uuid'
 import md5 from 'md5'
 import qs from 'qs'
+import pkg from '../../package.json'
 
 /**
  * Destructured MobX functions.
@@ -339,7 +338,7 @@ export default class ApiResourceManager {
     setProperty(
       axios,
       ['defaults', 'headers', 'common', 'X-Powered-By'],
-      'ARM JS Library/2.9.2',
+      `ARM JS Library/${pkg.version}`,
     )
   }
 
