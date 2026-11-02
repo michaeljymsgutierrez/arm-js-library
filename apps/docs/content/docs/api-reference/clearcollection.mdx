@@ -1,0 +1,20 @@
+---
+title: clearCollection()
+description: "Removes all records from a collection and cleans up any references to those records in aliases and request hashes."
+---
+# clearCollection()
+
+Removes all records from a collection and cleans up any references to those
+records in aliases and request hashes.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The registered collection name to clear. |
+
+**Example**  
+```js
+ARM.clearCollection('addresses')
+// All address records are removed from local state
+```
