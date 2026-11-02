@@ -44,6 +44,21 @@ yarn test
 yarn build
 ```
 
+To work on the documentation/demo site instead:
+
+```bash
+cd apps/docs
+yarn install
+
+# Starts the Nextra docs + live demo site on http://localhost:3002
+yarn dev
+```
+
+The API reference under `/docs/api-reference` is generated from the library's JSDoc
+comments via `yarn docs:generate` (also runs automatically before `yarn build`) - never
+edit the generated `.mdx` files under `content/docs/api-reference` by hand, edit the
+JSDoc comments in `packages/src/lib/api-resource-manager.js` instead.
+
 ---
 
 ## Branch Purposes
