@@ -1,0 +1,21 @@
+---
+title: mapBy()
+description: "Extracts a single property from every object in an array."
+---
+# mapBy()
+
+Extracts a single property from every object in an array.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;\*&gt;</code> - A new array of the extracted values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array to map over. |
+| mapByProperty | <code>string</code> | Dot-notation path to the property to extract. |
+
+**Example**  
+```js
+const ids = ARM.mapBy(addresses, 'id')
+const cities = ARM.mapBy(addresses, 'attributes.city')
+```
