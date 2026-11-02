@@ -1,0 +1,23 @@
+---
+title: sortBy()
+description: "Sorts an array of objects by one or more properties. Each entry in `sortProperties` is a string in the format `'property:order'` where `order` is `'asc'` o"
+---
+# sortBy()
+
+Sorts an array of objects by one or more properties.
+
+Each entry in `sortProperties` is a string in the format `'property:order'`
+where `order` is `'asc'` or `'desc'`. Supports dot-notation for nested properties.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Object&gt;</code> - A new sorted array.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array to sort. |
+| sortProperties | <code>Array.&lt;string&gt;</code> | Sort descriptors in `'property:order'` format. |
+
+**Example**  
+```js
+ARM.sortBy(addresses, ['attributes.city:asc', 'id:desc'])
+```
