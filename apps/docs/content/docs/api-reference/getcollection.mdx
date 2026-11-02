@@ -1,0 +1,24 @@
+---
+title: getCollection()
+description: "Returns all records in a collection as a MobX observable array. Returns an empty observable array if the collection has no records yet. Unlike `peekAll`, t"
+---
+# getCollection()
+
+Returns all records in a collection as a MobX observable array.
+
+Returns an empty observable array if the collection has no records yet.
+Unlike `peekAll`, this always returns an observable so components can
+react to future changes.
+
+**Kind**: global function  
+**Returns**: [<code>Array.&lt;CollectionRecord&gt;</code>](/docs/api-reference/types#collectionrecord) - Observable array of all records in the collection.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The registered collection name. |
+
+**Example**  
+```js
+const addresses = ARM.getCollection('addresses')
+// addresses is a live observable array - updates when records are added/removed
+```
