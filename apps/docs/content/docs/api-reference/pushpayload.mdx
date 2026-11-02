@@ -1,0 +1,36 @@
+---
+title: pushPayload()
+description: "Injects ARM reference keys into raw record objects and pushes them into the named collection. Unlike the internal `_pushPayload`, this public method first "
+---
+# pushPayload()
+
+Injects ARM reference keys into raw record objects and pushes them into the named collection.
+
+Unlike the internal `_pushPayload`, this public method first stamps each record with ARM's
+internal metadata (`hashId`, `collectionName`, `isLoading`, `isError`, `isPristine`,
+`isDirty`, `originalRecord`) before pushing. Use this to load records into a collection
+from sources other than an API request (e.g. server-side props, local fixtures).
+
+**Kind**: global function  
+**Throws**:
+
+- <code>Error</code> If `collectionName` was not registered during ARM initialization.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The collection to push records into. |
+| collectionRecords | <code>Object</code> \| <code>Array.&lt;Object&gt;</code> | A single record object or an array of records. |
+
+**Example**  
+```js
+ARM.pushPayload('addresses', [
+  { id: 1, type: 'addresses', attributes: { address1: '123 Main St' } },
+  { id: 2, type: 'addresses', attributes: { address1: '456 Oak Ave' } },
+])
+```
+**Example**  
+```js
+// Single record
+ARM.pushPayload('addresses', { id: 'ABC-001', type: 'addresses', attributes: { address1: 'HQ' } })
+```
