@@ -227,8 +227,7 @@ const keysToBeOmittedOnRequestPayload = [
  * @property {function(RequestConfig=): Promise}   save            - Persist changes to the server (PUT) or create (POST).
  * @property {function(RequestConfig=): Promise}   reload          - Re-fetch this record from the server.
  * @property {function(RequestConfig=): Promise}   destroyRecord   - Delete this record from the server and unload it locally.
- * @property {function(string, Object=): CollectionRecord|CollectionRecord[]} getCollection
- *   - Retrieve related records from a local collection using this record's relationship data.
+ * @property {function(string, Object=): CollectionRecord|CollectionRecord[]} getCollection - Retrieve related records from a local collection using this record's relationship data.
  */
 
 export default class ApiResourceManager {
