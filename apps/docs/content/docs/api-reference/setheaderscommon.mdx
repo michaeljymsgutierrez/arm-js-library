@@ -1,0 +1,21 @@
+---
+title: setHeadersCommon()
+description: "Sets a header that is sent on every Axios request made by ARM."
+---
+# setHeadersCommon()
+
+Sets a header that is sent on every Axios request made by ARM.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | Header name (e.g. `'Authorization'`, `'Content-Type'`). |
+| value | <code>string</code> \| <code>number</code> \| <code>boolean</code> | Header value. |
+
+**Example**  
+```js
+ARM.setHeadersCommon('Authorization', `Bearer ${token}`)
+ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+ARM.setHeadersCommon('X-Client-Platform', 'Web')
+```
