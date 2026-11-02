@@ -1,0 +1,24 @@
+---
+title: unloadRecord()
+description: "Removes a record from all local data stores: its collection, any aliases, and any request hashes that reference it. This is called automatically after a su"
+---
+# unloadRecord()
+
+Removes a record from all local data stores: its collection, any aliases, and any
+request hashes that reference it.
+
+This is called automatically after a successful `destroyRecord`. You can also call
+it manually to remove a record from local state without hitting the server.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| currentRecord | [<code>CollectionRecord</code>](/docs/api-reference/types#collectionrecord) | The record to remove. |
+
+**Example**  
+```js
+const record = ARM.peekRecord('addresses', 123)
+ARM.unloadRecord(record)
+// record is now gone from the collection and any aliases/request hashes
+```
