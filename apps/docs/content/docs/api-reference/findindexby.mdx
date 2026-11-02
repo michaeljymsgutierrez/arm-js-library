@@ -1,0 +1,20 @@
+---
+title: findIndexBy()
+description: "Returns the index of the first object in an array that matches the given properties."
+---
+# findIndexBy()
+
+Returns the index of the first object in an array that matches the given properties.
+
+**Kind**: global function  
+**Returns**: <code>number</code> - The index of the first match, or `-1` if not found.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> |  | The array to search. |
+| [findIndexProperties] | <code>Object</code> | <code>{}</code> | Key-value pairs to match against. |
+
+**Example**  
+```js
+const idx = ARM.findIndexBy(addresses, { id: 123 })
+```
