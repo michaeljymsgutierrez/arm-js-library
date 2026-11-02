@@ -1,0 +1,20 @@
+---
+title: getRootScope()
+description: "Reads a value from the shared reactive root scope."
+---
+# getRootScope()
+
+Reads a value from the shared reactive root scope.
+
+**Kind**: global function  
+**Returns**: <code>\*</code> - The stored value, or `undefined` if not set.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootScopeProperty | <code>string</code> | The property name to read (supports dot notation). |
+
+**Example**  
+```js
+const user = ARM.getRootScope('currentUser')
+const isOpen = ARM.getRootScope('ui.sidebarOpen')
+```
