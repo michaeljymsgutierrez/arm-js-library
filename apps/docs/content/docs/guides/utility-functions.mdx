@@ -1,0 +1,73 @@
+---
+title: Utility Functions
+description: A Lodash-backed set of helpers for data retrieval, manipulation, validation, and comparison - usable on any array of objects, not just ARM collections.
+---
+
+# Utility Functions
+
+A collection of utility functions built on [Lodash](https://lodash.com) for common
+data manipulation and validation tasks. They work on any array of objects - not just
+records pulled from ARM collections.
+
+```javascript
+// Sample data used in the examples below
+const addresses = [
+  { id: 1, attributes: { kind: 'office', label: 'My Office' } },
+  { id: 2, attributes: { kind: 'school', label: 'My School' } },
+  { id: 3, attributes: { kind: 'school', label: "My Brother's School" } },
+]
+```
+
+## Data retrieval and manipulation
+
+| Method | Description |
+| --- | --- |
+| [`findBy(objects, findProperties)`](/docs/api-reference/findby) | First element matching the given properties |
+| [`findIndexBy(objects, findIndexProperties)`](/docs/api-reference/findindexby) | Index of the first element matching the given properties |
+| [`filterBy(objects, filterProperties)`](/docs/api-reference/filterby) | All elements matching the given properties |
+| [`uniqBy(objects, uniqByProperty)`](/docs/api-reference/uniqby) | New array with duplicates removed, by a property |
+| [`uniq(values)`](/docs/api-reference/uniq) | New array with duplicate primitive values removed |
+| [`groupBy(objects, groupByProperty)`](/docs/api-reference/groupby) | Groups objects into arrays keyed by a property |
+| [`mapBy(objects, mapByProperty)`](/docs/api-reference/mapby) | New array of just one property from each object |
+| [`firstObject(objects)`](/docs/api-reference/firstobject) | First element, or `undefined` if empty |
+| [`lastObject(objects)`](/docs/api-reference/lastobject) | Last element, or `undefined` if empty |
+| [`mergeObjects(objects, otherObjects)`](/docs/api-reference/mergeobjects) | Combines two arrays into one, removing duplicate entries |
+| [`chunkObjects(objects, chunkSize)`](/docs/api-reference/chunkobjects) | Splits an array into smaller arrays of a given size |
+| [`sortBy(objects, sortProperties)`](/docs/api-reference/sortby) | Sorts by one or more `'property:direction'` descriptors |
+| [`sum(objects)`](/docs/api-reference/sum) | Sum of an array of numbers |
+| [`sumBy(objects, sumByProperty)`](/docs/api-reference/sumby) | Sum of a numeric property across an array of objects |
+
+```javascript
+ARM.findBy(addresses, { id: 1 }) // the record with id 1
+ARM.filterBy(addresses, { attributes: { kind: 'school' } }) // ids 2 and 3
+ARM.groupBy(addresses, 'attributes.kind') // { office: [...], school: [...] }
+ARM.sortBy(addresses, ['id:desc']) // ordered 3, 2, 1
+
+ARM.sumBy(
+  [
+    { id: 1, name: 'Banana', price: 100 },
+    { id: 2, name: 'Apple', price: 200 },
+    { id: 3, name: 'Orange', price: 300 },
+  ],
+  'price',
+) // 600
+```
+
+`ajax(config)` - a raw Axios request using ARM's base configuration - is covered in
+[Request Functions](/docs/guides/request-functions), since it shares the same
+request pipeline as `query`/`findAll`/etc.
+
+## Data validation and comparison
+
+| Method | Description |
+| --- | --- |
+| [`isEmpty(value)`](/docs/api-reference/isempty) | `true` for `null`, `undefined`, `''`, `[]`, or `{}` |
+| [`isPresent(value)`](/docs/api-reference/ispresent) | The opposite of `isEmpty` |
+| [`isEqual(value, other)`](/docs/api-reference/isequal) | Deep comparison between two values |
+| [`isNumber(value)`](/docs/api-reference/isnumber) | `true` if the value is a number |
+| [`isNil(value)`](/docs/api-reference/isnil) | `true` if `null` or `undefined` |
+| [`isNull(value)`](/docs/api-reference/isnull) | `true` if `null` |
+| [`isGte(value, other)`](/docs/api-reference/isgte) | `value >= other` |
+| [`isGt(value, other)`](/docs/api-reference/isgt) | `value > other` |
+| [`isLte(value, other)`](/docs/api-reference/islte) | `value <= other` |
+| [`isLt(value, other)`](/docs/api-reference/islt) | `value < other` |
