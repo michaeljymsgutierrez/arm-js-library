@@ -1,0 +1,18 @@
+---
+title: setGlobal()
+description: "Attaches this ARM instance to `window.ARM` in browser environments. The instance is frozen with `Object.freeze()` to prevent accidental mutation. This is a"
+---
+# setGlobal()
+
+Attaches this ARM instance to `window.ARM` in browser environments.
+
+The instance is frozen with `Object.freeze()` to prevent accidental mutation.
+This is a convenience for debugging and for accessing ARM from outside a React
+component tree. No-op in non-browser (SSR) environments.
+
+**Kind**: global function  
+**Example**  
+```js
+ARM.setGlobal()
+// Now accessible anywhere in the browser as window.ARM
+```
