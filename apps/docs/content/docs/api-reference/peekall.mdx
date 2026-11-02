@@ -1,0 +1,21 @@
+---
+title: peekAll()
+description: "Returns all locally cached records in a collection without making a network request."
+---
+# peekAll()
+
+Returns all locally cached records in a collection without making a network request.
+
+**Kind**: global function  
+**Returns**: [<code>Array.&lt;CollectionRecord&gt;</code>](/docs/api-reference/types#collectionrecord) \| <code>undefined</code> - The array of cached records, or `undefined`
+  if the collection has not been initialized.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The registered collection name. |
+
+**Example**  
+```js
+const addresses = ARM.peekAll('addresses')
+// Returns whatever is currently in the local collection (may be empty)
+```
