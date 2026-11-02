@@ -1,0 +1,25 @@
+---
+title: Root Scope
+description: A small globally-accessible key/value store for state that doesn't belong to any one collection.
+---
+
+# Root Scope
+
+The root scope is a globally accessible object for storing and sharing state across
+your application - outside of any collection.
+
+### `setRootScope(rootScopeProperty, rootScopeValue)`
+
+Set a value on the root scope.
+
+```javascript
+ARM.setRootScope('fullName', 'John Doe')
+```
+
+### `getRootScope(rootScopeProperty)`
+
+Retrieve a value from the root scope.
+
+```javascript
+ARM.getRootScope('fullName') // 'John Doe'
+```
