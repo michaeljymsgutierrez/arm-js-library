@@ -1,0 +1,21 @@
+---
+title: chunkObjects()
+description: "Splits an array into smaller arrays (chunks) of a given size."
+---
+# chunkObjects()
+
+Splits an array into smaller arrays (chunks) of a given size.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Array.&lt;Object&gt;&gt;</code> - Array of chunk arrays.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [objects] | <code>Array.&lt;Object&gt;</code> | <code>[]</code> | The array to split. |
+| [chunkSize] | <code>number</code> | <code>1</code> | Maximum number of elements per chunk. |
+
+**Example**  
+```js
+ARM.chunkObjects(addresses, 10)
+// [[...10 items...], [...10 items...], ...]
+```
