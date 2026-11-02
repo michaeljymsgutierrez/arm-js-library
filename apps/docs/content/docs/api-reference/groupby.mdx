@@ -1,0 +1,22 @@
+---
+title: groupBy()
+description: "Groups objects into arrays keyed by the value of a specified property."
+---
+# groupBy()
+
+Groups objects into arrays keyed by the value of a specified property.
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - An object where each key is a distinct property value and each
+  value is an array of matching objects.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array to group. |
+| groupByProperty | <code>string</code> | The property whose value becomes the group key. |
+
+**Example**  
+```js
+const byKind = ARM.groupBy(addresses, 'attributes.kind')
+// { home: [...], office: [...] }
+```
