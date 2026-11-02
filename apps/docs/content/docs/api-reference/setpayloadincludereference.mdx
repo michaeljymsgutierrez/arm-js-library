@@ -1,0 +1,27 @@
+---
+title: setPayloadIncludeReference()
+description: "Sets the key ARM reads from each `included` item to determine which collection it belongs to. Defaults to `'type'`, matching the JSON:API convention where "
+---
+# setPayloadIncludeReference()
+
+Sets the key ARM reads from each `included` item to determine which collection it belongs to.
+
+Defaults to `'type'`, matching the JSON:API convention where `included[].type` names
+the resource type. Override this if your API uses a different field name.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | The property name to read from each included record (default: `'type'`). |
+
+**Example**  
+```js
+// JSON:API default - included items have a `type` field
+ARM.setPayloadIncludeReference('type')
+```
+**Example**  
+```js
+// Custom API that uses `resource_type` instead
+ARM.setPayloadIncludeReference('resource_type')
+```
