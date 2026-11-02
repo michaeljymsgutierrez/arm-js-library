@@ -1,0 +1,164 @@
+---
+title: Collection Records
+description: The state properties, getter/setter functions, and request methods ARM injects onto every record in a collection.
+---
+
+import { Callout } from 'nextra/components'
+
+# Collection Records
+
+Collection records are the individual objects stored inside ARM collections. ARM
+decorates each one with state properties, getter/setter functions, and request
+methods the moment it enters a collection.
+
+```javascript
+// Example record shape, as returned from the API
+{
+  "id": 2519858,
+  "type": "addresses",
+  "attributes": {
+    "address1": "Test Address 1",
+    "address2": "171872.9.2222",
+    "kind": "office",
+    "label": "Anabu Hills",
+    "latitude": "14.394261",
+    "longitude": "120.940783"
+  }
+}
+```
+
+## State properties
+
+[Try it live](/demo/collection-records/state-properties)
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `isLoading` | `false` | `true` while `save`, `reload`, or `destroyRecord` is in flight. |
+| `isError` | `false` | `true` if the last `save`, `reload`, or `destroyRecord` call errored. |
+| `isPristine` | `true` | `true` when the record matches its last-saved state. |
+| `isDirty` | `false` | The inverse of `isPristine` - `true` when there are unsaved local changes. |
+
+```javascript
+address.get('isLoading')
+address.get('isDirty')
+```
+
+## Getter and setter functions
+
+[Try it live](/demo/collection-records/getter-setter-functions)
+
+### `get(key)`
+
+Read a property by dot-notation key.
+
+```javascript
+address.get('id') // 2519858
+address.get('attributes.label') // 'Anabu Hills'
+```
+
+### `set(key, value)`
+
+Set a single property. Runs a deep-equality check against the record's last-saved
+state and updates `isDirty`/`isPristine` accordingly.
+
+```javascript
+address.get('attributes.kind') // 'office'
+address.set('attributes.kind', 'school')
+address.get('attributes.kind') // 'school'
+address.get('isDirty') // true
+```
+
+### `setProperties(values)`
+
+Set multiple properties at once.
+
+```javascript
+address.setProperties({
+  attributes: { kind: 'school', label: 'My School' },
+})
+```
+
+## Request and retrieve functions
+
+### `save(config)`
+
+Persist changes to the server - `POST /{resource}` for a new record,
+`PUT /{resource}/{id}` for an existing one. `config` is optional and supports
+`alias`, `ignorePayload`, and `override`. [Try it live](/demo/collection-records/request-retrieve-functions/save).
+
+```javascript
+address.save()
+address.save({ ignorePayload: ['attributes.address2'] })
+```
+
+### `reload(config)`
+
+Re-fetch the record (`GET /{resource}/{id}`) and update the local copy. `config` is
+optional and supports `alias`, `ignorePayload`, and `override`.
+[Try it live](/demo/collection-records/request-retrieve-functions/reload).
+
+```javascript
+address.reload()
+address.reload({ override: { namespace: 'api/v2' } })
+```
+
+### `rollbackAttributes()`
+
+Revert the record's attributes back to their last-saved state - no API request.
+[Try it live](/demo/collection-records/request-retrieve-functions/rollback-attributes).
+
+```javascript
+address.rollbackAttributes()
+```
+
+### `destroyRecord(config)`
+
+Delete the record from the server (`DELETE /{resource}/{id}`) and remove it from
+the local collection. `config` is optional and supports `alias`, `ignorePayload`,
+and `override`. [Try it live](/demo/collection-records/request-retrieve-functions/destroy-record).
+
+```javascript
+address.destroyRecord()
+address.destroyRecord({
+  override: { path: `destroy-addresses/${address.get('id')}` },
+})
+```
+
+### `getCollection(collectionName, config)`
+
+Resolve related records from another collection using this record's relationship
+data. [Try it live](/demo/collection-records/request-retrieve-functions/get-collection).
+
+With `async: true`, missing records are fetched from the server automatically; with
+`async: false` (the default), only records already present locally are returned.
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `referenceKey` | String | Dot-notation path to the relationship data on the record |
+| `async` | Boolean | Whether to fetch missing related records from the server |
+| `filterBy` | Object | Filter the returned records by property values |
+| `sortBy` | Array | Sort criteria, `'property:direction'` format |
+| `override` | Object | Override the request config (host, namespace, path, headers) |
+
+```javascript
+const { isLoading, data: user } = ARM.findRecord('users', 12980860, {}, { alias: 'currentUser' })
+
+const addresses = isLoading
+  ? []
+  : user.getCollection('addresses', {
+      referenceKey: 'relationships.addresses.data',
+      async: true,
+      sortBy: ['id:desc'],
+      filterBy: { attributes: { label: 'Test' } },
+    })
+```
+
+<Callout type="info">
+  `save`, `reload`, and `destroyRecord` always return a `Promise<CollectionRecord>`
+  - unlike `query`/`queryRecord`/`findAll`/`findRecord`, their `config` has no
+  `autoResolve` option to switch that off. `skip` is also GET-only internally, so it
+  only has an effect on `reload`, not `save` or `destroyRecord`.
+</Callout>
+
+See [`CollectionRecord`](/docs/api-reference/types#collectionrecord) for the full
+shape of what gets injected onto a record.
