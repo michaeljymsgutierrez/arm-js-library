@@ -1,0 +1,22 @@
+---
+title: setNamespace()
+description: "Sets the API namespace used as the path prefix in every request URL. Combined with `host`, this forms the Axios `baseURL`: `{host}/{namespace}`. Defaults t"
+---
+# setNamespace()
+
+Sets the API namespace used as the path prefix in every request URL.
+
+Combined with `host`, this forms the Axios `baseURL`: `{host}/{namespace}`.
+Defaults to `'api/v1'`.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| namespace | <code>string</code> | The namespace (e.g. `'api/v2'`). |
+
+**Example**  
+```js
+ARM.setNamespace('api/v2')
+// All subsequent requests go to https://api.example.com/api/v2/...
+```
