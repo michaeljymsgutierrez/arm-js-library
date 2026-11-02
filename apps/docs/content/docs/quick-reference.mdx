@@ -1,0 +1,73 @@
+---
+title: Quick Reference
+description: Every ApiResourceManager method at a glance, linked to its full API reference page.
+---
+
+# Quick Reference
+
+## Request functions
+
+| Method | Description |
+| --- | --- |
+| [`query(resource, params, config)`](/docs/api-reference/query) | Fetch multiple records from the server |
+| [`queryRecord(resource, params, config)`](/docs/api-reference/queryrecord) | Fetch a single record from the server |
+| [`findAll(resource, config)`](/docs/api-reference/findall) | Fetch all records from the server |
+| [`findRecord(resource, id, params, config)`](/docs/api-reference/findrecord) | Fetch a single record by ID from the server |
+| [`ajax(config)`](/docs/api-reference/ajax) | Make a raw Axios request with ARM's base config |
+
+## Collection functions
+
+| Method | Description |
+| --- | --- |
+| [`peekAll(collectionName)`](/docs/api-reference/peekall) | Read all records from a local collection |
+| [`peekRecord(collectionName, id)`](/docs/api-reference/peekrecord) | Read a single record from a local collection |
+| [`getCollection(collectionName)`](/docs/api-reference/getcollection) | Get all records in a collection |
+| [`getAlias(aliasName, fallbackRecords)`](/docs/api-reference/getalias) | Get records stored under an alias |
+| [`getRequestAlias(aliasName)`](/docs/api-reference/getrequestalias) | Get the request hash object for an alias |
+| [`createRecord(collectionName, record, randomId)`](/docs/api-reference/createrecord) | Create a new local record |
+| [`pushPayload(collectionName, records)`](/docs/api-reference/pushpayload) | Push raw records into a collection |
+| [`unloadRecord(record)`](/docs/api-reference/unloadrecord) | Remove a record from a local collection |
+| [`clearCollection(collectionName)`](/docs/api-reference/clearcollection) | Clear all records from a collection |
+
+## Configuration functions
+
+| Method | Description |
+| --- | --- |
+| [`setHost(host)`](/docs/api-reference/sethost) | Set the API base host URL |
+| [`setNamespace(namespace)`](/docs/api-reference/setnamespace) | Set the API namespace |
+| [`setHeadersCommon(key, value)`](/docs/api-reference/setheaderscommon) | Set a common request header |
+| [`setPayloadIncludeReference(key)`](/docs/api-reference/setpayloadincludereference) | Set the included payload reference key |
+| [`setGlobal()`](/docs/api-reference/setglobal) | Attach the ARM instance to `window.ARM` |
+
+## Root scope functions
+
+| Method | Description |
+| --- | --- |
+| [`setRootScope(property, value)`](/docs/api-reference/setrootscope) | Set a global state value |
+| [`getRootScope(property)`](/docs/api-reference/getrootscope) | Get a global state value |
+
+## Record methods
+
+These are injected onto every record when it enters a collection - see
+[Collection Records](/docs/guides/collection-records) for the full guide.
+
+| Method | Description |
+| --- | --- |
+| `get(key)` | Read a property by dot-notation key |
+| `set(key, value)` | Set a single property and update dirty state |
+| `setProperties(values)` | Set multiple properties at once |
+| `save(config)` | Persist changes to the server (`POST` new, `PUT` existing) |
+| `reload(config)` | Re-fetch the record from the server |
+| `rollbackAttributes()` | Revert local changes back to the last-saved state |
+| `destroyRecord(config)` | Delete the record from the server and unload it locally |
+| `getCollection(name, config)` | Resolve related records via this record's relationship data |
+
+## Utility functions
+
+Lodash-backed helpers for working with any array of objects, not just ARM
+collections - see the full [Utility Functions guide](/docs/guides/utility-functions).
+
+`findBy` · `findIndexBy` · `filterBy` · `uniqBy` · `uniq` · `groupBy` · `mapBy` ·
+`firstObject` · `lastObject` · `mergeObjects` · `chunkObjects` · `sortBy` · `sum` ·
+`sumBy` · `isEmpty` · `isPresent` · `isEqual` · `isNumber` · `isNil` · `isNull` ·
+`isGte` · `isGt` · `isLte` · `isLt`
