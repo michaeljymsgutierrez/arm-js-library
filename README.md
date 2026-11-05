@@ -17,14 +17,13 @@
 </p>
 
 <p align="center">
-  <!-- TODO: replace with the real Vercel URL once the project is deployed -->
-  <a href="https://arm-js-library.vercel.app/docs">
+  <a href="https://arm-js-library-docs.vercel.app/docs">
     <img src="https://img.shields.io/badge/docs-full_documentation-blue" alt="docs-badge-logo" />
   </a>
-  <a href="https://arm-js-library.vercel.app/docs/api-reference">
+  <a href="https://arm-js-library-docs.vercel.app/docs/api-reference">
     <img src="https://img.shields.io/badge/api-reference-blue" alt="api-reference-badge-logo" />
   </a>
-  <a href="https://arm-js-library.vercel.app/docs/guides/request-functions">
+  <a href="https://arm-js-library-docs.vercel.app/docs/guides/request-functions">
     <img src="https://img.shields.io/badge/guides-live_examples-blue" alt="guides-badge-logo" />
   </a>
 </p>
@@ -62,7 +61,7 @@ const App = observer(() => {
 })
 ```
 
-See the [Getting Started guide](https://arm-js-library.vercel.app/docs/getting-started) for full setup (NextJS and non-NextJS), and the [guides](https://arm-js-library.vercel.app/docs/guides/request-functions) to see every method running against a real API.
+See the [Getting Started guide](https://arm-js-library-docs.vercel.app/docs/getting-started) for full setup (NextJS and non-NextJS), and the [guides](https://arm-js-library-docs.vercel.app/docs/guides/request-functions) to see every method running against a real API.
 
 ## Credits
 
