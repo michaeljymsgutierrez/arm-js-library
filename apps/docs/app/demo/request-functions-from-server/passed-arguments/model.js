@@ -8,7 +8,6 @@ const Model = () => {
     2519858,
     // params - query string parameters
     { include: 'user' },
-    // config
     {
       // alias - accessible anywhere via ARM.getAlias('customerAddress')
       alias: 'customerAddress',
