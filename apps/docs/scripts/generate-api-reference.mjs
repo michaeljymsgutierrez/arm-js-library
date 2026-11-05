@@ -114,8 +114,8 @@ const renderBody = async (templateData, name, kind) => {
 
 /**
  * jsdoc2md renders `{@link ApiResourceManager#method}` / typedef cross-references
- * as raw markdown links to anchors that only existed in the old single-file
- * DOCS.md. Rewrite them to point at this site's per-method pages and the shared
+ * as raw markdown links to anchors that only make sense in a single combined-file
+ * layout. Rewrite them to point at this site's per-method pages and the shared
  * types page instead, so nothing links into a 404.
  */
 const rewriteCrossReferences = (markdown, methodSlugByName) => {
@@ -230,7 +230,8 @@ const main = async () => {
       'Every page below is generated from the JSDoc comments on `ApiResourceManager` in',
       '`packages/src/lib/api-resource-manager.js` via `yarn docs:generate` - it never drifts',
       'from the source. Internal/private methods (prefixed with `_`) are intentionally left',
-      "out of this public reference; see the repo's own `DOCS.md` for the full internal listing.",
+      'out of this public reference; read their JSDoc comments directly in the source file',
+      'if you need the internal listing.',
       '',
     ].join('\n'),
   )
