@@ -80,13 +80,6 @@ export async function GET() {
     lines.push('')
   }
 
-  lines.push(
-    '## Demo',
-    '',
-    `- [Live interactive demo](${SITE_URL}/demo): every method above running against a real API, in the browser.`,
-    '',
-  )
-
   return new Response(lines.join('\n'), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   })
