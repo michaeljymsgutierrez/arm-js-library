@@ -23,7 +23,7 @@ npm install arm-js-library --save
 ```
 
 <!-- TODO: replace with the real Vercel URL once the project is deployed -->
-📖 **[Full documentation](https://arm-js-library.vercel.app/docs)** · 🔧 **[API reference](https://arm-js-library.vercel.app/docs/api-reference)** · 🎮 **[Live demo](https://arm-js-library.vercel.app/demo)**
+📖 **[Full documentation](https://arm-js-library.vercel.app/docs)** · 🔧 **[API reference](https://arm-js-library.vercel.app/docs/api-reference)** · 🎮 **[Guides](https://arm-js-library.vercel.app/docs/guides/request-functions)**
 
 ## Quick example
 
@@ -46,7 +46,7 @@ const App = observer(() => {
 })
 ```
 
-See the [Getting Started guide](https://arm-js-library.vercel.app/docs/getting-started) for full setup (NextJS and non-NextJS), and the [live demo](https://arm-js-library.vercel.app/demo) to see every method running against a real API.
+See the [Getting Started guide](https://arm-js-library.vercel.app/docs/getting-started) for full setup (NextJS and non-NextJS), and the [guides](https://arm-js-library.vercel.app/docs/guides/request-functions) to see every method running against a real API.
 
 ## Credits
 
