@@ -1,6 +1,7 @@
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Head, Search } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
+import ArmLogo from '@/components/arm-logo'
 import './globals.css'
 
 export const metadata = {
@@ -48,7 +49,7 @@ const NpmIcon = () => (
 
 const navbar = (
   <Navbar
-    logo={<b>ARM JS Library</b>}
+    logo={<ArmLogo height={40} />}
     projectLink={REPO_URL}
     chatLink="https://www.npmjs.com/package/arm-js-library"
     chatIcon={<NpmIcon />}
