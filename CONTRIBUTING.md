@@ -89,7 +89,7 @@ All work branches - including hotfixes - are created from `main` and merged back
 
 ### Promoting Phase
 
-`main` can collect several merged PRs before anyone promotes a release - merging does not publish anything by itself. When ready to ship, a maintainer manually triggers the `Release` GitHub Actions workflow (`workflow_dispatch`), which runs [`semantic-release`](https://semantic-release.gitbook.io/): it inspects the Conventional Commits made since the last release to decide the version bump, rebuilds `dist/`, `DOCS.md`, and `types/`, publishes to npm, tags the release, and commits the version bump back to `main`.
+`main` can collect several merged PRs before anyone promotes a release - merging does not publish anything by itself. When ready to ship, a maintainer manually triggers the `Release` GitHub Actions workflow (`workflow_dispatch`), which runs [`semantic-release`](https://semantic-release.gitbook.io/): it inspects the Conventional Commits made since the last release to decide the version bump, rebuilds `dist/` and `types/`, publishes to npm, tags the release, and commits the version bump back to `main`.
 
 No file needs manual version edits - `packages/package.json` is the single source of truth, and everything else (the npm badge, the library's own `X-Powered-By` header) derives from it automatically.
 
