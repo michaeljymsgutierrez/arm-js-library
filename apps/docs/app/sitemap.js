@@ -7,7 +7,6 @@ const CONTENT_DIR = path.join(process.cwd(), 'content')
 // Mirrors the routes under app/demo/** (see scripts/generate-api-reference.mjs
 // for the API reference pages, which are walked from content/ directly below).
 const DEMO_ROUTES = [
-  '',
   '/collection-records/getter-setter-functions',
   '/collection-records/request-retrieve-functions/destroy-record',
   '/collection-records/request-retrieve-functions/get-collection',
