@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import ArmLogo from '@/components/arm-logo'
 
 /**
  * DemoPage
@@ -10,6 +11,9 @@ import Link from 'next/link'
 const DemoPage = ({ title, method, guideHref, children }) => {
   return (
     <div className="max-w-4xl mx-auto">
+      <Link href="/" className="inline-block mb-4">
+        <ArmLogo height={32} />
+      </Link>
       <h1 className="text-xl font-bold">{title}</h1>
       {method && (
         <code className="block mt-1 mb-4 text-sm text-gray-600">{method}</code>
@@ -17,7 +21,7 @@ const DemoPage = ({ title, method, guideHref, children }) => {
       {guideHref && (
         <p className="mb-4">
           <Link href={guideHref} className="text-sky-600 hover:underline">
-            View this guide in the docs &rarr;
+            View this guide in the docs -&gt;
           </Link>
         </p>
       )}
