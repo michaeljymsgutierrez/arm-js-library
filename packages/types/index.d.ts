@@ -16,41 +16,28 @@ declare module "arm-js-library" {
         rootScope: {};
         payloadIncludedReference: string;
         /**
-         * Initializes the Axios configuration with the base URL.
-         *
-         * Sets the `baseURL` property in the Axios defaults to the value
-         * returned by the `_getBaseURL()` method. This ensures that all
-         * Axios requests use the correct base URL for the API.
+         * Sets Axios's default `baseURL` and `X-Powered-By` header so every
+         * request made through this instance uses them automatically.
          *
          * @private
          */
         private _initializeAxiosConfig;
         /**
-         * Initializes a collection of collections with optional default values.
-         *
-         * Iterates through the provided array of `collections` and calls the
-         * `_addCollection` method for each collection name, initializing it
-         * with an empty array (`[]`) as the default value.
+         * Registers each named collection with an empty array.
          *
          * @private
          * @param {string[]} collections - An array of collection names to initialize.
          */
         private _initializeCollections;
         /**
-         * Gets the base URL for API requests.
-         *
-         * Constructs the base URL by combining the `host` and `namespace`
-         * properties of the instance.
+         * Builds the Axios `baseURL` from the instance's `host` and `namespace`.
          *
          * @private
          * @returns {string} The base URL constructed from `host` and `namespace`.
          */
         private _getBaseURL;
         /**
-         * Checks if a collection exists in the current instance.
-         *
-         * This method verifies if a collection with the given `collectionName`
-         * exists in the `collections` object of the `ApiResourceManager` instance.
+         * Guards against using a collection name that was never registered.
          *
          * @private
          * @param {string} collectionName - The name of the collection to check.
@@ -58,28 +45,14 @@ declare module "arm-js-library" {
          */
         private _isCollectionExisting;
         /**
-         * Adds a collection to the current instance.
-         *
-         * This method adds a new collection with the specified `collectionName`
-         * to the `collections` object of the `ApiResourceManager`. The
-         * `collectionRecords` array is used to initialize the collection's data.
-         *
          * @private
          * @param {string} collectionName - The name of the collection to add.
          * @param {Array} collectionRecords - The initial records for the collection.
          */
         private _addCollection;
         /**
-         * Adds an alias to the aliases object.
-         *
-         * This method creates an alias for a collection or a single record.
-         * The `aliasName` specifies the name of the alias, and `aliasRecords`
-         * can be either an array of records (for a collection alias) or a
-         * single record object.
-         *
-         * If `aliasRecords` is an array, it's used directly (or an empty array
-         * if `aliasRecords` is falsy). If it's a plain object, it's used directly
-         * (or an empty object if `aliasRecords` is falsy).
+         * Creates or updates an alias, pointing it at either an array of records
+         * (a collection alias) or a single record object.
          *
          * @private
          * @param {string} aliasName - The name of the alias.
@@ -87,11 +60,8 @@ declare module "arm-js-library" {
          */
         private _addAlias;
         /**
-         * Adds a request alias to the request aliases object.
-         *
-         * This method maps a specific `aliasName` to a `requestHashKey` in the
-         * `requestAliases` dictionary. This allows the system to reference a
-         * specific request context using a human-readable alias.
+         * Maps a human-readable alias to the request hash it refers to, so
+         * `getRequestAlias` can look it up later.
          *
          * @private
          * @param {string} aliasName - The name of the alias for the request.
@@ -99,12 +69,9 @@ declare module "arm-js-library" {
          */
         private _addRequestAlias;
         /**
-         * Generates a hash ID based on the provided object.
-         *
-         * This method generates a unique hash ID by stringifying the given
-         * `object` and then calculating its MD5 hash using the `md5` library.
-         * If no `object` is provided, it defaults to an object with an
-         * `id` property generated using `uuidv1()`.
+         * MD5-hashes the stringified `object` to produce a stable cache key.
+         * With no argument, generates a random one-off key instead (via a
+         * fresh `uuidv1()`), useful for forcing a cache miss.
          *
          * @private
          * @param {Object} [object={ id: uuidv1() }] - The object to generate the hash ID from.
@@ -112,11 +79,8 @@ declare module "arm-js-library" {
          */
         private _generateHashId;
         /**
-         * Sets multiple properties on a target object recursively.
-         *
-         * This method iterates through the `keyValuePairs` object and sets the
-         * corresponding properties on the `targetObject`. It handles nested
-         * objects by recursively calling itself with an updated `prefix`.
+         * Flattens a (possibly nested) `keyValuePairs` object into dot-notation
+         * paths and sets each one on `targetObject`.
          *
          * @private
          * @param {Object} targetObject - The object on which to set the properties.
@@ -124,11 +88,8 @@ declare module "arm-js-library" {
          */
         private _setProperties;
         /**
-         * Gets a property from the current record.
-         *
-         * This method retrieves the value of a property with the given `key`
-         * from the current record object (`this`). It uses Lodash's `get`
-         * function (aliased as `getProperty`) to access the property.
+         * Bound to every record as its `get()` method - reads a property off
+         * `this` (the record) by dot-notation key.
          *
          * @private
          * @param {string} key - The key of the property to retrieve.
@@ -136,14 +97,9 @@ declare module "arm-js-library" {
          */
         private _getRecordProperty;
         /**
-         * Sets a single property on the current record and updates its state
-         * based on changes.
-         *
-         * This method sets the property with the given `key` to the specified
-         * `value` on the current record object (`this`). It then checks if the
-         * record has been modified by comparing it with the `originalRecord`.
-         * If changes are detected, it updates the `isDirty` and `isPristine`
-         * flags accordingly.
+         * Bound to every record as its `set()` method - writes `value` at `key`,
+         * then re-derives `isDirty`/`isPristine` by deep-comparing against
+         * `originalRecord`.
          *
          * @private
          * @param {string} key - The property key to set.
@@ -151,14 +107,8 @@ declare module "arm-js-library" {
          */
         private _setRecordProperty;
         /**
-         * Sets multiple properties on the current record and updates its state
-         * based on changes.
-         *
-         * This method sets multiple properties on the current record object
-         * (`this`) using the provided `values` object. It then compares the
-         * updated record with the `originalRecord` to detect any modifications.
-         * If the record has been changed, it updates the `isDirty` and
-         * `isPristine` flags.
+         * Bound to every record as its `setProperties()` method - same as
+         * `_setRecordProperty` but for several keys at once.
          *
          * @private
          * @param {Object} values - An object containing key-value pairs to set
@@ -166,13 +116,8 @@ declare module "arm-js-library" {
          */
         private _setRecordProperties;
         /**
-         * Sorts an array of records based on specified properties and sort orders.
-         *
-         * This method sorts the `currentRecords` array using the provided
-         * `sortProperties`. Each `sortProperty` should be a string in the
-         * format "property:order", where "property" is the name of the property
-         * to sort by and "order" is either "asc" (ascending) or "desc"
-         * (descending).
+         * Sorts `currentRecords` by one or more `'property:order'` descriptors
+         * (`order` is `'asc'` or `'desc'`). Backs the public `sortBy`.
          *
          * @private
          * @param {Array} currentRecords - The array of records to sort.
@@ -181,26 +126,15 @@ declare module "arm-js-library" {
          */
         private _sortRecordsBy;
         /**
-         * Removes a record from a specified collection based on its hash ID.
-         *
-         * This method removes a `collectionRecord` from its corresponding
-         * collection in the `collections` object. It determines the collection
-         * using the record's `collectionName` property and finds the record's
-         * index within the collection using its `hashId`. If the record is
-         * found, it's removed from the collection using Lodash's `pullAt`.
-         *
          * @private
          * @param {Object} collectionRecord - The record to be removed from
          *                                   the collection.
          */
         private _unloadFromCollection;
         /**
-         * Removes a record from all request hashes based on its hash ID.
-         *
-         * This method iterates through all request hashes in the `requestHashes`
-         * object and removes any occurrences of the `collectionRecord` based on
-         * its `hashId`. It handles both array-based and object-based request
-         * hash data.
+         * Scrubs `collectionRecord` out of every cached request hash that
+         * references it (array-shaped `data` has it spliced out; object-shaped
+         * `data` is nulled if it's the same record).
          *
          * @private
          * @param {Object} collectionRecord - The record to be removed from
@@ -208,11 +142,7 @@ declare module "arm-js-library" {
          */
         private _unloadFromRequestHashes;
         /**
-         * Removes a record from all aliases based on its hash ID.
-         *
-         * This method iterates through all aliases in the `aliases` object
-         * and removes any occurrences of the `collectionRecord` based on its
-         * `hashId`. It handles both array-based and object-based alias data.
+         * Same cleanup as `_unloadFromRequestHashes`, but for `aliases`.
          *
          * @private
          * @param {Object} collectionRecord - The record to be removed from aliases.
@@ -287,18 +217,12 @@ declare module "arm-js-library" {
          */
         private _rollbackRecordAttributes;
         /**
-         * Retrieves records from a specified collection based on given criteria.
-         *
-         * This method retrieves records from the collection with the specified
-         * `collectionName`, potentially fetching them asynchronously if needed.
-         * It uses the `collectionConfig` to determine how to filter, sort,
-         * and retrieve the records.
-         *
-         * The `currentRecord` is used to extract related records based on the
-         * `referenceKey` provided in the `collectionConfig`. If the related
-         * records are not already in the local collection and `async` is true
-         * in the `collectionConfig`, it initiates an asynchronous request to
-         * fetch them.
+         * Backs the public `getCollection` injected on every record. Resolves
+         * `currentRecord`'s relationship data (read via `collectionConfig.referenceKey`)
+         * against the local `collectionName` collection. Any related record not
+         * already cached locally is fetched in the background when
+         * `collectionConfig.async` is `true` - it simply won't appear in this
+         * call's return value yet, since the fetch is deferred and not awaited.
          *
          * @private
          * @param {string} collectionName - The name of the collection.
@@ -337,16 +261,10 @@ declare module "arm-js-library" {
          */
         private _injectRequestHashActions;
         /**
-         * Injects reference keys into a collection record.
-         *
-         * This method adds essential reference keys to a `collectionRecord`,
-         * including:
-         *  - `collectionName`: The name of the collection the record belongs to.
-         *  - `hashId`: A unique hash ID generated for the record.
-         *  - `isLoading`, `isError`, `isPristine`, `isDirty`: Flags to track
-         *     the record's state.
-         *  - `originalRecord`: A copy of the original record data for change
-         *     tracking.
+         * Stamps a raw record with ARM's internal metadata before it enters a
+         * collection: `collectionName`, `hashId`, the `isLoading`/`isError`/
+         * `isPristine`/`isDirty` state flags, and an `originalRecord` snapshot
+         * used later for dirty-tracking.
          *
          * @private
          * @param {string} collectionName - The name of the collection.
@@ -356,20 +274,10 @@ declare module "arm-js-library" {
          */
         private _injectCollectionReferenceKeys;
         /**
-         * Pushes records to a specified collection.
-         *
-         * This method adds or updates records in the collection with the given
-         * `collectionName`. The `collectionRecords` can be either an array of
-         * records or a single record object.
-         *
-         * If `collectionRecords` is an array, it iterates through the records
-         * and adds them to the collection if they don't already exist. If a
-         * record with the same `hashId` already exists, it updates the existing
-         * record with the new data.
-         *
-         * If `collectionRecords` is a single object, it adds it to the collection
-         * if it doesn't exist or updates the existing record if it has the same
-         * `hashId`.
+         * Upserts `collectionRecords` (array or single object) into `collectionName`
+         * by matching on `hashId`: new records are pushed, existing ones are
+         * merged in place. Also injects the record-level action methods
+         * (`get`/`set`/`save`/etc.) via `_injectCollectionActions`.
          *
          * @private
          * @param {string} collectionName - The name of the collection to push
@@ -379,18 +287,8 @@ declare module "arm-js-library" {
          */
         private _pushToCollection;
         /**
-         * Pushes records to specified aliases.
-         *
-         * This method updates aliases in the `aliases` object with the provided
-         * `collectionRecords`. It handles both array-based and object-based
-         * aliases.
-         *
-         * If an alias refers to an array of records, the method iterates through
-         * the `collectionRecords` and updates any matching records within the
-         * alias array based on their `hashId`.
-         *
-         * If an alias refers to a single record object, the method updates the
-         * alias with the matching `collectionRecord` based on its `hashId`.
+         * Propagates an updated record into every alias that currently points
+         * at it, so aliases stay in sync after a `_pushToCollection` update.
          *
          * @private
          * @param {Array|Object} collectionRecords - The records to be pushed to
@@ -398,19 +296,7 @@ declare module "arm-js-library" {
          */
         private _pushToAliases;
         /**
-         * Pushes records to specified request hashes.
-         *
-         * This method updates request hashes in the `requestHashes` object with
-         * the provided `collectionRecords`. It handles both array-based and
-         * object-based request hash data.
-         *
-         * If a request hash's `data` property is an array, the method iterates
-         * through the `collectionRecords` and updates any matching records
-         * within the `data` array based on their `hashId`.
-         *
-         * If a request hash's `data` property is a single record object, the
-         * method updates the `data` with the matching `collectionRecord` based
-         * on its `hashId`.
+         * Same sync as `_pushToAliases`, but for cached request hashes.
          *
          * @private
          * @param {Array|Object} collectionRecords - The records to be pushed to
@@ -418,17 +304,11 @@ declare module "arm-js-library" {
          */
         private _pushToRequestHashes;
         /**
-         * Pushes records to a collection, aliases, and request hashes.
-         *
-         * This method orchestrates the process of adding or updating records
-         * in various data stores within the `ApiResourceManager`. It takes a
-         * `collectionName` and `collectionRecords` (which can be an array or
-         * a single object) and performs the following actions:
-         *
-         * 1. Checks if the specified collection exists.
-         * 2. Pushes the records to the collection using `_pushToCollection`.
-         * 3. Updates any relevant aliases using `_pushToAliases`.
-         * 4. Updates any relevant request hashes using `_pushToRequestHashes`.
+         * Low-level entry point for getting records into ARM's state: pushes into
+         * the collection, then fans the result out to any aliases and request
+         * hashes that reference the same records. Does not stamp ARM metadata -
+         * callers are expected to have already run `_injectCollectionReferenceKeys`
+         * (see the public `pushPayload`, which does both).
          *
          * @private
          * @param {string} collectionName - The name of the collection.
@@ -460,12 +340,11 @@ declare module "arm-js-library" {
          */
         pushPayload(collectionName: string, collectionRecords: any | any[]): void;
         /**
-         * Caches a request/response pair in the internal hash store.
-         * * Generates a unique key based on the request and performs one of two actions:
-         * 1. If the key exists and the new response is marked `isNew`, it toggles the
-         * existing entry's `isNew` flag to `false`.
-         * 2. Otherwise, it stores the new response object under that key.
-         * * Also injects contextual actions (e.g., reload) into the response object.
+         * Caches a request/response pair under a hash key derived from the
+         * request, and injects the `reload()` action into the response object.
+         * If an entry already exists under that key and the incoming response
+         * is marked `isNew`, only its `isNew` flag is flipped to `false` rather
+         * than overwriting the existing (already-resolved) entry.
          *
          * @private
          * @param {Object} requestObject - The source object used to generate the hash key.
@@ -641,14 +520,10 @@ declare module "arm-js-library" {
          */
         createRecord(collectionName: string, collectionRecord?: any, collectionRecordRandomId?: boolean): CollectionRecord;
         /**
-         * Reloads a request by updating its skip ID and re-executing the request.
-         *
-         * This method modifies the `requestObject` by generating a new skip ID
-         * using `uuidv1()` and setting `autoResolve` to `false` and `autoResolveOrigin`
-         * to `'_internal'`. It then re-executes the request using the `_request`
-         * method. During the reload process, it sets the `isLoading` flag of the
-         * corresponding request hash to `true` and resets it to `false` after
-         * the request is completed.
+         * Backs the `reload()` action injected into every request hash by
+         * `_injectRequestHashActions`. Forces a fresh `skipId` (bypassing the
+         * cache) and re-runs the original request, toggling `isLoading` on the
+         * cached entry around the call.
          *
          * @private
          * @param {Object} requestObject - The request object to reload.
@@ -657,19 +532,10 @@ declare module "arm-js-library" {
          */
         private _reloadRequest;
         /**
-         * Resolves the request based on configuration.
-         *
-         * This method determines how to resolve an API request based on the
-         * `autoResolve` option in the `config` object.
-         *
-         * If `autoResolve` is true (which is the default if not explicitly
-         * provided), the method returns the `requestHashObject`, which likely
-         * contains the cached response data.
-         *
-         * If `autoResolve` is false, the method returns the `requestXHR` object,
-         * which represents the actual Axios request Promise. This allows for
-         * more control over handling the response, such as accessing the raw
-         * response data or handling specific HTTP status codes.
+         * Implements the `autoResolve` contract shared by `query`/`queryRecord`/
+         * `findAll`/`findRecord`: returns the reactive `requestHashObject` by
+         * default, or the raw `requestXHR` Promise when `config.autoResolve` is
+         * explicitly `false`.
          *
          * @private
          * @param {Object} config - The configuration object for the request.
@@ -681,12 +547,16 @@ declare module "arm-js-library" {
          */
         private _resolveRequest;
         /**
-         * Makes an API request based on the provided configuration.
+         * The single low-level request executor behind every public request
+         * method (`query`, `queryRecord`, `findAll`, `findRecord`) and every
+         * record action (`save`, `reload`, `destroyRecord`). Builds the Axios
+         * call, applies caching/skip rules for GETs, pushes the result into
+         * collections/aliases/request hashes, and resolves per `_resolveRequest`'s
+         * `autoResolve` contract - except when `resourceConfig.autoResolveOrigin`
+         * is set (used internally by the record actions), in which case it
+         * always resolves with the record data directly instead.
          *
-         * This method handles various HTTP methods (GET, POST, PUT, DELETE), resource URLs,
-         * query parameters, payloads, and error handling. It also manages aliases,
-         * request caching, and asynchronous loading of related resources.
-         *
+         * @private
          * @param {Object} requestConfig - The configuration object for the request.
          * @param {string} requestConfig.resourceMethod - The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete').
          * @param {string} requestConfig.resourceName - The name of the API resource being accessed.
@@ -700,37 +570,31 @@ declare module "arm-js-library" {
          *
          * @async
          */
-        _request({ resourceMethod, resourceName, resourceId, resourceParams, resourcePayload, resourceFallback, resourceConfig }: {
-            resourceMethod: string;
-            resourceName: string;
-            resourceId?: string | number;
-            resourceParams?: any;
-            resourcePayload?: any;
-            resourceFallback?: any;
-            resourceConfig?: any;
-        }, ...args: any[]): Promise<any>;
+        private _request;
         /**
-         * Processes the payload for a request, omitting specified keys and setting it in the request options.
+         * Strips internal ARM fields and any caller-specified `ignorePayload`
+         * keys off `resourcePayloadRecord`, then sets the result as the request
+         * body.
          *
+         * @private
          * @param {string[]} resourceIgnorePayload - An array of keys to be ignored (omitted) from the payload.
          * @param {Object} resourcePayloadRecord - The record object containing the payload data.
          * @param {Object} requestOptions - The options object for the request, where the processed payload will be set.
          */
-        _processRequestPayload(resourceIgnorePayload: string[], resourcePayloadRecord: any, requestOptions: any): void;
+        private _processRequestPayload;
         /**
-         * Processes the URL for a request, constructing it from the resource name and ID.
+         * Appends `resourceId` to the request URL (`{resourceName}/{resourceId}`).
          *
-         * @param {Object} requestOptions - The options object for the request, where the URL will be set.
+         * @private
          * @param {string} resourceName - The name of the resource being accessed.
          * @param {string|number} resourceId - The ID of the specific resource.
+         * @param {Object} requestOptions - The options object for the request, where the URL will be set.
          */
-        _processRequestURL(resourceName: string, resourceId: string | number, requestOptions: any): void;
+        private _processRequestURL;
         /**
-         * Processes an alias for a request, mapping both the records and the request hash.
-         *
-         * This method extracts the alias name from the request configuration and:
-         * 1. Maps the alias name to the provided collection records in the aliases store.
-         * 2. Maps the alias name to the generated request hash key in the request aliases store.
+         * Points `resourceConfig.alias` at both the resolved records (via
+         * `_addAlias`) and the request hash that produced them (via
+         * `_addRequestAlias`).
          *
          * @private
          * @param {Object} requestObject - The full request object used to generate the hash ID
@@ -740,11 +604,10 @@ declare module "arm-js-library" {
          */
         private _processRequestAlias;
         /**
-         * Processes request overrides based on the provided configuration.
+         * Applies `resourceConfig.override` (host/namespace/path/headers) on top
+         * of the instance defaults for this single request.
          *
-         * This method modifies the `requestOptions` object to incorporate any overrides
-         * specified in the `resourceConfig`.
-         *
+         * @private
          * @param {Object} resourceConfig - The configuration object for the resource request.
          * @param {Object} resourceConfig.override - Optional overrides for the request.
          * @param {string} [resourceConfig.override.host] - Optional override for the base URL host.
@@ -753,14 +616,7 @@ declare module "arm-js-library" {
          * @param {Object} [resourceConfig.override.headers] - Optional override for request headers.
          * @param {Object} requestOptions - The request options object to be modified.
          */
-        _processRequestOverride(resourceConfig: {
-            override: {
-                host?: string;
-                namespace?: string;
-                path?: string;
-                headers?: any;
-            };
-        }, requestOptions: any): void;
+        private _processRequestOverride;
         /**
          * Fetches multiple records from the server (`GET /{resource}`).
          *

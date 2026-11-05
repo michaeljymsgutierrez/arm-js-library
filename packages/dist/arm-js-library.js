@@ -4,7 +4,7 @@ import * as mobx from "mobx";
 import { v1, validate, NIL } from "uuid";
 import md5 from "md5";
 import qs from "qs";
-const version = "2.9.3";
+const version = "2.10.0";
 const pkg = {
   version
 };
