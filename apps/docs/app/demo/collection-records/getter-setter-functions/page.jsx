@@ -12,7 +12,7 @@ const Page = observer(() => {
 
   return (
     <DemoPage
-      title="Record get()/set()/setProperties()"
+      title="record.get()/set()/setProperties()"
       method="No request - all synchronous, local reads/writes"
       guideHref="/docs/guides/collection-records#getter-and-setter-functions">
       <AddressesTable
