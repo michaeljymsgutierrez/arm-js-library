@@ -16,20 +16,20 @@
   </a>
 </p>
 
-**ARM (API Resource Manager)** is a lightweight, MobX-powered API resource manager for JavaScript - reactive collections, request deduplication, and JSON:API-friendly data normalization, with a consistent `get`/`set`/`save`/`reload`/`destroyRecord` API on every record.
+**ARM (API Resource Manager)** is a lightweight, MobX-powered API resource manager for JavaScript. It organizes fetched data into reactive collections, deduplicates in-flight requests automatically, and gives every record a consistent `get`/`set`/`save`/`reload`/`destroyRecord` API - no more hand-rolled loading/error state.
 
 ```bash
 npm install arm-js-library --save
 ```
 
 <!-- TODO: replace with the real Vercel URL once the project is deployed -->
-📖 **[Full documentation](https://arm-js-library.vercel.app/docs)** · 🔧 **[API reference](https://arm-js-library.vercel.app/docs/api-reference)** · 🎮 **[Guides](https://arm-js-library.vercel.app/docs/guides/request-functions)**
+**[Full documentation](https://arm-js-library.vercel.app/docs)** · **[API reference](https://arm-js-library.vercel.app/docs/api-reference)** · **[Guides](https://arm-js-library.vercel.app/docs/guides/request-functions)**
 
 ## Quick example
 
 ```javascript
 import { observer } from 'mobx-react'
-import { ARM } from '@/components/providers/arm-config-provider'
+import { ARM } from '@/components/providers/arm-config-provider' // your own module - see Getting Started
 
 const App = observer(() => {
   const { isLoading, data: address } = ARM.findRecord('addresses', 2519858, { include: 'user' })
