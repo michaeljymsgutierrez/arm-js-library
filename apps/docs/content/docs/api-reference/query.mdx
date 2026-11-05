@@ -1,0 +1,37 @@
+---
+title: query()
+description: "Fetches multiple records from the server (`GET /{resource}`). By default returns a reactive request hash object immediately (before the request resolves) s"
+---
+# query()
+
+Fetches multiple records from the server (`GET /{resource}`).
+
+By default returns a reactive request hash object immediately (before the request
+resolves) so it can be bound directly in a component. Set `config.autoResolve: false`
+to receive a Promise instead.
+
+**Kind**: global function  
+**Returns**: <code>Object</code> \| <code>Promise</code> - Reactive request hash (default) or Axios Promise when `autoResolve: false`.  
+**Throws**:
+
+- <code>Error</code> If `resource` is not a registered collection.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| resource | <code>string</code> |  | The resource name / collection name (e.g. `'addresses'`). |
+| [params] | <code>Object</code> | <code>{}</code> | Query parameters appended to the request URL. |
+| [config] | [<code>RequestConfig</code>](/docs/api-reference/types#requestconfig) | <code>{}</code> | Request configuration options. |
+
+**Example**  
+```js
+// Reactive (default) - bind directly in a component
+const result = ARM.query('addresses', { 'filter[kind]': 'home' }, { alias: 'homeAddresses' })
+result.isLoading // true while fetching
+result.data      // array of CollectionRecord
+```
+**Example**  
+```js
+// Awaitable - full control over loading state
+const result = await ARM.query('addresses', { include: 'users' }, { autoResolve: false })
+```

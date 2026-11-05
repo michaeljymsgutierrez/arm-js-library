@@ -1,0 +1,20 @@
+---
+title: findBy()
+description: "Returns the first object in an array that matches the given properties."
+---
+# findBy()
+
+Returns the first object in an array that matches the given properties.
+
+**Kind**: global function  
+**Returns**: <code>Object</code> \| <code>undefined</code> - The first matching object, or `undefined`.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> |  | The array to search. |
+| [findProperties] | <code>Object</code> | <code>{}</code> | Key-value pairs to match against. |
+
+**Example**  
+```js
+const home = ARM.findBy(addresses, { attributes: { kind: 'home' } })
+```

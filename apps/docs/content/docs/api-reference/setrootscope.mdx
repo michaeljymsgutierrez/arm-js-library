@@ -1,0 +1,24 @@
+---
+title: setRootScope()
+description: "Stores a value in the shared reactive root scope. The root scope is a MobX observable object that lives on the ARM instance, making it a lightweight global"
+---
+# setRootScope()
+
+Stores a value in the shared reactive root scope.
+
+The root scope is a MobX observable object that lives on the ARM instance,
+making it a lightweight global state store accessible from any component
+that has access to ARM.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootScopeProperty | <code>string</code> | The property name to set (supports dot notation). |
+| rootScopeValue | <code>\*</code> | The value to store. |
+
+**Example**  
+```js
+ARM.setRootScope('currentUser', { id: 1, name: 'Alice' })
+ARM.setRootScope('ui.sidebarOpen', true)
+```

@@ -1,0 +1,34 @@
+---
+title: getAlias()
+description: "Returns the records stored under an alias, or `fallbackRecords` if the alias is not yet set. Aliases are populated when a request is made with `{ alias: 'm"
+---
+# getAlias()
+
+Returns the records stored under an alias, or `fallbackRecords` if the alias is not yet set.
+
+Aliases are populated when a request is made with `{ alias: 'myAlias' }` in the config.
+If `fallbackRecords` is a plain object, ARM injects the record-level action methods into
+it so it can be used as a placeholder record before the real data arrives.
+
+**Kind**: global function  
+**Returns**: [<code>CollectionRecord</code>](/docs/api-reference/types#collectionrecord) \| [<code>Array.&lt;CollectionRecord&gt;</code>](/docs/api-reference/types#collectionrecord) - The aliased records or the fallback.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| aliasName | <code>string</code> | The alias name to look up. |
+| [fallbackRecords] | <code>Object</code> \| <code>Array.&lt;Object&gt;</code> | Returned as an observable if the alias is empty. |
+
+**Example**  
+```js
+// Populate the alias via a request
+ARM.findRecord('addresses', 123, null, { alias: 'currentAddress' })
+
+// Read it back (returns fallback object until the request resolves)
+const address = ARM.getAlias('currentAddress', {})
+```
+**Example**  
+```js
+// Array alias
+ARM.findAll('addresses', { alias: 'allAddresses' })
+const addresses = ARM.getAlias('allAddresses', [])
+```

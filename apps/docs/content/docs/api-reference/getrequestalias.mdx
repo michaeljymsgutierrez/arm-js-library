@@ -1,0 +1,28 @@
+---
+title: getRequestAlias()
+description: "Returns the request hash object for a named alias. The request hash contains the full request state (`isLoading`, `isError`, `data`, `error`, `included`, `"
+---
+# getRequestAlias()
+
+Returns the request hash object for a named alias.
+
+The request hash contains the full request state (`isLoading`, `isError`, `data`,
+`error`, `included`, `meta`, and a `reload()` method) for the most recent request
+that used the given `alias`. Returns `null` if no request has used that alias yet.
+
+**Kind**: global function  
+**Returns**: <code>Object</code> \| <code>null</code> - The request hash object, or `null` if not found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| aliasName | <code>string</code> | The alias name to resolve. |
+
+**Example**  
+```js
+ARM.findAll('addresses', { alias: 'allAddresses' })
+
+const requestState = ARM.getRequestAlias('allAddresses')
+console.log(requestState.isLoading) // true while fetching
+console.log(requestState.meta)      // pagination metadata, etc.
+requestState.reload()               // re-trigger the original request
+```

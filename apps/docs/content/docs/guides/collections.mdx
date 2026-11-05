@@ -1,0 +1,118 @@
+---
+title: Collections
+description: Retrieve, create, push, and remove records in a local collection without necessarily touching the server.
+---
+
+# Collections
+
+## Retrieve functions
+
+### `peekAll(collectionName)`
+
+Read all records from a local collection without triggering a request.
+[Try it live](/demo/retrieve-functions-from-collections/peek-all).
+
+```javascript
+ARM.peekAll('addresses')
+```
+
+### `peekRecord(collectionName, collectionRecordId)`
+
+Read a single record from a local collection without triggering a request.
+[Try it live](/demo/retrieve-functions-from-collections/peek-record).
+
+```javascript
+ARM.peekRecord('addresses', 2519858)
+```
+
+### `getCollection(collectionName)`
+
+Retrieve every record currently stored in a collection.
+[Try it live](/demo/retrieve-functions-from-collections/get-collection).
+
+```javascript
+ARM.getCollection('addresses')
+```
+
+### `getAlias(aliasName, fallbackRecords)`
+
+Retrieve the records stored under an alias from a previous request. `fallbackRecords`
+is optional. [Try it live](/demo/retrieve-functions-from-collections/get-alias).
+
+```javascript
+const addresses = ARM.getAlias('customerAddresses', [])
+
+ARM.findAll('addresses', { alias: 'customerAddresses' })
+```
+
+### `getRequestAlias(aliasName)`
+
+Retrieve the full [returned object](/docs/guides/request-functions#returned-object)
+(`isLoading`, `data`, `meta`, etc.) for a previously aliased request.
+[Try it live](/demo/retrieve-functions-from-collections/get-request-alias).
+
+```javascript
+const addressesRequest = ARM.getRequestAlias('customerAddresses')
+
+ARM.findAll('addresses', { alias: 'customerAddresses' })
+
+addressesRequest.data // the resolved records, once isLoading is false
+```
+
+## Create
+
+### `createRecord(collectionName, collectionRecord, collectionRecordRandomId)`
+
+Create a new record in a local collection. `collectionRecord` defaults to `{}`,
+`collectionRecordRandomId` defaults to `true`.
+[Try it live](/demo/create-collection-record-function/create-record).
+
+```javascript
+// Set attributes after creation
+const newAddress = ARM.createRecord('addresses')
+newAddress.set('attributes.kind', 'school')
+newAddress.set('attributes.label', 'My school')
+
+// Or pass initial attributes directly
+const newAddress = ARM.createRecord('addresses', {
+  attributes: { kind: 'school', label: 'My school' },
+})
+
+// Persist it to the server (POST /addresses)
+newAddress.save()
+```
+
+## Remove
+
+### `unloadRecord(collectionRecord)`
+
+Remove a record from the local collection only - does not call the server.
+[Try it live](/demo/remove-collection-records-functions/unload-record).
+
+```javascript
+const address = ARM.peekRecord('addresses', 2519858)
+
+ARM.unloadRecord(address)
+```
+
+### `clearCollection(collectionName)`
+
+Remove every record from a collection, along with any related aliases and request
+hashes. [Try it live](/demo/remove-collection-records-functions/clear-collection).
+
+```javascript
+ARM.clearCollection('addresses')
+```
+
+## Push
+
+### `pushPayload(collectionName, collectionRecords)`
+
+Push raw records directly into a collection - useful for data fetched outside ARM's
+own request functions. [Try it live](/demo/push-collection-record-function/push-payload).
+
+```javascript
+ARM.ajax({ method: 'get', url: 'addresses/2518368' }).then((response) => {
+  ARM.pushPayload('addresses', response.data.data)
+})
+```

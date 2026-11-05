@@ -1,0 +1,20 @@
+---
+title: filterBy()
+description: "Returns all objects in an array that match the given properties."
+---
+# filterBy()
+
+Returns all objects in an array that match the given properties.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Object&gt;</code> - Array of matching objects (empty array if none match).  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> |  | The array to filter. |
+| [filterProperties] | <code>Object</code> | <code>{}</code> | Key-value pairs to match against. |
+
+**Example**  
+```js
+const homeAddresses = ARM.filterBy(addresses, { attributes: { kind: 'home' } })
+```

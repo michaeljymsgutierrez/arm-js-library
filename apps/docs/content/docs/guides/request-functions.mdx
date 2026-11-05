@@ -1,0 +1,163 @@
+---
+title: Request Functions
+description: query, queryRecord, findAll, and findRecord - fetching data from the server, the config object they share, and the reactive object they return.
+---
+
+import { Tabs, Callout } from 'nextra/components'
+
+# Request Functions from Server
+
+Import the stored ARM instance from `arm-config-provider` to use these:
+
+```javascript
+import { ARM } from '@/components/providers/arm-config-provider'
+```
+
+<Tabs items={['query', 'queryRecord', 'findAll', 'findRecord']}>
+  <Tabs.Tab>
+    Fetch multiple records from the server (`GET /{resource}`). `params` is required,
+    `config` is optional. [Try it live](/demo/request-functions-from-server/query).
+
+    ```javascript
+    ARM.query(
+      'addresses',
+      { sort: '-id', include: 'user' },
+      { alias: 'customerAddresses' },
+    )
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Fetch a single record from the server (`GET /{resource}`, filtered by `params`).
+    Both `params` and `config` are optional.
+    [Try it live](/demo/request-functions-from-server/query-record).
+
+    ```javascript
+    ARM.queryRecord(
+      'addresses',
+      { id: 2519858, sort: '-id', include: 'user' },
+      { alias: 'customerAddress' },
+    )
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Fetch every record for a resource (`GET /{resource}`). `config` is optional.
+    [Try it live](/demo/request-functions-from-server/find-all).
+
+    ```javascript
+    ARM.findAll('addresses', { alias: 'customerAddresses' })
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Fetch a single record by ID (`GET /{resource}/{id}`). `id` is required, `params`
+    and `config` are optional. [Try it live](/demo/request-functions-from-server/find-record).
+
+    ```javascript
+    ARM.findRecord(
+      'addresses',
+      2519858,
+      { include: 'user' },
+      { alias: 'customerAddress' },
+    )
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## Passed arguments
+
+[Try it live](/demo/request-functions-from-server/passed-arguments)
+
+```javascript
+// Example: https://api.example.com/api/v1/addresses/2519858?include=user
+ARM.findRecord(
+  'addresses',
+  2519858,
+  { include: 'user' },
+  { skip: true, alias: 'customerAddress' },
+)
+```
+
+- **`resource` - String** - `.../api/v1/`**`addresses`**`/2519858?include=user`. The
+  endpoint resource name; also the collection name registered at ARM initialization.
+- **`id` - Number | String** - `.../addresses/`**`2519858`**`?include=user`. Accepts
+  both numeric and string IDs.
+- **`params` - Object** - `.../addresses/2519858?`**`include=user`**. Endpoint query
+  string parameters.
+- **`config` - Object** - request configuration: `skip`, `skipId`, `alias`,
+  `autoResolve`, `ignorePayload`, `override`. See [`RequestConfig`](/docs/api-reference/types#requestconfig)
+  for the full shape.
+
+```javascript
+{
+  // Go-signal for the request. Useful when Request B depends on Request A's result.
+  skip: true,
+
+  // A human-readable identifier for the returned records. Accessible anywhere via
+  // ARM.getAlias('customerAddress') or ARM.getRequestAlias('customerAddress').
+  alias: 'customerAddress',
+
+  // Controls what the request function returns:
+  //   true  (default) - a reactive/observable object, auto-resolving
+  //   false            - a raw Axios Promise, resolved manually
+  // Only affects query, queryRecord, findAll, findRecord.
+  autoResolve: false,
+
+  // Attribute keys to omit from the request payload when saving.
+  ignorePayload: ['attributes.address2', 'attributes.address1'],
+
+  // Override the default request config for this call only.
+  // Before: https://api.example.com/api/v1/users/1
+  // After:  https://api.example.com/api/v2/update-users/1
+  override: {
+    host: 'https://api.example.com',
+    namespace: 'api/v2',
+    path: `update-users/${user.get('id')}`,
+    headers: {
+      'X-Client-Platform': 'Symbian',
+    },
+  },
+}
+```
+
+<Callout type="info">
+  `skipId` (a UUID, usually from `uuidv1()`) forces a request to bypass the cache
+  entirely - useful in tests or anywhere you need to guarantee a fresh fetch rather
+  than a deduplicated one.
+</Callout>
+
+## Returned object
+
+[Try it live](/demo/request-functions-from-server/returned-object)
+
+```javascript
+// Every property below is observable - reading it inside an observer() component
+// re-renders that component automatically when the value changes.
+{
+  isLoading: true,
+  isError: false,
+  isNew: true,
+  data: [],
+  error: null,
+  included: [],
+  meta: {},
+  reload: function,
+}
+```
+
+- **`isLoading` - Boolean** - starts `true` when the request is sent, resets to
+  `false` once it settles (success or error).
+- **`isError` - Boolean** - `true` if the request failed, `false` otherwise.
+- **`isNew` - Boolean** - `true` only the first time a given request hash is seen.
+  Subsequent calls with the same resource/params/config reuse the cached hash and
+  report `isNew: false` - pass `skipId` to force a fresh request instead.
+- **`data` - Array | Object** - the response payload. An empty array (`query`,
+  `findAll`) or empty object (`queryRecord`, `findRecord`) until the request resolves.
+- **`error` - Object | String | null** - the error from a failed request, `null`
+  otherwise.
+- **`included` - Array** - the JSON:API `included` array from the response, if any.
+- **`meta` - Object** - the JSON:API `meta` object from the response, if any.
+- **`reload` - Function** - re-runs the original request with a fresh `skipId`,
+  updating this same request hash and its related collection(s) in place.
+
+See [Types - DefaultRequestArrayResponse](/docs/api-reference/types#defaultrequestarrayresponse)
+and [DefaultRequestObjectResponse](/docs/api-reference/types#defaultrequestobjectresponse)
+for the exact shape returned by array vs. single-record methods.

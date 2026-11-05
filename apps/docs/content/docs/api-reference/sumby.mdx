@@ -1,0 +1,22 @@
+---
+title: sumBy()
+description: "Sums the value of a specific numeric property across all objects in an array. Returns `0` if the result is not a number (guards against `NaN` from missing "
+---
+# sumBy()
+
+Sums the value of a specific numeric property across all objects in an array.
+
+Returns `0` if the result is not a number (guards against `NaN` from missing properties).
+
+**Kind**: global function  
+**Returns**: <code>number</code> - The total sum, or `0` if the result is not a valid number.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The array of objects. |
+| sumByProperty | <code>string</code> | Dot-notation path to the numeric property. |
+
+**Example**  
+```js
+ARM.sumBy(orderItems, 'attributes.quantity')
+```

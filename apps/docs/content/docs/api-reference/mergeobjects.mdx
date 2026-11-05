@@ -1,0 +1,20 @@
+---
+title: mergeObjects()
+description: "Concatenates two arrays and removes duplicate objects (deep equality check)."
+---
+# mergeObjects()
+
+Concatenates two arrays and removes duplicate objects (deep equality check).
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Object&gt;</code> - A new array with all unique objects from both inputs.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [objects] | <code>Array.&lt;Object&gt;</code> | <code>[]</code> | The first array. |
+| [otherObjects] | <code>Array.&lt;Object&gt;</code> | <code>[]</code> | The second array to merge in. |
+
+**Example**  
+```js
+const merged = ARM.mergeObjects(localAddresses, serverAddresses)
+```

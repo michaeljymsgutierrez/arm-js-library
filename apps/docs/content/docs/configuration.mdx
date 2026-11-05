@@ -1,0 +1,74 @@
+---
+title: Configuration
+description: Required and optional configuration for an ApiResourceManager instance - host, namespace, headers, global access, and payload include references.
+---
+
+import { Callout } from 'nextra/components'
+
+# Configuration
+
+Configure the ARM instance from wherever it's stored (your `arm-config-provider`,
+typically) before making any requests.
+
+## Required configuration
+
+### `setHost(host)`
+
+Sets the API endpoint host URL. Defaults to `window.location.origin` when unset.
+
+```javascript
+ARM.setHost('https://api.example.com')
+```
+
+### `setNamespace(namespace)`
+
+Sets the API endpoint namespace, appended between the host and resource path.
+Defaults to `'api/v1'`.
+
+```javascript
+ARM.setNamespace('api/v1')
+```
+
+### `setHeadersCommon(key, value)`
+
+Sets a header sent on every request.
+
+```javascript
+ARM.setHeadersCommon('Authorization', `Token ${token}`)
+ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+ARM.setHeadersCommon('X-Client-Platform', 'Web')
+```
+
+## Optional configuration
+
+### `setGlobal()`
+
+Attaches the ARM instance to `window.ARM`, so it's reachable without an import -
+useful for debugging in the browser console.
+
+```javascript
+ARM.setGlobal()
+```
+
+### `setPayloadIncludeReference(key)`
+
+Sets the key used to resolve a JSON:API `included` array's records back to their
+collections.
+
+```javascript
+// Given a payload shaped like:
+// { data: [...], included: [{ id: 1, type: 'addresses' }], meta: {...} }
+ARM.setPayloadIncludeReference('type')
+```
+
+<Callout type="info">
+  Every request's base URL is built as `${host}/${namespace}` - set both before the
+  first request, or requests will resolve against `window.location.origin/api/v1` by
+  default.
+</Callout>
+
+See [`setHost`](/docs/api-reference/sethost), [`setNamespace`](/docs/api-reference/setnamespace),
+[`setHeadersCommon`](/docs/api-reference/setheaderscommon),
+[`setGlobal`](/docs/api-reference/setglobal), and
+[`setPayloadIncludeReference`](/docs/api-reference/setpayloadincludereference) in the API
+reference for full signatures.

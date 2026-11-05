@@ -1,0 +1,20 @@
+---
+title: uniqBy()
+description: "Returns a new array with duplicate objects removed, comparing by a given property."
+---
+# uniqBy()
+
+Returns a new array with duplicate objects removed, comparing by a given property.
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Object&gt;</code> - Array with duplicates (by property) removed.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| objects | <code>Array.&lt;Object&gt;</code> | The source array. |
+| uniqByProperty | <code>string</code> | The property to determine uniqueness by. |
+
+**Example**  
+```js
+const unique = ARM.uniqBy(addresses, 'attributes.city')
+```

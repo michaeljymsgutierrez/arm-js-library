@@ -1,0 +1,168 @@
+---
+title: Getting Started
+description: Install arm-js-library, create an ApiResourceManager instance, and wire it into a React or NextJS app.
+---
+
+import { Steps, Callout } from 'nextra/components'
+
+# Getting Started
+
+## Installation
+
+```bash
+npm install arm-js-library --save
+```
+
+ARM is built on [MobX](https://mobx.js.org) for its reactive collections. If your app
+renders with React, also install `mobx-react` so components can `observer()` ARM's data:
+
+```bash
+npm install mobx-react --save
+```
+
+## Initialization
+
+<Steps>
+
+### Create an `arm-config-provider`
+
+Create one module to hold the `ApiResourceManager` instance - this is the single
+source of truth every other part of your app imports from.
+
+```javascript
+'use client' // Omit this line if you are not using NextJS
+
+import ApiResourceManager from 'arm-js-library'
+
+const COLLECTIONS = ['addresses', 'users']
+
+export const ARM = new ApiResourceManager(COLLECTIONS)
+
+const ARMConfigProvider = ({ children }) => {
+  return <>{children}</>
+}
+
+export default ARMConfigProvider
+```
+
+See it running in the
+[`arm-config-provider`](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/docs/src/components/providers/arm-config-provider/index.jsx)
+used by every demo page linked from the guides.
+
+### Wrap your app with it
+
+For **NextJS** projects, wrap `arm-config-provider` in a client-only
+`application-providers` component, loaded dynamically with `ssr: false` - this keeps
+ARM's `window`/`document` access from running during server rendering.
+
+```javascript
+'use client'
+
+import dynamic from 'next/dynamic'
+
+const ARMConfigProvider = dynamic(
+  () => import('@/components/providers/arm-config-provider'),
+  { ssr: false },
+)
+
+const ApplicationProviders = ({ children }) => {
+  return <ARMConfigProvider>{children}</ARMConfigProvider>
+}
+
+export default ApplicationProviders
+```
+
+Then wrap the root layout:
+
+```javascript
+import ApplicationProviders from '@/components/providers/application-providers'
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body className="antialiased">
+        <ApplicationProviders>{children}</ApplicationProviders>
+      </body>
+    </html>
+  )
+}
+```
+
+<Callout type="info">
+  For **non-NextJS** React apps, there's no SSR to guard against - wrap your root
+  component directly with `arm-config-provider`, no dynamic import needed:
+
+  ```javascript
+  import ARMConfigProvider from '@/components/providers/arm-config-provider'
+  import ReactDOM from 'react-dom/client'
+  import App from './App'
+
+  const root = ReactDOM.createRoot(document.getElementById('root'))
+
+  root.render(
+    <ARMConfigProvider>
+      <App />
+    </ARMConfigProvider>,
+  )
+  ```
+</Callout>
+
+### Configure the instance
+
+Set the host, namespace, and any required headers before making requests - see
+[Configuration](/docs/configuration) for the full list.
+
+```javascript
+ARM.setHost('https://api.example.com')
+ARM.setNamespace('api/v1')
+ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
+```
+
+</Steps>
+
+## Basic usage
+
+```javascript
+import { observer } from 'mobx-react'
+import { ARM } from '@/components/providers/arm-config-provider'
+
+const App = observer(() => {
+  // GET /addresses/2519858?include=user
+  const {
+    isLoading,
+    data: address,
+  } = ARM.findRecord(
+    'addresses',
+    2519858,
+    { include: 'user' },
+    { alias: 'customerAddress' },
+  )
+
+  if (isLoading) return <span>Loading...</span>
+
+  return (
+    <div className="form">
+      <label>Address1 </label>
+      <input
+        value={address.get('attributes.address1')}
+        onChange={(event) =>
+          address.set('attributes.address1', event.target.value)
+        }
+      />
+      <button onClick={() => address.save()}>
+        {address.get('isLoading') ? 'Saving' : 'Save'}
+      </button>
+    </div>
+  )
+})
+
+export default App
+```
+
+Components must be wrapped with `observer()` from `mobx-react` to re-render when ARM's
+observable collections change - without it, the UI won't reflect updates after `save()`,
+`set()`, or a completed request.
+
+Next: [Configuration](/docs/configuration) to point ARM at your real API, or jump
+straight to the [guides](/docs/guides/request-functions) to see every method running
+against a real endpoint.

@@ -1,0 +1,53 @@
+---
+title: ARM JS Library
+description: A lightweight, MobX-powered API resource manager for JavaScript - reactive collections, request deduplication, and JSON:API-friendly data normalization.
+---
+
+# ARM JS Library
+
+<div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', margin: '1rem 0' }}>
+  <a href="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml">
+    <img src="https://github.com/michaeljymsgutierrez/arm-js-library/actions/workflows/ci-cd.yml/badge.svg" alt="cicd-badge-logo" />
+  </a>
+  <a href="https://www.npmjs.com/package/arm-js-library">
+    <img src="https://img.shields.io/npm/v/arm-js-library" alt="npm-badge-logo" />
+  </a>
+  <a href="https://github.com/michaeljymsgutierrez/arm-js-library?tab=MIT-1-ov-file">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="license-badge-logo" />
+  </a>
+</div>
+
+**ARM (API Resource Manager)** centralizes data management and simplifies API interactions
+for JavaScript applications. It organizes fetched data into reactive collections, deduplicates
+in-flight requests automatically, and gives every record a consistent set of read/write/save
+methods - so components bind directly to live, observable data instead of hand-rolled
+loading/error state.
+
+```bash
+npm install arm-js-library --save
+```
+
+[Get started](/docs/getting-started) · [API reference](/docs/api-reference) · [Guides](/docs/guides/request-functions)
+
+## Core functionalities
+
+- **Centralized data storage** - every fetched record lands in a named collection, acting as a single source of truth for that resource across your app.
+- **API interactions** - one consistent set of methods (`query`, `queryRecord`, `findAll`, `findRecord`) covers the common read patterns; `ajax` drops down to raw Axios when you need it.
+- **Request deduplication** - every request is hashed from its full config; a matching in-flight or resolved request is reused instead of re-fetched, unless you explicitly bypass it with `skipId`.
+- **Reactive records** - collections are MobX `observable` arrays, so bound components re-render automatically when a record's data changes, loads, or errors.
+- **Root scope** - a small global key/value store for state that doesn't belong to any one collection.
+
+## Key features
+
+- **Record lifecycle** - `get`/`set`/`setProperties` for reads and writes, `save`/`reload`/`destroyRecord` for server round-trips, `rollbackAttributes` to discard local edits - injected onto every record automatically.
+- **Dirty tracking** - every `set` call runs a deep-equality check against the record's last-synced state to keep `isDirty`/`isPristine` accurate, with no manual bookkeeping.
+- **`autoResolve` flag** - request methods return a reactive, bindable object by default; pass `autoResolve: false` for the raw Axios `Promise` instead, when you'd rather `await` and manage loading state yourself.
+- **JSON:API-friendly** - understands `included` payloads and relationship data out of the box via `setPayloadIncludeReference` and `record.getCollection()`.
+- **Utility belt** - `findBy`, `filterBy`, `groupBy`, `sortBy`, `sumBy`, and the rest of a small Lodash-backed helper set, usable on any array - not just ARM collections.
+
+## Benefits
+
+Centralizing data access removes the usual pile of duplicated `useState`/`useEffect` fetch
+boilerplate: components read and write through the same collection, caching and
+deduplication happen for free, and the dirty/pristine/loading state that's normally
+hand-rolled per component comes attached to every record already.

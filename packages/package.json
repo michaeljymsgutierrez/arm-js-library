@@ -6,7 +6,6 @@
   "files": [
     "dist",
     "types",
-    "DOCS.md",
     "LICENSE.md"
   ],
   "types": "types/index.d.ts",
@@ -19,7 +18,6 @@
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "build:jsdocs": "jsdoc2md --private src/lib/api-resource-manager.js > DOCS.md",
     "build:dts": "tsc dist/arm-js-library.js --declaration --allowJs --emitDeclarationOnly --outFile types/index.d.ts --lib esnext --module esnext --skipLibCheck",
     "test": "vitest run --reporter=verbose",
     "test:watch": "vitest run --reporter=verbose --watch"
@@ -47,7 +45,6 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
-    "jsdoc-to-markdown": "^8.0.3",
     "jsdom": "^27.4.0",
     "miragejs": "^0.1.48",
     "typescript": "^5.5.4",
@@ -76,8 +73,7 @@
     "flatted": "3.4.2",
     "vite-plugin-eslint/@rollup/pluginutils/picomatch": "2.3.2",
     "source-map-js": "1.2.2",
-    "miragejs/lodash": "4.18.1",
-    "jsdoc-to-markdown/**/lodash": "4.18.1"
+    "miragejs/lodash": "4.18.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

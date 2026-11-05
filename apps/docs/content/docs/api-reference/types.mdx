@@ -1,0 +1,94 @@
+---
+title: Types
+description: Shared object shapes (RequestConfig, CollectionRecord, and the request response shapes) referenced across the API reference.
+---
+
+# Types
+
+Object shapes referenced from more than one method's parameters or return value.
+
+## RequestConfig
+
+Configuration options accepted by all request methods:
+[`query()`](/docs/api-reference/query), [`queryRecord()`](/docs/api-reference/queryrecord),
+[`findAll()`](/docs/api-reference/findall), and [`findRecord()`](/docs/api-reference/findrecord).
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| [alias] | <code>string</code> |  | Store the response data under this alias name.   The resolved records are then accessible via [`getAlias()`](/docs/api-reference/getalias) and   the request hash via [`getRequestAlias()`](/docs/api-reference/getrequestalias). |
+| [autoResolve] | <code>boolean</code> | <code>true</code> | When `true` (default), the method returns the   reactive request hash object immediately (useful for binding directly in UI components).   When `false`, returns the raw Axios Promise so you can `await` the result and handle   loading/error state yourself. |
+| [skip] | <code>boolean</code> |  | When `true`, skip making the network request   entirely. Useful for conditional fetching. |
+| [skipId] | <code>string</code> |  | A unique value (typically a UUID) that forces   the request to bypass the internal cache and always re-fetch from the server. Each unique   `skipId` value is treated as a new request. |
+| [ignorePayload] | <code>Array.&lt;string&gt;</code> |  | An array of attribute keys to omit from the   request payload when saving a record via `record.save()`. |
+| [override] | <code>Object</code> |  | Override specific parts of the request URL or   headers for this single request only. |
+| [override.host] | <code>string</code> |  | Override the base host URL (e.g. `'https://other-api.com'`). |
+| [override.namespace] | <code>string</code> |  | Override the API namespace (e.g. `'api/v2'`). |
+| [override.path] | <code>string</code> |  | Override the full request path. |
+| [override.headers] | <code>Object</code> |  | Additional headers to merge into the request. |
+
+## CollectionRecord
+
+A record object returned from the collection after a fetch or local lookup.
+ARM injects these methods at runtime onto every record pushed into a collection.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> \| <code>number</code> | The record's identifier (numeric or string). |
+| type | <code>string</code> | The resource type (matches the collection name). |
+| attributes | <code>Object</code> | The record's attribute payload from the API. |
+| [relationships] | <code>Object</code> | Optional JSON:API relationships block. |
+| hashId | <code>string</code> | Internal MD5-based unique key used by ARM. |
+| collectionName | <code>string</code> | The collection this record belongs to. |
+| isLoading | <code>boolean</code> | `true` while a save/reload/destroy request is in flight. |
+| isError | <code>boolean</code> | `true` if the last request for this record errored. |
+| isDirty | <code>boolean</code> | `true` if the record has unsaved local changes. |
+| isPristine | <code>boolean</code> | `true` if the record matches its last-saved state. |
+| originalRecord | <code>Object</code> | Snapshot of the record at the time it was last synced. |
+| get | <code>function</code> | Read a property by dot-notation key. |
+| set | <code>function</code> | Set a single property and update dirty state. |
+| setProperties | <code>function</code> | Set multiple properties at once. |
+| rollbackAttributes | <code>function</code> | Revert all changes back to `originalRecord`. |
+| save | <code>function</code> | Persist changes to the server (PUT) or create (POST). |
+| reload | <code>function</code> | Re-fetch this record from the server. |
+| destroyRecord | <code>function</code> | Delete this record from the server and unload it locally. |
+| getCollection | <code>function</code> | Retrieve related records from a local collection using this record's relationship data. |
+
+## DefaultRequestArrayResponse
+
+Default response object for array-based requests.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| isLoading | <code>boolean</code> | Indicates if the request is loading. |
+| isError | <code>boolean</code> | Indicates if an error occurred during the request. |
+| isNew | <code>boolean</code> | Indicates if the response is new. |
+| data | <code>Array</code> | The main data array returned by the request. |
+| included | <code>Array</code> | Additional included data related to the response. |
+| meta | <code>Object</code> | Metadata about the response. |
+| error | <code>Object</code> | Error information, if any (null if no error). |
+
+## DefaultRequestObjectResponse
+
+Default response object for object-based requests.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| isLoading | <code>boolean</code> | Indicates if the request is loading. |
+| isError | <code>boolean</code> | Indicates if an error occurred during the request. |
+| isNew | <code>boolean</code> | Indicates if the response is new. |
+| data | <code>Object</code> | The main data object returned by the request. |
+| included | <code>Array</code> | Additional included data related to the response. |
+| meta | <code>Object</code> | Metadata about the response. |
+| error | <code>Object</code> | Error information, if any (null if no error). |

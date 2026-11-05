@@ -1,0 +1,21 @@
+---
+title: isEmpty()
+description: "Returns `true` if the value is empty (empty string, array, object, `null`, or `undefined`)."
+---
+# isEmpty()
+
+Returns `true` if the value is empty (empty string, array, object, `null`, or `undefined`).
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+**Example**  
+```js
+ARM.isEmpty([])    // true
+ARM.isEmpty('')    // true
+ARM.isEmpty(null)  // true
+ARM.isEmpty([1])   // false
+```

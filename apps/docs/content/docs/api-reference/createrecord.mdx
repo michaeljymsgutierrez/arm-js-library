@@ -1,0 +1,34 @@
+---
+title: createRecord()
+description: "Creates a new local record in the named collection without making a network request. The record is pushed into the collection immediately as an observable "
+---
+# createRecord()
+
+Creates a new local record in the named collection without making a network request.
+
+The record is pushed into the collection immediately as an observable object with
+the full ARM record API injected (`get`, `set`, `save`, `reload`, etc.).
+
+By default, ARM assigns a UUID v1 as the record's `id`. This UUID signals to
+`record.save()` that the record is new and should be sent as a POST request.
+Pass `collectionRecordRandomId = false` to assign the nil UUID instead (useful
+when you need a known placeholder ID).
+
+**Kind**: global function  
+**Returns**: [<code>CollectionRecord</code>](/docs/api-reference/types#collectionrecord) - The newly created observable record.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| collectionName | <code>string</code> |  | The registered collection to create the record in. |
+| [collectionRecord] | <code>Object</code> | <code>{}</code> | Initial attribute data for the record. |
+| [collectionRecordRandomId] | <code>boolean</code> | <code>true</code> | `true` to assign a random UUID; `false` for nil UUID. |
+
+**Example**  
+```js
+const newAddress = ARM.createRecord('addresses', {
+  attributes: { address1: '123 Main St', kind: 'home' },
+})
+
+// Persist to the server (sends POST /addresses)
+await newAddress.save()
+```

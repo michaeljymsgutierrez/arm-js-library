@@ -1,0 +1,28 @@
+---
+title: peekRecord()
+description: "Returns a single locally cached record by ID without making a network request. Accepts both numeric and string IDs (string ID support added in v2.9.0)."
+---
+# peekRecord()
+
+Returns a single locally cached record by ID without making a network request.
+
+Accepts both numeric and string IDs (string ID support added in v2.9.0).
+
+**Kind**: global function  
+**Returns**: [<code>CollectionRecord</code>](/docs/api-reference/types#collectionrecord) \| <code>undefined</code> - The matching record, or `undefined` if not in the local cache.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| collectionName | <code>string</code> | The registered collection name. |
+| collectionRecordId | <code>number</code> \| <code>string</code> | The record ID to look up. |
+
+**Example**  
+```js
+// Numeric ID
+const address = ARM.peekRecord('addresses', 123)
+```
+**Example**  
+```js
+// String ID
+const address = ARM.peekRecord('addresses', 'JO-26181S4VPU65')
+```

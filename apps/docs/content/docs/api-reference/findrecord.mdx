@@ -1,0 +1,41 @@
+---
+title: findRecord()
+description: "Fetches a single record by ID from the server (`GET /{resource}/{id}`). Accepts both numeric and string IDs (string ID support added in v2.9.0)."
+---
+# findRecord()
+
+Fetches a single record by ID from the server (`GET /{resource}/{id}`).
+
+Accepts both numeric and string IDs (string ID support added in v2.9.0).
+
+**Kind**: global function  
+**Returns**: <code>Object</code> \| <code>Promise</code> - Reactive request hash (default) or Axios Promise when `autoResolve: false`.  
+**Throws**:
+
+- <code>Error</code> If `resource` is not a registered collection.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| resource | <code>string</code> |  | The resource name / collection name. |
+| id | <code>number</code> \| <code>string</code> |  | The record ID to fetch. |
+| [params] | <code>Object</code> | <code>{}</code> | Query parameters appended to the request URL. |
+| [config] | [<code>RequestConfig</code>](/docs/api-reference/types#requestconfig) | <code>{}</code> | Request configuration options. |
+
+**Example**  
+```js
+// Reactive - numeric ID
+const result = ARM.findRecord('addresses', 123, null, { alias: 'currentAddress' })
+result.isLoading // true while fetching
+result.data      // CollectionRecord once resolved
+```
+**Example**  
+```js
+// String ID
+ARM.findRecord('addresses', 'JO-26181S4VPU65', null, { alias: 'currentAddress' })
+```
+**Example**  
+```js
+// Awaitable with query params
+await ARM.findRecord('addresses', 123, { include: 'user' }, { autoResolve: false })
+```

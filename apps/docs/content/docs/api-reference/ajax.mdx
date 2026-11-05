@@ -1,0 +1,26 @@
+---
+title: ajax()
+description: "Makes a raw Axios request using the ARM instance's configured headers and base URL. Use this for one-off requests that don't map to a collection (e.g. file"
+---
+# ajax()
+
+Makes a raw Axios request using the ARM instance's configured headers and base URL.
+
+Use this for one-off requests that don't map to a collection (e.g. file uploads,
+action endpoints, or any API call where you don't need record management).
+
+**Kind**: global function  
+**Returns**: <code>Promise</code> - Resolves with the Axios response or rejects with an error.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [config] | <code>Object</code> | <code>{}</code> | Any valid Axios request config object. |
+
+**Example**  
+```js
+const response = await ARM.ajax({
+  method: 'post',
+  url: '/addresses/bulk-delete',
+  data: { ids: [1, 2, 3] },
+})
+```
