@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# pagefind search index (generated at build time)
+/public/_pagefind/
+
 # production
 /build
 
