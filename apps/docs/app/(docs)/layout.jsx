@@ -38,11 +38,20 @@ export const metadata = {
 
 const REPO_URL = 'https://github.com/michaeljymsgutierrez/arm-js-library'
 
+// The official npm wordmark is built from thin rectangular bars, so even
+// cropped to its own bounding box it reads as noticeably lighter/thinner
+// than a solid-silhouette icon like GitHub's - a bold text badge matches
+// the other icons' visual weight better than any monochrome npm glyph does.
+const NpmIcon = () => (
+  <span style={{ fontWeight: 700, fontSize: '1rem', lineHeight: '24px' }}>npm</span>
+)
+
 const navbar = (
   <Navbar
     logo={<b>ARM JS Library</b>}
     projectLink={REPO_URL}
     chatLink="https://www.npmjs.com/package/arm-js-library"
+    chatIcon={<NpmIcon />}
   />
 )
 
