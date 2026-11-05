@@ -14,10 +14,6 @@ ARM.setHeadersCommon('Content-Type', 'application/vnd.api+json')
 ARM.setHeadersCommon('X-Client-Platform', 'Web')
 ARM.setGlobal()
 
-/* ARMConfigProvider
- *
- * Configures the ARM library before any of the demo pages use it.
- */
 const ARMConfigProvider = ({ children }) => {
   return <>{children}</>
 }
