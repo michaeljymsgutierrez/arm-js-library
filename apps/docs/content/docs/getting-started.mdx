@@ -14,7 +14,7 @@ npm install arm-js-library --save
 ```
 
 ARM is built on [MobX](https://mobx.js.org) for its reactive collections. If your app
-renders with React, also install `mobx-react` so components can `observe()` ARM's data:
+renders with React, also install `mobx-react` so components can `observer()` ARM's data:
 
 ```bash
 npm install mobx-react --save
@@ -45,8 +45,9 @@ const ARMConfigProvider = ({ children }) => {
 export default ARMConfigProvider
 ```
 
-See it running in the [live demo](/demo)'s
-[`arm-config-provider`](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/docs/src/components/providers/arm-config-provider/index.jsx).
+See it running in the
+[`arm-config-provider`](https://github.com/michaeljymsgutierrez/arm-js-library/blob/main/apps/docs/src/components/providers/arm-config-provider/index.jsx)
+used by every demo page linked from the guides.
 
 ### Wrap your app with it
 
@@ -163,4 +164,5 @@ observable collections change - without it, the UI won't reflect updates after `
 `set()`, or a completed request.
 
 Next: [Configuration](/docs/configuration) to point ARM at your real API, or jump
-straight to the [live demo](/demo) to see every method running against a real endpoint.
+straight to the [guides](/docs/guides/request-functions) to see every method running
+against a real endpoint.
