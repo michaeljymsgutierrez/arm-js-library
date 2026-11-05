@@ -795,6 +795,41 @@
   resolved "https://registry.yarnpkg.com/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz#3dc35ba0f1e66b403c00b39344f870298ebb1c8e"
   integrity sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==
 
+"@pagefind/darwin-arm64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/darwin-arm64/-/darwin-arm64-1.6.0.tgz#5327071edae5fc6d48fa9a505615f1e38b1f54fe"
+  integrity sha512-611gl64aqN12UcMyKPtZ8+vRWBKlJFSh2JgO8uScxa1Eyjo1dXz9r4wZuRno0yCUE/KN0FauEoKZ3KEwUYHCCg==
+
+"@pagefind/darwin-x64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/darwin-x64/-/darwin-x64-1.6.0.tgz#a18aac54b7f6e53fd12b0fe2dfb424a642c266f0"
+  integrity sha512-rd3ZbtuxyYqjASKZAPuIV7eeQQHJ7VYpoNKKG8CvglaD3g30eT5Nb7XGNLYwVReBsCccpkURwrGwWjSwr8nyQQ==
+
+"@pagefind/freebsd-x64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/freebsd-x64/-/freebsd-x64-1.6.0.tgz#fc3afdcfcaecda75ce7fedad37d0bf66f8413b02"
+  integrity sha512-d+sXqsaThszmPWGVDSRKqIz9GpZcj/bAksNZfg19asSxU0ogNPOMND4kV4giQvOjPFMsltUFf6hQJfoHQ6+hSQ==
+
+"@pagefind/linux-arm64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/linux-arm64/-/linux-arm64-1.6.0.tgz#f4bc27d4efdc89c498a70b3add3342924506eb34"
+  integrity sha512-SLB2I+XqCZma8NvIGIH8nyKblgKIxw5PmqsVtofWOKxNHhEtOEsddbqU+hsrNcT3EV0faM6UmKDHVIxcPYq29w==
+
+"@pagefind/linux-x64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/linux-x64/-/linux-x64-1.6.0.tgz#d34f07dbc6142c6f45bb263e41d10ba8f0ea26f4"
+  integrity sha512-IbMSx/+Vr/Xk0TTBlLkjgK+rvnbOXGmmb2/MKxQu99AR5DsqQoV3NKEA9PQz2tAhuCZjeD5xJBp4w5N5DHIC7Q==
+
+"@pagefind/windows-arm64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/windows-arm64/-/windows-arm64-1.6.0.tgz#240688ea6c7f8e391a827438569c4635a72a7114"
+  integrity sha512-wUrniW3REr7VWJHz6xE6F/p/AQgHDFpGZiY9sbWT71KfEijDE5Jnc37V8zc7cilV9h/QkwJGXoEP2+ZLwDmhtw==
+
+"@pagefind/windows-x64@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pagefind/windows-x64/-/windows-x64-1.6.0.tgz#fd8b74e66b6b4152568615406e28f36ed9109d23"
+  integrity sha512-cUA2+yXfbymdJllyMjY5YTBwuOgh0/H53Pn5fYKjDnDjk154Ft4U5RVj3TenWySPL/jG6zJfARUWSlyUyXHlZw==
+
 "@react-aria/focus@^3.20.2":
   version "3.22.1"
   resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.22.1.tgz#7e7ba6a2250135728eb68ffa21e422ec25a16800"
@@ -5353,6 +5388,19 @@ package-manager-detector@^1.8.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/package-manager-detector/-/package-manager-detector-1.9.0.tgz#217ed03645bfeb563e9efce4c5bbbfbb652754ab"
   integrity sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==
+
+pagefind@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/pagefind/-/pagefind-1.6.0.tgz#baeab15ee57705dc661e8f656ca59156bd0d1380"
+  integrity sha512-yeOd9EA0TUE1PUfbQIluBxzPadBG5/0BV48FAxwMVLkhZcOvwCz6TX4/a/Ofz97pF9/FwwT7CVbTC97BfmI+LQ==
+  optionalDependencies:
+    "@pagefind/darwin-arm64" "1.6.0"
+    "@pagefind/darwin-x64" "1.6.0"
+    "@pagefind/freebsd-x64" "1.6.0"
+    "@pagefind/linux-arm64" "1.6.0"
+    "@pagefind/linux-x64" "1.6.0"
+    "@pagefind/windows-arm64" "1.6.0"
+    "@pagefind/windows-x64" "1.6.0"
 
 parent-module@^1.0.0:
   version "1.0.1"
