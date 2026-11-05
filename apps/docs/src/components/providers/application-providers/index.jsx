@@ -2,16 +2,12 @@
 
 import dynamic from 'next/dynamic'
 
+// ssr: false - ARM touches window/document, which don't exist during server rendering.
 const ARMConfigProvider = dynamic(
   () => import('@/components/providers/arm-config-provider'),
   { ssr: false },
 )
 
-/**
- * ApplicationProviders
- *
- * Wraps the demo section with the providers it needs to function.
- */
 const ApplicationProviders = ({ children }) => {
   return <ARMConfigProvider>{children}</ARMConfigProvider>
 }
