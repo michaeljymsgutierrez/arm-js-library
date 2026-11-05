@@ -62,9 +62,9 @@ ARM.setPayloadIncludeReference('type')
 ```
 
 <Callout type="info">
-  `_getBaseURL()` builds every request's base URL as `${host}/${namespace}` - set
-  both before the first request, or requests will resolve against
-  `window.location.origin/api/v1` by default.
+  Every request's base URL is built as `${host}/${namespace}` - set both before the
+  first request, or requests will resolve against `window.location.origin/api/v1` by
+  default.
 </Callout>
 
 See [`setHost`](/docs/api-reference/sethost), [`setNamespace`](/docs/api-reference/setnamespace),
