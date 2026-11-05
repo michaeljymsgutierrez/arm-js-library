@@ -1,6 +1,6 @@
 <p align="center" style="margin-bottom:10px;">
   <a href="https://www.npmjs.com/package/arm-js-library">
-    <img src="https://assets-omega-neon.vercel.app/images/arm-js-title-logo.png" alt="arm-js-logo" height="200" width="143.7" />
+    <img src="./assets/arm-js-logo.png" alt="arm-js-logo" height="200" width="143.7" />
   </a>
 </p>
 
