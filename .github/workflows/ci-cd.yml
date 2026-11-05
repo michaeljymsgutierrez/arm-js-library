@@ -42,7 +42,3 @@ jobs:
       - name: Build types
         working-directory: packages
         run: yarn build:dts
-
-      - name: Build jsdocs
-        working-directory: packages
-        run: yarn build:jsdocs
