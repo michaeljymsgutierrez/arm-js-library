@@ -16,14 +16,30 @@
   </a>
 </p>
 
-**ARM (API Resource Manager)** is a lightweight, MobX-powered API resource manager for JavaScript. It organizes fetched data into reactive collections, deduplicates in-flight requests automatically, and gives every record a consistent `get`/`set`/`save`/`reload`/`destroyRecord` API - no more hand-rolled loading/error state.
+<p align="center">
+  <!-- TODO: replace with the real Vercel URL once the project is deployed -->
+  <a href="https://arm-js-library.vercel.app/docs">
+    <img src="https://img.shields.io/badge/docs-full_documentation-blue" alt="docs-badge-logo" />
+  </a>
+  <a href="https://arm-js-library.vercel.app/docs/api-reference">
+    <img src="https://img.shields.io/badge/api-reference-blue" alt="api-reference-badge-logo" />
+  </a>
+  <a href="https://arm-js-library.vercel.app/docs/guides/request-functions">
+    <img src="https://img.shields.io/badge/guides-live_examples-blue" alt="guides-badge-logo" />
+  </a>
+</p>
+
+<p align="center">
+  <b>ARM (API Resource Manager)</b> is a lightweight, MobX-powered API resource manager for JavaScript.<br />
+  It organizes fetched data into reactive collections, deduplicates in-flight requests automatically,<br />
+  and gives every record a consistent <code>get</code>/<code>set</code>/<code>save</code>/<code>reload</code>/<code>destroyRecord</code> API - no more hand-rolled loading/error state.
+</p>
 
 ```bash
 npm install arm-js-library --save
 ```
 
-<!-- TODO: replace with the real Vercel URL once the project is deployed -->
-**[Full documentation](https://arm-js-library.vercel.app/docs)** · **[API reference](https://arm-js-library.vercel.app/docs/api-reference)** · **[Guides](https://arm-js-library.vercel.app/docs/guides/request-functions)**
+---
 
 ## Quick example
 
@@ -50,9 +66,11 @@ See the [Getting Started guide](https://arm-js-library.vercel.app/docs/getting-s
 
 ## Credits
 
-- **[Axl Asuncion](https://www.facebook.com/skpcls)** - Original logo/design creator
-- **[Luigi Cruz](https://github.com/luigircruz)** - Features and bugs feedback
-- **[Dickson Palomeras](https://github.com/DicksonPal)** - Features and bugs feedback
+| Contributor | Role |
+| --- | --- |
+| [Axl Asuncion](https://www.facebook.com/skpcls) | Designed the original ARM JS logo |
+| [Luigi Cruz](https://github.com/luigircruz) | Early feedback on features and bugs |
+| [Dickson Palomeras](https://github.com/DicksonPal) | Early feedback on features and bugs |
 
 ## License
 
