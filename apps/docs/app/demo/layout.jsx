@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import ApplicationProviders from '@/components/providers/application-providers'
 import './globals.css'
@@ -23,6 +24,7 @@ export default function DemoLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApplicationProviders>{children}</ApplicationProviders>
+        <Analytics />
       </body>
     </html>
   )
