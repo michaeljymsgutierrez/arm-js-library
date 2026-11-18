@@ -11,6 +11,7 @@
     "docs:generate": "node scripts/generate-api-reference.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "arm-js-library": "file:../../packages",
     "mobx-react": "^9.2.1",
     "next": "15.5.28",
